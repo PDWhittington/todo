@@ -27,16 +27,6 @@ namespace Todo
                 .AddSingleton<ITodoService, TodoService>()
                 .BuildServiceProvider();
 
-            //configure console logging
-            serviceProvider
-                .GetService<ILoggerFactory>();
-                //.AddConsole(LogLevel.Debug);
-
-            var logger = (serviceProvider.GetService<ILoggerFactory>() ?? throw new InvalidOperationException())
-                .CreateLogger<Program>();
-            
-            logger.LogDebug("Starting application");
-
             return serviceProvider;
         }
     }
