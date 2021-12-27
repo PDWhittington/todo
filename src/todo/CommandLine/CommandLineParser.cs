@@ -4,13 +4,16 @@ using Todo.Contracts.Services;
 
 namespace todo.CommandLine
 {
+    /// <summary>
+    /// This class 
+    /// </summary>
     public class CommandLineParser : ICommandLineParser
     {
         public DateTime GetDateFromCommandLine()
         {
             var commandLine = GetCommandLineMinusAssemblyLocation();
             
-            if (IsYesterday(commandLine)) return GetTodayWithMidnightAdjusted();
+            if (IsYesterday(commandLine)) return GetTodayWithMidnightAdjusted().AddDays(-1);
             if (IsToday(commandLine)) return GetTodayWithMidnightAdjusted();
             if (IsTomorrow(commandLine)) return GetTodayWithMidnightAdjusted().AddDays(1);
             if (IsRelativeOffset(commandLine, out var offset)) return GetTodayWithMidnightAdjusted().AddDays(offset);
