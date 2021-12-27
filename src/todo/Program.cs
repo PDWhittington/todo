@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using todo.CommandLine;
-using Todo.Contracts;
+using Todo.Configuration;
 using Todo.Contracts.Services;
 using Todo.Service;
+using Todo.State;
+using Todo.Template;
 
 namespace Todo
 {
@@ -24,6 +24,9 @@ namespace Todo
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
                 .AddSingleton<ICommandLineParser, CommandLineParser>()
+                .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
+                .AddSingleton<IStateProvider, StateProvider>()
+                .AddSingleton<ITemplateProvider, TemplateProvider>()
                 .AddSingleton<ITodoService, TodoService>()
                 .BuildServiceProvider();
 
