@@ -2,6 +2,7 @@
 using todo.CommandLine;
 using Todo.Configuration;
 using Todo.Contracts.Services;
+using Todo.Path;
 using Todo.Service;
 using Todo.State;
 using Todo.Template;
@@ -26,6 +27,8 @@ namespace Todo
                 .AddSingleton<ICommandLineParser, CommandLineParser>()
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
                 .AddSingleton<IStateProvider, StateProvider>()
+                .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
+                .AddSingleton<IPathHelper, PathHelper>()
                 .AddSingleton<ITemplateProvider, TemplateProvider>()
                 .AddSingleton<ITodoService, TodoService>()
                 .BuildServiceProvider();

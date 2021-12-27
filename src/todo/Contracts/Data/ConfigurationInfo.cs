@@ -1,16 +1,18 @@
-﻿namespace Todo.Contracts.Data
+﻿using System.Text.Json.Serialization;
+
+namespace Todo.Contracts.Data
 {
     public class ConfigurationInfo
     {
-        public FilePath TemplatePath { get; }
+        public string TemplatePath { get; }
+        
+        public bool UseNamesForDays { get; }
 
-        private ConfigurationInfo(FilePath templatePath)
+        [JsonConstructor]
+        public ConfigurationInfo(string templatePath, bool useNamesForDays)
         {
             TemplatePath = templatePath;
+            UseNamesForDays = useNamesForDays;
         }
-
-        public static ConfigurationInfo Of(FilePath templatePath) => new(templatePath);
-        
-        public static ConfigurationInfo Of(string templatePath) => Of(new FilePath(templatePath));
     }
 }

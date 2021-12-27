@@ -28,7 +28,7 @@ namespace Todo.Template
         /// <exception cref="Exception"></exception>
         public string GetTemplate()
         {
-            var path = _configurationProvider.Configuration.TemplatePath.GetRooted();
+            var path = _configurationProvider.GetConfiguration().TemplatePath;
 
             if (!File.Exists(path)) throw new Exception($"{path} not found");
 

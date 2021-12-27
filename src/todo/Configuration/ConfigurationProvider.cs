@@ -1,11 +1,34 @@
-﻿using Todo.Contracts.Services;
+﻿using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Todo.Contracts.Data;
+using Todo.Contracts.Services;
 
 namespace Todo.Configuration
 {
     public class ConfigurationProvider : IConfigurationProvider
     {
-        private Contracts.Data.ConfigurationInfo _configuration;
+        private readonly ISettingsPathProvider _settingsPathProvider;
+        private ConfigurationInfo _configuration = null;
 
-        public Contracts.Data.ConfigurationInfo Configuration => _configuration ??= Contracts.Data.ConfigurationInfo.Of("template.md");
+        public ConfigurationProvider(ISettingsPathProvider settingsPathProvider)
+        {
+            _settingsPathProvider = settingsPathProvider;
+        }
+
+        public ConfigurationInfo GetConfiguration()
+            => _configuration ?? PopulateAndReturnConfiguration();
+        
+        
+        private ConfigurationInfo PopulateAndReturnConfiguration()
+        {
+            var settingsPath = _settingsPathProvider.GetSettingsPath();
+
+            using var fileStream = new FileStream(settingsPath, FileMode.Open, FileAccess.Read);
+            var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
+
+            _configuration = configuration;
+            return _configuration;
+        }
     }
 }

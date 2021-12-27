@@ -18,7 +18,7 @@ namespace Todo.Service
         
         public void PerformTask()
         {
-            var configuration = _configurationProvider.Configuration;
+            var configuration = _configurationProvider.GetConfiguration();
             var state = _stateProvider.GetState();
 
              

@@ -1,7 +1,9 @@
-﻿namespace Todo.Contracts.Services
+﻿using Todo.Contracts.Data;
+
+namespace Todo.Contracts.Services
 {
     public interface IConfigurationProvider
     {
-        Data.ConfigurationInfo Configuration { get; }
+        public ConfigurationInfo GetConfiguration();
     }
 }
