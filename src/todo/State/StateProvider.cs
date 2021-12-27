@@ -1,21 +1,22 @@
 ﻿using Todo.Contracts.Data;
+using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services;
 
 namespace Todo.State
 {
-    public class StateProvider : IStateProvider
+    public class CommandProvider : ICommandProvider
     {
         private readonly ICommandLineParser _commandLineParser;
 
-        public StateProvider(ICommandLineParser commandLineParser)
+        public CommandProvider(ICommandLineParser commandLineParser)
         {
             _commandLineParser = commandLineParser;
         }
         
-        public StateInfo GetState()
+        public CreateOrShowCommand GetCommand()
         {
             var date = _commandLineParser.GetDateFromCommandLine();
-            return StateInfo.Of(date);
+            return CreateOrShowCommand.Of(date);
         }
     }
 }

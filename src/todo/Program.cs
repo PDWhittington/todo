@@ -26,7 +26,7 @@ namespace Todo
                 .AddLogging()
                 .AddSingleton<ICommandLineParser, CommandLineParser>()
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
-                .AddSingleton<IStateProvider, StateProvider>()
+                .AddSingleton<ICommandProvider, CommandProvider>()
                 .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
                 .AddSingleton<IPathHelper, PathHelper>()
                 .AddSingleton<ITemplateProvider, TemplateProvider>()

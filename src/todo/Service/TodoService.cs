@@ -5,11 +5,11 @@ namespace Todo.Service
     public class TodoService : ITodoService
     {
         private readonly IConfigurationProvider _configurationProvider;
-        private readonly IStateProvider _stateProvider;
+        private readonly ICommandProvider _stateProvider;
         private readonly ITemplateProvider _templateProvider;
 
         public TodoService(IConfigurationProvider configurationProvider,
-            IStateProvider stateProvider, ITemplateProvider templateProvider)
+            ICommandProvider stateProvider, ITemplateProvider templateProvider)
         {
             _configurationProvider = configurationProvider;
             _stateProvider = stateProvider;
@@ -19,7 +19,7 @@ namespace Todo.Service
         public void PerformTask()
         {
             var configuration = _configurationProvider.GetConfiguration();
-            var state = _stateProvider.GetState();
+            var state = _stateProvider.GetCommand();
 
              
 
