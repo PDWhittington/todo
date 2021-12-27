@@ -2,13 +2,15 @@
 {
     public class ConfigurationInfo
     {
-        public string TemplatePath { get; }
+        public FilePath TemplatePath { get; }
 
-        private ConfigurationInfo(string templatePath)
+        private ConfigurationInfo(FilePath templatePath)
         {
             TemplatePath = templatePath;
         }
 
-        public static ConfigurationInfo Of(string templatePath) => new(templatePath);
+        public static ConfigurationInfo Of(FilePath templatePath) => new(templatePath);
+        
+        public static ConfigurationInfo Of(string templatePath) => Of(new FilePath(templatePath));
     }
 }

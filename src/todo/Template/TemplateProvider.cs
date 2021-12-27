@@ -5,32 +5,34 @@ using Todo.Contracts.Services;
 
 namespace Todo.Template
 {
+    /// <summary>
+    /// A client of this class can retrieve a string which is a template of the markdown to use.
+    /// </summary>
     public class TemplateProvider : ITemplateProvider
     {
         private readonly IConfigurationProvider _configurationProvider;
 
+        /// <summary>
+        /// Constructor. This takes a ConfigurationProvider
+        /// </summary>
+        /// <param name="configurationProvider">Typically registered in Windsor</param>
         public TemplateProvider(IConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
         }
         
+        /// <summary>
+        /// Returns a string representing the Markdown template
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public string GetTemplate()
         {
-            var templatePath = _configurationProvider.Configuration.TemplatePath;
+            var path = _configurationProvider.Configuration.TemplatePath.GetRooted();
 
-            var fullPath = Path.IsPathRooted(templatePath) ? templatePath : RootToAssemblyFolder(templatePath);
+            if (!File.Exists(path)) throw new Exception($"{path} not found");
 
-            if (!File.Exists(fullPath)) throw new Exception($"{fullPath} not found");
-
-            return File.ReadAllText(fullPath);
-        }
-
-        private string RootToAssemblyFolder(string fileName)
-        {
-            var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? throw new Exception("Cannot find folder of the executing process");
-            var assemblyFolder = Path.GetDirectoryName(assemblyLocation) ?? throw new Exception("Cannot get containing folder of executing process");;
-
-            return Path.Combine(assemblyFolder, fileName);
+            return File.ReadAllText(path);
         }
     }
 }
