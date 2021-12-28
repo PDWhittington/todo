@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands
 {
-    public class CreateOrShowCommand
+    public class CreateOrShowCommand : CommandBase
     {
         public DateTime Date { get; }
 

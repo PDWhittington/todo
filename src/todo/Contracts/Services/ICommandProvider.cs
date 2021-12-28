@@ -5,6 +5,6 @@ namespace Todo.Contracts.Services
 {
     public interface ICommandProvider
     {
-        public CreateOrShowCommand GetCommand();
+        public CommandBase GetCommand();
     }
 }

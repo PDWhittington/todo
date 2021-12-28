@@ -13,7 +13,7 @@ namespace Todo.State
             _commandLineParser = commandLineParser;
         }
         
-        public CreateOrShowCommand GetCommand()
+        public CommandBase GetCommand()
         {
             var date = _commandLineParser.GetDateFromCommandLine();
             return CreateOrShowCommand.Of(date);
