@@ -68,8 +68,8 @@ namespace Todo.Service
             {
                 return $"{dateName}, {date.Year}";
             }
-
-            return $"{date:Ddd} <sup>{GetOrdinal(date.Day)}</sup> {date:Mmmm}, {date:YYYY}";
+            
+            return $"{date:dddd d} <sup>{GetOrdinal(date.Day)}</sup> {date:MMMM}, {date:yyyy}";
         }
 
         private string GetOrdinal(int num)
