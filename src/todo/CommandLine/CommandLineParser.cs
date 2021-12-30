@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using Todo.Contracts.Services;
 
 namespace todo.CommandLine
@@ -23,7 +26,7 @@ namespace todo.CommandLine
             if (IsYesterday(commandLine)) return GetTodayWithMidnightAdjusted().AddDays(-1);
             if (IsToday(commandLine)) return GetTodayWithMidnightAdjusted();
             if (IsTomorrow(commandLine)) return GetTodayWithMidnightAdjusted().AddDays(1);
-            if (IsRelativeOffset(commandLine, out var offset)) return GetTodayWithMidnightAdjusted().AddDays(offset);
+            if (IsRelativeOffset(commandLine, out var offset)) return GetTodayWithMidnightAdjusted().AddDays((int)offset);
             if (IsDayOnly(commandLine, out var dayOnly)) return GetDateFromDayOnly(dayOnly);
 
             if (DateOnly.TryParse(commandLine, out var dte)) return dte;
@@ -55,7 +58,7 @@ namespace todo.CommandLine
             _ => false,
         };
 
-        private bool IsRelativeOffset(string commandLine, out int offset)
+        private bool IsRelativeOffset(string commandLine, out int? offset)
         {
             if (int.TryParse(commandLine.Substring(1), out var parsed))
             {
@@ -68,7 +71,9 @@ namespace todo.CommandLine
                         offset = -parsed;
                         return true;
                     default:
-                        throw new ArgumentException("unrecognised control character before number", nameof(commandLine));        
+                        offset = default;
+                        return false;
+                                
                 }
             }
 
@@ -76,22 +81,32 @@ namespace todo.CommandLine
             return false;
         }
 
-        private bool IsDayOnly(string commandLine, out int dayOnly) => int.TryParse(commandLine, out dayOnly);
+        private bool IsDayOnly(string commandLine, out int dayOnly) 
+            => int.TryParse(commandLine, out dayOnly) && dayOnly is > 0 and < 32;
 
         private DateOnly GetDateFromDayOnly(int dayOnly)
         {
             var today = GetTodayWithMidnightAdjusted();
-            
-            //Case where day is coming up in the current month
-            if (today.Day <= dayOnly) return new DateOnly(dayOnly, today.Month, today.Year);
 
-            //Case where day has passed in the current month and it's not December
-            if (today.Month < 12) return new DateOnly(dayOnly, today.Month + 1, today.Year);
-            
-            //Case where day has passed in the current month and it is December
-            return new DateOnly(dayOnly, 1, today.Year);
+            var possibles = GetPossibles(today, dayOnly);
+
+            var nearestDate = possibles
+                .OrderBy(x => _dateHelper.AbsoluteDateDiff(x, today))
+                .First();
+
+            return nearestDate;
         }
-        
+
+        IEnumerable<DateOnly> GetPossibles(DateOnly currentDay, int n)
+        {
+            if (_dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return (DateOnly)nOfMonth;
+            if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
+            if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
+        }
+
+
+
+
         private string GetCommandLineMinusAssemblyLocation()
         {
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? "";
