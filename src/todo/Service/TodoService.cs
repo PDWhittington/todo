@@ -1,4 +1,8 @@
-﻿using Todo.Contracts.Services;
+﻿using System;
+using System.IO;
+using Todo.Contracts.Data;
+using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services;
 
 namespace Todo.Service
 {
@@ -18,11 +22,39 @@ namespace Todo.Service
         
         public void PerformTask()
         {
+            var command = _stateProvider.GetCommand();
+
+            switch (command)
+            {
+                case CreateOrShowCommand createOrShowCommand:
+
+                    CreateOrShow(createOrShowCommand);
+                    break;
+                
+                default:
+                    throw new Exception();
+            }
+        }
+
+        private void CreateOrShow(CreateOrShowCommand createOrShowCommand)
+        {
             var configuration = _configurationProvider.GetConfiguration();
-            var state = _stateProvider.GetCommand();
+            
+            var fileName = $"todo-{createOrShowCommand.Date:yyyy-MM-dd}.md";
+            var path = System.IO.Path.Combine(configuration.OutputFolder, fileName);
 
-             
+            if (!File.Exists(path))
+            {
+                var templateText = _templateProvider.GetTemplate();
+                
+                
+                
+            }
+        }
 
+        private string GetDateText(ConfigurationInfo configurationInfo, DateOnly date)
+        {
+            
         }
     }
 }

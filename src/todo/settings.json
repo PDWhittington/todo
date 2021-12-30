@@ -2,5 +2,6 @@
   "BrowserPath": "chrome {filepath}",
   "TextEditorPath": "code {filepath}",
   "TemplatePath": "template.md",
-  "UseNamesForDays": true
+  "UseNamesForDays": true,
+  "OutputFolder": "D:\\workspace\\year-of-phil\\todo"
 }

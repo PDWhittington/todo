@@ -9,7 +9,7 @@ namespace todo.CommandLine
     /// </summary>
     public class CommandLineParser : ICommandLineParser
     {
-        public DateTime GetDateFromCommandLine()
+        public DateOnly GetDateFromCommandLine()
         {
             var commandLine = GetCommandLineMinusAssemblyLocation();
             

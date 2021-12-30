@@ -4,13 +4,13 @@ namespace Todo.Contracts.Data.Commands
 {
     public class CreateOrShowCommand : CommandBase
     {
-        public DateTime Date { get; }
+        public DateOnly Date { get; }
 
-        private CreateOrShowCommand(DateTime date)
+        private CreateOrShowCommand(DateOnly date)
         {
             Date = date;
         }
 
-        public static CreateOrShowCommand Of(DateTime date) => new(date);
+        public static CreateOrShowCommand Of(DateOnly date) => new(date);
     }
 }

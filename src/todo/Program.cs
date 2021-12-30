@@ -2,6 +2,8 @@
 using todo.CommandLine;
 using Todo.Configuration;
 using Todo.Contracts.Services;
+using Todo.DateNaming;
+using Todo.Helpers;
 using Todo.Path;
 using Todo.Service;
 using Todo.State;
@@ -24,6 +26,10 @@ namespace Todo
             //setup our DI
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
+                .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
+                .AddSingleton<IEasterDateNamer, EasterDateNamer>()
+                .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
+                .AddSingleton<IDateNamer, DateNamer>()
                 .AddSingleton<ICommandLineParser, CommandLineParser>()
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
                 .AddSingleton<ICommandProvider, CommandProvider>()
