@@ -1,0 +1,20 @@
+﻿using System;
+
+namespace Todo.DateNaming;
+
+public class SaintsDayDateNamer : ISaintsDayDateNamer
+{
+    public bool TryGetName(DateOnly date, out string name)
+    {
+        name = date switch
+        {
+            { Month: 03, Day: 01 } => "St. David's Day",
+            { Month: 03, Day: 17 } => "St. Patrick's Day",
+            { Month: 04, Day: 23 } => "St. George's Day",
+            { Month: 11, Day: 30 } => "St. Andrew's Day",
+            _ => null
+        };
+
+        return name != null;
+    }
+}
