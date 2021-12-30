@@ -1,4 +1,6 @@
 ﻿{
+  "BrowserPath": "chrome {filepath}",
+  "TextEditorPath": "code {filepath}",
   "TemplatePath": "template.md",
   "UseNamesForDays": true
 }
