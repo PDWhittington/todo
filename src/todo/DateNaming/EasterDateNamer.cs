@@ -4,38 +4,6 @@ namespace Todo.DateNaming;
 
 public class EasterDateNamer : IEasterDateNamer
 {
-    /*
-     * Calculate D="'225'" - 11(Y MOD 19).
-
-If D is greater than 50 then subtract multiples of 30 until the resulting new value of D is
-
-less than 51.
-
-If D is greater than 48 subtract 1 from it.
-
-Calculate E="'(Y" +' [Y/4] + D + 1) MOD 7. (NB Integer part of [Y/4])
-
-Calculate Q="'D +'" 7 - E.
-
-If Q is less than 32 then Easter is in March. If Q is greater than 31 then Q - 31 is its date in April.
-
-For example, for 1998:
-
-D = 225 - 11*(1998 MOD 19) = 225 - 11*3 = 192
-
-D is greater than 50, therefore:
-
-D = (192 - 5*30) = 42
-
-E = (1998 + [1998/4] + 42 + 1) MOD 7="'2540'" MOD 7="'6'"
-
-Q = 42 + 7 - 6="'43'"
-
-Easter 1998="'43" -' 31="'12" April'
-
-That’s nice and simple then!
-     */
-    
     public bool TryGetName(DateOnly date, out string name)
     {
         var easterDay = EasterDayForYear(date.Year);
