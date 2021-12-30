@@ -1,5 +1,4 @@
-﻿using Todo.Contracts.Data;
-using Todo.Contracts.Data.Commands;
+﻿using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services;
 
 namespace Todo.State

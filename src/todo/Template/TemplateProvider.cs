@@ -11,14 +11,17 @@ namespace Todo.Template
     public class TemplateProvider : ITemplateProvider
     {
         private readonly IConfigurationProvider _configurationProvider;
+        private readonly IPathHelper _pathHelper;
 
         /// <summary>
         /// Constructor. This takes a ConfigurationProvider
         /// </summary>
         /// <param name="configurationProvider">Typically registered in Windsor</param>
-        public TemplateProvider(IConfigurationProvider configurationProvider)
+        /// <param name="pathHelper"></param>
+        public TemplateProvider(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
         {
             _configurationProvider = configurationProvider;
+            _pathHelper = pathHelper;
         }
         
         /// <summary>
@@ -29,10 +32,11 @@ namespace Todo.Template
         public string GetTemplate()
         {
             var path = _configurationProvider.GetConfiguration().TemplatePath;
+            var rootedPath = _pathHelper.GetRooted(path);
+            
+            if (!File.Exists(rootedPath)) throw new Exception($"{rootedPath} not found");
 
-            if (!File.Exists(path)) throw new Exception($"{path} not found");
-
-            return File.ReadAllText(path);
+            return File.ReadAllText(rootedPath);
         }
     }
 }

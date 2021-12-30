@@ -9,6 +9,13 @@ namespace todo.CommandLine
     /// </summary>
     public class CommandLineParser : ICommandLineParser
     {
+        private readonly IDateHelper _dateHelper;
+
+        public CommandLineParser(IDateHelper dateHelper)
+        {
+            _dateHelper = dateHelper;
+        }
+        
         public DateOnly GetDateFromCommandLine()
         {
             var commandLine = GetCommandLineMinusAssemblyLocation();
@@ -19,14 +26,15 @@ namespace todo.CommandLine
             if (IsRelativeOffset(commandLine, out var offset)) return GetTodayWithMidnightAdjusted().AddDays(offset);
             if (IsDayOnly(commandLine, out var dayOnly)) return GetDateFromDayOnly(dayOnly);
 
-            if (DateTime.TryParse(commandLine, out var dte)) return dte;
+            if (DateOnly.TryParse(commandLine, out var dte)) return dte;
 
             throw new Exception("date is not a recognised format");
         }
 
-        private DateTime GetTodayWithMidnightAdjusted() => DateTime.Now.TimeOfDay < new TimeSpan(04, 00, 00) 
-            ? DateTime.Today.AddDays(-1) 
-            : DateTime.Today;
+        private DateOnly GetTodayWithMidnightAdjusted() 
+            => DateTime.Now.TimeOfDay < new TimeSpan(04, 00, 00) 
+            ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1)) 
+            : _dateHelper.ConvertToDateOnly(DateTime.Today);
 
         private bool IsYesterday(string commandLine)=> commandLine.ToLower() switch
         {
@@ -70,18 +78,18 @@ namespace todo.CommandLine
 
         private bool IsDayOnly(string commandLine, out int dayOnly) => int.TryParse(commandLine, out dayOnly);
 
-        private DateTime GetDateFromDayOnly(int dayOnly)
+        private DateOnly GetDateFromDayOnly(int dayOnly)
         {
             var today = GetTodayWithMidnightAdjusted();
             
             //Case where day is coming up in the current month
-            if (today.Day <= dayOnly) return new DateTime(dayOnly, today.Month, today.Year);
+            if (today.Day <= dayOnly) return new DateOnly(dayOnly, today.Month, today.Year);
 
             //Case where day has passed in the current month and it's not December
-            if (today.Month < 12) return new DateTime(dayOnly, today.Month + 1, today.Year);
+            if (today.Month < 12) return new DateOnly(dayOnly, today.Month + 1, today.Year);
             
             //Case where day has passed in the current month and it is December
-            return new DateTime(dayOnly, 1, today.Year);
+            return new DateOnly(dayOnly, 1, today.Year);
         }
         
         private string GetCommandLineMinusAssemblyLocation()
