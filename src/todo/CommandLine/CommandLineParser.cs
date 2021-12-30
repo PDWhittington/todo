@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Newtonsoft.Json;
 using Todo.Contracts.Services;
 
 namespace todo.CommandLine
@@ -17,6 +16,16 @@ namespace todo.CommandLine
         public CommandLineParser(IDateHelper dateHelper)
         {
             _dateHelper = dateHelper;
+        }
+
+        public bool TryGetWordFromCommandLine(string[] candidates, out string word)
+        {
+            var commandLine = GetCommandLineMinusAssemblyLocation();
+
+            word = candidates.FirstOrDefault(x =>
+                string.Equals(x, commandLine, StringComparison.CurrentCultureIgnoreCase));
+
+            return word != default;
         }
         
         public DateOnly GetDateFromCommandLine()
@@ -104,10 +113,7 @@ namespace todo.CommandLine
             if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
         }
 
-
-
-
-        private string GetCommandLineMinusAssemblyLocation()
+        public string GetCommandLineMinusAssemblyLocation()
         {
             var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? "";
 

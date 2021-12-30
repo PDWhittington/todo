@@ -2,6 +2,7 @@
 using todo.CommandLine;
 using Todo.Contracts.Services;
 using Todo.DateNaming;
+using Todo.Git;
 using Todo.Helpers;
 using Todo.Service;
 using Todo.State;
@@ -34,6 +35,7 @@ namespace Todo
                 .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
                 .AddSingleton<IPathHelper, PathHelper>()
                 .AddSingleton<IDateHelper, DateHelper>()
+                .AddSingleton<IGitInterface, GitInterface>()
                 .AddSingleton<ITemplateProvider, TemplateProvider>()
                 .AddSingleton<ITodoService, TodoService>()
                 .BuildServiceProvider();

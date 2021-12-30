@@ -14,15 +14,17 @@ namespace Todo.Service
         private readonly ICommandProvider _stateProvider;
         private readonly ITemplateProvider _templateProvider;
         private readonly IDateNamer _dateNamer;
+        private readonly IGitInterface _gitInterface;
 
         public TodoService(IConfigurationProvider configurationProvider,
             ICommandProvider stateProvider, ITemplateProvider templateProvider,
-            IDateNamer dateNamer)
+            IDateNamer dateNamer, IGitInterface gitInterface)
         {
             _configurationProvider = configurationProvider;
             _stateProvider = stateProvider;
             _templateProvider = templateProvider;
             _dateNamer = dateNamer;
+            _gitInterface = gitInterface;
         }
         
         public void PerformTask()
@@ -34,6 +36,10 @@ namespace Todo.Service
                 case CreateOrShowCommand createOrShowCommand:
 
                     CreateOrShow(createOrShowCommand);
+                    break;
+                
+                case SyncCommand syncCommand:
+                    Sync(syncCommand);
                     break;
                 
                 default:
@@ -61,6 +67,18 @@ namespace Todo.Service
             Process.Start(configuration.TextEditorPath, path);
         }
 
+        private void Sync(SyncCommand syncCommand)
+        {
+            var configuration = _configurationProvider.GetConfiguration();
+
+            var commitMessage = syncCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+            
+            _gitInterface.RunGitCommand("reset");
+            _gitInterface.RunGitCommand($"add \"{configuration.OutputFolder}\"");
+            _gitInterface.RunGitCommand($"commit -m \"{commitMessage}\"");
+            _gitInterface.RunGitCommand($"push");
+        }
+        
         private string GetDateText(ConfigurationInfo configurationInfo, DateOnly date)
         {
             if (configurationInfo.UseNamesForDays &&

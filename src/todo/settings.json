@@ -1,6 +1,7 @@
 ﻿{
   "BrowserPath": "chrome",
   "TextEditorPath": "C:\\Users\\philipdw\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+  "GitPath" : "C:\\Program Files\\Git\\bin\\git.exe",
   "TemplatePath": "template.md",
   "UseNamesForDays": true,
   "OutputFolder": "D:\\workspace\\year-of-phil\\todo"

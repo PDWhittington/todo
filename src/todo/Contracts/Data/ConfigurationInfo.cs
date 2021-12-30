@@ -8,6 +8,8 @@ namespace Todo.Contracts.Data
 
         public string TextEditorPath { get; }
         
+        public string GitPath { get; }
+        
         public string TemplatePath { get; }
         
         public bool UseNamesForDays { get; }
@@ -17,13 +19,14 @@ namespace Todo.Contracts.Data
         [JsonConstructor]
         public ConfigurationInfo(string templatePath, 
             bool useNamesForDays, string browserPath,
-            string textEditorPath, string outputFolder)
+            string textEditorPath, string gitPath, string outputFolder)
         {
             TemplatePath = templatePath;
             UseNamesForDays = useNamesForDays;
             BrowserPath = browserPath;
             TextEditorPath = textEditorPath;
             OutputFolder = outputFolder;
+            GitPath = gitPath;
         }
     }
 }
