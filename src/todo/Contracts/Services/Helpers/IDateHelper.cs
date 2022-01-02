@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Todo.Contracts.Services;
+namespace Todo.Contracts.Services.Helpers;
 
 public interface IDateHelper
 {
