@@ -1,4 +1,4 @@
-﻿namespace Todo.Contracts.Services;
+﻿namespace Todo.Contracts.Services.Git;
 
 public interface IGitDependencyValidator
 {
