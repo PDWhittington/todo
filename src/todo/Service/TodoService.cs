@@ -7,6 +7,7 @@ using Todo.Contracts.Services;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.Template;
 using Todo.DateNaming;
 
 namespace Todo.Service

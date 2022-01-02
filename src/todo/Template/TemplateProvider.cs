@@ -4,6 +4,7 @@ using System.Reflection;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.Template;
 
 namespace Todo.Template
 {
