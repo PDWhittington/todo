@@ -1,7 +1,6 @@
 ﻿using System;
-using Cavity;
 
-namespace Todo.DateNaming;
+namespace Todo.Contracts.Services.DateNaming;
 
 public interface IDateNamer
 {
