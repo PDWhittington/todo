@@ -10,7 +10,7 @@ using Todo.Template;
 
 namespace Todo
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -25,22 +25,42 @@ namespace Todo
             //setup our DI
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
-                .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
-                .AddSingleton<IEasterDateNamer, EasterDateNamer>()
-                .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
-                .AddSingleton<IDateNamer, DateNamer>()
-                .AddSingleton<ICommandLineParser, CommandLineParser>()
-                .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
-                .AddSingleton<ICommandProvider, CommandProvider>()
-                .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
-                .AddSingleton<IPathHelper, PathHelper>()
-                .AddSingleton<IDateHelper, DateHelper>()
-                .AddSingleton<IGitInterface, GitInterface>()
-                .AddSingleton<ITemplateProvider, TemplateProvider>()
+                .AddStateAndConfig()
+                .AddHelpers()
+                .AddTemplateFunctionality()
+                .AddDateNaming()
+                .AddGitFunctionality()
                 .AddSingleton<ITodoService, TodoService>()
                 .BuildServiceProvider();
 
             return serviceProvider;
         }
+        
+        static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<ICommandLineParser, CommandLineParser>()
+                .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
+                .AddSingleton<ICommandProvider, CommandProvider>()
+                .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
+        
+        static IServiceCollection AddHelpers(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IPathHelper, PathHelper>()
+                .AddSingleton<IDateHelper, DateHelper>();
+
+        static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<ITemplateProvider, TemplateProvider>();
+        
+        static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
+                .AddSingleton<IEasterDateNamer, EasterDateNamer>()
+                .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
+                .AddSingleton<IDateNamer, DateNamer>();
+
+        static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IGitInterface, GitInterface>();
     }
 }
