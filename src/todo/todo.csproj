@@ -8,19 +8,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="3.1.0" />
-      <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />
-      <PackageReference Include="Cavity.ServiceLocation.CastleWindsor.Console" Version="2.0.0.970" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0-preview.5.21301.5" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="template.md">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="settings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.4.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     </ItemGroup>
 
 </Project>
