@@ -8,7 +8,6 @@ using Todo.Contracts.Services.Template;
 using Todo.DateNaming;
 using Todo.Git;
 using Todo.Helpers;
-using Todo.Service;
 using Todo.StateAndConfig;
 using Todo.Template;
 
