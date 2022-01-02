@@ -2,8 +2,9 @@
 using System.Text.Json;
 using Todo.Contracts.Data;
 using Todo.Contracts.Services;
+using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.State
+namespace Todo.StateAndConfig
 {
     public class ConfigurationProvider : IConfigurationProvider
     {

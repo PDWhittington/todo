@@ -1,8 +1,9 @@
 ﻿using System;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services;
+using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.State
+namespace Todo.StateAndConfig
 {
     public class CommandProvider : ICommandProvider
     {

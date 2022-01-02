@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using todo.CommandLine;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.DateNaming;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.DateNaming;
 using Todo.Git;
 using Todo.Helpers;
 using Todo.Service;
-using Todo.State;
+using Todo.StateAndConfig;
 using Todo.Template;
 
 namespace Todo
