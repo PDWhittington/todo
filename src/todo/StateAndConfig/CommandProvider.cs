@@ -26,11 +26,12 @@ namespace Todo.StateAndConfig
                 switch (commandType)
                 {
                     case ICommandIdentifier.CommandTypeEnum.Archive:
-
+                    {
                         if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
                             throw new ArgumentException("Date in archive command is not recognised");
 
                         return ArchiveCommand.Of((DateOnly)dateOnly);
+                    }
                     
                     case ICommandIdentifier.CommandTypeEnum.Commit:
                         
@@ -39,7 +40,15 @@ namespace Todo.StateAndConfig
                     case ICommandIdentifier.CommandTypeEnum.Push:
 
                         return PushCommand.Singleton;
-                    
+
+                    case ICommandIdentifier.CommandTypeEnum.ShowHtml:
+                    {
+                        if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
+                            throw new ArgumentException("Date in archive command is not recognised");
+
+                        return ShowHtmlCommand.Of((DateOnly)dateOnly);
+                    }
+
                     case ICommandIdentifier.CommandTypeEnum.Sync:
                         
                         return SyncCommand.Of(restOfCommand);

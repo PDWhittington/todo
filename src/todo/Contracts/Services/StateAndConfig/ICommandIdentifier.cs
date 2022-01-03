@@ -6,6 +6,7 @@ public interface ICommandIdentifier
     {
         Archive,
         Commit,
+        ShowHtml,
         Sync,
         Push,
     }

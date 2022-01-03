@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Todo.Contracts.Services;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 

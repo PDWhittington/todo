@@ -30,6 +30,11 @@ public class CommandIdentifier : ICommandIdentifier
                 commandType = ICommandIdentifier.CommandTypeEnum.Commit;
                 break;
             
+            case "html":
+            case "h":
+                commandType = ICommandIdentifier.CommandTypeEnum.ShowHtml;
+                break;
+            
             case "push":
             case "p":
                 commandType = ICommandIdentifier.CommandTypeEnum.Push;
