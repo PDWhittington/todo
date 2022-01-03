@@ -17,8 +17,7 @@ namespace Todo.StateAndConfig
 
         public ConfigurationInfo GetConfiguration()
             => _configuration ?? PopulateAndReturnConfiguration();
-        
-        
+
         private ConfigurationInfo PopulateAndReturnConfiguration()
         {
             var settingsPath = _settingsPathProvider.GetSettingsPath();
