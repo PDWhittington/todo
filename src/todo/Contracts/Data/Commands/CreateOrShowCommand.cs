@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace Todo.Contracts.Data.Commands
+namespace Todo.Contracts.Data.Commands;
+
+public class CreateOrShowCommand : CommandBase
 {
-    public class CreateOrShowCommand : CommandBase
+    public DateOnly Date { get; }
+
+    private CreateOrShowCommand(DateOnly date)
     {
-        public DateOnly Date { get; }
-
-        private CreateOrShowCommand(DateOnly date)
-        {
-            Date = date;
-        }
-
-        public static CreateOrShowCommand Of(DateOnly date) => new(date);
+        Date = date;
     }
+
+    public static CreateOrShowCommand Of(DateOnly date) => new(date);
 }

@@ -3,7 +3,4 @@ using Todo.Execution;
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IShowHtmlExecutor : IExecutor<ShowHtmlCommand>
-{
-    
-}
+public interface IShowHtmlExecutor : IExecutor<ShowHtmlCommand> { }

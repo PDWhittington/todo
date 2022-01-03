@@ -1,6 +1,3 @@
 ﻿namespace Todo.Contracts.Services.DateNaming;
 
-public interface ISaintsDayDateNamer : ISpecialDateNamer
-{
-    
-}
+public interface ISaintsDayDateNamer : ISpecialDateNamer { }

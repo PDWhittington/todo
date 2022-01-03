@@ -1,8 +1,6 @@
 ﻿using System;
-using Todo.Contracts.Data;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.DateNaming;
-using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Template;
 
@@ -18,7 +16,7 @@ public class SubstitutionMaker : ISubstitutionMaker
         _configurationProvider = configurationProvider;
         _specialDateNamer = specialDateNamer;
     }
-    
+
     public string MakeSubstitutions(CreateOrShowCommand command, string template)
     {
         var outputText = template.Replace(
@@ -26,7 +24,7 @@ public class SubstitutionMaker : ISubstitutionMaker
 
         return outputText;
     }
-    
+
     private string GetDateText(DateOnly date)
     {
         if (_configurationProvider.Config.UseNamesForDays &&
@@ -34,10 +32,10 @@ public class SubstitutionMaker : ISubstitutionMaker
         {
             return $"{dateName}, {date.Year}";
         }
-            
+
         return $"{date:dddd d}<sup>{GetOrdinal(date.Day)}</sup> {date:MMMM}, {date:yyyy}";
     }
-    
+
     private string GetOrdinal(int num)
     {
         if (num < 1 || num > 31) throw new ArgumentException("Out of range", nameof(num));

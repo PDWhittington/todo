@@ -1,8 +1,3 @@
-﻿using Todo.DateNaming;
+﻿namespace Todo.Contracts.Services.DateNaming;
 
-namespace Todo.Contracts.Services.DateNaming;
-
-public interface IChristmasNewYearDateNamer : ISpecialDateNamer
-{
-    
-}
+public interface IChristmasNewYearDateNamer : ISpecialDateNamer { }

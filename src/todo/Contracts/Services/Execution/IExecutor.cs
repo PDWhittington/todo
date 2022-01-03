@@ -1,6 +1,6 @@
 ﻿using Todo.Contracts.Data.Commands;
 
-namespace Todo.Execution;
+namespace Todo.Contracts.Services.Execution;
 
 public interface IExecutor<T> where T : CommandBase
 {

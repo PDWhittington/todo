@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Todo.Contracts.Services;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -15,12 +14,12 @@ public class GitDependencyValidator : IGitDependencyValidator
     {
         _configurationProvider = configurationProvider;
     }
-    
+
     public bool GitDependenciesValidated()
     {
         if (_validated == null)
         {
-            _validated = File.Exists(_configurationProvider.Config.GitPath);    
+            _validated = File.Exists(_configurationProvider.Config.GitPath);
         }
 
         return (bool)_validated;

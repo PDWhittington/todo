@@ -3,7 +3,4 @@ using Todo.Execution;
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface ICommitExecutor : IExecutor<CommitCommand>
-{
-    
-}
+public interface ICommitExecutor : IExecutor<CommitCommand> { }
