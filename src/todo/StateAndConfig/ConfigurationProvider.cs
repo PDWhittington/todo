@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
 using Todo.Contracts.Data;
-using Todo.Contracts.Services;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig
