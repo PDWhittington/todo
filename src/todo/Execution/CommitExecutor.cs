@@ -19,15 +19,13 @@ public class CommitExecutor : ICommitExecutor
     
     public void Execute(CommitCommand commitCommand)
     {
-        var configuration = _configurationProvider.GetConfiguration();
-
-        if (!configuration.UseGit)
+        if (!_configurationProvider.Config.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
         var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
             
         _gitInterface.RunGitCommand("reset");
-        _gitInterface.RunGitCommand($"add \"{configuration.OutputFolder}\"");
+        _gitInterface.RunGitCommand($"add \"{_configurationProvider.Config.OutputFolder}\"");
         _gitInterface.RunGitCommand($"commit -m \"{commitMessage}\"");
     }
 }

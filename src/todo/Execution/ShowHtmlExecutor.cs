@@ -33,14 +33,13 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
 
     public void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var configuration = _configurationProvider.GetConfiguration();
         var path = _fileNamer.GetFilePath(showHtmlCommand.Date, FileTypeEnum.Html);
 
         if (!File.Exists(path))
             throw new Exception(
                 $"Path {path} does not exist. You may need to export to Html in VSCode first");
 
-        var process = Process.Start(configuration.BrowserPath, path);
+        var process = Process.Start(_configurationProvider.Config.BrowserPath, path);
         
         BringMainWindowToFront(process);
     }

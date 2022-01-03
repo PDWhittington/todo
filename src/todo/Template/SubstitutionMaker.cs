@@ -21,17 +21,15 @@ public class SubstitutionMaker : ISubstitutionMaker
     
     public string MakeSubstitutions(CreateOrShowCommand command, string template)
     {
-        var configuration = _configurationProvider.GetConfiguration();
-        
         var outputText = template.Replace(
-            "{date}", GetDateText(configuration, command.Date));
+            "{date}", GetDateText(command.Date));
 
         return outputText;
     }
     
-    private string GetDateText(ConfigurationInfo configurationInfo, DateOnly date)
+    private string GetDateText(DateOnly date)
     {
-        if (configurationInfo.UseNamesForDays &&
+        if (_configurationProvider.Config.UseNamesForDays &&
             _specialDateNamer.TryGetSpecialName(date, out var dateName))
         {
             return $"{dateName}, {date.Year}";

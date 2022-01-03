@@ -4,6 +4,6 @@ namespace Todo.Contracts.Services.StateAndConfig
 {
     public interface IConfigurationProvider
     {
-        public ConfigurationInfo GetConfiguration();
+        public ConfigurationInfo Config { get; }
     }
 }

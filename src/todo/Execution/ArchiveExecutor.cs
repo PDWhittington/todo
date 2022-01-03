@@ -24,9 +24,7 @@ public class ArchiveExecutor : IArchiveExecutor
 
     public void Execute(ArchiveCommand command)
     {
-        var configuration = _configurationProvider.GetConfiguration();
-        
-        if (configuration.UseGit) Archive(command, GitArchive);
+        if (_configurationProvider.Config.UseGit) Archive(command, GitArchive);
         else Archive(command, FileArchive);
     }
 

@@ -27,7 +27,6 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
 
     public void Execute(CreateOrShowCommand createOrShowCommand)
     {
-        var configuration = _configurationProvider.GetConfiguration();
         var path = _fileNamer.GetFilePath(createOrShowCommand.Date, FileTypeEnum.Markdown);
 
         if (!File.Exists(path))
@@ -38,6 +37,6 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
             File.WriteAllText(path, outputText);
         }
 
-        Process.Start(configuration.TextEditorPath, path);
+        Process.Start(_configurationProvider.Config.TextEditorPath, path);
     }
 }

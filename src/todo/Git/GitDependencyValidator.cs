@@ -20,8 +20,7 @@ public class GitDependencyValidator : IGitDependencyValidator
     {
         if (_validated == null)
         {
-            var configuration = _configurationProvider.GetConfiguration();
-            _validated = File.Exists(configuration.GitPath);    
+            _validated = File.Exists(_configurationProvider.Config.GitPath);    
         }
 
         return (bool)_validated;

@@ -23,16 +23,15 @@ public class FileNamer : IFileNamer
 
     public string GetFilePath(DateOnly dateOnly, FileTypeEnum fileType)
     {
-        var configuration = _configurationProvider.GetConfiguration();
         var fileName = FileNameForDate(dateOnly, fileType);
-        return Path.Combine(configuration.OutputFolder, fileName);
+        return Path.Combine(_configurationProvider.Config.OutputFolder, fileName);
     }
     
     public string GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType)
     {
-        var configuration = _configurationProvider.GetConfiguration();
         var fileName = FileNameForDate(dateOnly, fileType);
-        return Path.Combine(configuration.OutputFolder, configuration.ArchiveFolderName, fileName);
+        return Path.Combine(_configurationProvider.Config.OutputFolder,
+            _configurationProvider.Config.ArchiveFolderName, fileName);
     }
 
     private string GetExtension(FileTypeEnum fileTypeEnum)

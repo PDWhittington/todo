@@ -22,12 +22,10 @@ public class GitInterface : IGitInterface
         {
             throw new Exception("Git not found at path given in settings file");
         }
-        
-        var configuration = _configurationProvider.GetConfiguration();
 
-        var processStartInfo = new ProcessStartInfo(configuration.GitPath, command)
+        var processStartInfo = new ProcessStartInfo(_configurationProvider.Config.GitPath, command)
         {
-            WorkingDirectory = configuration.OutputFolder
+            WorkingDirectory = _configurationProvider.Config.OutputFolder
         };
 
         var process = Process.Start(processStartInfo);

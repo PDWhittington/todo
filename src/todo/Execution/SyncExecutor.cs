@@ -21,9 +21,7 @@ public class SyncExecutor : ISyncExecutor
 
     public void Execute(SyncCommand syncCommand)
     {
-        var configuration = _configurationProvider.GetConfiguration();
-
-        if (!configuration.UseGit)
+        if (!_configurationProvider.Config.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
         _commitExecutor.Execute(CommitCommand.Of(syncCommand.CommitMessage));
