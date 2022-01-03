@@ -16,7 +16,7 @@ public class CommandIdentifier : ICommandIdentifier
     {
         var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
 
-        var firstWord = firstWordToLower(commandLine);
+        var firstWord = FirstWordToLower(commandLine);
 
         switch (firstWord)
         {
@@ -55,7 +55,7 @@ public class CommandIdentifier : ICommandIdentifier
         return commandType != default;
     }
 
-    string firstWordToLower(string str)
+    string FirstWordToLower(string str)
     {
         var index = str.IndexOf(" ", StringComparison.Ordinal); 
         
