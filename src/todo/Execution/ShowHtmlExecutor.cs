@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
@@ -31,13 +32,13 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
 
     public void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var path = _fileNamer.GetFilePath(showHtmlCommand.Date, FileTypeEnum.Html);
+        var pathInfo = _fileNamer.GetFilePath(showHtmlCommand.Date, FileTypeEnum.Html);
 
-        if (!File.Exists(path))
+        if (!File.Exists(pathInfo.Path))
             throw new Exception(
-                $"Path {path} does not exist. You may need to export to Html in VSCode first");
+                $"Path {pathInfo} does not exist. You may need to export to Html in VSCode first");
 
-        var process = Process.Start(_configurationProvider.Config.BrowserPath, path);
+        var process = Process.Start(_configurationProvider.Config.BrowserPath, pathInfo.Path);
 
         BringMainWindowToFront(process);
     }

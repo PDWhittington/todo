@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
@@ -15,36 +16,36 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IMarkdownTemplateProvider _templateProvider;
-    private readonly IFileNamer _fileNamer;
+    private readonly IContentFileResolver _fileResolver;
     private readonly IMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
     private readonly IDateFormatter _dateFormatter;
 
     public CreateOrShowExecutor(IConfigurationProvider configurationProvider, IMarkdownTemplateProvider templateProvider,
-        IFileNamer fileNamer, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
+        IContentFileResolver fileResolver, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter)
     {
         _configurationProvider = configurationProvider;
         _templateProvider = templateProvider;
-        _fileNamer = fileNamer;
+        _fileResolver = fileResolver;
         _markdownSubstitutionMaker = markdownSubstitutionMaker;
         _dateFormatter = dateFormatter;
     }
 
     public void Execute(CreateOrShowCommand createOrShowCommand)
     {
-        var path = _fileNamer.GetFilePath(createOrShowCommand.Date, FileTypeEnum.Markdown);
+        var pathInfo = _fileResolver.GetPathFor(createOrShowCommand.Date, FileTypeEnum.Markdown);
 
-        if (!File.Exists(path))
+        if (!File.Exists(pathInfo.Path))
         {
             var templateText = _templateProvider.GetTemplate();
 
             var markdownSubstitutions = GetMarkdownSubstitutions(createOrShowCommand);
 
             var outputText = _markdownSubstitutionMaker.MakeSubstitutions(markdownSubstitutions, templateText);
-            File.WriteAllText(path, outputText);
+            File.WriteAllText(pathInfo.Path, outputText);
         }
 
-        Process.Start(_configurationProvider.Config.TextEditorPath, path);
+        Process.Start(_configurationProvider.Config.TextEditorPath, pathInfo.Path);
     }
 
     private MarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowCommand createOrShowCommand)

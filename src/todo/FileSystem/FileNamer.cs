@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -21,17 +22,21 @@ public class FileNamer : IFileNamer
 
     public string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType) => $"{FileNameWithoutExtension(dateOnly)}.{GetExtension(fileType)}";
 
-    public string GetFilePath(DateOnly dateOnly, FileTypeEnum fileType)
+    public FilePathInfo GetFilePath(DateOnly dateOnly, FileTypeEnum fileType)
     {
         var fileName = FileNameForDate(dateOnly, fileType);
-        return Path.Combine(_configurationProvider.Config.OutputFolder, fileName);
+        var path = Path.Combine(_configurationProvider.Config.OutputFolder, fileName);
+
+        return FilePathInfo.Of(path, fileType, FolderEnum.TodoRoot);
     }
 
-    public string GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType)
+    public FilePathInfo GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType)
     {
         var fileName = FileNameForDate(dateOnly, fileType);
-        return Path.Combine(_configurationProvider.Config.OutputFolder,
+        var path = Path.Combine(_configurationProvider.Config.OutputFolder,
             _configurationProvider.Config.ArchiveFolderName, fileName);
+
+        return FilePathInfo.Of(path, fileType, FolderEnum.Archive);
     }
 
     private static string GetExtension(FileTypeEnum fileTypeEnum)

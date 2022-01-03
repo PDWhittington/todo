@@ -1,4 +1,5 @@
 ﻿using System;
+using Todo.Contracts.Data.FileSystem;
 using Todo.FileSystem;
 
 namespace Todo.Contracts.Services.FileSystem;
@@ -9,7 +10,7 @@ public interface IFileNamer
 
     string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType);
 
-    string GetFilePath(DateOnly dateOnly, FileTypeEnum fileType);
+    FilePathInfo GetFilePath(DateOnly dateOnly, FileTypeEnum fileType);
 
-    string GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType);
+    FilePathInfo GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType);
 }

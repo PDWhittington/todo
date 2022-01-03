@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Markdig;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
@@ -44,8 +45,8 @@ public class PrintHtmlExecutor : IPrintHtmlExecutor
 
         var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, htmlTemplate);
 
-        var path = _fileNamer.GetFilePath(command.Date, FileTypeEnum.Html);
+        var pathInfo = _fileNamer.GetFilePath(command.Date, FileTypeEnum.Html);
 
-        File.WriteAllText(path, outputHtml);
+        File.WriteAllText(pathInfo.Path, outputHtml);
     }
 }

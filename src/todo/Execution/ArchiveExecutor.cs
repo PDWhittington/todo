@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
@@ -29,15 +30,15 @@ public class ArchiveExecutor : IArchiveExecutor
         else Archive(command, FileArchive);
     }
 
-    private void Archive(ArchiveCommand command, Action<string, string> archiveOp)
+    private void Archive(ArchiveCommand command, Action<FilePathInfo, FilePathInfo> archiveOp)
     {
-        var sourcePath = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
-        var destinationPath = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var sourcePathInfo = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var destinationPathInfo = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
 
-        archiveOp(sourcePath, destinationPath);
+        archiveOp(sourcePathInfo, destinationPathInfo);
     }
 
-    private void GitArchive(string sourcePath, string destinationPath) => _gitInterface.RunGitCommand($"mv {sourcePath} {destinationPath}");
+    private void GitArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo) => _gitInterface.RunGitCommand($"mv {sourcePathInfo.Path} {destinationPathInfo.Path}");
 
-    private static void FileArchive(string sourcePath, string destinationPath) => File.Move(sourcePath, destinationPath);
+    private static void FileArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo) => File.Move(sourcePathInfo.Path, destinationPathInfo.Path);
 }

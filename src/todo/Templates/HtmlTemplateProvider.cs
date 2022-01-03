@@ -1,4 +1,5 @@
-﻿using Todo.Contracts.Services.Helpers;
+﻿using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 
@@ -20,5 +21,9 @@ public class HtmlTemplateProvider : TemplateProviderBase, IHtmlTemplateProvider
         _pathHelper = pathHelper;
     }
 
-    protected override string GetTemplatePath() => _pathHelper.GetRooted(_configurationProvider.Config.HtmlTemplatePath);
+    protected override FilePathInfo GetTemplatePath()
+    {
+        var path = _pathHelper.GetRooted(_configurationProvider.Config.HtmlTemplatePath);
+        return FilePathInfo.Of(path, FileTypeEnum.HtmlTemplate, FolderEnum.SpecifiedInSettings);
+    }
 }

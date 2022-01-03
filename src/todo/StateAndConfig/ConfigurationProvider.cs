@@ -22,7 +22,7 @@ public class ConfigurationProvider : IConfigurationProvider
     {
         var settingsPath = _settingsPathProvider.GetSettingsPath();
 
-        using var fileStream = new FileStream(settingsPath, FileMode.Open, FileAccess.Read);
+        using var fileStream = new FileStream(settingsPath.Path, FileMode.Open, FileAccess.Read);
         var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
 
         _configuration = configuration ??

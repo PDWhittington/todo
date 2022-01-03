@@ -1,4 +1,5 @@
 ﻿using System;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.FileSystem;
 
 namespace Todo.FileSystem;
@@ -16,6 +17,6 @@ public class MarkdownFileReader : FileReader, IMarkdownFileReader
     {
         var filePath = _fileNamer.GetFilePath(dateOnly, FileTypeEnum.Markdown);
 
-        return GetFileText(filePath);
+        return GetFileText(filePath.Path);
     }
 }

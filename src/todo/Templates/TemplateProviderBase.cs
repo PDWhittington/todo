@@ -1,11 +1,12 @@
 ﻿using System;
+using Todo.Contracts.Data.FileSystem;
 using Todo.FileSystem;
 
 namespace Todo.Templates;
 
 public abstract class TemplateProviderBase : FileReader
 {
-    protected abstract string GetTemplatePath();
+    protected abstract FilePathInfo GetTemplatePath();
 
     /// <summary>
     /// Returns a string representing the Markdown template
@@ -14,7 +15,7 @@ public abstract class TemplateProviderBase : FileReader
     /// <exception cref="Exception"></exception>
     public string GetTemplate()
     {
-        var rootedPath = GetTemplatePath();
-        return GetFileText(rootedPath);
+        var pathInfo = GetTemplatePath();
+        return GetFileText(pathInfo.Path);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Todo.Contracts.Services.Helpers;
+﻿using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 
@@ -23,5 +24,9 @@ public class MarkdownTemplateProvider : TemplateProviderBase, IMarkdownTemplateP
         _pathHelper = pathHelper;
     }
 
-    protected override string GetTemplatePath() => _pathHelper.GetRooted(_configurationProvider.Config.MarkdownTemplatePath);
+    protected override FilePathInfo GetTemplatePath()
+    {
+        var path = _pathHelper.GetRooted(_configurationProvider.Config.MarkdownTemplatePath);
+        return FilePathInfo.Of(path, FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
+    }
 }
