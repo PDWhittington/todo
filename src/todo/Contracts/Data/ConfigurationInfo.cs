@@ -12,7 +12,9 @@ public class ConfigurationInfo
 
     public bool UseGit { get; }
 
-    public string TemplatePath { get; }
+    public string MarkdownTemplatePath { get; }
+
+    public string HtmlTemplatePath { get; }
 
     public bool UseNamesForDays { get; }
 
@@ -21,12 +23,14 @@ public class ConfigurationInfo
     public string ArchiveFolderName { get; }
 
     [JsonConstructor]
-    public ConfigurationInfo(string templatePath, bool useNamesForDays,
+    public ConfigurationInfo(string markdownTemplatePath, string htmlTemplatePath,
+        bool useNamesForDays,
         string browserPath, string textEditorPath,
         string gitPath, bool useGit,
         string outputFolder, string archiveFolderName)
     {
-        TemplatePath = templatePath;
+        MarkdownTemplatePath = markdownTemplatePath;
+        HtmlTemplatePath = htmlTemplatePath;
         UseNamesForDays = useNamesForDays;
         BrowserPath = browserPath;
         TextEditorPath = textEditorPath;

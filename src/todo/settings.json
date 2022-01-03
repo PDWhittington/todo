@@ -3,7 +3,8 @@
   "TextEditorPath": "C:\\Users\\philipdw\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
   "UseGit": true,
   "GitPath" : "C:\\Program Files\\Git\\bin\\git.exe",
-  "TemplatePath": "template.md",
+  "MarkdownTemplatePath": "template.md",
+  "HtmlTemplatePath": "template.html",
   "UseNamesForDays": true,
   "OutputFolder": "D:\\workspace\\year-of-phil\\todo",
   "ArchiveFolderName": "_archive"

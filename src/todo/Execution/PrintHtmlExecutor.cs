@@ -6,7 +6,7 @@ namespace Todo.Execution;
 
 public class PrintHtmlExecutor : IPrintHtmlExecutor
 {
-    private const string _openHtml = @"# Heading 1
+    private const string _test = @"# Heading 1
 
 ## Heading 2
 

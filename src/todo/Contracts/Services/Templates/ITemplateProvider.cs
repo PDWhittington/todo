@@ -1,4 +1,4 @@
-﻿namespace Todo.Contracts.Services.Template;
+﻿namespace Todo.Contracts.Services.Templates;
 
 public interface ITemplateProvider
 {

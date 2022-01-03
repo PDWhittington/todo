@@ -8,7 +8,7 @@ using Todo.Contracts.Services.FileNaming;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
-using Todo.Contracts.Services.Template;
+using Todo.Contracts.Services.Templates;
 using Todo.DateNaming;
 using Todo.DateParsing;
 using Todo.Execution;
@@ -16,7 +16,7 @@ using Todo.FileNaming;
 using Todo.Git;
 using Todo.Helpers;
 using Todo.StateAndConfig;
-using Todo.Template;
+using Todo.Templates;
 
 namespace Todo;
 
@@ -67,8 +67,9 @@ internal static class Program
 
     private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<ISubstitutionMaker, SubstitutionMaker>()
-            .AddSingleton<ITemplateProvider, TemplateProvider>();
+            .AddSingleton<IMarkdownSubstitutionMaker, MarkdownSubstitutionMaker>()
+            .AddSingleton<IMarkdownTemplateProvider, MarkdownTemplateProvider>()
+            .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
 
     private static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
         => serviceCollection
