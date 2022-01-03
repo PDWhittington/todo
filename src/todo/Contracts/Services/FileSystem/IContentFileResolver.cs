@@ -5,5 +5,5 @@ namespace Todo.Contracts.Services.FileSystem;
 
 public interface IContentFileResolver
 {
-    FilePathInfo GetPathFor(DateOnly date, FileTypeEnum fileType);
+    FilePathInfo GetPathFor(DateOnly date, FileTypeEnum fileType, bool allowNotPresent);
 }

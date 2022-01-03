@@ -41,9 +41,9 @@ public class PrintHtmlExecutor : IPrintHtmlExecutor
 
         var htmlSubstitutions = HtmlSubstitutions.Of(htmlTitle, htmlBody);
 
-        var htmlTemplate = _htmlTemplateProvider.GetTemplate();
+        var htmlTemplateFile = _htmlTemplateProvider.GetTemplate();
 
-        var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, htmlTemplate);
+        var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, htmlTemplateFile.FileContents);
 
         var pathInfo = _fileNamer.GetFilePath(command.Date, FileTypeEnum.Html);
 

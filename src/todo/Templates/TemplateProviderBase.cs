@@ -13,9 +13,10 @@ public abstract class TemplateProviderBase : FileReader
     /// </summary>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public string GetTemplate()
+    public TodoFile GetTemplate()
     {
-        var pathInfo = GetTemplatePath();
-        return GetFileText(pathInfo.Path);
+        var filePathInfo = GetTemplatePath();
+
+        return TodoFile.Of(filePathInfo, GetFileText(filePathInfo.Path));
     }
 }

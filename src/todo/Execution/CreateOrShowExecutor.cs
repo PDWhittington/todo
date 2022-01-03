@@ -33,15 +33,15 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
 
     public void Execute(CreateOrShowCommand createOrShowCommand)
     {
-        var pathInfo = _fileResolver.GetPathFor(createOrShowCommand.Date, FileTypeEnum.Markdown);
+        var pathInfo = _fileResolver.GetPathFor(createOrShowCommand.Date, FileTypeEnum.Markdown, true);
 
         if (!File.Exists(pathInfo.Path))
         {
-            var templateText = _templateProvider.GetTemplate();
+            var templateFile = _templateProvider.GetTemplate();
 
             var markdownSubstitutions = GetMarkdownSubstitutions(createOrShowCommand);
 
-            var outputText = _markdownSubstitutionMaker.MakeSubstitutions(markdownSubstitutions, templateText);
+            var outputText = _markdownSubstitutionMaker.MakeSubstitutions(markdownSubstitutions, templateFile.FileContents);
             File.WriteAllText(pathInfo.Path, outputText);
         }
 
