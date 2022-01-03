@@ -2,6 +2,7 @@
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
+using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
@@ -73,8 +74,8 @@ namespace Todo
 
         static IServiceCollection AddMainExecutionLogic(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
                 .AddSingleton<ISyncExecutor, SyncExecutor>()
                 .AddSingleton<ITodoService, TodoService>();
-
     }
 }
