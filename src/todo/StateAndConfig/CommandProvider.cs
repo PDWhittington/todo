@@ -11,14 +11,14 @@ namespace Todo.StateAndConfig
         private readonly ICommandIdentifier _commandIdentifier;
         private readonly IDateParser _dateParser;
 
-        public CommandProvider(ICommandLineProvider commandLineProvider, 
+        public CommandProvider(ICommandLineProvider commandLineProvider,
             ICommandIdentifier commandIdentifier, IDateParser dateParser)
         {
             _commandLineProvider = commandLineProvider;
             _commandIdentifier = commandIdentifier;
             _dateParser = dateParser;
         }
-        
+
         public CommandBase GetCommand()
         {
             if (_commandIdentifier.TryGetCommandType(out var commandType, out var restOfCommand))
@@ -30,13 +30,13 @@ namespace Todo.StateAndConfig
                         if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
                             throw new ArgumentException("Date in archive command is not recognised");
 
-                        return ArchiveCommand.Of((DateOnly)dateOnly);
+                        return ArchiveCommand.Of(dateOnly);
                     }
-                    
+
                     case ICommandIdentifier.CommandTypeEnum.Commit:
-                        
+
                         return CommitCommand.Of(restOfCommand);
-                    
+
                     case ICommandIdentifier.CommandTypeEnum.Push:
 
                         return PushCommand.Singleton;
@@ -46,22 +46,22 @@ namespace Todo.StateAndConfig
                         if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
                             throw new ArgumentException("Date in archive command is not recognised");
 
-                        return ShowHtmlCommand.Of((DateOnly)dateOnly);
+                        return ShowHtmlCommand.Of(dateOnly);
                     }
 
                     case ICommandIdentifier.CommandTypeEnum.Sync:
-                        
+
                         return SyncCommand.Of(restOfCommand);
-                    
+
                     default: throw new Exception("Command not yet implemented.");
                 }
             }
 
             var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
-            
+
             if (_dateParser.TryGetDate(commandLine, out var date))
             {
-                return CreateOrShowCommand.Of((DateOnly)date);                
+                return CreateOrShowCommand.Of(date);
             }
 
             throw new Exception("Command not recognised");

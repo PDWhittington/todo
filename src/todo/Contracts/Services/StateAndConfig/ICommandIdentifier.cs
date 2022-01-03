@@ -11,5 +11,5 @@ public interface ICommandIdentifier
         Push,
     }
 
-    bool TryGetCommandType(out CommandTypeEnum? commandName, out string restOfCommand);
+    bool TryGetCommandType(out CommandTypeEnum? commandName, out string? restOfCommand);
 }

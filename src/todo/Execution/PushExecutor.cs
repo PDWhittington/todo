@@ -16,12 +16,12 @@ public class PushExecutor : IPushExecutor
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
     }
-    
+
     public void Execute(PushCommand command)
     {
         if (!_configurationProvider.Config.UseGit)
             throw new Exception("Pushing does not make sense when UseGit is set to false in the settings file.");
-        
-        _gitInterface.RunGitCommand($"push");
+
+        _gitInterface.RunGitCommand("push");
     }
 }

@@ -4,5 +4,5 @@ namespace Todo.Contracts.Services.DateNaming;
 
 public interface ISpecialDateNamer
 {
-    bool TryGetSpecialName(DateOnly date, out string name);
+    bool TryGetSpecialName(DateOnly date, out string? name);
 }

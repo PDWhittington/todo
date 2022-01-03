@@ -15,7 +15,7 @@ public class GitInterface : IGitInterface
         _gitDependencyValidator = gitDependencyValidator;
         _configurationProvider = configurationProvider;
     }
-    
+
     public bool RunGitCommand(string command)
     {
         if (!_gitDependencyValidator.GitDependenciesValidated())
@@ -28,7 +28,7 @@ public class GitInterface : IGitInterface
             WorkingDirectory = _configurationProvider.Config.OutputFolder
         };
 
-        var process = Process.Start(processStartInfo);
+        var process = Process.Start(processStartInfo) ?? throw new Exception("Process failed to start");
 
         process.WaitForExit();
 

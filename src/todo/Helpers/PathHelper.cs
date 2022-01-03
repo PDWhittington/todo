@@ -14,5 +14,5 @@ public class PathHelper : IPathHelper
         => System.IO.Path.GetDirectoryName(GetAssemblyLocation()) ??
            throw new Exception("Cannot get containing folder of executing process");
 
-    public string GetAssemblyLocation() => Assembly.GetEntryAssembly()?.Location;
+    public string GetAssemblyLocation() => Assembly.GetEntryAssembly()?.Location!;
 }

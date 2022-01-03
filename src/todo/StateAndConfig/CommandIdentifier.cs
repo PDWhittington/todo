@@ -12,7 +12,7 @@ public class CommandIdentifier : ICommandIdentifier
         _commandLineProvider = commandLineProvider;
     }
 
-    public bool TryGetCommandType(out ICommandIdentifier.CommandTypeEnum? commandType, out string restOfCommand)
+    public bool TryGetCommandType(out ICommandIdentifier.CommandTypeEnum? commandType, out string? restOfCommand)
     {
         var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
 
@@ -24,7 +24,7 @@ public class CommandIdentifier : ICommandIdentifier
             case "a":
                 commandType = ICommandIdentifier.CommandTypeEnum.Archive;
                 break;
-            
+
             case "commit":
             case "c":
                 commandType = ICommandIdentifier.CommandTypeEnum.Commit;
@@ -40,12 +40,12 @@ public class CommandIdentifier : ICommandIdentifier
             case "h":
                 commandType = ICommandIdentifier.CommandTypeEnum.ShowHtml;
                 break;
-            
+
             case "sync":
             case "s":
                 commandType = ICommandIdentifier.CommandTypeEnum.Sync;
                 break;
-            
+
             default:
                 commandType = default;
                 break;
@@ -57,8 +57,8 @@ public class CommandIdentifier : ICommandIdentifier
 
     string FirstWordToLower(string str)
     {
-        var index = str.IndexOf(" ", StringComparison.Ordinal); 
-        
+        var index = str.IndexOf(" ", StringComparison.Ordinal);
+
         switch (index)
         {
             case -1: return str;

@@ -4,6 +4,6 @@ namespace Todo.Contracts.Services.DateParsing;
 
 public interface IDateParser
 {
-    bool TryGetDate(string str, out DateOnly? dateOnly);
+    bool TryGetDate(string? str, out DateOnly dateOnly);
 
 }

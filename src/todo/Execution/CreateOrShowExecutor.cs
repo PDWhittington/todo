@@ -16,7 +16,7 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
     private readonly IFileNamer _fileNamer;
     private readonly ISubstitutionMaker _substitutionMaker;
 
-    public CreateOrShowExecutor(IConfigurationProvider configurationProvider, ITemplateProvider templateProvider, 
+    public CreateOrShowExecutor(IConfigurationProvider configurationProvider, ITemplateProvider templateProvider,
         IFileNamer fileNamer, ISubstitutionMaker substitutionMaker)
     {
         _configurationProvider = configurationProvider;
@@ -34,7 +34,7 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
             var templateText = _templateProvider.GetTemplate();
 
             var outputText = _substitutionMaker.MakeSubstitutions(createOrShowCommand, templateText);
-            File.WriteAllText(path, outputText);
+            File.WriteAllText(path!, outputText);
         }
 
         Process.Start(_configurationProvider.Config.TextEditorPath, path);

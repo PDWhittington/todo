@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Todo.Contracts.Data;
 using Todo.Contracts.Services.StateAndConfig;
@@ -8,15 +9,15 @@ namespace Todo.StateAndConfig
     public class ConfigurationProvider : IConfigurationProvider
     {
         private readonly ISettingsPathProvider _settingsPathProvider;
-        private ConfigurationInfo _configuration = null;
+        private ConfigurationInfo? _configuration;
 
         public ConfigurationProvider(ISettingsPathProvider settingsPathProvider)
         {
             _settingsPathProvider = settingsPathProvider;
         }
-        
+
         public ConfigurationInfo Config => _configuration ?? PopulateAndReturnConfiguration();
-        
+
         private ConfigurationInfo PopulateAndReturnConfiguration()
         {
             var settingsPath = _settingsPathProvider.GetSettingsPath();
@@ -24,7 +25,9 @@ namespace Todo.StateAndConfig
             using var fileStream = new FileStream(settingsPath, FileMode.Open, FileAccess.Read);
             var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
 
-            _configuration = configuration;
+            _configuration = configuration ??
+                             throw new Exception($"Configuration could not be loaded from {settingsPath}");
+
             return _configuration;
         }
     }

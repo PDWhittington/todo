@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using Todo.Contracts.Data.Commands;
@@ -13,15 +14,12 @@ namespace Todo.Execution;
 public class ShowHtmlExecutor : IShowHtmlExecutor
 {
     [DllImport("user32.dll")]
-    public static extern int SetForegroundWindow(int hwnd); 
-    
-    [DllImport("user32.dll")]
-    [return: MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
 
     [DllImport("user32.dll")]
     private static extern int SetForegroundWindow(IntPtr hwnd);
-    
+
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IFileNamer _fileNamer;
 
@@ -40,21 +38,22 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
                 $"Path {path} does not exist. You may need to export to Html in VSCode first");
 
         var process = Process.Start(_configurationProvider.Config.BrowserPath, path);
-        
+
         BringMainWindowToFront(process);
     }
-    
-    
+
+
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum ShowWindowEnum
     {
         Hide = 0,
-        ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+        ShowNormal = 1, ShowMinimized = 2,
         Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
         Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
         Restore = 9, ShowDefault = 10, ForceMinimized = 11
-    };
+    }
 
-    public void BringMainWindowToFront(Process process)
+    private static int BringMainWindowToFront(Process process)
     {
         // check if the window is hidden / minimized
         if (process.MainWindowHandle == IntPtr.Zero)
@@ -64,6 +63,6 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
         }
 
         // set user the focus to the window
-        SetForegroundWindow(process.MainWindowHandle);
+        return SetForegroundWindow(process.MainWindowHandle);
     }
 }

@@ -16,16 +16,16 @@ public class DateNamer : ISpecialDateNamer
         _easterDateNamer = easterDateNamer;
         _saintsDayDateNamer = saintsDayDateNamer;
     }
-    
-    public bool TryGetSpecialName(DateOnly date, out string name)
+
+    public bool TryGetSpecialName(DateOnly date, out string? name)
     {
         //Order important -- Easter should trump a saint's day
-        
+
         if (_christmasNewYearDateNamer.TryGetSpecialName(date, out name)) return true;
         if (_easterDateNamer.TryGetSpecialName(date, out name)) return true;
         if (_saintsDayDateNamer.TryGetSpecialName(date, out name)) return true;
 
         name = null;
-        return false; 
+        return false;
     }
 }

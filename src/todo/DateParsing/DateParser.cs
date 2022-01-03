@@ -14,9 +14,11 @@ public class DateParser : IDateParser
     {
         _dateHelper = dateHelper;
     }
-    
-    public bool TryGetDate(string str, out DateOnly? dateOnly)
+
+    public bool TryGetDate(string? str, out DateOnly dateOnly)
     {
+        if (str == null) return false;
+
         if (IsYesterday(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(-1);
         else if (IsToday(str)) dateOnly = GetTodayWithMidnightAdjusted();
         else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
@@ -25,14 +27,14 @@ public class DateParser : IDateParser
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsDayMonthOnly(str, out day, out var month)) dateOnly = GetDateFromDayMonth(month, day);
         else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
-        else dateOnly = null;
+        else dateOnly = default;
 
         return dateOnly != default;
     }
-    
-     private DateOnly GetTodayWithMidnightAdjusted() 
-            => DateTime.Now.TimeOfDay < new TimeSpan(04, 00, 00) 
-            ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1)) 
+
+     private DateOnly GetTodayWithMidnightAdjusted()
+            => DateTime.Now.TimeOfDay < new TimeSpan(04, 00, 00)
+            ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))
             : _dateHelper.ConvertToDateOnly(DateTime.Today);
 
     private bool IsYesterday(string commandLine)=> commandLine.ToLower() switch
@@ -41,8 +43,8 @@ public class DateParser : IDateParser
         "yesterday" => true,
         _ => false,
     };
-    
-    private bool IsToday(string commandLine) => 
+
+    private bool IsToday(string commandLine) =>
         string.IsNullOrWhiteSpace(commandLine) ||
         ".".Equals(commandLine) ||
         "today".Equals(commandLine.ToLower());
@@ -60,7 +62,7 @@ public class DateParser : IDateParser
         {
             switch (commandLine[0])
             {
-                case '+': 
+                case '+':
                     offset = parsed;
                     return true;
                 case '-':
@@ -69,7 +71,7 @@ public class DateParser : IDateParser
                 default:
                     offset = default;
                     return false;
-                            
+
             }
         }
 
@@ -77,7 +79,7 @@ public class DateParser : IDateParser
         return false;
     }
 
-    private bool IsDayOnly(string commandLine, out int dayOnly) 
+    private bool IsDayOnly(string commandLine, out int dayOnly)
         => int.TryParse(commandLine, out dayOnly) && dayOnly is > 0 and < 32;
 
     private bool IsDayMonthOnly(string commandLine, out int day, out int month)
@@ -100,7 +102,7 @@ public class DateParser : IDateParser
         if (possibles.Length == 0) throw new Exception($"No dates found for day = {dayOnly}");
         return _dateHelper.GetNearestTo(possibles, today);
     }
-    
+
     private DateOnly GetDateFromDayMonth(int month, int day)
     {
         var today = GetTodayWithMidnightAdjusted();
@@ -115,19 +117,19 @@ public class DateParser : IDateParser
         {
             if (_dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return nOfMonth;
             if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
-            if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;    
+            if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
         }
 
         return PotentialDates().ToArray();
     }
-    
+
     DateOnly [] GetPossiblesForDayMonth(DateOnly currentDay, int month, int day)
     {
         IEnumerable<DateOnly> PotentialDates()
         {
             if (_dateHelper.TryGetDateInPreviousYear(currentDay, month, day, out var nOfMonth)) yield return nOfMonth;
             if (_dateHelper.TryGetDateInCurrentYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
-            if (_dateHelper.TryGetDateInFollowingYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;    
+            if (_dateHelper.TryGetDateInFollowingYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
         }
 
         return PotentialDates().ToArray();

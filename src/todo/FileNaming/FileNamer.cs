@@ -9,8 +9,8 @@ public class FileNamer : IFileNamer
 {
     private readonly IConfigurationProvider _configurationProvider;
 
-    private readonly string _markdownExtension = "md";
-    private readonly string _htmlExtension = "html";
+    private const string MarkdownExtension = "md";
+    private const string HtmlExtension = "html";
 
     public FileNamer(IConfigurationProvider configurationProvider)
     {
@@ -18,7 +18,7 @@ public class FileNamer : IFileNamer
     }
 
     public string FileNameWithoutExtension(DateOnly dateOnly) => $"todo-{dateOnly:yyyy-MM-dd}";
-    
+
     public string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType) => $"{FileNameWithoutExtension(dateOnly)}.{GetExtension(fileType)}";
 
     public string GetFilePath(DateOnly dateOnly, FileTypeEnum fileType)
@@ -26,7 +26,7 @@ public class FileNamer : IFileNamer
         var fileName = FileNameForDate(dateOnly, fileType);
         return Path.Combine(_configurationProvider.Config.OutputFolder, fileName);
     }
-    
+
     public string GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType)
     {
         var fileName = FileNameForDate(dateOnly, fileType);
@@ -34,11 +34,11 @@ public class FileNamer : IFileNamer
             _configurationProvider.Config.ArchiveFolderName, fileName);
     }
 
-    private string GetExtension(FileTypeEnum fileTypeEnum)
+    private static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
         {
-            FileTypeEnum.Html => _htmlExtension,
-            FileTypeEnum.Markdown => _markdownExtension,
-            _ => throw new Exception("FileType not recognised"),
+            FileTypeEnum.Html => HtmlExtension,
+            FileTypeEnum.Markdown => MarkdownExtension,
+            _ => throw new Exception("FileType not recognised")
         };
 }
