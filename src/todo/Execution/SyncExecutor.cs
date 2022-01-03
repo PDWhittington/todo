@@ -21,6 +21,9 @@ public class SyncExecutor : ISyncExecutor
     {
         var configuration = _configurationProvider.GetConfiguration();
 
+        if (!configuration.UseGit)
+            throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
+
         var commitMessage = syncCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
             
         _gitInterface.RunGitCommand("reset");

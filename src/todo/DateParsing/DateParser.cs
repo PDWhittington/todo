@@ -57,7 +57,7 @@ public class DateParser : IDateParser
         {
             if (int.TryParse(commandLine.Substring(1), out var parsed))
             {
-                switch (commandLine[1])
+                switch (commandLine[0])
                 {
                     case '+': 
                         offset = parsed;

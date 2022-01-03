@@ -10,6 +10,8 @@ namespace Todo.Contracts.Data
         
         public string GitPath { get; }
         
+        public bool UseGit { get; }
+
         public string TemplatePath { get; }
         
         public bool UseNamesForDays { get; }
@@ -21,7 +23,7 @@ namespace Todo.Contracts.Data
         [JsonConstructor]
         public ConfigurationInfo(string templatePath, 
             bool useNamesForDays, string browserPath,
-            string textEditorPath, string gitPath, string outputFolder, string archiveFolderName)
+            string textEditorPath, string gitPath, bool useGit, string outputFolder, string archiveFolderName)
         {
             TemplatePath = templatePath;
             UseNamesForDays = useNamesForDays;
@@ -30,6 +32,7 @@ namespace Todo.Contracts.Data
             OutputFolder = outputFolder;
             ArchiveFolderName = archiveFolderName;
             GitPath = gitPath;
+            UseGit = useGit;
         }
     }
 }

@@ -73,10 +73,12 @@ namespace Todo
 
         static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()    
                 .AddSingleton<IGitInterface, GitInterface>();
 
         static IServiceCollection AddMainExecutionLogic(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<IArchiveExecutor, ArchiveExecutor>()    
                 .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
                 .AddSingleton<ISyncExecutor, SyncExecutor>()
                 .AddSingleton<ITodoService, TodoService>();
