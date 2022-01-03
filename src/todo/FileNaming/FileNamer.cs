@@ -42,6 +42,4 @@ public class FileNamer : IFileNamer
             FileTypeEnum.Markdown => _markdownExtension,
             _ => throw new Exception("FileType not recognised"),
         };
-
-
 }
