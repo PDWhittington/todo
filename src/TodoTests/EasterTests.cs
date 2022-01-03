@@ -52,7 +52,7 @@ public class EasterTests
 
     }
 
-    static class DayNames
+    private static class DayNames
     {
         public const string MaundyThursday = "Maundy Thursday";
         public const string GoodFriday = "Good Friday";

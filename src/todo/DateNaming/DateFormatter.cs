@@ -1,7 +1,6 @@
 ﻿using System;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.StateAndConfig;
-using Todo.StateAndConfig;
 
 namespace Todo.DateNaming;
 

@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Services.Templates;
 
-public interface ISubstitutionsMaker<T> where T : SubstitutionsBase
+public interface ISubstitutionsMaker<in T> where T : SubstitutionsBase
 {
     string MakeSubstitutions(T substitutions, string template);
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.Substitutions;
@@ -18,18 +17,16 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
     private readonly IMarkdownTemplateProvider _templateProvider;
     private readonly IFileNamer _fileNamer;
     private readonly IMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
-    private readonly ISpecialDateNamer _specialDateNamer;
     private readonly IDateFormatter _dateFormatter;
 
     public CreateOrShowExecutor(IConfigurationProvider configurationProvider, IMarkdownTemplateProvider templateProvider,
-        IFileNamer fileNamer, IMarkdownSubstitutionsMaker markdownSubstitutionMaker, ISpecialDateNamer specialDateNamer,
+        IFileNamer fileNamer, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter)
     {
         _configurationProvider = configurationProvider;
         _templateProvider = templateProvider;
         _fileNamer = fileNamer;
         _markdownSubstitutionMaker = markdownSubstitutionMaker;
-        _specialDateNamer = specialDateNamer;
         _dateFormatter = dateFormatter;
     }
 
@@ -52,7 +49,7 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
 
     private MarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowCommand createOrShowCommand)
     {
-        string dateText = _dateFormatter.GetMarkdownHeader(createOrShowCommand.Date);
+        var dateText = _dateFormatter.GetMarkdownHeader(createOrShowCommand.Date);
 
         return MarkdownSubstitutions.Of(dateText);
     }
