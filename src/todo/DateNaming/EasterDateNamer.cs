@@ -5,7 +5,7 @@ namespace Todo.DateNaming;
 
 public class EasterDateNamer : IEasterDateNamer
 {
-    public bool TryGetName(DateOnly date, out string name)
+    public bool TryGetSpecialName(DateOnly date, out string name)
     {
         var easterDay = EasterDayForYear(date.Year);
 

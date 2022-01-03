@@ -108,7 +108,7 @@ public class EasterTests
         
         var dateNamer = new EasterDateNamer();
         
-        var result = dateNamer.TryGetName(dateParsed, out var name);
+        var result = dateNamer.TryGetSpecialName(dateParsed, out var name);
         
         Assert.AreEqual(name != null, result);
         Assert.AreEqual(nameExpected, name);

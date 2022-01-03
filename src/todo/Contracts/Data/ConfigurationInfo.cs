@@ -15,17 +15,20 @@ namespace Todo.Contracts.Data
         public bool UseNamesForDays { get; }
         
         public string OutputFolder { get; }
+        
+        public string ArchiveFolderName { get; }
 
         [JsonConstructor]
         public ConfigurationInfo(string templatePath, 
             bool useNamesForDays, string browserPath,
-            string textEditorPath, string gitPath, string outputFolder)
+            string textEditorPath, string gitPath, string outputFolder, string archiveFolderName)
         {
             TemplatePath = templatePath;
             UseNamesForDays = useNamesForDays;
             BrowserPath = browserPath;
             TextEditorPath = textEditorPath;
             OutputFolder = outputFolder;
+            ArchiveFolderName = archiveFolderName;
             GitPath = gitPath;
         }
     }

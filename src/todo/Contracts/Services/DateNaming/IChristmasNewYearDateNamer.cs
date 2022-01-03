@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Services.DateNaming;
 
-public interface IChristmasNewYearDateNamer : IDateNamer
+public interface IChristmasNewYearDateNamer : ISpecialDateNamer
 {
     
 }

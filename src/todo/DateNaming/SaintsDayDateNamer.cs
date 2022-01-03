@@ -5,7 +5,7 @@ namespace Todo.DateNaming;
 
 public class SaintsDayDateNamer : ISaintsDayDateNamer
 {
-    public bool TryGetName(DateOnly date, out string name)
+    public bool TryGetSpecialName(DateOnly date, out string name)
     {
         name = date switch
         {

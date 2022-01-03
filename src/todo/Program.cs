@@ -3,6 +3,7 @@ using Todo.Contracts.Services;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileNaming;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
@@ -10,6 +11,7 @@ using Todo.Contracts.Services.Template;
 using Todo.DateNaming;
 using Todo.DateParsing;
 using Todo.Execution;
+using Todo.FileNaming;
 using Todo.Git;
 using Todo.Helpers;
 using Todo.StateAndConfig;
@@ -28,20 +30,16 @@ namespace Todo
         }
 
         static ServiceProvider GetServiceProvider()
-        {   
-            //setup our DI
-            var serviceProvider = new ServiceCollection()
+            =>  new ServiceCollection()
                 .AddLogging()
                 .AddStateAndConfig()
                 .AddHelpers()
                 .AddTemplateFunctionality()
                 .AddDateNaming()
+                .AddFileNaming()
                 .AddGitFunctionality()
                 .AddMainExecutionLogic()
                 .BuildServiceProvider();
-
-            return serviceProvider;
-        }
         
         static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
             => serviceCollection
@@ -59,6 +57,7 @@ namespace Todo
 
         static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<ISubstitutionMaker, SubstitutionMaker>()    
                 .AddSingleton<ITemplateProvider, TemplateProvider>();
         
         static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
@@ -66,7 +65,11 @@ namespace Todo
                 .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
                 .AddSingleton<IEasterDateNamer, EasterDateNamer>()
                 .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
-                .AddSingleton<IDateNamer, DateNamer>();
+                .AddSingleton<ISpecialDateNamer, DateNamer>();
+
+        static IServiceCollection AddFileNaming(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IFileNamer, FileNamer>();
 
         static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
