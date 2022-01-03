@@ -14,22 +14,24 @@ public class FileNamer : IFileNamer
         _configurationProvider = configurationProvider;
     }
 
-    public string FileNameForDate(DateOnly dateOnly) => $"todo-{dateOnly:yyyy-MM-dd}.md";
+    public string FileNameWithoutExtension(DateOnly dateOnly) => $"todo-{dateOnly:yyyy-MM-dd}";
+    
+    public string MarkdownFileNameForDate(DateOnly dateOnly) => $"{FileNameWithoutExtension(dateOnly)}.md";
 
-    public string FilePathForDate(DateOnly dateOnly)
+    public string MarkdownFilePathForDate(DateOnly dateOnly)
     {
         var configuration = _configurationProvider.GetConfiguration();
 
-        var fileName = FileNameForDate(dateOnly);
+        var fileName = MarkdownFileNameForDate(dateOnly);
         
         return Path.Combine(configuration.OutputFolder, fileName);
     }
     
-    public string ArchiveFilePathForDate(DateOnly dateOnly)
+    public string MarkdownArchiveFilePathForDate(DateOnly dateOnly)
     {
         var configuration = _configurationProvider.GetConfiguration();
 
-        var fileName = FileNameForDate(dateOnly);
+        var fileName = MarkdownFileNameForDate(dateOnly);
         
         return Path.Combine(configuration.OutputFolder, configuration.ArchiveFolderName, fileName);
     }

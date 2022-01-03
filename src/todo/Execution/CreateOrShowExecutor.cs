@@ -32,7 +32,7 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
     public void Execute(CreateOrShowCommand createOrShowCommand)
     {
         var configuration = _configurationProvider.GetConfiguration();
-        var path = _fileNamer.FilePathForDate(createOrShowCommand.Date);
+        var path = _fileNamer.MarkdownFilePathForDate(createOrShowCommand.Date);
 
         if (!File.Exists(path))
         {

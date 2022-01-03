@@ -31,8 +31,8 @@ public class ArchiveExecutor : IArchiveExecutor
 
     private void Archive(ArchiveCommand command, Action<string, string> archiveOp)
     {
-        var sourcePath = _fileNamer.FilePathForDate(command.DateOfFileToArchive);
-        var destinationPath = _fileNamer.ArchiveFilePathForDate(command.DateOfFileToArchive);
+        var sourcePath = _fileNamer.MarkdownFilePathForDate(command.DateOfFileToArchive);
+        var destinationPath = _fileNamer.MarkdownArchiveFilePathForDate(command.DateOfFileToArchive);
 
         archiveOp(sourcePath, destinationPath);
     }

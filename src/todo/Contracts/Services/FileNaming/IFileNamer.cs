@@ -4,9 +4,9 @@ namespace Todo.Contracts.Services.FileNaming;
 
 public interface IFileNamer
 {
-    string FileNameForDate(DateOnly dateOnly);
+    string MarkdownFileNameForDate(DateOnly dateOnly);
 
-    string FilePathForDate(DateOnly dateOnly);
+    string MarkdownFilePathForDate(DateOnly dateOnly);
 
-    string ArchiveFilePathForDate(DateOnly dateOnly);
+    string MarkdownArchiveFilePathForDate(DateOnly dateOnly);
 }
