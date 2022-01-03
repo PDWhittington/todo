@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
@@ -25,9 +26,17 @@ internal static class Program
     {
         var serviceProvider = GetServiceProvider();
 
-        serviceProvider
-            .GetService<ITodoService>()!
-            .PerformTask();
+        try
+        {
+            serviceProvider
+                .GetService<ITodoService>()!
+                .PerformTask();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}" + e);
+            throw;
+        }
     }
 
     private static ServiceProvider GetServiceProvider()
