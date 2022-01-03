@@ -27,15 +27,6 @@ namespace Todo.StateAndConfig
 
             return word != default;
         }
-        
-        public DateOnly GetDateFromCommandLine()
-        {
-            var commandLine = GetCommandLineMinusAssemblyLocation();
-            
-            if (!_dateParser.TryGetDate(commandLine, out var dateOnly)) return (DateOnly)dateOnly;
-
-            throw new Exception("date is not a recognised format");
-        }
 
         public string GetCommandLineMinusAssemblyLocation()
         {
