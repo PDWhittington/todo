@@ -23,7 +23,7 @@ public class DateParser : IDateParser
         else if (IsToday(str)) dateOnly = GetTodayWithMidnightAdjusted();
         else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
         else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted()
-                                                                        .AddDays((int)offset);
+                                                                        .AddDays(offset);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsDayMonthOnly(str, out day, out var month)) dateOnly = GetDateFromDayMonth(month, day);
         else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
@@ -37,28 +37,28 @@ public class DateParser : IDateParser
             ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))
             : _dateHelper.ConvertToDateOnly(DateTime.Today);
 
-    private bool IsYesterday(string commandLine)=> commandLine.ToLower() switch
+    private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
     {
         "y" => true,
         "yesterday" => true,
-        _ => false,
+        _ => false
     };
 
-    private bool IsToday(string commandLine) =>
+    private static bool IsToday(string commandLine) =>
         string.IsNullOrWhiteSpace(commandLine) ||
         ".".Equals(commandLine) ||
         "today".Equals(commandLine.ToLower());
 
-    private bool IsTomorrow(string commandLine) => commandLine.ToLower() switch
+    private static bool IsTomorrow(string commandLine) => commandLine.ToLower() switch
     {
         "tm" => true,
         "tomorrow" => true,
-        _ => false,
+        _ => false
     };
 
-    private bool IsRelativeOffset(string commandLine, out int offset)
+    private static bool IsRelativeOffset(string commandLine, out int offset)
     {
-        if (int.TryParse(commandLine.Substring(1), out var parsed))
+        if (int.TryParse(commandLine[1..], out var parsed))
         {
             switch (commandLine[0])
             {
@@ -79,10 +79,10 @@ public class DateParser : IDateParser
         return false;
     }
 
-    private bool IsDayOnly(string commandLine, out int dayOnly)
+    private static bool IsDayOnly(string commandLine, out int dayOnly)
         => int.TryParse(commandLine, out dayOnly) && dayOnly is > 0 and < 32;
 
-    private bool IsDayMonthOnly(string commandLine, out int day, out int month)
+    private static bool IsDayMonthOnly(string commandLine, out int day, out int month)
     {
         var elements = commandLine.Split('/', '.', '-');
 
@@ -111,7 +111,8 @@ public class DateParser : IDateParser
         return _dateHelper.GetNearestTo(possibles, today);
     }
 
-    DateOnly [] GetPossiblesForDayOnly(DateOnly currentDay, int n)
+    // ReSharper disable once ReturnTypeCanBeEnumerable.Local
+    private DateOnly [] GetPossiblesForDayOnly(DateOnly currentDay, int n)
     {
         IEnumerable<DateOnly> PotentialDates()
         {
@@ -123,7 +124,8 @@ public class DateParser : IDateParser
         return PotentialDates().ToArray();
     }
 
-    DateOnly [] GetPossiblesForDayMonth(DateOnly currentDay, int month, int day)
+    // ReSharper disable once ReturnTypeCanBeEnumerable.Local
+    private DateOnly [] GetPossiblesForDayMonth(DateOnly currentDay, int month, int day)
     {
         IEnumerable<DateOnly> PotentialDates()
         {

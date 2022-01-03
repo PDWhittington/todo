@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IExecutor<T> where T : CommandBase
+public interface IExecutor<in T> where T : CommandBase
 {
     void Execute(T command);
 }

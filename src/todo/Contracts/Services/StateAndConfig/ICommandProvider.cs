@@ -1,9 +1,8 @@
 ﻿using Todo.Contracts.Data.Commands;
 
-namespace Todo.Contracts.Services.StateAndConfig
+namespace Todo.Contracts.Services.StateAndConfig;
+
+public interface ICommandProvider
 {
-    public interface ICommandProvider
-    {
-        public CommandBase GetCommand();
-    }
+    public CommandBase GetCommand();
 }

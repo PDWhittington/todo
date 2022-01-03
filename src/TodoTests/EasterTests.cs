@@ -6,44 +6,44 @@ namespace TodoTests;
 
 public class EasterTests
 {
-    static class DateConstants
+    private static class DateConstants
     {
         public const string MaundyThursday2017 = "2017-04-13";
         public const string GoodFriday2017 = "2017-04-14";
         public const string HolySaturday2017 = "2017-04-15";
         public const string EasterDay2017 = "2017-04-16";
         public const string EasterMonday2017 = "2017-04-17";
-        
+
         public const string MaundyThursday2018 = "2018-03-29";
         public const string GoodFriday2018 = "2018-03-30";
         public const string HolySaturday2018 = "2018-03-31";
         public const string EasterDay2018 = "2018-04-01";
         public const string EasterMonday2018 = "2018-04-02";
-        
+
         public const string MaundyThursday2019 = "2019-04-18";
         public const string GoodFriday2019 = "2019-04-19";
         public const string HolySaturday2019 = "2019-04-20";
         public const string EasterDay2019 = "2019-04-21";
         public const string EasterMonday2019 = "2019-04-22";
-        
+
         public const string MaundyThursday2020 = "2020-04-09";
         public const string GoodFriday2020 = "2020-04-10";
         public const string HolySaturday2020 = "2020-04-11";
         public const string EasterDay2020 = "2020-04-12";
         public const string EasterMonday2020 = "2020-04-13";
-        
+
         public const string MaundyThursday2021 = "2021-04-01";
         public const string GoodFriday2021 = "2021-04-02";
         public const string HolySaturday2021 = "2021-04-03";
         public const string EasterDay2021 = "2021-04-04";
         public const string EasterMonday2021 = "2021-04-05";
-        
+
         public const string MaundyThursday2022 = "2022-04-14";
         public const string GoodFriday2022 = "2022-04-15";
         public const string HolySaturday2022 = "2022-04-16";
         public const string EasterDay2022 = "2022-04-17";
         public const string EasterMonday2022 = "2022-04-18";
-        
+
         public const string MaundyThursday2023 = "2023-04-06";
         public const string GoodFriday2023 = "2023-04-07";
         public const string HolySaturday2023 = "2023-04-08";
@@ -60,7 +60,7 @@ public class EasterTests
         public const string EasterDay = "Easter Day";
         public const string EasterMonday = "Easter Monday";
     }
-    
+
     [SetUp]
     public void Setup()
     {
@@ -105,11 +105,11 @@ public class EasterTests
     public void TestEaster(string date, string nameExpected)
     {
         var dateParsed = DateOnly.Parse(date);
-        
+
         var dateNamer = new EasterDateNamer();
-        
+
         var result = dateNamer.TryGetSpecialName(dateParsed, out var name);
-        
+
         Assert.AreEqual(name != null, result);
         Assert.AreEqual(nameExpected, name);
     }

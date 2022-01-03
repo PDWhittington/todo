@@ -51,20 +51,19 @@ public class CommandIdentifier : ICommandIdentifier
                 break;
         }
 
-        restOfCommand = commandType != default ? commandLine.Substring(firstWord.Length).Trim() : default;
+        restOfCommand = commandType != default ? commandLine[firstWord.Length..].Trim() : default;
         return commandType != default;
     }
 
-    string FirstWordToLower(string str)
+    private static string FirstWordToLower(string str)
     {
         var index = str.IndexOf(" ", StringComparison.Ordinal);
 
-        switch (index)
+        return index switch
         {
-            case -1: return str;
-            case 0: return str;
-            default:
-                return str.Substring(0, index).ToLower();
-        }
+            -1 => str,
+            0 => str,
+            _ => str[..index].ToLower()
+        };
     }
 }

@@ -53,6 +53,7 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
         Restore = 9, ShowDefault = 10, ForceMinimized = 11
     }
 
+    // ReSharper disable once UnusedMethodReturnValue.Local
     private static int BringMainWindowToFront(Process process)
     {
         // check if the window is hidden / minimized

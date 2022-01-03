@@ -15,7 +15,7 @@ public class ArchiveExecutor : IArchiveExecutor
     private readonly IGitInterface _gitInterface;
     private readonly IFileNamer _fileNamer;
 
-    public ArchiveExecutor(IConfigurationProvider configurationProvider, 
+    public ArchiveExecutor(IConfigurationProvider configurationProvider,
         IGitInterface gitInterface, IFileNamer fileNamer)
     {
         _configurationProvider = configurationProvider;
@@ -36,8 +36,8 @@ public class ArchiveExecutor : IArchiveExecutor
 
         archiveOp(sourcePath, destinationPath);
     }
-    
+
     private void GitArchive(string sourcePath, string destinationPath) => _gitInterface.RunGitCommand($"mv {sourcePath} {destinationPath}");
 
-    private void FileArchive(string sourcePath, string destinationPath) => File.Move(sourcePath, destinationPath);
+    private static void FileArchive(string sourcePath, string destinationPath) => File.Move(sourcePath, destinationPath);
 }

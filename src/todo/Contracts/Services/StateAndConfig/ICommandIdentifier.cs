@@ -8,7 +8,7 @@ public interface ICommandIdentifier
         Commit,
         ShowHtml,
         Sync,
-        Push,
+        Push
     }
 
     bool TryGetCommandType(out CommandTypeEnum? commandName, out string? restOfCommand);

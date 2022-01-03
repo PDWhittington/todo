@@ -19,9 +19,9 @@ using Todo.Template;
 
 namespace Todo;
 
-static class Program
+internal static class Program
 {
-    static void Main()
+    private static void Main()
     {
         var serviceProvider = GetServiceProvider();
 
@@ -30,7 +30,7 @@ static class Program
             .PerformTask();
     }
 
-    static ServiceProvider GetServiceProvider()
+    private static ServiceProvider GetServiceProvider()
         =>  new ServiceCollection()
             .AddLogging()
             .AddStateAndConfig()
@@ -42,7 +42,7 @@ static class Program
             .AddMainExecutionLogic()
             .BuildServiceProvider();
 
-    static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<ICommandLineProvider, CommandLineProvider>()
             .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
@@ -51,33 +51,33 @@ static class Program
             .AddSingleton<IDateParser, DateParser>()
             .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
 
-    static IServiceCollection AddHelpers(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddHelpers(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IPathHelper, PathHelper>()
             .AddSingleton<IDateHelper, DateHelper>();
 
-    static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<ISubstitutionMaker, SubstitutionMaker>()
             .AddSingleton<ITemplateProvider, TemplateProvider>();
 
-    static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
             .AddSingleton<IEasterDateNamer, EasterDateNamer>()
             .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
             .AddSingleton<ISpecialDateNamer, DateNamer>();
 
-    static IServiceCollection AddFileNaming(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddFileNaming(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IFileNamer, FileNamer>();
 
-    static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
             .AddSingleton<IGitInterface, GitInterface>();
 
-    static IServiceCollection AddMainExecutionLogic(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddMainExecutionLogic(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IArchiveExecutor, ArchiveExecutor>()
             .AddSingleton<ICommitExecutor, CommitExecutor>()

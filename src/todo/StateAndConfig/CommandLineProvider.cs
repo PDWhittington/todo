@@ -2,34 +2,32 @@
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.StateAndConfig
+namespace Todo.StateAndConfig;
+
+/// <summary>
+/// This class
+/// </summary>
+public class CommandLineProvider : ICommandLineProvider
 {
-    /// <summary>
-    /// This class
-    /// </summary>
-    public class CommandLineProvider : ICommandLineProvider
+    private readonly IPathHelper _pathHelper;
+
+    public CommandLineProvider(IPathHelper pathHelper)
     {
-        private readonly IPathHelper _pathHelper;
+        _pathHelper = pathHelper;
+    }
 
-        public CommandLineProvider(IPathHelper pathHelper)
+    public string GetCommandLineMinusAssemblyLocation()
+    {
+        var assemblyLocation = _pathHelper.GetAssemblyLocation();
+
+        var wholeCommandLine = Environment.CommandLine;
+
+        if (wholeCommandLine.StartsWith(assemblyLocation))
         {
-            _pathHelper = pathHelper;
+            return wholeCommandLine[assemblyLocation.Length..]
+                .Trim();
         }
 
-        public string GetCommandLineMinusAssemblyLocation()
-        {
-            var assemblyLocation = _pathHelper.GetAssemblyLocation();
-
-            var wholeCommandLine = Environment.CommandLine;
-
-            if (wholeCommandLine.StartsWith(assemblyLocation))
-            {
-                return wholeCommandLine
-                    .Substring(assemblyLocation.Length)
-                    .Trim();
-            }
-
-            return wholeCommandLine.Trim();
-        }
+        return wholeCommandLine.Trim();
     }
 }

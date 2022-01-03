@@ -4,31 +4,30 @@ using System.Text.Json;
 using Todo.Contracts.Data;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.StateAndConfig
+namespace Todo.StateAndConfig;
+
+public class ConfigurationProvider : IConfigurationProvider
 {
-    public class ConfigurationProvider : IConfigurationProvider
+    private readonly ISettingsPathProvider _settingsPathProvider;
+    private ConfigurationInfo? _configuration;
+
+    public ConfigurationProvider(ISettingsPathProvider settingsPathProvider)
     {
-        private readonly ISettingsPathProvider _settingsPathProvider;
-        private ConfigurationInfo? _configuration;
+        _settingsPathProvider = settingsPathProvider;
+    }
 
-        public ConfigurationProvider(ISettingsPathProvider settingsPathProvider)
-        {
-            _settingsPathProvider = settingsPathProvider;
-        }
+    public ConfigurationInfo Config => _configuration ?? PopulateAndReturnConfiguration();
 
-        public ConfigurationInfo Config => _configuration ?? PopulateAndReturnConfiguration();
+    private ConfigurationInfo PopulateAndReturnConfiguration()
+    {
+        var settingsPath = _settingsPathProvider.GetSettingsPath();
 
-        private ConfigurationInfo PopulateAndReturnConfiguration()
-        {
-            var settingsPath = _settingsPathProvider.GetSettingsPath();
+        using var fileStream = new FileStream(settingsPath, FileMode.Open, FileAccess.Read);
+        var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
 
-            using var fileStream = new FileStream(settingsPath, FileMode.Open, FileAccess.Read);
-            var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
+        _configuration = configuration ??
+                         throw new Exception($"Configuration could not be loaded from {settingsPath}");
 
-            _configuration = configuration ??
-                             throw new Exception($"Configuration could not be loaded from {settingsPath}");
-
-            return _configuration;
-        }
+        return _configuration;
     }
 }

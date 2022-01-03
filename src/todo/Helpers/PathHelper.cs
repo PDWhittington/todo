@@ -11,7 +11,7 @@ public class PathHelper : IPathHelper
         => Path.IsPathRooted(path) ? path : Path.Combine(GetAssemblyFolder(), path);
 
     public string GetAssemblyFolder()
-        => System.IO.Path.GetDirectoryName(GetAssemblyLocation()) ??
+        => Path.GetDirectoryName(GetAssemblyLocation()) ??
            throw new Exception("Cannot get containing folder of executing process");
 
     public string GetAssemblyLocation() => Assembly.GetEntryAssembly()?.Location!;

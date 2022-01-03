@@ -34,7 +34,7 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
             var templateText = _templateProvider.GetTemplate();
 
             var outputText = _substitutionMaker.MakeSubstitutions(createOrShowCommand, templateText);
-            File.WriteAllText(path!, outputText);
+            File.WriteAllText(path, outputText);
         }
 
         Process.Start(_configurationProvider.Config.TextEditorPath, path);

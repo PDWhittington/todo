@@ -1,7 +1,6 @@
-﻿namespace Todo.Contracts.Services
+﻿namespace Todo.Contracts.Services;
+
+public interface ITodoService
 {
-    public interface ITodoService
-    {
-        void PerformTask();
-    }
+    void PerformTask();
 }

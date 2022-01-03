@@ -6,7 +6,7 @@ namespace TodoTests;
 
 public class ChristmasTests
 {
-    static class DateConstants
+    private static class DateConstants
     {
         public const string ChristmasEve2017 = "2017-12-24";
         public const string ChristmasDay2017 = "2017-12-25";
@@ -14,14 +14,14 @@ public class ChristmasTests
         public const string NewYearsEve2017 = "2017-12-31";
         public const string NewYearsDay2018 = "2018-01-01";
         public const string Epiphany2018 = "2018-01-06";
-        
+
         public const string ChristmasEve2018 = "2018-12-24";
         public const string ChristmasDay2018 = "2018-12-25";
         public const string BoxingDay2018 = "2018-12-26";
         public const string NewYearsEve2018 = "2018-12-31";
         public const string NewYearsDay2019 = "2019-01-01";
         public const string Epiphany2019 = "2019-01-06";
-        
+
         public const string ChristmasEve2019 = "2019-12-24";
         public const string ChristmasDay2019 = "2019-12-25";
         public const string BoxingDay2019 = "2019-12-26";
@@ -31,7 +31,7 @@ public class ChristmasTests
 
     }
 
-    static class DayNames
+    private static class DayNames
     {
         public const string ChristmasEve = "Christmas Eve";
         public const string ChristmasDay = "Christmas Day";
@@ -40,7 +40,7 @@ public class ChristmasTests
         public const string NewYearsDay = "New Year's Day";
         public const string Epiphany = "Epiphany";
     }
-    
+
     [SetUp]
     public void Setup()
     {
@@ -68,11 +68,11 @@ public class ChristmasTests
     public void TestChristmasAndNewYear(string date, string nameExpected)
     {
         var dateParsed = DateOnly.Parse(date);
-        
+
         var dateNamer = new ChristmasNewYearDateNamer();
-        
+
         var result = dateNamer.TryGetSpecialName(dateParsed, out var name);
-        
+
         Assert.AreEqual(name != null, result);
         Assert.AreEqual(nameExpected, name);
     }

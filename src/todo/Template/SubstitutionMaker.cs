@@ -36,9 +36,9 @@ public class SubstitutionMaker : ISubstitutionMaker
         return $"{date:dddd d}<sup>{GetOrdinal(date.Day)}</sup> {date:MMMM}, {date:yyyy}";
     }
 
-    private string GetOrdinal(int num)
+    private static string GetOrdinal(int num)
     {
-        if (num < 1 || num > 31) throw new ArgumentException("Out of range", nameof(num));
+        if (num is < 1 or > 31) throw new ArgumentException("Out of range", nameof(num));
 
         return num switch
         {

@@ -8,7 +8,7 @@ public class GitDependencyValidator : IGitDependencyValidator
 {
     private readonly IConfigurationProvider _configurationProvider;
 
-    private bool? _validated = null;
+    private bool? _validated;
 
     public GitDependencyValidator(IConfigurationProvider configurationProvider)
     {
@@ -17,10 +17,7 @@ public class GitDependencyValidator : IGitDependencyValidator
 
     public bool GitDependenciesValidated()
     {
-        if (_validated == null)
-        {
-            _validated = File.Exists(_configurationProvider.Config.GitPath);
-        }
+        _validated ??= File.Exists(_configurationProvider.Config.GitPath);
 
         return (bool)_validated;
     }

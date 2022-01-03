@@ -78,7 +78,7 @@ public class DateHelper : IDateHelper
     public bool TryGetDateInFollowingYear(DateOnly currentDay, int month, int day, out DateOnly dateInYear)
         => TryGetDate(currentDay.Year, month, day, out dateInYear);
 
-    private bool TryGetDate(int year, int month, int day, out DateOnly dateInYear)
+    private static bool TryGetDate(int year, int month, int day, out DateOnly dateInYear)
     {
         var daysInMonth = DaysInMonth(month, year);
 
@@ -88,7 +88,7 @@ public class DateHelper : IDateHelper
         return true;
     }
 
-    public int DaysInMonth(int month, int year)
+    private static int DaysInMonth(int month, int year)
         => month == 12 ? 31 :
         new DateOnly(year, month + 1, 1).AddDays(-1).Day;
 }

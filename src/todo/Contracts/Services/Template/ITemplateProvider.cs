@@ -1,7 +1,6 @@
-﻿namespace Todo.Contracts.Services.Template
+﻿namespace Todo.Contracts.Services.Template;
+
+public interface ITemplateProvider
 {
-    public interface ITemplateProvider
-    {
-        string GetTemplate();
-    }
+    string GetTemplate();
 }

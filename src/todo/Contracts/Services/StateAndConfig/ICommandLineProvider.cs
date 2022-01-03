@@ -1,7 +1,6 @@
-﻿namespace Todo.Contracts.Services.StateAndConfig
+﻿namespace Todo.Contracts.Services.StateAndConfig;
+
+public interface ICommandLineProvider
 {
-    public interface ICommandLineProvider
-    {
-        string GetCommandLineMinusAssemblyLocation();
-    }
+    string GetCommandLineMinusAssemblyLocation();
 }
