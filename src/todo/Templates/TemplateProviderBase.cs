@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
+using Todo.FileSystem;
 
 namespace Todo.Templates;
 
-public abstract class TemplateProviderBase
+public abstract class TemplateProviderBase : FileReader
 {
     protected abstract string GetTemplatePath();
 
@@ -15,9 +15,6 @@ public abstract class TemplateProviderBase
     public string GetTemplate()
     {
         var rootedPath = GetTemplatePath();
-
-        if (!File.Exists(rootedPath)) throw new Exception($"{rootedPath} not found");
-
-        return File.ReadAllText(rootedPath);
+        return GetFileText(rootedPath);
     }
 }

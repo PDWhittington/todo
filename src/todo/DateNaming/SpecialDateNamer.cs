@@ -3,13 +3,13 @@ using Todo.Contracts.Services.DateNaming;
 
 namespace Todo.DateNaming;
 
-public class DateNamer : ISpecialDateNamer
+public class SpecialDateNamer : ISpecialDateNamer
 {
     private readonly IChristmasNewYearDateNamer _christmasNewYearDateNamer;
     private readonly IEasterDateNamer _easterDateNamer;
     private readonly ISaintsDayDateNamer _saintsDayDateNamer;
 
-    public DateNamer(IChristmasNewYearDateNamer christmasNewYearDateNamer,
+    public SpecialDateNamer(IChristmasNewYearDateNamer christmasNewYearDateNamer,
         IEasterDateNamer easterDateNamer, ISaintsDayDateNamer saintsDayDateNamer)
     {
         _christmasNewYearDateNamer = christmasNewYearDateNamer;

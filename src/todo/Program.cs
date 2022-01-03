@@ -4,7 +4,7 @@ using Todo.Contracts.Services;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Execution;
-using Todo.Contracts.Services.FileNaming;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
@@ -12,7 +12,7 @@ using Todo.Contracts.Services.Templates;
 using Todo.DateNaming;
 using Todo.DateParsing;
 using Todo.Execution;
-using Todo.FileNaming;
+using Todo.FileSystem;
 using Todo.Git;
 using Todo.Helpers;
 using Todo.StateAndConfig;
@@ -46,7 +46,7 @@ internal static class Program
             .AddHelpers()
             .AddTemplateFunctionality()
             .AddDateNaming()
-            .AddFileNaming()
+            .AddFileSystemFunctionality()
             .AddGitFunctionality()
             .AddMainExecutionLogic()
             .BuildServiceProvider();
@@ -67,7 +67,8 @@ internal static class Program
 
     private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<IMarkdownSubstitutionMaker, MarkdownSubstitutionMaker>()
+            .AddSingleton<IMarkdownSubstitutionsMaker, MarkdownSubstitutionsMaker>()
+            .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
             .AddSingleton<IMarkdownTemplateProvider, MarkdownTemplateProvider>()
             .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
 
@@ -76,11 +77,14 @@ internal static class Program
             .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
             .AddSingleton<IEasterDateNamer, EasterDateNamer>()
             .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
-            .AddSingleton<ISpecialDateNamer, DateNamer>();
+            .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
+            .AddSingleton<IDateFormatter, DateFormatter>();
 
-    private static IServiceCollection AddFileNaming(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<IFileNamer, FileNamer>();
+            .AddSingleton<IFileNamer, FileNamer>()
+            .AddSingleton<IFileReader, FileReader>()
+            .AddSingleton<IMarkdownFileReader, MarkdownFileReader>();
 
     private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection

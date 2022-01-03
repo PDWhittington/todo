@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using Todo.Contracts.Services.FileNaming;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.FileNaming;
+namespace Todo.FileSystem;
 
 public class FileNamer : IFileNamer
 {

@@ -5,10 +5,10 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
-using Todo.Contracts.Services.FileNaming;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
-using Todo.FileNaming;
+using Todo.FileSystem;
 
 namespace Todo.Execution;
 
@@ -17,17 +17,20 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IMarkdownTemplateProvider _templateProvider;
     private readonly IFileNamer _fileNamer;
-    private readonly IMarkdownSubstitutionMaker _markdownSubstitutionMaker;
+    private readonly IMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
     private readonly ISpecialDateNamer _specialDateNamer;
+    private readonly IDateFormatter _dateFormatter;
 
     public CreateOrShowExecutor(IConfigurationProvider configurationProvider, IMarkdownTemplateProvider templateProvider,
-        IFileNamer fileNamer, IMarkdownSubstitutionMaker markdownSubstitutionMaker, ISpecialDateNamer specialDateNamer)
+        IFileNamer fileNamer, IMarkdownSubstitutionsMaker markdownSubstitutionMaker, ISpecialDateNamer specialDateNamer,
+        IDateFormatter dateFormatter)
     {
         _configurationProvider = configurationProvider;
         _templateProvider = templateProvider;
         _fileNamer = fileNamer;
         _markdownSubstitutionMaker = markdownSubstitutionMaker;
         _specialDateNamer = specialDateNamer;
+        _dateFormatter = dateFormatter;
     }
 
     public void Execute(CreateOrShowCommand createOrShowCommand)
@@ -47,31 +50,12 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
         Process.Start(_configurationProvider.Config.TextEditorPath, path);
     }
 
-    private MarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowCommand createOrShowCommand) //DateOnly date)
+    private MarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowCommand createOrShowCommand)
     {
-        string dateText = _configurationProvider.Config.UseNamesForDays && //Check if UseNamesForDays is turned on
-                          _specialDateNamer.TryGetSpecialName(createOrShowCommand.Date, out var dateName) // Check if current day is a special day
-            ?
-            $"{dateName}, {createOrShowCommand.Date.Year}" :
-            $"{createOrShowCommand.Date:dddd d}<sup>{GetOrdinal(createOrShowCommand.Date.Day)}</sup> {createOrShowCommand.Date:MMMM}, {createOrShowCommand.Date:yyyy}";
+        string dateText = _dateFormatter.GetMarkdownHeader(createOrShowCommand.Date);
 
         return MarkdownSubstitutions.Of(dateText);
     }
 
-    private static string GetOrdinal(int num)
-    {
-        if (num is < 1 or > 31) throw new ArgumentException("Out of range", nameof(num));
 
-        return num switch
-        {
-            1 => "st",
-            2 => "nd",
-            3 => "rd",
-            21 => "st",
-            22 => "nd",
-            23 => "rd",
-            31 => "st",
-            _ => "th"
-        };
-    }
 }

@@ -1,4 +1,4 @@
-﻿namespace Todo.FileNaming;
+﻿namespace Todo.FileSystem;
 
 public enum FileTypeEnum
 {

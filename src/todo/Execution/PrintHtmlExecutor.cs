@@ -1,24 +1,51 @@
-﻿using Markdig;
+﻿using System.IO;
+using Markdig;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.Substitutions;
+using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.Templates;
+using Todo.FileSystem;
 
 namespace Todo.Execution;
 
 public class PrintHtmlExecutor : IPrintHtmlExecutor
 {
-    private const string _test = @"# Heading 1
+    private readonly IHtmlTemplateProvider _htmlTemplateProvider;
+    private readonly IMarkdownFileReader _markdownFileReader;
+    private readonly IHtmlSubstitutionsMaker _htmlSubstitutionsMaker;
+    private readonly IDateFormatter _dateFormatter;
+    private readonly IFileNamer _fileNamer;
 
-## Heading 2
-
-* Bullet 1
-* Bullet 2";
+    public PrintHtmlExecutor(IHtmlTemplateProvider htmlTemplateProvider, IMarkdownFileReader markdownFileReader,
+        IHtmlSubstitutionsMaker htmlSubstitutionsMaker, IDateFormatter dateFormatter, IFileNamer fileNamer)
+    {
+        _htmlTemplateProvider = htmlTemplateProvider;
+        _markdownFileReader = markdownFileReader;
+        _htmlSubstitutionsMaker = htmlSubstitutionsMaker;
+        _dateFormatter = dateFormatter;
+        _fileNamer = fileNamer;
+    }
 
     public void Execute(PrintHtmlCommand command)
     {
         var _pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
 
-        var result = Markdown.ToHtml(_test, _pipeline);
+        var markdownText = _markdownFileReader.ReadMarkdownFile(command.Date);
 
-        //return result;
+        var htmlBody = Markdown.ToHtml(markdownText, _pipeline);
+
+        var htmlTitle = _dateFormatter.GetHtmlTitle(command.Date);
+
+        var htmlSubstitutions = HtmlSubstitutions.Of(htmlTitle, htmlBody);
+
+        var htmlTemplate = _htmlTemplateProvider.GetTemplate();
+
+        var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, htmlTemplate);
+
+        var path = _fileNamer.GetFilePath(command.Date, FileTypeEnum.Html);
+
+        File.WriteAllText(path, outputHtml);
     }
 }

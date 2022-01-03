@@ -3,13 +3,9 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class MarkdownSubstitutionMaker : IMarkdownSubstitutionMaker
+public class MarkdownSubstitutionsMaker : IMarkdownSubstitutionsMaker
 {
     public string MakeSubstitutions(MarkdownSubstitutions substitutions, string template)
-    {
-        var outputText = template.Replace(
-            "{date}", substitutions.DateText);
-
-        return outputText;
-    }
+        => template
+            .Replace("{date}", substitutions.DateText);
 }

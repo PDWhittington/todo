@@ -1,7 +1,7 @@
 ﻿using System;
-using Todo.FileNaming;
+using Todo.FileSystem;
 
-namespace Todo.Contracts.Services.FileNaming;
+namespace Todo.Contracts.Services.FileSystem;
 
 public interface IFileNamer
 {
