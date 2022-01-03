@@ -82,6 +82,7 @@ namespace Todo
                 .AddSingleton<ICommitExecutor, CommitExecutor>()
                 .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
                 .AddSingleton<ISyncExecutor, SyncExecutor>()
+                .AddSingleton<IPushExecutor, PushExecutor>()
                 .AddSingleton<ITodoService, TodoService>();
     }
 }

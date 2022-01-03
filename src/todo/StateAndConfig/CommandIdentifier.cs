@@ -30,6 +30,11 @@ public class CommandIdentifier : ICommandIdentifier
                 commandType = ICommandIdentifier.CommandTypeEnum.Commit;
                 break;
             
+            case "push":
+            case "p":
+                commandType = ICommandIdentifier.CommandTypeEnum.Push;
+                break;
+
             case "sync":
             case "s":
                 commandType = ICommandIdentifier.CommandTypeEnum.Sync;

@@ -36,6 +36,10 @@ namespace Todo.StateAndConfig
                         
                         return CommitCommand.Of(restOfCommand);
                     
+                    case ICommandIdentifier.CommandTypeEnum.Push:
+
+                        return PushCommand.Singleton;
+                    
                     case ICommandIdentifier.CommandTypeEnum.Sync:
                         
                         return SyncCommand.Of(restOfCommand);
