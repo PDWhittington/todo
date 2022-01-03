@@ -15,12 +15,14 @@ namespace Todo
     {
         private readonly ICommandProvider _commandProvider;
         private readonly ISyncExecutor _syncExecutor;
+        private readonly IArchiveExecutor _archiveExecutor;
         private readonly ICreateOrShowExecutor _createOrShowExecutor;
 
-        public TodoService(ICommandProvider commandProvider, ISyncExecutor syncExecutor, ICreateOrShowExecutor createOrShowExecutor)
+        public TodoService(ICommandProvider commandProvider, ICreateOrShowExecutor createOrShowExecutor, ISyncExecutor syncExecutor, IArchiveExecutor archiveExecutor)
         {
             _commandProvider = commandProvider;
             _syncExecutor = syncExecutor;
+            _archiveExecutor = archiveExecutor;
             _createOrShowExecutor = createOrShowExecutor;
         }
         
@@ -34,6 +36,10 @@ namespace Todo
                     _createOrShowExecutor.Execute(createOrShowCommand);
                     break;
                 
+                case ArchiveCommand archiveCommand:
+                    _archiveExecutor.Execute(archiveCommand);
+                    break;
+
                 case SyncCommand syncCommand:
                     _syncExecutor.Execute(syncCommand);
                     break;

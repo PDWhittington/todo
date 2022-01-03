@@ -4,6 +4,7 @@ public interface ICommandIdentifier
 {
     public enum CommandTypeEnum
     {
+        Archive,
         Sync
     }
 

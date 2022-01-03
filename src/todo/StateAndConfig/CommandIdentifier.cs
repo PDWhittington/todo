@@ -12,26 +12,31 @@ public class CommandIdentifier : ICommandIdentifier
         _commandLineProvider = commandLineProvider;
     }
 
-    public bool TryGetCommandType(out ICommandIdentifier.CommandTypeEnum? commandName, out string restOfCommand)
+    public bool TryGetCommandType(out ICommandIdentifier.CommandTypeEnum? commandType, out string restOfCommand)
     {
         var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
 
-        var firstWord = this.firstWordToLower(commandLine);
+        var firstWord = firstWordToLower(commandLine);
 
         switch (firstWord)
         {
+            case "archive":
+            case "a":
+                commandType = ICommandIdentifier.CommandTypeEnum.Archive;
+                break;
+
             case "sync":
             case "s":
-                commandName = ICommandIdentifier.CommandTypeEnum.Sync;
-                restOfCommand = commandLine.Substring(firstWord.Length).Trim();
+                commandType = ICommandIdentifier.CommandTypeEnum.Sync;
                 break;
+            
             default:
-                commandName = default;
-                restOfCommand = default;
+                commandType = default;
                 break;
         }
 
-        return commandName != default;
+        restOfCommand = commandType != default ? commandLine.Substring(firstWord.Length).Trim() : default;
+        return commandType != default;
     }
 
     string firstWordToLower(string str)

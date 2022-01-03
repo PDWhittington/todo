@@ -4,5 +4,6 @@
   "GitPath" : "C:\\Program Files\\Git\\bin\\git.exe",
   "TemplatePath": "template.md",
   "UseNamesForDays": true,
-  "OutputFolder": "D:\\workspace\\year-of-phil\\todo"
+  "OutputFolder": "D:\\workspace\\year-of-phil\\todo",
+  "ArchiveFolderName": "_archive"
 }

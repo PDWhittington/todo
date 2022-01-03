@@ -21,12 +21,20 @@ namespace Todo.StateAndConfig
         
         public CommandBase GetCommand()
         {
-            if (_commandIdentifier.TryGetCommandType(out var commandType, out var commitMessage))
+            if (_commandIdentifier.TryGetCommandType(out var commandType, out var restOfCommand))
             {
                 switch (commandType)
                 {
+                    case ICommandIdentifier.CommandTypeEnum.Archive:
+
+                        if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
+                            throw new ArgumentException("Date in archive command is not recognised");
+
+                        return ArchiveCommand.Of((DateOnly)dateOnly);
+                    
                     case ICommandIdentifier.CommandTypeEnum.Sync:
-                    return SyncCommand.Of(commitMessage);
+                        
+                        return SyncCommand.Of(restOfCommand);
                     
                     default: throw new Exception("Command not yet implemented.");
                 }

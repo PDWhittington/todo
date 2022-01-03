@@ -2,5 +2,5 @@
 
 public interface IGitDependencyValidator
 {
-    bool IsGitPresent();
+    bool GitDependenciesValidated();
 }

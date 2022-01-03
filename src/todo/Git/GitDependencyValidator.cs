@@ -9,14 +9,21 @@ public class GitDependencyValidator : IGitDependencyValidator
 {
     private readonly IConfigurationProvider _configurationProvider;
 
+    private bool? _validated = null;
+
     public GitDependencyValidator(IConfigurationProvider configurationProvider)
     {
         _configurationProvider = configurationProvider;
     }
     
-    public bool IsGitPresent()
+    public bool GitDependenciesValidated()
     {
-        var configuration = _configurationProvider.GetConfiguration();
-        return File.Exists(configuration.GitPath);
+        if (_validated == null)
+        {
+            var configuration = _configurationProvider.GetConfiguration();
+            _validated = File.Exists(configuration.GitPath);    
+        }
+
+        return (bool)_validated;
     }
 }
