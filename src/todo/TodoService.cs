@@ -8,6 +8,7 @@ using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Template;
+using Todo.Execution;
 
 namespace Todo
 {
@@ -17,17 +18,17 @@ namespace Todo
         private readonly ICommandProvider _commandProvider;
         private readonly ITemplateProvider _templateProvider;
         private readonly IDateNamer _dateNamer;
-        private readonly IGitInterface _gitInterface;
+        private readonly ISyncExecutor _syncExecutor;
 
         public TodoService(IConfigurationProvider configurationProvider,
             ICommandProvider commandProvider, ITemplateProvider templateProvider,
-            IDateNamer dateNamer, IGitInterface gitInterface)
+            IDateNamer dateNamer, ISyncExecutor syncExecutor)
         {
             _configurationProvider = configurationProvider;
             _commandProvider = commandProvider;
             _templateProvider = templateProvider;
             _dateNamer = dateNamer;
-            _gitInterface = gitInterface;
+            _syncExecutor = syncExecutor;
         }
         
         public void PerformTask()
@@ -42,7 +43,7 @@ namespace Todo
                     break;
                 
                 case SyncCommand syncCommand:
-                    Sync(syncCommand);
+                    _syncExecutor.Execute(syncCommand);
                     break;
                 
                 default:
@@ -70,18 +71,7 @@ namespace Todo
             Process.Start(configuration.TextEditorPath, path);
         }
 
-        private void Sync(SyncCommand syncCommand)
-        {
-            var configuration = _configurationProvider.GetConfiguration();
 
-            var commitMessage = syncCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
-            
-            _gitInterface.RunGitCommand("reset");
-            _gitInterface.RunGitCommand($"add \"{configuration.OutputFolder}\"");
-            _gitInterface.RunGitCommand($"commit -m \"{commitMessage}\"");
-            _gitInterface.RunGitCommand($"push");
-        }
-        
         private string GetDateText(ConfigurationInfo configurationInfo, DateOnly date)
         {
             if (configurationInfo.UseNamesForDays &&
