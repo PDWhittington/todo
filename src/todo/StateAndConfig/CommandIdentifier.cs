@@ -30,8 +30,14 @@ public class CommandIdentifier : ICommandIdentifier
                 commandType = ICommandIdentifier.CommandTypeEnum.Commit;
                 break;
 
-            case "push":
+            case "printhtml":
+            case "print":
             case "p":
+                commandType = ICommandIdentifier.CommandTypeEnum.PrintHtml;
+                break;
+
+            case "push":
+
                 commandType = ICommandIdentifier.CommandTypeEnum.Push;
                 break;
 

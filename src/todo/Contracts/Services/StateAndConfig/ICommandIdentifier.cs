@@ -8,6 +8,7 @@ public interface ICommandIdentifier
         Commit,
         ShowHtml,
         Sync,
+        PrintHtml,
         Push
     }
 

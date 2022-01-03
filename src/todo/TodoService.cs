@@ -13,22 +13,24 @@ public class TodoService : ITodoService
     private readonly IArchiveExecutor _archiveExecutor;
     private readonly ICreateOrShowExecutor _createOrShowExecutor;
     private readonly ICommitExecutor _commitExecutor;
+    private readonly IPrintHtmlExecutor _printHtmlExecutor;
     private readonly IPushExecutor _pushExecutor;
     private readonly ISyncExecutor _syncExecutor;
     private readonly IShowHtmlExecutor _showHtmlExecutor;
 
     public TodoService(ICommandProvider commandProvider,
         IArchiveExecutor archiveExecutor, ICreateOrShowExecutor createOrShowExecutor,
-        ICommitExecutor commitExecutor, IPushExecutor pushExecutor, ISyncExecutor syncExecutor,
-        IShowHtmlExecutor showHtmlExecutor)
+        ICommitExecutor commitExecutor, IPrintHtmlExecutor printHtmlExecutor, IPushExecutor pushExecutor,
+        IShowHtmlExecutor showHtmlExecutor, ISyncExecutor syncExecutor)
     {
         _commandProvider = commandProvider;
         _archiveExecutor = archiveExecutor;
         _createOrShowExecutor = createOrShowExecutor;
         _commitExecutor = commitExecutor;
+        _printHtmlExecutor = printHtmlExecutor;
         _pushExecutor = pushExecutor;
-        _syncExecutor = syncExecutor;
         _showHtmlExecutor = showHtmlExecutor;
+        _syncExecutor = syncExecutor;
     }
 
     public void PerformTask()
@@ -47,6 +49,10 @@ public class TodoService : ITodoService
 
             case CommitCommand commitCommand:
                 _commitExecutor.Execute(commitCommand);
+                break;
+
+            case PrintHtmlCommand printHtmlCommand:
+                _printHtmlExecutor.Execute(printHtmlCommand);
                 break;
 
             case PushCommand pushCommand:

@@ -91,6 +91,7 @@ internal static class Program
             .AddSingleton<IArchiveExecutor, ArchiveExecutor>()
             .AddSingleton<ICommitExecutor, CommitExecutor>()
             .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
+            .AddSingleton<IPrintHtmlExecutor, PrintHtmlExecutor>()
             .AddSingleton<IPushExecutor, PushExecutor>()
             .AddSingleton<IShowHtmlExecutor, ShowHtmlExecutor>()
             .AddSingleton<ISyncExecutor, SyncExecutor>()

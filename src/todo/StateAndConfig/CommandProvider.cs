@@ -37,6 +37,14 @@ public class CommandProvider : ICommandProvider
 
                     return CommitCommand.Of(restOfCommand);
 
+                case ICommandIdentifier.CommandTypeEnum.PrintHtml:
+                {
+                    if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
+                        throw new ArgumentException("Date in archive command is not recognised");
+
+                    return PrintHtmlCommand.Of(dateOnly);
+                }
+
                 case ICommandIdentifier.CommandTypeEnum.Push:
 
                     return PushCommand.Singleton;
