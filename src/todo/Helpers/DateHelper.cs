@@ -1,5 +1,6 @@
 ﻿using System;
-using Todo.Contracts.Services;
+using System.Collections.Generic;
+using System.Linq;
 using Todo.Contracts.Services.Helpers;
 
 namespace Todo.Helpers;
@@ -14,11 +15,16 @@ public class DateHelper : IDateHelper
 
     public int DateDiff(DateOnly a, DateOnly b) 
         => (int)(ConvertToDateTime(a) - ConvertToDateTime(b)).TotalDays;
-    
+
+    public DateOnly GetNearestTo(IEnumerable<DateOnly> candidates, DateOnly to)
+        => candidates
+            .OrderBy(x => AbsoluteDateDiff(x, to))
+            .First();
+
     public int AbsoluteDateDiff(DateOnly a, DateOnly b) 
         => Math.Abs(DateDiff(a, b));
 
-    public bool TryGetNthOfPreviousMonth(DateOnly currentDay, int n, out DateOnly? nOfMonth)
+    public bool TryGetNthOfPreviousMonth(DateOnly currentDay, int n, out DateOnly nOfMonth)
     {
         if (currentDay.Month == 1 && n <= DaysInMonth(12, currentDay.Year - 1))
         {
@@ -36,16 +42,16 @@ public class DateHelper : IDateHelper
         return nOfMonth != default;
     }
 
-    public bool TryGetNthOfCurrentMonth(DateOnly currentDay, int n, out DateOnly? nOfMonth)
+    public bool TryGetNthOfCurrentMonth(DateOnly currentDay, int n, out DateOnly nOfMonth)
     {
         nOfMonth = n <= DaysInMonth(currentDay.Month, currentDay.Year) ? 
             new DateOnly(currentDay.Year, currentDay.Month, n) : 
-            default(DateOnly?);
+            default;
 
         return nOfMonth != default;
     }
 
-    public bool TryGetNthOfNextMonth(DateOnly currentDay, int n, out DateOnly? nOfMonth)
+    public bool TryGetNthOfNextMonth(DateOnly currentDay, int n, out DateOnly nOfMonth)
     {
         if (currentDay.Month == 12 && n <= DaysInMonth(1, currentDay.Year))
         {
@@ -61,6 +67,25 @@ public class DateHelper : IDateHelper
         }
 
         return nOfMonth != default;
+    }
+
+    public bool TryGetDateInPreviousYear(DateOnly currentDay, int month, int day, out DateOnly dateInYear)
+        => TryGetDate(currentDay.Year - 1, month, day, out dateInYear);
+    
+    public bool TryGetDateInCurrentYear(DateOnly currentDay, int month, int day, out DateOnly dateInYear)
+        => TryGetDate(currentDay.Year, month, day, out dateInYear);
+    
+    public bool TryGetDateInFollowingYear(DateOnly currentDay, int month, int day, out DateOnly dateInYear)
+        => TryGetDate(currentDay.Year, month, day, out dateInYear);
+    
+    private bool TryGetDate(int year, int month, int day, out DateOnly dateInYear)
+    {
+        var daysInMonth = DaysInMonth(month, year);
+
+        if (day < 0 || day > daysInMonth) return false;
+
+        dateInYear = new DateOnly(year, month, day);
+        return true;
     }
 
     public int DaysInMonth(int month, int year)

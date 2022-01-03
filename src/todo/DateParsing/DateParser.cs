@@ -22,7 +22,8 @@ public class DateParser : IDateParser
         else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
         else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted()
                                                                         .AddDays((int)offset);
-        else if (IsDayOnly(str, out var dayOnly)) dateOnly = GetDateFromDayOnly(dayOnly);
+        else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
+        else if (IsDayMonthOnly(str, out day, out var month)) dateOnly = GetDateFromDayMonth(month, day);
         else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
         else dateOnly = null;
 
@@ -34,68 +35,101 @@ public class DateParser : IDateParser
             ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1)) 
             : _dateHelper.ConvertToDateOnly(DateTime.Today);
 
-        private bool IsYesterday(string commandLine)=> commandLine.ToLower() switch
-        {
-            "y" => true,
-            "yesterday" => true,
-            _ => false,
-        };
-        
-        private bool IsToday(string commandLine) => 
-            string.IsNullOrWhiteSpace(commandLine) ||
-            ".".Equals(commandLine) ||
-            "today".Equals(commandLine.ToLower());
+    private bool IsYesterday(string commandLine)=> commandLine.ToLower() switch
+    {
+        "y" => true,
+        "yesterday" => true,
+        _ => false,
+    };
+    
+    private bool IsToday(string commandLine) => 
+        string.IsNullOrWhiteSpace(commandLine) ||
+        ".".Equals(commandLine) ||
+        "today".Equals(commandLine.ToLower());
 
-        private bool IsTomorrow(string commandLine) => commandLine.ToLower() switch
-        {
-            "tm" => true,
-            "tomorrow" => true,
-            _ => false,
-        };
+    private bool IsTomorrow(string commandLine) => commandLine.ToLower() switch
+    {
+        "tm" => true,
+        "tomorrow" => true,
+        _ => false,
+    };
 
-        private bool IsRelativeOffset(string commandLine, out int? offset)
+    private bool IsRelativeOffset(string commandLine, out int offset)
+    {
+        if (int.TryParse(commandLine.Substring(1), out var parsed))
         {
-            if (int.TryParse(commandLine.Substring(1), out var parsed))
+            switch (commandLine[0])
             {
-                switch (commandLine[0])
-                {
-                    case '+': 
-                        offset = parsed;
-                        return true;
-                    case '-':
-                        offset = -parsed;
-                        return true;
-                    default:
-                        offset = default;
-                        return false;
-                                
-                }
+                case '+': 
+                    offset = parsed;
+                    return true;
+                case '-':
+                    offset = -parsed;
+                    return true;
+                default:
+                    offset = default;
+                    return false;
+                            
             }
-
-            offset = int.MinValue;
-            return false;
         }
 
-        private bool IsDayOnly(string commandLine, out int dayOnly) 
-            => int.TryParse(commandLine, out dayOnly) && dayOnly is > 0 and < 32;
+        offset = int.MinValue;
+        return false;
+    }
 
-        private DateOnly GetDateFromDayOnly(int dayOnly)
+    private bool IsDayOnly(string commandLine, out int dayOnly) 
+        => int.TryParse(commandLine, out dayOnly) && dayOnly is > 0 and < 32;
+
+    private bool IsDayMonthOnly(string commandLine, out int day, out int month)
+    {
+        var elements = commandLine.Split('/', '.', '-');
+
+        var dayParsed = int.TryParse(elements[0], out day);
+        var monthParsed = int.TryParse(elements[1], out month);
+
+        return
+            elements.Length == 2 && dayParsed && monthParsed;
+    }
+
+    private DateOnly GetDateFromDayOnly(int dayOnly)
+    {
+        var today = GetTodayWithMidnightAdjusted();
+
+        var possibles = GetPossiblesForDayOnly(today, dayOnly).ToArray();
+
+        if (possibles.Length == 0) throw new Exception($"No dates found for day = {dayOnly}");
+        return _dateHelper.GetNearestTo(possibles, today);
+    }
+    
+    private DateOnly GetDateFromDayMonth(int month, int day)
+    {
+        var today = GetTodayWithMidnightAdjusted();
+
+        var possibles = GetPossiblesForDayMonth(today, month, day);
+        return _dateHelper.GetNearestTo(possibles, today);
+    }
+
+    DateOnly [] GetPossiblesForDayOnly(DateOnly currentDay, int n)
+    {
+        IEnumerable<DateOnly> PotentialDates()
         {
-            var today = GetTodayWithMidnightAdjusted();
-
-            var possibles = GetPossibles(today, dayOnly);
-
-            var nearestDate = possibles
-                .OrderBy(x => _dateHelper.AbsoluteDateDiff(x, today))
-                .First();
-
-            return nearestDate;
+            if (_dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return nOfMonth;
+            if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
+            if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;    
         }
 
-        IEnumerable<DateOnly> GetPossibles(DateOnly currentDay, int n)
+        return PotentialDates().ToArray();
+    }
+    
+    DateOnly [] GetPossiblesForDayMonth(DateOnly currentDay, int month, int day)
+    {
+        IEnumerable<DateOnly> PotentialDates()
         {
-            if (_dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return (DateOnly)nOfMonth;
-            if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
-            if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
+            if (_dateHelper.TryGetDateInPreviousYear(currentDay, month, day, out var nOfMonth)) yield return nOfMonth;
+            if (_dateHelper.TryGetDateInCurrentYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
+            if (_dateHelper.TryGetDateInFollowingYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;    
         }
+
+        return PotentialDates().ToArray();
+    }
 }
