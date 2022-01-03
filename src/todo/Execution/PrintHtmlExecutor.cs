@@ -33,9 +33,9 @@ public class PrintHtmlExecutor : IPrintHtmlExecutor
     {
         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
 
-        var markdownText = _markdownFileReader.ReadMarkdownFile(command.Date);
+        var markdownSourceFile = _markdownFileReader.ReadMarkdownFile(command.Date);
 
-        var htmlBody = Markdown.ToHtml(markdownText, pipeline);
+        var htmlBody = Markdown.ToHtml(markdownSourceFile.FileContents, pipeline);
 
         var htmlTitle = _dateFormatter.GetHtmlTitle(command.Date);
 

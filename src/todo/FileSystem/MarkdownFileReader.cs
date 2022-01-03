@@ -14,10 +14,10 @@ public class MarkdownFileReader : FileReader, IMarkdownFileReader
         _contentFileResolver = contentFileResolver;
     }
 
-    public string ReadMarkdownFile(DateOnly dateOnly)
+    public TodoFile ReadMarkdownFile(DateOnly dateOnly)
     {
-        var filePath = _contentFileResolver.GetPathFor(dateOnly, FileTypeEnum.Markdown, false);
+        var filePathInfo = _contentFileResolver.GetPathFor(dateOnly, FileTypeEnum.Markdown, false);
 
-        return GetFileText(filePath.Path);
+        return TodoFile.Of(filePathInfo, GetFileText(filePathInfo.Path));
     }
 }

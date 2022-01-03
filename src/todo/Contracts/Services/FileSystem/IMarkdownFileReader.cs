@@ -1,8 +1,9 @@
 ﻿using System;
+using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Services.FileSystem;
 
 public interface IMarkdownFileReader
 {
-    string ReadMarkdownFile(DateOnly dateOnly);
+    TodoFile ReadMarkdownFile(DateOnly dateOnly);
 }
