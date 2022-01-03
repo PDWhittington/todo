@@ -5,7 +5,9 @@ public interface ICommandIdentifier
     public enum CommandTypeEnum
     {
         Archive,
-        Sync
+        Commit,
+        Sync,
+        Push,
     }
 
     bool TryGetCommandType(out CommandTypeEnum? commandName, out string restOfCommand);

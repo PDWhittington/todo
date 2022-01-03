@@ -14,16 +14,21 @@ namespace Todo
     public class TodoService : ITodoService
     {
         private readonly ICommandProvider _commandProvider;
-        private readonly ISyncExecutor _syncExecutor;
+        
         private readonly IArchiveExecutor _archiveExecutor;
         private readonly ICreateOrShowExecutor _createOrShowExecutor;
+        private readonly ICommitExecutor _commitExecutor;
+        private readonly ISyncExecutor _syncExecutor;
 
-        public TodoService(ICommandProvider commandProvider, ICreateOrShowExecutor createOrShowExecutor, ISyncExecutor syncExecutor, IArchiveExecutor archiveExecutor)
+        public TodoService(ICommandProvider commandProvider, 
+            IArchiveExecutor archiveExecutor, ICreateOrShowExecutor createOrShowExecutor,
+            ICommitExecutor commitExecutor,ISyncExecutor syncExecutor)
         {
             _commandProvider = commandProvider;
-            _syncExecutor = syncExecutor;
             _archiveExecutor = archiveExecutor;
             _createOrShowExecutor = createOrShowExecutor;
+            _commitExecutor = commitExecutor;
+            _syncExecutor = syncExecutor;
         }
         
         public void PerformTask()
@@ -38,6 +43,10 @@ namespace Todo
                 
                 case ArchiveCommand archiveCommand:
                     _archiveExecutor.Execute(archiveCommand);
+                    break;
+                
+                case CommitCommand commitCommand:
+                    _commitExecutor.Execute(commitCommand);
                     break;
 
                 case SyncCommand syncCommand:

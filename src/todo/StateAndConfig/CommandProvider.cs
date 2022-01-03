@@ -32,6 +32,10 @@ namespace Todo.StateAndConfig
 
                         return ArchiveCommand.Of((DateOnly)dateOnly);
                     
+                    case ICommandIdentifier.CommandTypeEnum.Commit:
+                        
+                        return CommitCommand.Of(restOfCommand);
+                    
                     case ICommandIdentifier.CommandTypeEnum.Sync:
                         
                         return SyncCommand.Of(restOfCommand);

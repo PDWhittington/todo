@@ -24,7 +24,12 @@ public class CommandIdentifier : ICommandIdentifier
             case "a":
                 commandType = ICommandIdentifier.CommandTypeEnum.Archive;
                 break;
-
+            
+            case "commit":
+            case "c":
+                commandType = ICommandIdentifier.CommandTypeEnum.Commit;
+                break;
+            
             case "sync":
             case "s":
                 commandType = ICommandIdentifier.CommandTypeEnum.Sync;

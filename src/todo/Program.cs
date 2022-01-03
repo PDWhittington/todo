@@ -79,6 +79,7 @@ namespace Todo
         static IServiceCollection AddMainExecutionLogic(this IServiceCollection serviceCollection)
             => serviceCollection
                 .AddSingleton<IArchiveExecutor, ArchiveExecutor>()    
+                .AddSingleton<ICommitExecutor, CommitExecutor>()
                 .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
                 .AddSingleton<ISyncExecutor, SyncExecutor>()
                 .AddSingleton<ITodoService, TodoService>();
