@@ -4,6 +4,7 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.FileNaming;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.FileNaming;
 
 namespace Todo.Execution;
 
@@ -31,8 +32,8 @@ public class ArchiveExecutor : IArchiveExecutor
 
     private void Archive(ArchiveCommand command, Action<string, string> archiveOp)
     {
-        var sourcePath = _fileNamer.MarkdownFilePathForDate(command.DateOfFileToArchive);
-        var destinationPath = _fileNamer.MarkdownArchiveFilePathForDate(command.DateOfFileToArchive);
+        var sourcePath = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var destinationPath = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
 
         archiveOp(sourcePath, destinationPath);
     }

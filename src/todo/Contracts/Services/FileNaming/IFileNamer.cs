@@ -1,12 +1,15 @@
 ﻿using System;
+using Todo.FileNaming;
 
 namespace Todo.Contracts.Services.FileNaming;
 
 public interface IFileNamer
 {
-    string MarkdownFileNameForDate(DateOnly dateOnly);
+    public string FileNameWithoutExtension(DateOnly dateOnly);
+    
+    public string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType);
 
-    string MarkdownFilePathForDate(DateOnly dateOnly);
+    public string GetFilePath(DateOnly dateOnly, FileTypeEnum fileType);
 
-    string MarkdownArchiveFilePathForDate(DateOnly dateOnly);
+    public string GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType);
 }
