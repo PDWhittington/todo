@@ -14,17 +14,17 @@ namespace Todo
     public class TodoService : ITodoService
     {
         private readonly IConfigurationProvider _configurationProvider;
-        private readonly ICommandProvider _stateProvider;
+        private readonly ICommandProvider _commandProvider;
         private readonly ITemplateProvider _templateProvider;
         private readonly IDateNamer _dateNamer;
         private readonly IGitInterface _gitInterface;
 
         public TodoService(IConfigurationProvider configurationProvider,
-            ICommandProvider stateProvider, ITemplateProvider templateProvider,
+            ICommandProvider commandProvider, ITemplateProvider templateProvider,
             IDateNamer dateNamer, IGitInterface gitInterface)
         {
             _configurationProvider = configurationProvider;
-            _stateProvider = stateProvider;
+            _commandProvider = commandProvider;
             _templateProvider = templateProvider;
             _dateNamer = dateNamer;
             _gitInterface = gitInterface;
@@ -32,7 +32,7 @@ namespace Todo
         
         public void PerformTask()
         {
-            var command = _stateProvider.GetCommand();
+            var command = _commandProvider.GetCommand();
 
             switch (command)
             {
