@@ -1,51 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Todo.Contracts.Services;
+using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Helpers;
-using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.StateAndConfig
+namespace Todo.DateParsing;
+
+public class DateParser : IDateParser
 {
-    /// <summary>
-    /// This class 
-    /// </summary>
-    public class CommandLineParser : ICommandLineParser
+    private readonly IDateHelper _dateHelper;
+
+    public DateParser(IDateHelper dateHelper)
     {
-        private readonly IDateHelper _dateHelper;
+        _dateHelper = dateHelper;
+    }
+    
+    public bool TryGetDate(string str, out DateOnly? dateOnly)
+    {
+        if (IsYesterday(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(-1);
+        else if (IsToday(str)) dateOnly = GetTodayWithMidnightAdjusted();
+        else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
+        else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted()
+                                                                        .AddDays((int)offset);
+        else if (IsDayOnly(str, out var dayOnly)) dateOnly = GetDateFromDayOnly(dayOnly);
+        else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
+        else dateOnly = null;
 
-        public CommandLineParser(IDateHelper dateHelper)
-        {
-            _dateHelper = dateHelper;
-        }
-
-        public bool TryGetWordFromCommandLine(string[] candidates, out string word)
-        {
-            var commandLine = GetCommandLineMinusAssemblyLocation();
-
-            word = candidates.FirstOrDefault(x =>
-                string.Equals(x, commandLine, StringComparison.CurrentCultureIgnoreCase));
-
-            return word != default;
-        }
-        
-        public DateOnly GetDateFromCommandLine()
-        {
-            var commandLine = GetCommandLineMinusAssemblyLocation();
-            
-            if (IsYesterday(commandLine)) return GetTodayWithMidnightAdjusted().AddDays(-1);
-            if (IsToday(commandLine)) return GetTodayWithMidnightAdjusted();
-            if (IsTomorrow(commandLine)) return GetTodayWithMidnightAdjusted().AddDays(1);
-            if (IsRelativeOffset(commandLine, out var offset)) return GetTodayWithMidnightAdjusted().AddDays((int)offset);
-            if (IsDayOnly(commandLine, out var dayOnly)) return GetDateFromDayOnly(dayOnly);
-
-            if (DateOnly.TryParse(commandLine, out var dte)) return dte;
-
-            throw new Exception("date is not a recognised format");
-        }
-
-        private DateOnly GetTodayWithMidnightAdjusted() 
+        return dateOnly != default;
+    }
+    
+     private DateOnly GetTodayWithMidnightAdjusted() 
             => DateTime.Now.TimeOfDay < new TimeSpan(04, 00, 00) 
             ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1)) 
             : _dateHelper.ConvertToDateOnly(DateTime.Today);
@@ -114,21 +98,4 @@ namespace Todo.StateAndConfig
             if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
             if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return (DateOnly)nOfMonth;
         }
-
-        public string GetCommandLineMinusAssemblyLocation()
-        {
-            var assemblyLocation = Assembly.GetEntryAssembly()?.Location ?? "";
-
-            var wholeCommandLine = Environment.CommandLine;
-            
-            if (wholeCommandLine.StartsWith(assemblyLocation))
-            {
-                return wholeCommandLine
-                    .Substring(assemblyLocation.Length)
-                    .Trim();
-            }
-
-            return wholeCommandLine.Trim();
-        }
-    }
 }

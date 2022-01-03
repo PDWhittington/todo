@@ -6,6 +6,8 @@ public class SyncCommand : CommandBase
 
     private SyncCommand(string commitMessage)
     {
+        if (string.IsNullOrWhiteSpace(commitMessage)) commitMessage = null;
+        
         CommitMessage = commitMessage;
     }
 

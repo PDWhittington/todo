@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Services.StateAndConfig
 {
-    public interface ICommandLineParser
+    public interface ICommandLineProvider
     {
         DateOnly GetDateFromCommandLine();
 

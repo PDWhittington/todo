@@ -1,33 +1,45 @@
 ﻿using System;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services;
+using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig
 {
     public class CommandProvider : ICommandProvider
     {
-        private readonly ICommandLineParser _commandLineParser;
+        private readonly ICommandLineProvider _commandLineProvider;
+        private readonly ICommandIdentifier _commandIdentifier;
+        private readonly IDateParser _dateParser;
 
-        public CommandProvider(ICommandLineParser commandLineParser)
+        public CommandProvider(ICommandLineProvider commandLineProvider, 
+            ICommandIdentifier commandIdentifier, IDateParser dateParser)
         {
-            _commandLineParser = commandLineParser;
+            _commandLineProvider = commandLineProvider;
+            _commandIdentifier = commandIdentifier;
+            _dateParser = dateParser;
         }
         
         public CommandBase GetCommand()
         {
-            var commandLine = _commandLineParser.GetCommandLineMinusAssemblyLocation();
-
-            if (commandLine.StartsWith("sync", StringComparison.CurrentCultureIgnoreCase))
+            if (_commandIdentifier.TryGetCommandType(out var commandType, out var commitMessage))
             {
-                var commitMessage = commandLine.Substring("sync".Length).Trim();
-
-                if (string.IsNullOrWhiteSpace(commitMessage)) commitMessage = null;
-                return SyncCommand.Of(commitMessage);
+                switch (commandType)
+                {
+                    case ICommandIdentifier.CommandTypeEnum.Sync:
+                    return SyncCommand.Of(commitMessage);
+                    
+                    default: throw new Exception("Command not yet implemented.");
+                }
             }
+
+            var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
             
-            var date = _commandLineParser.GetDateFromCommandLine();
-            return CreateOrShowCommand.Of(date);
+            if (_dateParser.TryGetDate(commandLine, out var date))
+            {
+                return CreateOrShowCommand.Of((DateOnly)date);                
+            }
+
+            throw new Exception("Command not recognised");
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Todo
         
         static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<ICommandLineParser, CommandLineParser>()
+                .AddSingleton<ICommandLineProvider, CommandLineProvider>()
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
                 .AddSingleton<ICommandProvider, CommandProvider>()
                 .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
