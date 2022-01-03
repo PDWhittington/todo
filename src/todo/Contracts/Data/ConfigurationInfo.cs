@@ -21,9 +21,10 @@ public class ConfigurationInfo
     public string ArchiveFolderName { get; }
 
     [JsonConstructor]
-    public ConfigurationInfo(string templatePath,
-        bool useNamesForDays, string browserPath,
-        string textEditorPath, string gitPath, bool useGit, string outputFolder, string archiveFolderName)
+    public ConfigurationInfo(string templatePath, bool useNamesForDays,
+        string browserPath, string textEditorPath,
+        string gitPath, bool useGit,
+        string outputFolder, string archiveFolderName)
     {
         TemplatePath = templatePath;
         UseNamesForDays = useNamesForDays;
