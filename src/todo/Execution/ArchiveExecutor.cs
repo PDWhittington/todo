@@ -33,12 +33,14 @@ public class ArchiveExecutor : IArchiveExecutor
     private void Archive(ArchiveCommand command, Action<FilePathInfo, FilePathInfo> archiveOp)
     {
         var sourcePathInfo = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
-        var destinationPathInfo = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var destinationPathInfo = _fileNamer.GetArchiveFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
 
         archiveOp(sourcePathInfo, destinationPathInfo);
     }
 
-    private void GitArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo) => _gitInterface.RunGitCommand($"mv {sourcePathInfo.Path} {destinationPathInfo.Path}");
+    private void GitArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
+        => _gitInterface.RunGitCommand($"mv {sourcePathInfo.Path} {destinationPathInfo.Path}");
 
-    private static void FileArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo) => File.Move(sourcePathInfo.Path, destinationPathInfo.Path);
+    private static void FileArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
+        => File.Move(sourcePathInfo.Path, destinationPathInfo.Path);
 }
