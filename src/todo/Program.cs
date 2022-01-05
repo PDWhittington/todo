@@ -1,6 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Todo.CommandFactories;
+using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services;
+using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Execution;
@@ -47,9 +50,28 @@ internal static class Program
             .AddTemplateFunctionality()
             .AddDateNaming()
             .AddFileSystemFunctionality()
+            .AddCommandFactories()
             .AddGitFunctionality()
             .AddMainExecutionLogic()
             .BuildServiceProvider();
+
+    private static IServiceCollection AddCommandFactories(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<IArchiveCommandFactory, ArchiveCommandFactory>()
+            .AddSingleton<ICommitCommandFactory, CommitCommandFactory>()
+            .AddSingleton<ICreateOrShowCommandFactory, CreateOrShowCommandFactory>()
+            .AddSingleton<IPrintHtmlCommandFactory, PrintHtmlCommandFactory>()
+            .AddSingleton<IPushCommandFactory, PushCommandFactory>()
+            .AddSingleton<IShowHtmlCommandFactory, ShowHtmlCommandFactory>()
+            .AddSingleton<ISyncCommandFactory, SyncCommandFactory>()
+
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IArchiveCommandFactory>())
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<ICommitCommandFactory>())
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<ICreateOrShowCommandFactory>())
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IPrintHtmlCommandFactory>())
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IPushCommandFactory>())
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IShowHtmlCommandFactory>())
+            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<ISyncCommandFactory>());
 
     private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
         => serviceCollection

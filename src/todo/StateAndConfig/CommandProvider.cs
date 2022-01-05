@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.DateParsing;
+using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
@@ -8,69 +10,66 @@ namespace Todo.StateAndConfig;
 public class CommandProvider : ICommandProvider
 {
     private readonly ICommandLineProvider _commandLineProvider;
-    private readonly ICommandIdentifier _commandIdentifier;
-    private readonly IDateParser _dateParser;
+
+    private readonly ICommandFactory<CommandBase> _defaultCommandFactory;
+    private readonly ICommandFactory<CommandBase> [] _nonDefaultCommandFactories;
 
     public CommandProvider(ICommandLineProvider commandLineProvider,
-        ICommandIdentifier commandIdentifier, IDateParser dateParser)
+        IEnumerable<ICommandFactory<CommandBase>> commandFactories)
     {
         _commandLineProvider = commandLineProvider;
-        _commandIdentifier = commandIdentifier;
-        _dateParser = dateParser;
+
+        ValidateCommandFactories(commandFactories, out _defaultCommandFactory, out _nonDefaultCommandFactories);
+    }
+
+    private void ValidateCommandFactories(IEnumerable<ICommandFactory<CommandBase>> commandFactories,
+        out ICommandFactory<CommandBase> defaultCommandFactory, out ICommandFactory<CommandBase>[] nonDefaultCommandFactories)
+    {
+        var commandFactoriesArr = commandFactories.ToArray();
+
+        var wordsDuplicated = commandFactoriesArr
+            .SelectMany(x => x.WordsForCommand)
+            .GroupBy(x => x)
+            .Where(g => g.Count() != 1)
+            .Select(g => g.Key)
+            .ToArray();
+
+        if (wordsDuplicated.Any())
+        {
+            throw new Exception(
+                $"The following words are taken by more than one CommandFactory: {string.Join(',',wordsDuplicated)}");
+        }
+
+        var oneAndOnlyOneDefault = commandFactoriesArr
+            .Count(x => x.IsDefaultCommandFactory) == 1;
+
+        if (!oneAndOnlyOneDefault)
+        {
+            throw new Exception("There should be one and only one CommandFactory which is the default");
+        }
+
+        defaultCommandFactory = commandFactoriesArr
+            .Single(x => x.IsDefaultCommandFactory);
+
+        nonDefaultCommandFactories = commandFactoriesArr
+            .Where(x => !x.IsDefaultCommandFactory)
+            .ToArray();
     }
 
     public CommandBase GetCommand()
     {
-        if (_commandIdentifier.TryGetCommandType(out var commandType, out var restOfCommand))
-        {
-            switch (commandType)
-            {
-                case ICommandIdentifier.CommandTypeEnum.Archive:
-                {
-                    if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
-                        throw new ArgumentException("Date in archive command is not recognised");
-
-                    return ArchiveCommand.Of(dateOnly);
-                }
-
-                case ICommandIdentifier.CommandTypeEnum.Commit:
-
-                    return CommitCommand.Of(restOfCommand);
-
-                case ICommandIdentifier.CommandTypeEnum.PrintHtml:
-                {
-                    if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
-                        throw new ArgumentException("Date in archive command is not recognised");
-
-                    return PrintHtmlCommand.Of(dateOnly);
-                }
-
-                case ICommandIdentifier.CommandTypeEnum.Push:
-
-                    return PushCommand.Singleton;
-
-                case ICommandIdentifier.CommandTypeEnum.ShowHtml:
-                {
-                    if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
-                        throw new ArgumentException("Date in archive command is not recognised");
-
-                    return ShowHtmlCommand.Of(dateOnly);
-                }
-
-                case ICommandIdentifier.CommandTypeEnum.Sync:
-
-                    return SyncCommand.Of(restOfCommand);
-
-                default: throw new Exception("Command not yet implemented.");
-            }
-        }
-
         var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
 
-        if (_dateParser.TryGetDate(commandLine, out var date))
+        foreach (var commandFactory in _nonDefaultCommandFactories)
         {
-            return CreateOrShowCommand.Of(date);
+            var command = commandFactory.TryGetCommand(commandLine);
+
+            if (command != default) return command;
         }
+
+        var commandForDefault = _defaultCommandFactory.TryGetCommand(commandLine);
+
+        if (commandForDefault != default) return commandForDefault;
 
         throw new Exception("Command not recognised");
     }
