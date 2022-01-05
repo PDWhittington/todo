@@ -5,5 +5,5 @@ namespace Todo.Contracts.Services.TextFormatting;
 
 public interface ITableWriter
 {
-    void OutputTable(IEnumerable<CommandHelpMessage> rows);
+    string CreateTable(IEnumerable<CommandHelpMessage> rows);
 }

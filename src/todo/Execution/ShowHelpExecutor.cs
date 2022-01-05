@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.HelpMessages;
 using Todo.Contracts.Services.CommandFactories;
@@ -24,6 +25,7 @@ public class ShowHelpExecutor : IShowHelpExecutor
             .GetAllCommandFactories()
             .Select(cf => new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
 
-        _tableWriter.OutputTable(commandHelpMessages);
+        var table = _tableWriter.CreateTable(commandHelpMessages);
+        Console.WriteLine(table);
     }
 }

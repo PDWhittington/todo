@@ -17,13 +17,15 @@ public class TableWriter : ITableWriter
 
     private int FullWidth = 80;
 
-    public void OutputTable(IEnumerable<CommandHelpMessage> commandHelpMessages)
+    public string CreateTable(IEnumerable<CommandHelpMessage> commandHelpMessages)
     {
         var commandHelpMessagesArr = commandHelpMessages.ToArray();
 
         var columnWidths = GetColumnWidths(commandHelpMessagesArr);
 
-        OutputHorizontalLine(RowType.Top, columnWidths);
+        var sb = new StringBuilder();
+
+        sb.AppendLine(HorizontalLine(RowType.Top, columnWidths));
 
         for (var i = 0; i < commandHelpMessagesArr.Length; i++)
         {
@@ -36,16 +38,21 @@ public class TableWriter : ITableWriter
 
             for (var j = 0; j < maxLines; j++)
             {
-                OutputRow(helpWordLines, commandDescriptionLines, j, columnWidths);
+                sb.AppendLine(CreateRow(helpWordLines, commandDescriptionLines, j, columnWidths));
             }
 
-            if (i < commandHelpMessagesArr.Length - 1) OutputHorizontalLine(RowType.Middle, columnWidths);
+            if (i < commandHelpMessagesArr.Length - 1)
+            {
+                sb.AppendLine(HorizontalLine(RowType.Middle, columnWidths));
+            }
         }
 
-        OutputHorizontalLine(RowType.Bottom, columnWidths);
+        sb.AppendLine(HorizontalLine(RowType.Bottom, columnWidths));
+
+        return sb.ToString();
     }
 
-    private void OutputRow(string[] helpWordLines, string[] commandDescriptionLines, int index, ColumnWidths columnWidths)
+    private static string CreateRow(string[] helpWordLines, string[] commandDescriptionLines, int index, ColumnWidths columnWidths)
     {
         var sb = new StringBuilder()
             .Append('\u2502');
@@ -62,7 +69,7 @@ public class TableWriter : ITableWriter
 
         sb.Append(descriptionPadded).Append('\u2502');
 
-        Console.WriteLine(sb);
+        return sb.ToString();
     }
 
     enum RowType
@@ -72,10 +79,8 @@ public class TableWriter : ITableWriter
         Bottom
     }
 
-
-    private void OutputHorizontalLine(RowType rowType, ColumnWidths columnWidths)
-    {
-        var line = rowType switch
+    private static string HorizontalLine(RowType rowType, ColumnWidths columnWidths)
+        => rowType switch
         {
             RowType.Top => "\u250C" + new string('\u2500', columnWidths.WordColumnWidth) + "\u252C" + new string('\u2500', columnWidths.MessageColumnWidth) + "\u2510",
             RowType.Middle => "\u251C" + new string('\u2500', columnWidths.WordColumnWidth) + "\u253C" + new string('\u2500', columnWidths.MessageColumnWidth) + "\u2524",
@@ -83,10 +88,7 @@ public class TableWriter : ITableWriter
             _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null)
         };
 
-        Console.WriteLine(line);
-    }
-
-    private IEnumerable<string> WrapText(string [] lines, int columnWidth)
+    private static IEnumerable<string> WrapText(string [] lines, int columnWidth)
     {
 
         IEnumerable<string[]> GetLines(string[] words)
