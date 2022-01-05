@@ -40,6 +40,7 @@ public class CommandProvider : ICommandProvider
                 $"The following words are taken by more than one CommandFactory: {string.Join(',',wordsDuplicated)}");
         }
 
+
         var oneAndOnlyOneDefault = commandFactoriesArr
             .Count(x => x.IsDefaultCommandFactory) == 1;
 

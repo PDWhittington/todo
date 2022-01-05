@@ -6,10 +6,11 @@ using Todo.Contracts.Services.DateParsing;
 
 namespace Todo.CommandFactories;
 
-public class CreateOrShowCommandFactory : CommandFactoryBase, ICreateOrShowCommandFactory
+public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand>
 {
     private readonly IDateParser _dateParser;
-    public bool IsDefaultCommandFactory => true;
+
+    public override bool IsDefaultCommandFactory => true;
 
     public override HashSet<string> WordsForCommand { get; }
         = new(StringComparer.InvariantCultureIgnoreCase)
@@ -22,7 +23,7 @@ public class CreateOrShowCommandFactory : CommandFactoryBase, ICreateOrShowComma
         _dateParser = dateParser;
     }
 
-    public CreateOrShowCommand? TryGetCommand(string commandLine)
+    public override CreateOrShowCommand? TryGetCommand(string commandLine)
     {
         var commandLineToUse = IsThisCommand(commandLine, out var restOfCommand)
             ? restOfCommand : commandLine;

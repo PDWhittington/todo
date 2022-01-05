@@ -62,7 +62,7 @@ internal static class Program
         var commandFactories = Assembly
             .GetExecutingAssembly()
             .GetTypes()
-            .Where(x => x.IsClass)
+            .Where(x => x.IsClass && !x.IsAbstract)
             .Where(x => x.IsAssignableTo(typeof(ICommandFactory<CommandBase>)));
 
         foreach (var commandFactory in commandFactories)

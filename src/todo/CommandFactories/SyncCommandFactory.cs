@@ -5,9 +5,9 @@ using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
-public class SyncCommandFactory : CommandFactoryBase, ISyncCommandFactory
+public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
 {
-    public bool IsDefaultCommandFactory => false;
+    public override bool IsDefaultCommandFactory => false;
 
     public override HashSet<string> WordsForCommand { get; }
         = new(StringComparer.CurrentCultureIgnoreCase)
@@ -16,7 +16,7 @@ public class SyncCommandFactory : CommandFactoryBase, ISyncCommandFactory
             "s"
         };
 
-    public SyncCommand?  TryGetCommand(string commandLine)
+    public override SyncCommand? TryGetCommand(string commandLine)
     {
         if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
 

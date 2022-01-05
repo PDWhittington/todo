@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
-public abstract class CommandFactoryBase
+public abstract class CommandFactoryBase<T> : ICommandFactory<T>
+    where T : CommandBase
 {
+    public abstract T? TryGetCommand(string commandLine);
+
+    public abstract bool IsDefaultCommandFactory { get; }
+
     public abstract HashSet<string> WordsForCommand { get; }
 
     protected bool IsThisCommand(string commandLine, out string? restOfCommand)

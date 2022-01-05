@@ -5,9 +5,9 @@ using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
-public class PushCommandFactory : CommandFactoryBase, IPushCommandFactory
+public class PushCommandFactory : CommandFactoryBase<PushCommand>
 {
-    public bool IsDefaultCommandFactory => false;
+    public override bool IsDefaultCommandFactory => false;
 
     public override HashSet<string> WordsForCommand { get; }
         = new(StringComparer.InvariantCultureIgnoreCase)
@@ -15,7 +15,7 @@ public class PushCommandFactory : CommandFactoryBase, IPushCommandFactory
             "push"
         };
 
-    public PushCommand? TryGetCommand(string commandLine)
+    public override PushCommand? TryGetCommand(string commandLine)
     {
         if (!IsThisCommand(commandLine, out _)) return default;
 

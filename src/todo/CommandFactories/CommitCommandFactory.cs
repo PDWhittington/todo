@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
-public class CommitCommandFactory : CommandFactoryBase, ICommitCommandFactory
+public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
 {
-    public bool IsDefaultCommandFactory => false;
+    public override bool IsDefaultCommandFactory => false;
 
     public override HashSet<string> WordsForCommand { get; }
         = new(StringComparer.InvariantCultureIgnoreCase)
@@ -16,7 +15,7 @@ public class CommitCommandFactory : CommandFactoryBase, ICommitCommandFactory
             "c"
         };
 
-    public CommitCommand? TryGetCommand(string commandLine)
+    public override CommitCommand? TryGetCommand(string commandLine)
     {
         if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
 
