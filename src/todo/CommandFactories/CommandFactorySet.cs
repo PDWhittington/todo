@@ -14,7 +14,8 @@ public class CommandFactorySet : ICommandFactorySet
     public ICommandFactory<CommandBase>[] GetAllCommandFactories()
     {
         return new[] { DefaultCommandFactory }
-            .Concat(NonDefaultCommandFactories)
+            .Concat(NonDefaultCommandFactories
+                .OrderBy(x => x.CommandWords.First()))
             .ToArray();
     }
 
