@@ -94,7 +94,7 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
             _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null)
         };
 
-    private static IEnumerable<string> WrapText(IReadOnlyList<string> lines, int columnWidth)
+    public IEnumerable<string> WrapText(IReadOnlyList<string> lines, int columnWidth)
     {
 
         IEnumerable<string[]> GetLines(IEnumerable<string> words)

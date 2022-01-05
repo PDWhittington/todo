@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.HelpMessages;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.TextFormatting;
 
 namespace Todo.Execution;
 
 public class ShowHelpExecutor : CommandExecutorBase<ShowHelpCommand>, IShowHelpExecutor
 {
+    private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _tableWriter;
 
-    public ShowHelpExecutor(ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter)
+    public ShowHelpExecutor(IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter)
     {
+        _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
         _tableWriter = tableWriter;
     }
@@ -28,33 +32,40 @@ public class ShowHelpExecutor : CommandExecutorBase<ShowHelpCommand>, IShowHelpE
 
         var sb = new StringBuilder()
             .AppendLine(_tableWriter.CreateTable(commandHelpMessages))
-            .AppendLine()
-            .AppendLine(GetNotes());
+            .AppendLine();
+
+        var notesLines = GetNotes();
+
+        foreach (var notesLine in notesLines) sb.AppendLine(notesLine);
 
         Console.WriteLine(sb);
     }
 
-    private static string GetNotes() => _notes
-        .Replace("->", "\u2192");
+    private IEnumerable<string> GetNotes()
+    {
+        var withSpecialChars = _notes.Select(x => x.Replace("->", "\u2192"));
 
-    private const string _notes =
-@"Notes: 
+        return _tableWriter.WrapText(_notes, _configurationProvider.Config.ConsoleWidth);
+    }
 
-createorshow is the default command. This means it can be accessed simply by typing anything that can be parsed as a date after the word todo.
+    private readonly string [] _notes =
+    {
+        "Notes:",
 
-Valid date formats:-
+        "createorshow is the default command. This means it can be accessed simply by typing anything that can be parsed as a date after the word todo.",
 
-    ""y"", ""yesterday"" -> yesterday 
-    [empty string], ""."", ""today"" -> today
-    ""tm"", ""tomorrow"" -> tomorrow
-        
-    [day] -> maps to the day/month/year which is nearest in time to today
-    [day]/[month] -> maps to the day/month which is nearest in time to today
-    +[daycount] -> positive offset a number of days from today
-    -[daycount] -> negative offset a number of days from today
+        "Valid date formats:-",
 
-[Commit Message] -> In the Commit and Sync commands, the commit message is optional. If none is supplied, then 
-a standard message detailing date and time of the commit will be used. 
-";
+        "\t\"y\", \"yesterday\" -> yesterday",
+"\t[empty string], \".\", \"today\" -> today",
+"\t\"tm\", \"tomorrow\" -> tomorrow",
 
+"\t[day] -> maps to the day/month/year which is nearest in time to today",
+"\t[day]/[month] -> maps to the day/month which is nearest in time to today",
+"\t+[daycount] -> positive offset a number of days from today",
+"\t-[daycount] -> negative offset a number of days from today",
+
+        @"[Commit Message] -> In the Commit and Sync commands, the commit message is optional. If none is supplied, then 
+a standard message detailing date and time of the commit will be used."
+    };
 }
