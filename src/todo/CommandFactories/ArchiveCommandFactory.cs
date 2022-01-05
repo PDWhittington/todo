@@ -16,7 +16,8 @@ public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
 
     public override string [] HelpText => new[]
     {
-        "Archives the markdown file for a given date."
+        "Archives the markdown file for a given date.",
+        "Usage: todo a [date]"
     };
 
     public ArchiveCommandFactory(IDateParser dateParser)

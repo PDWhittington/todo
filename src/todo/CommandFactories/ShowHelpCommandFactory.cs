@@ -8,7 +8,9 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 
     public override string[] HelpText => new[]
     {
-        "Displays this help screen."
+        "Displays this help screen.",
+
+        "Usage: todo help"
     };
 
     public ShowHelpCommandFactory() : base(Words) { }

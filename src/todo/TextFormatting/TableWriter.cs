@@ -113,14 +113,16 @@ public class TableWriter : ITableWriter
             yield return list.ToArray();
         }
 
-        foreach (var line in lines)
+        for (int i = 0; i < lines.Length; i++)
         {
-            var wordsInLine = line.Split(' ');
+            var wordsInLine = lines[i].Split(' ');
 
             var outputLines = GetLines(wordsInLine)
                 .Select(outputWord => string.Join(' ', outputWord));
 
             foreach (var outputLine in outputLines) yield return outputLine;
+
+            if (i < lines.Length - 1) yield return "";
         }
     }
 

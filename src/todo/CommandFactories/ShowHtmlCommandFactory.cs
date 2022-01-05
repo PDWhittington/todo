@@ -16,7 +16,9 @@ public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
 
     public override string[] HelpText => new[]
     {
-        "Opens the browser specified in the settings file and loads the Html file for the given date."
+        "Opens the browser specified in the settings file and loads the Html file for the given date.",
+
+        "Usage: todo h [date]"
     };
 
     public ShowHtmlCommandFactory(IDateParser dateParser)

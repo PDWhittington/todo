@@ -12,7 +12,9 @@ public class PushCommandFactory : CommandFactoryBase<PushCommand>
 
     public override string[] HelpText => new[]
     {
-        "Executes a git push."
+        "Executes a git push.",
+
+        "Usage: todo push"
     };
 
 

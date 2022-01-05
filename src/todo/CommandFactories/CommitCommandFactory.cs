@@ -12,7 +12,8 @@ public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
 
     public override string [] HelpText => new[]
     {
-        "Gathers the current modifications into a commit. Commit message is optional."
+        "Gathers the current modifications into a commit. Commit message is optional.",
+        "Usage: todo c [commit message]"
     };
 
     public CommitCommandFactory() : base(Words) { }
