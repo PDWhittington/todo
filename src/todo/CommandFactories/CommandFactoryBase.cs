@@ -5,12 +5,13 @@ using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
-public abstract class CommandFactoryBase<T> : ICommandFactory<T>
-    where T : CommandBase
+public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : CommandBase
 {
     public abstract T? TryGetCommand(string commandLine);
 
     public abstract bool IsDefaultCommandFactory { get; }
+
+    public abstract string HelpText { get; }
 
     public HashSet<string> CommandWords { get; }
 

@@ -14,6 +14,11 @@ public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand
 
     public override bool IsDefaultCommandFactory => true;
 
+    public override string HelpText =>
+        "Creates or shows a markdown file for the date supplied. " +
+        "This is the default command and can be executed by typing anything that can be parsed as a date. " +
+        "Supplying no date assumes the current day";
+
     public CreateOrShowCommandFactory(IDateParser dateParser)
         : base(Words)
     {

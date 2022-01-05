@@ -14,6 +14,8 @@ public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
+    public override string HelpText => "Archives the markdown file for a given date.";
+
     public ArchiveCommandFactory(IDateParser dateParser)
         : base(Words)
     {

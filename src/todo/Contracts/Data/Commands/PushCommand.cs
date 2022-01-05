@@ -2,7 +2,7 @@
 
 public class PushCommand : CommandBase
 {
-    public static PushCommand Singleton => new();
+    public static PushCommand Singleton { get; } = new();
 
     private PushCommand() { }
 }

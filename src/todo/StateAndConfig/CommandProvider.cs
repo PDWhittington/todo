@@ -10,65 +10,28 @@ namespace Todo.StateAndConfig;
 public class CommandProvider : ICommandProvider
 {
     private readonly ICommandLineProvider _commandLineProvider;
+    private readonly ICommandFactorySet _commandFactorySet;
 
-    private readonly ICommandFactory<CommandBase> _defaultCommandFactory;
-    private readonly ICommandFactory<CommandBase> [] _nonDefaultCommandFactories;
 
     public CommandProvider(ICommandLineProvider commandLineProvider,
-        IEnumerable<ICommandFactory<CommandBase>> commandFactories)
+        ICommandFactorySet commandFactorySet)
     {
         _commandLineProvider = commandLineProvider;
-
-        ValidateCommandFactories(commandFactories, out _defaultCommandFactory, out _nonDefaultCommandFactories);
-    }
-
-    private static void ValidateCommandFactories(IEnumerable<ICommandFactory<CommandBase>> commandFactories,
-        out ICommandFactory<CommandBase> defaultCommandFactory, out ICommandFactory<CommandBase>[] nonDefaultCommandFactories)
-    {
-        var commandFactoriesArr = commandFactories.ToArray();
-
-        var wordsDuplicated = commandFactoriesArr
-            .SelectMany(x => x.CommandWords)
-            .GroupBy(x => x)
-            .Where(g => g.Count() != 1)
-            .Select(g => g.Key)
-            .ToArray();
-
-        if (wordsDuplicated.Any())
-        {
-            throw new Exception(
-                $"The following words are taken by more than one CommandFactory: {string.Join(',',wordsDuplicated)}");
-        }
-
-
-        var oneAndOnlyOneDefault = commandFactoriesArr
-            .Count(x => x.IsDefaultCommandFactory) == 1;
-
-        if (!oneAndOnlyOneDefault)
-        {
-            throw new Exception("There should be one and only one CommandFactory which is the default");
-        }
-
-        defaultCommandFactory = commandFactoriesArr
-            .Single(x => x.IsDefaultCommandFactory);
-
-        nonDefaultCommandFactories = commandFactoriesArr
-            .Where(x => !x.IsDefaultCommandFactory)
-            .ToArray();
+        _commandFactorySet = commandFactorySet;
     }
 
     public CommandBase GetCommand()
     {
         var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
 
-        foreach (var commandFactory in _nonDefaultCommandFactories)
+        foreach (var commandFactory in _commandFactorySet.NonDefaultCommandFactories)
         {
             var command = commandFactory.TryGetCommand(commandLine);
 
             if (command != default) return command;
         }
 
-        var commandForDefault = _defaultCommandFactory.TryGetCommand(commandLine);
+        var commandForDefault = _commandFactorySet.DefaultCommandFactory.TryGetCommand(commandLine);
 
         if (commandForDefault != default) return commandForDefault;
 
