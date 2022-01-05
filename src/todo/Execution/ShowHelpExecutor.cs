@@ -12,9 +12,9 @@ namespace Todo.Execution;
 public class ShowHelpExecutor : CommandExecutorBase<ShowHelpCommand>, IShowHelpExecutor
 {
     private readonly ICommandFactorySet _commandFactorySet;
-    private readonly ITableWriter _tableWriter;
+    private readonly IConsoleTextFormatter _tableWriter;
 
-    public ShowHelpExecutor(ICommandFactorySet commandFactorySet, ITableWriter tableWriter)
+    public ShowHelpExecutor(ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter)
     {
         _commandFactorySet = commandFactorySet;
         _tableWriter = tableWriter;

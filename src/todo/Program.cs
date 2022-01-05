@@ -109,7 +109,7 @@ internal static class Program
 
     private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<ITableWriter, TableWriter>();
+            .AddSingleton<IConsoleTextFormatter, ConsoleTextFormatter>();
 
     private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection

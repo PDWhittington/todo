@@ -8,7 +8,7 @@ using Todo.Contracts.Services.TextFormatting;
 
 namespace Todo.TextFormatting;
 
-public class TableWriter : ITableWriter
+public class ConsoleTextFormatter : IConsoleTextFormatter
 {
     private struct ColumnWidths
     {
@@ -18,7 +18,7 @@ public class TableWriter : ITableWriter
 
     private readonly IConfigurationProvider _configurationProvider;
 
-    public TableWriter(IConfigurationProvider configurationProvider)
+    public ConsoleTextFormatter(IConfigurationProvider configurationProvider)
     {
         _configurationProvider = configurationProvider;
     }
