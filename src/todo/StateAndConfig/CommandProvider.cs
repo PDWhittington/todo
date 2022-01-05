@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.StateAndConfig;

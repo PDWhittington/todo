@@ -9,13 +9,13 @@ namespace Todo.TextFormatting;
 
 public class TableWriter : ITableWriter
 {
-    struct ColumnWidths
+    private struct ColumnWidths
     {
         public int WordColumnWidth;
         public int MessageColumnWidth;
     }
 
-    private int FullWidth = 80;
+    private const int FullWidth = 80;
 
     public string CreateTable(IEnumerable<CommandHelpMessage> commandHelpMessages)
     {
@@ -52,18 +52,18 @@ public class TableWriter : ITableWriter
         return sb.ToString();
     }
 
-    private static string CreateRow(string[] helpWordLines, string[] commandDescriptionLines, int index, ColumnWidths columnWidths)
+    private static string CreateRow(IReadOnlyList<string> helpWordLines, IReadOnlyList<string> commandDescriptionLines, int index, ColumnWidths columnWidths)
     {
         var sb = new StringBuilder()
             .Append('\u2502');
 
-        var helpWord = index >= 0 && index < helpWordLines.Length ? helpWordLines[index] : "";
+        var helpWord = index >= 0 && index < helpWordLines.Count ? helpWordLines[index] : "";
 
         var helpWordPadded = helpWord.PadRight(columnWidths.WordColumnWidth);
 
         sb.Append(helpWordPadded).Append('\u2502');
 
-        var description = index >= 0 && index < commandDescriptionLines.Length ? commandDescriptionLines[index] : "";
+        var description = index >= 0 && index < commandDescriptionLines.Count ? commandDescriptionLines[index] : "";
 
         var descriptionPadded = description.PadRight(columnWidths.MessageColumnWidth);
 
@@ -72,7 +72,7 @@ public class TableWriter : ITableWriter
         return sb.ToString();
     }
 
-    enum RowType
+    private enum RowType
     {
         Top,
         Middle,
@@ -88,14 +88,14 @@ public class TableWriter : ITableWriter
             _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null)
         };
 
-    private static IEnumerable<string> WrapText(string [] lines, int columnWidth)
+    private static IEnumerable<string> WrapText(IReadOnlyList<string> lines, int columnWidth)
     {
 
-        IEnumerable<string[]> GetLines(string[] words)
+        IEnumerable<string[]> GetLines(IEnumerable<string> words)
         {
             var list = new List<string>();
 
-            int currentLineLength = 0;
+            var currentLineLength = 0;
 
             foreach (var word in words)
             {
@@ -115,7 +115,7 @@ public class TableWriter : ITableWriter
             yield return list.ToArray();
         }
 
-        for (int i = 0; i < lines.Length; i++)
+        for (var i = 0; i < lines.Count; i++)
         {
             var wordsInLine = lines[i].Split(' ');
 
@@ -124,11 +124,11 @@ public class TableWriter : ITableWriter
 
             foreach (var outputLine in outputLines) yield return outputLine;
 
-            if (i < lines.Length - 1) yield return "";
+            if (i < lines.Count - 1) yield return "";
         }
     }
 
-    private ColumnWidths GetColumnWidths(CommandHelpMessage [] rows)
+    private static ColumnWidths GetColumnWidths(IEnumerable<CommandHelpMessage> rows)
     {
         var wordColumnWidth = rows
             .SelectMany(x => x.HelpWords)
@@ -139,7 +139,7 @@ public class TableWriter : ITableWriter
         return new ColumnWidths
         {
             MessageColumnWidth = messageColumnWidth,
-            WordColumnWidth = wordColumnWidth,
+            WordColumnWidth = wordColumnWidth
         };
     }
 }

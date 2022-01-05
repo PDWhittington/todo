@@ -11,7 +11,7 @@ public class CommandFactorySet : ICommandFactorySet
     public ICommandFactory<CommandBase> DefaultCommandFactory { get; }
     public ICommandFactory<CommandBase> [] NonDefaultCommandFactories { get; }
 
-    public ICommandFactory<CommandBase>[] GetAllCommandFactories()
+    public IEnumerable<ICommandFactory<CommandBase>> GetAllCommandFactories()
     {
         return new[] { DefaultCommandFactory }
             .Concat(NonDefaultCommandFactories
@@ -28,7 +28,7 @@ public class CommandFactorySet : ICommandFactorySet
         NonDefaultCommandFactories = nonDefaultCommandFactories;
     }
 
-    private void ValidateCommandFactories(IEnumerable<ICommandFactory<CommandBase>> commandFactories,
+    private static void ValidateCommandFactories(IEnumerable<ICommandFactory<CommandBase>> commandFactories,
         out ICommandFactory<CommandBase> defaultCommandFactory,
         out ICommandFactory<CommandBase> [] nonDefaultCommandFactories)
     {

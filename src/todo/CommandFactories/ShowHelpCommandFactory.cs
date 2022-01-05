@@ -1,7 +1,9 @@
-﻿using Todo.Contracts.Data.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 {
     private static readonly string[] Words = { "help" };
@@ -21,5 +23,5 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
             ? ShowHelpCommand.Singleton : default;
     }
 
-    public override bool IsDefaultCommandFactory { get; } = false;
+    public override bool IsDefaultCommandFactory => false;
 }
