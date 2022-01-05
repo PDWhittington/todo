@@ -14,8 +14,10 @@ public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string HelpText
-        => "Opens the browser specified in the settings file and loads the Html file for the given date.";
+    public override string[] HelpText => new[]
+    {
+        "Opens the browser specified in the settings file and loads the Html file for the given date."
+    };
 
     public ShowHtmlCommandFactory(IDateParser dateParser)
         : base(Words)

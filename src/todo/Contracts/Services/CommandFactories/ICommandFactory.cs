@@ -9,7 +9,7 @@ public interface ICommandFactory<out T> where T : CommandBase
 
     bool IsDefaultCommandFactory { get; }
 
-    string HelpText { get; }
+    string [] HelpText { get; }
 
     HashSet<string> CommandWords { get; }
 }

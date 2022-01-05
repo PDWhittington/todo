@@ -86,9 +86,8 @@ public class TableWriter : ITableWriter
         Console.WriteLine(line);
     }
 
-    private IEnumerable<string> WrapText(string line, int columnWidth)
+    private IEnumerable<string> WrapText(string [] lines, int columnWidth)
     {
-        var wordsInLine = line.Split(' ');
 
         IEnumerable<string[]> GetLines(string[] words)
         {
@@ -114,8 +113,15 @@ public class TableWriter : ITableWriter
             yield return list.ToArray();
         }
 
-        return GetLines(wordsInLine)
-            .Select(line => string.Join(' ', line));
+        foreach (var line in lines)
+        {
+            var wordsInLine = line.Split(' ');
+
+            var outputLines = GetLines(wordsInLine)
+                .Select(outputWord => string.Join(' ', outputWord));
+
+            foreach (var outputLine in outputLines) yield return outputLine;
+        }
     }
 
     private ColumnWidths GetColumnWidths(CommandHelpMessage [] rows)

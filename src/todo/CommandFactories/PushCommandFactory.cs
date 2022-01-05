@@ -10,7 +10,11 @@ public class PushCommandFactory : CommandFactoryBase<PushCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string HelpText => "Executes a git push.";
+    public override string[] HelpText => new[]
+    {
+        "Executes a git push."
+    };
+
 
     public PushCommandFactory() : base(Words) { }
 

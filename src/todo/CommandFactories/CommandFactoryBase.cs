@@ -11,7 +11,7 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
 
     public abstract bool IsDefaultCommandFactory { get; }
 
-    public abstract string HelpText { get; }
+    public abstract string [] HelpText { get; }
 
     public HashSet<string> CommandWords { get; }
 

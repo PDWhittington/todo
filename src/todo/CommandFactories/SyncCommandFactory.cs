@@ -10,7 +10,10 @@ public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string HelpText => "Executes a commit and push operation sequentially.";
+    public override string[] HelpText => new[]
+    {
+        "Executes a commit and push operation sequentially."
+    };
 
     public SyncCommandFactory() : base(Words) { }
 
