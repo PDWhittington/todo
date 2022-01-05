@@ -54,27 +54,53 @@ internal static class Program
             .AddTemplateFunctionality()
             .AddDateNaming()
             .AddFileSystemFunctionality()
-            .AutoRegisterCommandFactories()
+            .AutoRegisterTypes<ICommandFactory<CommandBase>>()
+            .AutoRegisterTypes<IExecutor>()
             .AddGitFunctionality()
             .AddHelpTextWritingFunctionality()
-            .AddMainExecutionLogic()
+            .AddTodoService()
+            .AddTypeSets()
             .BuildServiceProvider();
 
-    private static IServiceCollection AutoRegisterCommandFactories(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddTypeSets(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<ICommandFactorySet, CommandFactorySet>()
+            .AddSingleton<ICommandExecutorSet, CommandExecutorSet>();
+
+    private static IServiceCollection AutoRegisterTypes<T>(this IServiceCollection serviceCollection)
     {
-        var commandFactories = Assembly
+        var typesToRegister = Assembly
             .GetExecutingAssembly()
             .GetTypes()
             .Where(x => x.IsClass && !x.IsAbstract)
-            .Where(x => x.IsAssignableTo(typeof(ICommandFactory<CommandBase>)));
+            .Where(x => x.IsAssignableTo(typeof(T)));
 
-        foreach (var commandFactory in commandFactories)
+        foreach (var typeToRegister in typesToRegister)
         {
-            serviceCollection.AddSingleton(commandFactory);
-            serviceCollection.AddSingleton(typeof(ICommandFactory<CommandBase>), commandFactory);
+            serviceCollection.AddSingleton(typeToRegister);
+            serviceCollection.AddSingleton(typeof(T), typeToRegister);
         }
 
-        serviceCollection.AddSingleton<ICommandFactorySet, CommandFactorySet>();
+        var interfacesToMap = Assembly
+            .GetExecutingAssembly()
+            .GetTypes()
+            .Where(x => x.IsInterface && !x.IsGenericType && x != typeof(T))
+            .Where(x => x.IsAssignableTo(typeof(T)));
+
+        foreach (var interfaceToRegister in interfacesToMap)
+        {
+            var typesAssignableToInterface = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(x => x.IsClass && !x.IsAbstract)
+                .Where(x => x.IsAssignableTo(interfaceToRegister));
+
+            foreach (var typeAssignableToInterface in typesAssignableToInterface)
+            {
+                serviceCollection.AddSingleton(interfaceToRegister,
+                    x => x.GetRequiredService(typeAssignableToInterface));
+            }
+        }
 
         return serviceCollection;
     }
@@ -119,16 +145,8 @@ internal static class Program
             .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
             .AddSingleton<IGitInterface, GitInterface>();
 
-    private static IServiceCollection AddMainExecutionLogic(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddTodoService(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<IArchiveExecutor, ArchiveExecutor>()
-            .AddSingleton<ICommitExecutor, CommitExecutor>()
-            .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
-            .AddSingleton<IPrintHtmlExecutor, PrintHtmlExecutor>()
-            .AddSingleton<IPushExecutor, PushExecutor>()
-            .AddSingleton<IShowHelpExecutor, ShowHelpExecutor>()
-            .AddSingleton<IShowHtmlExecutor, ShowHtmlExecutor>()
-            .AddSingleton<ISyncExecutor, SyncExecutor>()
             .AddSingleton<ITodoService, TodoService>();
 
     private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)

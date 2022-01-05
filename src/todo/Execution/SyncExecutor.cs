@@ -5,7 +5,7 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-public class SyncExecutor : ISyncExecutor
+public class SyncExecutor : CommandExecutorBase<SyncCommand>, ISyncExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommitExecutor _commitExecutor;
@@ -18,7 +18,7 @@ public class SyncExecutor : ISyncExecutor
         _pushExecutor = pushExecutor;
     }
 
-    public void Execute(SyncCommand syncCommand)
+    public override void Execute(SyncCommand syncCommand)
     {
         if (!_configurationProvider.Config.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");

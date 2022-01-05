@@ -11,7 +11,7 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-public class ShowHtmlExecutor : IShowHtmlExecutor
+public class ShowHtmlExecutor : CommandExecutorBase<ShowHtmlCommand>, IShowHtmlExecutor
 {
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -29,7 +29,7 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
         _contentFileResolver = contentFileResolver;
     }
 
-    public void Execute(ShowHtmlCommand showHtmlCommand)
+    public override void Execute(ShowHtmlCommand showHtmlCommand)
     {
         var pathInfo = _contentFileResolver.GetPathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 

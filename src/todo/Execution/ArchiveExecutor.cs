@@ -9,7 +9,7 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-public class ArchiveExecutor : IArchiveExecutor
+public class ArchiveExecutor : CommandExecutorBase<ArchiveCommand>, IArchiveExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
@@ -23,7 +23,7 @@ public class ArchiveExecutor : IArchiveExecutor
         _fileNamer = fileNamer;
     }
 
-    public void Execute(ArchiveCommand command)
+    public override void Execute(ArchiveCommand command)
     {
         if (_configurationProvider.Config.UseGit) Archive(command, GitArchive);
         else Archive(command, FileArchive);

@@ -10,7 +10,7 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Execution;
 
-public class PrintHtmlExecutor : IPrintHtmlExecutor
+public class PrintHtmlExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHtmlExecutor
 {
     private readonly IHtmlTemplateProvider _htmlTemplateProvider;
     private readonly IMarkdownFileReader _markdownFileReader;
@@ -28,7 +28,7 @@ public class PrintHtmlExecutor : IPrintHtmlExecutor
         _fileNamer = fileNamer;
     }
 
-    public void Execute(PrintHtmlCommand command)
+    public override void Execute(PrintHtmlCommand command)
     {
         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
 

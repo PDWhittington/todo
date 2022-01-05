@@ -19,7 +19,6 @@ public class CommandFactorySet : ICommandFactorySet
             .ToArray();
     }
 
-
     public CommandFactorySet(IEnumerable<ICommandFactory<CommandBase>> commandFactories)
     {
         ValidateCommandFactories(commandFactories, out var defaultCommandFactory, out var nonDefaultCommandFactories);

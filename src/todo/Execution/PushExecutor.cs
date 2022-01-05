@@ -6,7 +6,7 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-public class PushExecutor : IPushExecutor
+public class PushExecutor : CommandExecutorBase<PushCommand>, IPushExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
@@ -17,7 +17,7 @@ public class PushExecutor : IPushExecutor
         _gitInterface = gitInterface;
     }
 
-    public void Execute(PushCommand command)
+    public override void Execute(PushCommand command)
     {
         if (!_configurationProvider.Config.UseGit)
             throw new Exception("Pushing does not make sense when UseGit is set to false in the settings file.");

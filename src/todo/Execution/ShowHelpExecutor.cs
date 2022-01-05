@@ -9,7 +9,7 @@ using Todo.Contracts.Services.TextFormatting;
 
 namespace Todo.Execution;
 
-public class ShowHelpExecutor : IShowHelpExecutor
+public class ShowHelpExecutor : CommandExecutorBase<ShowHelpCommand>, IShowHelpExecutor
 {
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly ITableWriter _tableWriter;
@@ -20,7 +20,7 @@ public class ShowHelpExecutor : IShowHelpExecutor
         _tableWriter = tableWriter;
     }
 
-    public void Execute(ShowHelpCommand command)
+    public override void Execute(ShowHelpCommand command)
     {
         var commandHelpMessages = _commandFactorySet
             .GetAllCommandFactories()

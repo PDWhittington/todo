@@ -11,7 +11,7 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Execution;
 
-public class CreateOrShowExecutor : ICreateOrShowExecutor
+public class CreateOrShowExecutor : CommandExecutorBase<CreateOrShowCommand>, ICreateOrShowExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IMarkdownTemplateProvider _templateProvider;
@@ -30,7 +30,7 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
         _dateFormatter = dateFormatter;
     }
 
-    public void Execute(CreateOrShowCommand createOrShowCommand)
+    public override void Execute(CreateOrShowCommand createOrShowCommand)
     {
         var pathInfo = _fileResolver.GetPathFor(createOrShowCommand.Date, FileTypeEnum.Markdown, true);
 
