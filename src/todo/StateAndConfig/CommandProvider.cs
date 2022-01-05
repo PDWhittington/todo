@@ -22,13 +22,13 @@ public class CommandProvider : ICommandProvider
         ValidateCommandFactories(commandFactories, out _defaultCommandFactory, out _nonDefaultCommandFactories);
     }
 
-    private void ValidateCommandFactories(IEnumerable<ICommandFactory<CommandBase>> commandFactories,
+    private static void ValidateCommandFactories(IEnumerable<ICommandFactory<CommandBase>> commandFactories,
         out ICommandFactory<CommandBase> defaultCommandFactory, out ICommandFactory<CommandBase>[] nonDefaultCommandFactories)
     {
         var commandFactoriesArr = commandFactories.ToArray();
 
         var wordsDuplicated = commandFactoriesArr
-            .SelectMany(x => x.WordsForCommand)
+            .SelectMany(x => x.CommandWords)
             .GroupBy(x => x)
             .Where(g => g.Count() != 1)
             .Select(g => g.Key)

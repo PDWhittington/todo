@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
 {
+    private static readonly string[] Words = { "sync", "s" };
+
     public override bool IsDefaultCommandFactory => false;
 
-    public override HashSet<string> WordsForCommand { get; }
-        = new(StringComparer.CurrentCultureIgnoreCase)
-        {
-            "sync",
-            "s"
-        };
+    public SyncCommandFactory() : base(Words) { }
 
     public override SyncCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
-
-        return SyncCommand.Of(restOfCommand);
+        return !IsThisCommand(commandLine, out var restOfCommand)
+            ? default : SyncCommand.Of(restOfCommand);
     }
 }

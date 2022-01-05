@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.DateParsing;
 
 namespace Todo.CommandFactories;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
 {
+    private static readonly string[] Words = { "showhtml", "html", "h" };
+
     private readonly IDateParser _dateParser;
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override HashSet<string> WordsForCommand { get; }
-        = new(StringComparer.InvariantCultureIgnoreCase)
-        {
-            "showhtml",
-            "html",
-            "h"
-        };
-
     public ShowHtmlCommandFactory(IDateParser dateParser)
+        : base(Words)
     {
         _dateParser = dateParser;
     }

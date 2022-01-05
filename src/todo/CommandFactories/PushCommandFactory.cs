@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.CommandFactories;
 
 namespace Todo.CommandFactories;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class PushCommandFactory : CommandFactoryBase<PushCommand>
 {
+    private static readonly string[] Words = { "push" };
+
     public override bool IsDefaultCommandFactory => false;
 
-    public override HashSet<string> WordsForCommand { get; }
-        = new(StringComparer.InvariantCultureIgnoreCase)
-        {
-            "push"
-        };
+    public PushCommandFactory() : base(Words) { }
 
     public override PushCommand? TryGetCommand(string commandLine)
-    {
-        if (!IsThisCommand(commandLine, out _)) return default;
 
-        return PushCommand.Singleton;
+    {
+        return !IsThisCommand(commandLine, out _)
+            ? default : PushCommand.Singleton;
     }
 }

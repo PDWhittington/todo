@@ -12,6 +12,7 @@ public class FileNamer : IFileNamer
 
     private const string MarkdownExtension = "md";
     private const string HtmlExtension = "html";
+    private const string SettingsExtension = "json";
 
     public FileNamer(IConfigurationProvider configurationProvider)
     {
@@ -44,6 +45,12 @@ public class FileNamer : IFileNamer
         {
             FileTypeEnum.Html => HtmlExtension,
             FileTypeEnum.Markdown => MarkdownExtension,
-            _ => throw new Exception("FileType not recognised")
+
+            FileTypeEnum.HtmlTemplate => HtmlExtension,
+            FileTypeEnum.MarkdownTemplate => MarkdownExtension,
+
+            FileTypeEnum.Settings => SettingsExtension,
+
+            _ => throw new ArgumentOutOfRangeException(nameof(fileTypeEnum), fileTypeEnum, null)
         };
 }

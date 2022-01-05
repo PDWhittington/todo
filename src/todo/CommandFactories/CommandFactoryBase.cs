@@ -12,13 +12,18 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T>
 
     public abstract bool IsDefaultCommandFactory { get; }
 
-    public abstract HashSet<string> WordsForCommand { get; }
+    public HashSet<string> CommandWords { get; }
+
+    protected CommandFactoryBase(IEnumerable<string> wordsForCommand)
+    {
+        CommandWords = new HashSet<string>(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
+    }
 
     protected bool IsThisCommand(string commandLine, out string? restOfCommand)
     {
         var firstWord = FirstWordToLower(commandLine);
 
-        if (!WordsForCommand.Contains(firstWord))
+        if (!CommandWords.Contains(firstWord))
         {
             restOfCommand = null;
             return false;

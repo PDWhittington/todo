@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
 {
+    private static readonly string[] Words = { "commit", "c" };
+
     public override bool IsDefaultCommandFactory => false;
 
-    public override HashSet<string> WordsForCommand { get; }
-        = new(StringComparer.InvariantCultureIgnoreCase)
-        {
-            "commit",
-            "c"
-        };
+    public CommitCommandFactory() : base(Words) { }
 
     public override CommitCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
-
-        return CommitCommand.Of(restOfCommand);
+        return !IsThisCommand(commandLine, out var restOfCommand)
+            ? default : CommitCommand.Of(restOfCommand);
     }
 }

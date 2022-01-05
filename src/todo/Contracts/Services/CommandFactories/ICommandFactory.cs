@@ -9,5 +9,5 @@ public interface ICommandFactory<out T> where T : CommandBase
 
     bool IsDefaultCommandFactory { get; }
 
-    HashSet<string> WordsForCommand { get; }
+    HashSet<string> CommandWords { get; }
 }

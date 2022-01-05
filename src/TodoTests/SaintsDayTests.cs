@@ -34,7 +34,7 @@ public class SaintsDayTests
         public const string StAndrewsDay2021 = "2021-11-30";
     }
 
-    static class DayNames
+    private static class DayNames
     {
         public const string StDavidsDay = "St. David's Day";
         public const string StPatricksDay = "St. Patrick's Day";

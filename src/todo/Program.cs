@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.CommandFactories;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.CommandFactories;
