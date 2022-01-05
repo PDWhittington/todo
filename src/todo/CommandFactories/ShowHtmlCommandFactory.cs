@@ -8,7 +8,7 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
 {
-    private static readonly string[] Words = { "showhtml", "html", "h" };
+    private static readonly string[] Words = { "h", "html", "showhtml" };
 
     private readonly IDateParser _dateParser;
 

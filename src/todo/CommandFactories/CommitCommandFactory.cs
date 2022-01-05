@@ -6,7 +6,7 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
 {
-    private static readonly string[] Words = { "commit", "c" };
+    private static readonly string[] Words = { "c", "commit" };
 
     public override bool IsDefaultCommandFactory => false;
 

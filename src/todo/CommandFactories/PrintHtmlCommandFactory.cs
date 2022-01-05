@@ -8,7 +8,7 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class PrintHtmlCommandFactory : CommandFactoryBase<PrintHtmlCommand>
 {
-    private static readonly string[] Words = { "printhtml", "print", "p" };
+    private static readonly string[] Words = { "p", "print", "printhtml" };
 
     private readonly IDateParser _dateParser;
 

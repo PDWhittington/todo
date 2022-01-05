@@ -6,7 +6,7 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
 {
-    private static readonly string[] Words = { "sync", "s" };
+    private static readonly string[] Words = { "s", "sync" };
 
     public override bool IsDefaultCommandFactory => false;
 
