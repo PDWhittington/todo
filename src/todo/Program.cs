@@ -49,23 +49,74 @@ internal static class Program
     private static ServiceProvider GetServiceProvider()
         =>  new ServiceCollection()
             .AddLogging()
+
+            /* Base functionality */
             .AddStateAndConfig()
             .AddHelpers()
             .AddTemplateFunctionality()
             .AddDateNaming()
             .AddFileSystemFunctionality()
+            .AddHelpTextWritingFunctionality()
+            .AddGitFunctionality()
+
+            /* Command interpretation and execution */
             .AutoRegisterTypes<ICommandFactory<CommandBase>>()
             .AutoRegisterTypes<IExecutor>()
-            .AddGitFunctionality()
-            .AddHelpTextWritingFunctionality()
-            .AddTodoService()
             .AddTypeSets()
+
+            /* Main service */
+            .AddTodoService()
+
+            /* Build the service provider */
             .BuildServiceProvider();
 
-    private static IServiceCollection AddTypeSets(this IServiceCollection serviceCollection)
+    #region Base functionality
+
+    private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<ICommandFactorySet, CommandFactorySet>()
-            .AddSingleton<ICommandExecutorSet, CommandExecutorSet>();
+            .AddSingleton<ICommandLineProvider, CommandLineProvider>()
+            .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
+            .AddSingleton<ICommandProvider, CommandProvider>()
+            .AddSingleton<IDateParser, DateParser>()
+            .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
+
+    private static IServiceCollection AddHelpers(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<IPathHelper, PathHelper>()
+            .AddSingleton<IDateHelper, DateHelper>();
+
+    private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<IMarkdownSubstitutionsMaker, MarkdownSubstitutionsMaker>()
+            .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
+            .AddSingleton<IMarkdownTemplateProvider, MarkdownTemplateProvider>()
+            .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
+
+    private static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
+            .AddSingleton<IEasterDateNamer, EasterDateNamer>()
+            .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
+            .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
+            .AddSingleton<IDateFormatter, DateFormatter>();
+
+    private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<IFileNamer, FileNamer>()
+            .AddSingleton<IContentFilePathResolver, ContentFilePathResolver>()
+            .AddSingleton<IFileReader, FileReader>()
+            .AddSingleton<IMarkdownFileReader, MarkdownFileReader>();
+
+    private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<ITableWriter, TableWriter>();
+
+    private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
+            .AddSingleton<IGitInterface, GitInterface>();
+
+    #endregion
 
     private static IServiceCollection AutoRegisterTypes<T>(this IServiceCollection serviceCollection)
     {
@@ -105,51 +156,12 @@ internal static class Program
         return serviceCollection;
     }
 
-    private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
+    private static IServiceCollection AddTypeSets(this IServiceCollection serviceCollection)
         => serviceCollection
-            .AddSingleton<ICommandLineProvider, CommandLineProvider>()
-            .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
-            .AddSingleton<ICommandProvider, CommandProvider>()
-            .AddSingleton<IDateParser, DateParser>()
-            .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
-
-    private static IServiceCollection AddHelpers(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<IPathHelper, PathHelper>()
-            .AddSingleton<IDateHelper, DateHelper>();
-
-    private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<IMarkdownSubstitutionsMaker, MarkdownSubstitutionsMaker>()
-            .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
-            .AddSingleton<IMarkdownTemplateProvider, MarkdownTemplateProvider>()
-            .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
-
-    private static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
-            .AddSingleton<IEasterDateNamer, EasterDateNamer>()
-            .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
-            .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
-            .AddSingleton<IDateFormatter, DateFormatter>();
-
-    private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<IFileNamer, FileNamer>()
-            .AddSingleton<IContentFilePathResolver, ContentFilePathResolver>()
-            .AddSingleton<IFileReader, FileReader>()
-            .AddSingleton<IMarkdownFileReader, MarkdownFileReader>();
-
-    private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
-            .AddSingleton<IGitInterface, GitInterface>();
+            .AddSingleton<ICommandFactorySet, CommandFactorySet>()
+            .AddSingleton<ICommandExecutorSet, CommandExecutorSet>();
 
     private static IServiceCollection AddTodoService(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<ITodoService, TodoService>();
-
-    private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<ITableWriter, TableWriter>();
 }
