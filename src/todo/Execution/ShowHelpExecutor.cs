@@ -47,9 +47,9 @@ Valid date formats:-
     ""y"", ""yesterday"" -> yesterday 
     [empty string], ""."", ""today"" -> today
     ""tm"", ""tomorrow"" -> tomorrow
-    
-    [day]/[month] -> maps to the day/month which is nearest in time to today
+        
     [day] -> maps to the day/month/year which is nearest in time to today
+    [day]/[month] -> maps to the day/month which is nearest in time to today
     +[daycount] -> positive offset a number of days from today
     -[daycount] -> negative offset a number of days from today
 
