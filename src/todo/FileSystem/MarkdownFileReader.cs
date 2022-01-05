@@ -6,10 +6,10 @@ namespace Todo.FileSystem;
 
 public class MarkdownFileReader : FileReader, IMarkdownFileReader
 {
-    private readonly IContentFileResolver _contentFileResolver;
+    private readonly IContentFilePathResolver _contentFileResolver;
 
 
-    public MarkdownFileReader(IContentFileResolver contentFileResolver)
+    public MarkdownFileReader(IContentFilePathResolver contentFileResolver)
     {
         _contentFileResolver = contentFileResolver;
     }

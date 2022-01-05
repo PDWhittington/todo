@@ -21,9 +21,9 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
     private static extern int SetForegroundWindow(IntPtr hwnd);
 
     private readonly IConfigurationProvider _configurationProvider;
-    private readonly IContentFileResolver _contentFileResolver;
+    private readonly IContentFilePathResolver _contentFileResolver;
 
-    public ShowHtmlExecutor(IConfigurationProvider configurationProvider, IContentFileResolver contentFileResolver)
+    public ShowHtmlExecutor(IConfigurationProvider configurationProvider, IContentFilePathResolver contentFileResolver)
     {
         _configurationProvider = configurationProvider;
         _contentFileResolver = contentFileResolver;

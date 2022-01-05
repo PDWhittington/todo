@@ -15,12 +15,12 @@ public class CreateOrShowExecutor : ICreateOrShowExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IMarkdownTemplateProvider _templateProvider;
-    private readonly IContentFileResolver _fileResolver;
+    private readonly IContentFilePathResolver _fileResolver;
     private readonly IMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
     private readonly IDateFormatter _dateFormatter;
 
     public CreateOrShowExecutor(IConfigurationProvider configurationProvider, IMarkdownTemplateProvider templateProvider,
-        IContentFileResolver fileResolver, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
+        IContentFilePathResolver fileResolver, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter)
     {
         _configurationProvider = configurationProvider;

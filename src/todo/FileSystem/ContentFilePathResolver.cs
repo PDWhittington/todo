@@ -5,11 +5,11 @@ using Todo.Contracts.Services.FileSystem;
 
 namespace Todo.FileSystem;
 
-public class ContentFileResolver : IContentFileResolver
+public class ContentFilePathResolver : IContentFilePathResolver
 {
     private readonly IFileNamer _fileNamer;
 
-    public ContentFileResolver(IFileNamer fileNamer)
+    public ContentFilePathResolver(IFileNamer fileNamer)
     {
         _fileNamer = fileNamer;
     }

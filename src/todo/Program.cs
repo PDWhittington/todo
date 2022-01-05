@@ -110,7 +110,7 @@ internal static class Program
     private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<IFileNamer, FileNamer>()
-            .AddSingleton<IContentFileResolver, ContentFileResolver>()
+            .AddSingleton<IContentFilePathResolver, ContentFilePathResolver>()
             .AddSingleton<IFileReader, FileReader>()
             .AddSingleton<IMarkdownFileReader, MarkdownFileReader>();
 
