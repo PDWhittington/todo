@@ -14,6 +14,7 @@ using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
+using Todo.Contracts.Services.TextFormatting;
 using Todo.DateNaming;
 using Todo.DateParsing;
 using Todo.Execution;
@@ -22,6 +23,7 @@ using Todo.Git;
 using Todo.Helpers;
 using Todo.StateAndConfig;
 using Todo.Templates;
+using Todo.TextFormatting;
 
 namespace Todo;
 
@@ -54,6 +56,7 @@ internal static class Program
             .AddFileSystemFunctionality()
             .AutoRegisterCommandFactories()
             .AddGitFunctionality()
+            .AddHelpTextWritingFunctionality()
             .AddMainExecutionLogic()
             .BuildServiceProvider();
 
@@ -123,7 +126,12 @@ internal static class Program
             .AddSingleton<ICreateOrShowExecutor, CreateOrShowExecutor>()
             .AddSingleton<IPrintHtmlExecutor, PrintHtmlExecutor>()
             .AddSingleton<IPushExecutor, PushExecutor>()
+            .AddSingleton<IShowHelpExecutor, ShowHelpExecutor>()
             .AddSingleton<IShowHtmlExecutor, ShowHtmlExecutor>()
             .AddSingleton<ISyncExecutor, SyncExecutor>()
             .AddSingleton<ITodoService, TodoService>();
+
+    private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)
+        => serviceCollection
+            .AddSingleton<ITableWriter, TableWriter>();
 }

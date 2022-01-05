@@ -6,4 +6,6 @@ public interface ICommandFactorySet
 {
     ICommandFactory<CommandBase> DefaultCommandFactory { get; }
     ICommandFactory<CommandBase> [] NonDefaultCommandFactories { get; }
+
+    ICommandFactory<CommandBase>[] GetAllCommandFactories();
 }

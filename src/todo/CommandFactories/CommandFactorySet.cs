@@ -11,6 +11,14 @@ public class CommandFactorySet : ICommandFactorySet
     public ICommandFactory<CommandBase> DefaultCommandFactory { get; }
     public ICommandFactory<CommandBase> [] NonDefaultCommandFactories { get; }
 
+    public ICommandFactory<CommandBase>[] GetAllCommandFactories()
+    {
+        return new[] { DefaultCommandFactory }
+            .Concat(NonDefaultCommandFactories)
+            .ToArray();
+    }
+
+
     public CommandFactorySet(IEnumerable<ICommandFactory<CommandBase>> commandFactories)
     {
         ValidateCommandFactories(commandFactories, out var defaultCommandFactory, out var nonDefaultCommandFactories);
