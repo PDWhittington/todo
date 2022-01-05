@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.CommandFactories;
 using Todo.Contracts.Data.Commands;
@@ -50,35 +52,33 @@ internal static class Program
             .AddTemplateFunctionality()
             .AddDateNaming()
             .AddFileSystemFunctionality()
-            .AddCommandFactories()
+            .AutoRegisterCommandFactories()
             .AddGitFunctionality()
             .AddMainExecutionLogic()
             .BuildServiceProvider();
 
-    private static IServiceCollection AddCommandFactories(this IServiceCollection serviceCollection)
-        => serviceCollection
-            .AddSingleton<IArchiveCommandFactory, ArchiveCommandFactory>()
-            .AddSingleton<ICommitCommandFactory, CommitCommandFactory>()
-            .AddSingleton<ICreateOrShowCommandFactory, CreateOrShowCommandFactory>()
-            .AddSingleton<IPrintHtmlCommandFactory, PrintHtmlCommandFactory>()
-            .AddSingleton<IPushCommandFactory, PushCommandFactory>()
-            .AddSingleton<IShowHtmlCommandFactory, ShowHtmlCommandFactory>()
-            .AddSingleton<ISyncCommandFactory, SyncCommandFactory>()
+    private static IServiceCollection AutoRegisterCommandFactories(this IServiceCollection serviceCollection)
+    {
+        var commandFactories = Assembly
+            .GetExecutingAssembly()
+            .GetTypes()
+            .Where(x => x.IsClass)
+            .Where(x => x.IsAssignableTo(typeof(ICommandFactory<CommandBase>)));
 
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IArchiveCommandFactory>())
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<ICommitCommandFactory>())
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<ICreateOrShowCommandFactory>())
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IPrintHtmlCommandFactory>())
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IPushCommandFactory>())
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<IShowHtmlCommandFactory>())
-            .AddSingleton<ICommandFactory<CommandBase>>(x => x.GetRequiredService<ISyncCommandFactory>());
+        foreach (var commandFactory in commandFactories)
+        {
+            serviceCollection.AddSingleton(commandFactory);
+            serviceCollection.AddSingleton(typeof(ICommandFactory<CommandBase>), commandFactory);
+        }
+
+        return serviceCollection;
+    }
 
     private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
         => serviceCollection
             .AddSingleton<ICommandLineProvider, CommandLineProvider>()
             .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
             .AddSingleton<ICommandProvider, CommandProvider>()
-            .AddSingleton<ICommandIdentifier, CommandIdentifier>()
             .AddSingleton<IDateParser, DateParser>()
             .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
 
