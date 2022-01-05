@@ -1,11 +1,15 @@
 ﻿{
   "BrowserPath": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
   "TextEditorPath": "C:\\Users\\philipdw\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-  "UseGit": true,
   "GitPath" : "C:\\Program Files\\Git\\bin\\git.exe",
+
   "MarkdownTemplatePath": "template.md",
   "HtmlTemplatePath": "template.html",
-  "UseNamesForDays": true,
+
   "OutputFolder": "D:\\workspace\\year-of-phil\\todo",
-  "ArchiveFolderName": "_archive"
+  "ArchiveFolderName": "_archive",
+
+  "UseGit": true,
+  "UseNamesForDays": true,
+  "ConsoleWidth": 80
 }

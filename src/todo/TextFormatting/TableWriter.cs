@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Todo.Contracts.Data.HelpMessages;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.TextFormatting;
 
 namespace Todo.TextFormatting;
@@ -15,7 +16,12 @@ public class TableWriter : ITableWriter
         public int MessageColumnWidth;
     }
 
-    private const int FullWidth = 80;
+    private readonly IConfigurationProvider _configurationProvider;
+
+    public TableWriter(IConfigurationProvider configurationProvider)
+    {
+        _configurationProvider = configurationProvider;
+    }
 
     public string CreateTable(IEnumerable<CommandHelpMessage> commandHelpMessages)
     {
@@ -128,13 +134,13 @@ public class TableWriter : ITableWriter
         }
     }
 
-    private static ColumnWidths GetColumnWidths(IEnumerable<CommandHelpMessage> rows)
+    private ColumnWidths GetColumnWidths(IEnumerable<CommandHelpMessage> rows)
     {
         var wordColumnWidth = rows
             .SelectMany(x => x.HelpWords)
             .Max(word => word.Length);
 
-        var messageColumnWidth = FullWidth - wordColumnWidth - 3;
+        var messageColumnWidth = _configurationProvider.Config.ConsoleWidth - wordColumnWidth - 3;
 
         return new ColumnWidths
         {

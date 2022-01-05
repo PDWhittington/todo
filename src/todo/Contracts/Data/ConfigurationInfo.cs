@@ -4,39 +4,58 @@ namespace Todo.Contracts.Data;
 
 public class ConfigurationInfo
 {
+
+    #region Paths to third-party tools
+
     public string BrowserPath { get; }
 
     public string TextEditorPath { get; }
 
     public string GitPath { get; }
 
-    public bool UseGit { get; }
+    #endregion
+
+    #region Paths to templates
 
     public string MarkdownTemplatePath { get; }
 
     public string HtmlTemplatePath { get; }
 
-    public bool UseNamesForDays { get; }
+    #endregion
+
+    #region Paths to folders the app writes to
 
     public string OutputFolder { get; }
 
     public string ArchiveFolderName { get; }
 
+    #endregion
+
+    public bool UseGit { get; }
+
+    public bool UseNamesForDays { get; }
+
+    public int ConsoleWidth { get; }
+
     [JsonConstructor]
-    public ConfigurationInfo(string markdownTemplatePath, string htmlTemplatePath,
-        bool useNamesForDays,
-        string browserPath, string textEditorPath,
-        string gitPath, bool useGit,
-        string outputFolder, string archiveFolderName)
+    public ConfigurationInfo(
+        string browserPath, string textEditorPath, string gitPath,
+        string markdownTemplatePath, string htmlTemplatePath,
+        string outputFolder, string archiveFolderName,
+        bool useNamesForDays, bool useGit, int consoleWidth)
     {
-        MarkdownTemplatePath = markdownTemplatePath;
-        HtmlTemplatePath = htmlTemplatePath;
-        UseNamesForDays = useNamesForDays;
         BrowserPath = browserPath;
         TextEditorPath = textEditorPath;
+        GitPath = gitPath;
+
+        MarkdownTemplatePath = markdownTemplatePath;
+        HtmlTemplatePath = htmlTemplatePath;
+
         OutputFolder = outputFolder;
         ArchiveFolderName = archiveFolderName;
-        GitPath = gitPath;
+
         UseGit = useGit;
+        UseNamesForDays = useNamesForDays;
+        ConsoleWidth = consoleWidth;
     }
 }
