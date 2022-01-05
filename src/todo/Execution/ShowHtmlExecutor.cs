@@ -21,17 +21,17 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
     private static extern int SetForegroundWindow(IntPtr hwnd);
 
     private readonly IConfigurationProvider _configurationProvider;
-    private readonly IFileNamer _fileNamer;
+    private readonly IContentFileResolver _contentFileResolver;
 
-    public ShowHtmlExecutor(IConfigurationProvider configurationProvider, IFileNamer fileNamer)
+    public ShowHtmlExecutor(IConfigurationProvider configurationProvider, IContentFileResolver contentFileResolver)
     {
         _configurationProvider = configurationProvider;
-        _fileNamer = fileNamer;
+        _contentFileResolver = contentFileResolver;
     }
 
     public void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var pathInfo = _fileNamer.GetFilePath(showHtmlCommand.Date, FileTypeEnum.Html);
+        var pathInfo = _contentFileResolver.GetPathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 
         if (!File.Exists(pathInfo.Path))
             throw new Exception(
@@ -41,7 +41,6 @@ public class ShowHtmlExecutor : IShowHtmlExecutor
 
         BringMainWindowToFront(process);
     }
-
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum ShowWindowEnum
