@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.DateParsing;
-using Todo.Contracts.Services.Execution;
 
 namespace Todo.CommandFactories;
 
@@ -17,7 +16,10 @@ public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
 
     public override string [] HelpText => new[]
     {
-        "Archives the markdown file for a given date.",
+        "Archives the markdown file for a given date. The file is moved into the archive subfolder " +
+        "of the main todo folder. The name of the archive folder is specified in settings.json. Also in " +
+        "settings.json can be specified whether the file is simply moved in the file system, or moved using " +
+        "git mv.",
         "Usage: todo a [date]"
     };
 
