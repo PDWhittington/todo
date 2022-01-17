@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
@@ -21,9 +22,12 @@ public class PushCommandFactory : CommandFactoryBase<PushCommand>
     public PushCommandFactory() : base(Words) { }
 
     public override PushCommand? TryGetCommand(string commandLine)
-
     {
-        return !IsThisCommand(commandLine, out _)
-            ? default : PushCommand.Singleton;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+
+        if (!string.IsNullOrWhiteSpace(restOfCommand))
+            throw new ArgumentException("Command expects nothing following.");
+
+        return PushCommand.Singleton;
     }
 }
