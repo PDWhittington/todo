@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Todo.Contracts.Data;
 
@@ -35,6 +36,8 @@ public class ConfigurationInfo
 
     public bool UseNamesForDays { get; }
 
+    public TimeSpan? NewDayThreshold { get; }
+
     public int ConsoleWidth { get; }
 
     [JsonConstructor]
@@ -42,7 +45,7 @@ public class ConfigurationInfo
         string browserPath, string textEditorPath, string gitPath,
         string markdownTemplatePath, string htmlTemplatePath,
         string outputFolder, string archiveFolderName,
-        bool useNamesForDays, bool useGit, int consoleWidth)
+        bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth)
     {
         BrowserPath = browserPath;
         TextEditorPath = textEditorPath;
@@ -56,6 +59,7 @@ public class ConfigurationInfo
 
         UseGit = useGit;
         UseNamesForDays = useNamesForDays;
+        NewDayThreshold = newDayThreshold;
         ConsoleWidth = consoleWidth;
     }
 }
