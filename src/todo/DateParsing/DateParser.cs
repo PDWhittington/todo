@@ -26,8 +26,8 @@ public class DateParser : IDateParser
         if (IsYesterday(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(-1);
         else if (IsToday(str)) dateOnly = GetTodayWithMidnightAdjusted();
         else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
-        else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted()
-                                                                        .AddDays(offset);
+        else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(offset);
+        else if (IsDayOfWeek(str, out var dayOfWeek)) dateOnly = GetDateFromDayOfWeek((DayOfWeek)dayOfWeek!);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsDayMonthOnly(str, out day, out var month)) dateOnly = GetDateFromDayMonth(month, day);
         else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
@@ -64,6 +64,43 @@ public class DateParser : IDateParser
         _ => false
     };
 
+    private static bool IsDayOfWeek(string commandLine, out DayOfWeek? dayOfWeek)
+    {
+        switch (commandLine.ToLower())
+        {
+            case "sun":
+            case "sunday":
+                dayOfWeek = DayOfWeek.Sunday; return true;
+
+            case "mon":
+            case "monday":
+                dayOfWeek = DayOfWeek.Monday; return true;
+
+            case "tue":
+            case "tuesday":
+                dayOfWeek = DayOfWeek.Tuesday; return true;
+
+            case "wed":
+            case "wednesday":
+                dayOfWeek = DayOfWeek.Wednesday; return true;
+
+            case "thu":
+            case "thursday":
+                dayOfWeek = DayOfWeek.Thursday; return true;
+
+            case "fri":
+            case "friday":
+                dayOfWeek = DayOfWeek.Friday; return true;
+
+            case "sat":
+            case "saturday":
+                dayOfWeek = DayOfWeek.Saturday; return true;
+
+            default:
+                dayOfWeek = default; return false;
+        }
+    }
+
     private static bool IsRelativeOffset(string commandLine, out int offset)
     {
         if (int.TryParse(commandLine[1..], out var parsed))
@@ -99,6 +136,16 @@ public class DateParser : IDateParser
 
         return
             elements.Length == 2 && dayParsed && monthParsed;
+    }
+
+    private DateOnly GetDateFromDayOfWeek(DayOfWeek dayOfWeek)
+    {
+        var today = GetTodayWithMidnightAdjusted();
+
+        var possibles = GetPossiblesForDayOfWeek(today, dayOfWeek);
+
+        if (possibles.Length == 0) throw new Exception($"No dates found for day = {dayOfWeek}");
+        return _dateHelper.GetNearestTo(possibles, today);
     }
 
     private DateOnly GetDateFromDayOnly(int dayOnly)
@@ -144,4 +191,38 @@ public class DateParser : IDateParser
 
         return PotentialDates().ToArray();
     }
+
+    private DateOnly[] GetPossiblesForDayOfWeek(DateOnly currentDay, DayOfWeek dayOfWeek)
+    {
+        var dateDiffs = GetDateDiffsFor(currentDay, dayOfWeek);
+
+        return dateDiffs
+            .Select(dateDiff => currentDay.AddDays(dateDiff))
+            .ToArray();
+    }
+
+    private int[] GetDateDiffsFor(DateOnly currentDay, DayOfWeek dayOfWeek)
+    {
+        var currentDayIndex = MapDayOfWeekToNumber(currentDay.DayOfWeek);
+        var dayOfWeekIndex = MapDayOfWeekToNumber(dayOfWeek);
+
+        return new []
+        {
+            dayOfWeekIndex - 7 - currentDayIndex,
+            dayOfWeekIndex - currentDayIndex,
+            dayOfWeekIndex + 7 - currentDayIndex,
+        };
+    }
+
+    private int MapDayOfWeekToNumber(DayOfWeek dayOfWeek) => dayOfWeek switch
+    {
+        DayOfWeek.Sunday => 0,
+        DayOfWeek.Monday => 1,
+        DayOfWeek.Tuesday => 2,
+        DayOfWeek.Wednesday => 3,
+        DayOfWeek.Thursday => 4,
+        DayOfWeek.Friday => 5,
+        DayOfWeek.Saturday => 6,
+        _ => throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek, null)
+    };
 }
