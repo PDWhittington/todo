@@ -23,7 +23,7 @@ public class PathResolver : IPathResolver
     public string FileNameWithoutExtension(DateOnly dateOnly)
     {
         var fileNameFragments = GetFragments(_configurationProvider.Config.TodoListFilenameFormat,
-            '{', '}', str => dateOnly.ToString(str));
+            '{', '}', dateOnly.ToString);
 
         return string.Join("", fileNameFragments);
     }
