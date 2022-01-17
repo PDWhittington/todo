@@ -11,5 +11,7 @@
 
   "UseGit": true,
   "UseNamesForDays": true,
+  "NewDayThreshold": "04:00:00",
+
   "ConsoleWidth": 80
 }

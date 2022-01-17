@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Helpers;
+using IConfigurationProvider = Todo.Contracts.Services.StateAndConfig.IConfigurationProvider;
 
 namespace Todo.DateParsing;
 
 public class DateParser : IDateParser
 {
     private readonly IDateHelper _dateHelper;
+    private readonly IConfigurationProvider _configurationProvider;
 
-    public DateParser(IDateHelper dateHelper)
+    public DateParser(IDateHelper dateHelper, IConfigurationProvider configurationProvider)
     {
         _dateHelper = dateHelper;
+        _configurationProvider = configurationProvider;
     }
 
     public bool TryGetDate(string? str, out DateOnly dateOnly)
@@ -32,10 +36,14 @@ public class DateParser : IDateParser
         return dateOnly != default;
     }
 
-     private DateOnly GetTodayWithMidnightAdjusted()
-            => DateTime.Now.TimeOfDay < new TimeSpan(04, 00, 00)
+    private DateOnly GetTodayWithMidnightAdjusted()
+    {
+        var newDayThreshold = _configurationProvider.Config.NewDayThreshold ?? new TimeSpan(0, 0, 0);
+
+        return DateTime.Now.TimeOfDay < newDayThreshold
             ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))
             : _dateHelper.ConvertToDateOnly(DateTime.Today);
+    }
 
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
     {
