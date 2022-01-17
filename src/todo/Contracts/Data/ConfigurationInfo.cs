@@ -32,6 +32,8 @@ public class ConfigurationInfo
 
     #endregion
 
+    public string TodoListFilenameFormat { get; }
+
     public bool UseGit { get; }
 
     public bool UseNamesForDays { get; }
@@ -44,7 +46,7 @@ public class ConfigurationInfo
     public ConfigurationInfo(
         string browserPath, string textEditorPath, string gitPath,
         string markdownTemplatePath, string htmlTemplatePath,
-        string outputFolder, string archiveFolderName,
+        string outputFolder, string archiveFolderName, string todoListFilenameFormat,
         bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth)
     {
         BrowserPath = browserPath;
@@ -56,6 +58,7 @@ public class ConfigurationInfo
 
         OutputFolder = outputFolder;
         ArchiveFolderName = archiveFolderName;
+        TodoListFilenameFormat = todoListFilenameFormat;
 
         UseGit = useGit;
         UseNamesForDays = useNamesForDays;

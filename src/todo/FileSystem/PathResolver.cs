@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.FileSystem;
@@ -19,7 +20,13 @@ public class PathResolver : IPathResolver
         _configurationProvider = configurationProvider;
     }
 
-    public string FileNameWithoutExtension(DateOnly dateOnly) => $"todo-{dateOnly:yyyy-MM-dd}";
+    public string FileNameWithoutExtension(DateOnly dateOnly)
+    {
+        var fileNameFragments = GetFragments(_configurationProvider.Config.TodoListFilenameFormat,
+            '{', '}', str => dateOnly.ToString(str));
+
+        return string.Join("", fileNameFragments);
+    }
 
     public string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType) => $"{FileNameWithoutExtension(dateOnly)}.{GetExtension(fileType)}";
 
@@ -58,4 +65,38 @@ public class PathResolver : IPathResolver
 
             _ => throw new ArgumentOutOfRangeException(nameof(fileTypeEnum), fileTypeEnum, null)
         };
+
+    private static IEnumerable<string> GetFragments(string str, char openChar, char closeChar,
+        Func<string, string> operatorForEnclosedFragments)
+    {
+        var enclosed = false;
+        var previousIndex = 0;
+
+        for (int i = 0; i < str.Length; i++)
+        {
+            if (str[i] == openChar)
+            {
+                if (enclosed) throw new Exception("OpenChar and CloseChar must alternate");
+
+                yield return str.Substring(previousIndex, i - previousIndex);
+
+                previousIndex = i + 1;
+                enclosed = true;
+            }
+            else if (str[i] == closeChar)
+            {
+                if (!enclosed) throw new Exception("OpenChar and CloseChar must alternate");
+
+                yield return operatorForEnclosedFragments(str.Substring(previousIndex, i - previousIndex));
+
+                previousIndex = i + 1;
+
+                enclosed = false;
+            }
+        }
+
+        yield return enclosed
+            ? operatorForEnclosedFragments(str[previousIndex..])
+            : str[previousIndex..];
+    }
 }
