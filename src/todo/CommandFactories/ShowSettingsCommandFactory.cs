@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
@@ -13,8 +14,12 @@ public class ShowSettingsCommandFactory : CommandFactoryBase<ShowSettingsCommand
 
     public override ShowSettingsCommand? TryGetCommand(string commandLine)
     {
-        return !IsThisCommand(commandLine, out _)
-            ? default : ShowSettingsCommand.Singleton;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+
+        if (!string.IsNullOrWhiteSpace(restOfCommand))
+            throw new ArgumentException("Command expects nothing following.");
+
+        return ShowSettingsCommand.Singleton;
     }
 
     public override bool IsDefaultCommandFactory { get; }

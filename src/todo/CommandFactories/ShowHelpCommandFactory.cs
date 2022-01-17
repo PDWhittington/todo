@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
@@ -19,8 +20,12 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 
     public override ShowHelpCommand? TryGetCommand(string commandLine)
     {
-        return IsThisCommand(commandLine, out _)
-            ? ShowHelpCommand.Singleton : default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+
+        if (!string.IsNullOrWhiteSpace(restOfCommand))
+            throw new ArgumentException("Command expects nothing following.");
+
+        return ShowHelpCommand.Singleton;
     }
 
     public override bool IsDefaultCommandFactory => false;

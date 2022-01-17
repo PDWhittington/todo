@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
@@ -11,8 +12,15 @@ public class KillHtmlCommandFactory : CommandFactoryBase<KillHtmlCommand>
     public KillHtmlCommandFactory() : base(Words) { }
 
     public override KillHtmlCommand? TryGetCommand(string commandLine)
-        => !IsThisCommand(commandLine, out _)
-            ? default : KillHtmlCommand.Singleton;
+    {
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+
+        if (!string.IsNullOrWhiteSpace(restOfCommand))
+            throw new ArgumentException("Command expects nothing following.");
+
+        return KillHtmlCommand.Singleton;
+    }
+
 
     public override bool IsDefaultCommandFactory => false;
 
