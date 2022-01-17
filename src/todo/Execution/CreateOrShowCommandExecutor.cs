@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
@@ -6,12 +6,12 @@ using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
-using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 
 namespace Todo.Execution;
 
-public class CreateOrShowExecutor : CommandExecutorBase<CreateOrShowCommand>, ICreateOrShowExecutor
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public class CreateOrShowCommandExecutor : CommandExecutorBase<CreateOrShowCommand>, ICreateOrShowCommandExecutor
 {
     private readonly IMarkdownTemplateProvider _templateProvider;
     private readonly IContentFilePathResolver _fileResolver;
@@ -19,7 +19,7 @@ public class CreateOrShowExecutor : CommandExecutorBase<CreateOrShowCommand>, IC
     private readonly IDateFormatter _dateFormatter;
     private readonly IFileOpener _fileOpener;
 
-    public CreateOrShowExecutor(IMarkdownTemplateProvider templateProvider,
+    public CreateOrShowCommandExecutor(IMarkdownTemplateProvider templateProvider,
         IContentFilePathResolver fileResolver, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter, IFileOpener fileOpener)
     {

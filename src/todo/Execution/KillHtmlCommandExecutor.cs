@@ -1,16 +1,18 @@
-﻿using Todo.Contracts.Data.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 
 namespace Todo.Execution;
 
-public class KillHtmlExecutor : CommandExecutorBase<KillHtmlCommand>, IKillHtmlExecutor
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public class KillHtmlCommandExecutor : CommandExecutorBase<KillHtmlCommand>, IKillHtmlCommandExecutor
 {
     private readonly IPathResolver _pathResolver;
     private readonly IFileDeleter _fileDeleter;
 
-    public KillHtmlExecutor(IPathResolver pathResolver, IFileDeleter fileDeleter)
+    public KillHtmlCommandExecutor(IPathResolver pathResolver, IFileDeleter fileDeleter)
     {
         _pathResolver = pathResolver;
         _fileDeleter = fileDeleter;

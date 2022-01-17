@@ -3,13 +3,13 @@ using Todo.Contracts.Data.Commands;
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IExecutor<in T> : IExecutor
+public interface ICommandExecutor<in T> : ICommandExecutor
     where T : CommandBase
 {
     void Execute(T command);
 }
 
-public interface IExecutor
+public interface ICommandExecutor
 {
     Type CommandType { get; }
 

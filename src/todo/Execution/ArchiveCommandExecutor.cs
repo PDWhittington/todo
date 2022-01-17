@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
@@ -9,13 +10,15 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-public class ArchiveExecutor : CommandExecutorBase<ArchiveCommand>, IArchiveExecutor
+
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public class ArchiveCommandExecutor : CommandExecutorBase<ArchiveCommand>, IArchiveCommandExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
     private readonly IPathResolver _pathResolver;
 
-    public ArchiveExecutor(IConfigurationProvider configurationProvider,
+    public ArchiveCommandExecutor(IConfigurationProvider configurationProvider,
         IGitInterface gitInterface, IPathResolver pathResolver)
     {
         _configurationProvider = configurationProvider;
