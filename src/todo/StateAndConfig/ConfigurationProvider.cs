@@ -23,7 +23,10 @@ public class ConfigurationProvider : IConfigurationProvider
         var settingsPath = _settingsPathProvider.GetSettingsPath();
 
         using var fileStream = new FileStream(settingsPath.Path, FileMode.Open, FileAccess.Read);
-        var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
+
+        var serializationOptions = new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip };
+
+        var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream, serializationOptions);
 
         _configuration = configuration ??
                          throw new Exception($"Configuration could not be loaded from {settingsPath}");
