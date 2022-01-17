@@ -7,17 +7,17 @@ namespace Todo.FileSystem;
 
 public class ContentFilePathResolver : IContentFilePathResolver
 {
-    private readonly IFileNamer _fileNamer;
+    private readonly IPathResolver _pathResolver;
 
-    public ContentFilePathResolver(IFileNamer fileNamer)
+    public ContentFilePathResolver(IPathResolver pathResolver)
     {
-        _fileNamer = fileNamer;
+        _pathResolver = pathResolver;
     }
 
     public FilePathInfo GetPathFor(DateOnly date, FileTypeEnum fileType, bool allowNotPresent)
     {
-        var pathInTodoFolder = _fileNamer.GetFilePath(date, fileType);
-        var pathInArchiveFolder  = _fileNamer.GetArchiveFilePath(date, fileType);
+        var pathInTodoFolder = _pathResolver.GetFilePath(date, fileType);
+        var pathInArchiveFolder  = _pathResolver.GetArchiveFilePath(date, fileType);
 
         switch (File.Exists(pathInTodoFolder.Path), File.Exists(pathInArchiveFolder.Path), allowNotPresent)
         {

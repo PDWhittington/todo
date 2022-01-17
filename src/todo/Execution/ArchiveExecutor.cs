@@ -13,14 +13,14 @@ public class ArchiveExecutor : CommandExecutorBase<ArchiveCommand>, IArchiveExec
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
-    private readonly IFileNamer _fileNamer;
+    private readonly IPathResolver _pathResolver;
 
     public ArchiveExecutor(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IFileNamer fileNamer)
+        IGitInterface gitInterface, IPathResolver pathResolver)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
-        _fileNamer = fileNamer;
+        _pathResolver = pathResolver;
     }
 
     public override void Execute(ArchiveCommand command)
@@ -31,8 +31,8 @@ public class ArchiveExecutor : CommandExecutorBase<ArchiveCommand>, IArchiveExec
 
     private void Archive(ArchiveCommand command, Action<FilePathInfo, FilePathInfo> archiveOp)
     {
-        var sourcePathInfo = _fileNamer.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
-        var destinationPathInfo = _fileNamer.GetArchiveFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var sourcePathInfo = _pathResolver.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var destinationPathInfo = _pathResolver.GetArchiveFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
 
         archiveOp(sourcePathInfo, destinationPathInfo);
     }

@@ -6,7 +6,7 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem;
 
-public class FileNamer : IFileNamer
+public class PathResolver : IPathResolver
 {
     private readonly IConfigurationProvider _configurationProvider;
 
@@ -14,7 +14,7 @@ public class FileNamer : IFileNamer
     private const string HtmlExtension = "html";
     private const string SettingsExtension = "json";
 
-    public FileNamer(IConfigurationProvider configurationProvider)
+    public PathResolver(IConfigurationProvider configurationProvider)
     {
         _configurationProvider = configurationProvider;
     }
@@ -39,6 +39,11 @@ public class FileNamer : IFileNamer
 
         return FilePathInfo.Of(path, fileType, FolderEnum.Archive);
     }
+
+    public string GetOutputFolder() => _configurationProvider.Config.OutputFolder;
+
+    public string GetArchiveFolder() => Path.Combine(_configurationProvider.Config.OutputFolder,
+        _configurationProvider.Config.ArchiveFolderName);
 
     private static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
