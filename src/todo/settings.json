@@ -8,7 +8,7 @@
 
   "OutputFolder": "D:\\workspace\\year-of-phil\\todo",
   "ArchiveFolderName": "_archive",
-  "TodoListFilenameFormat": "todo-{yyyy-MM-dd}.md",
+  "TodoListFilenameFormat": "todo-{yyyy-MM-dd}",
 
   "UseGit": true,
   "UseNamesForDays": true,
