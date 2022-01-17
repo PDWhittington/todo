@@ -8,6 +8,7 @@ using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileLaunching;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Helpers;
@@ -17,6 +18,7 @@ using Todo.Contracts.Services.TextFormatting;
 using Todo.DateNaming;
 using Todo.DateParsing;
 using Todo.Execution;
+using Todo.FileLaunching;
 using Todo.FileSystem;
 using Todo.Git;
 using Todo.Helpers;
@@ -87,7 +89,8 @@ internal static class Initialise
                 .AddSingleton<IFileNamer, FileNamer>()
                 .AddSingleton<IContentFilePathResolver, ContentFilePathResolver>()
                 .AddSingleton<IFileReader, FileReader>()
-                .AddSingleton<IMarkdownFileReader, MarkdownFileReader>();
+                .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
+                .AddSingleton<IFileOpener, FileOpener>();
 
         private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection

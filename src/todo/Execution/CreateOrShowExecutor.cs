@@ -5,6 +5,7 @@ using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileLaunching;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
@@ -13,21 +14,21 @@ namespace Todo.Execution;
 
 public class CreateOrShowExecutor : CommandExecutorBase<CreateOrShowCommand>, ICreateOrShowExecutor
 {
-    private readonly IConfigurationProvider _configurationProvider;
     private readonly IMarkdownTemplateProvider _templateProvider;
     private readonly IContentFilePathResolver _fileResolver;
     private readonly IMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
     private readonly IDateFormatter _dateFormatter;
+    private readonly IFileOpener _fileOpener;
 
-    public CreateOrShowExecutor(IConfigurationProvider configurationProvider, IMarkdownTemplateProvider templateProvider,
+    public CreateOrShowExecutor(IMarkdownTemplateProvider templateProvider,
         IContentFilePathResolver fileResolver, IMarkdownSubstitutionsMaker markdownSubstitutionMaker,
-        IDateFormatter dateFormatter)
+        IDateFormatter dateFormatter, IFileOpener fileOpener)
     {
-        _configurationProvider = configurationProvider;
         _templateProvider = templateProvider;
         _fileResolver = fileResolver;
         _markdownSubstitutionMaker = markdownSubstitutionMaker;
         _dateFormatter = dateFormatter;
+        _fileOpener = fileOpener;
     }
 
     public override void Execute(CreateOrShowCommand createOrShowCommand)
@@ -44,7 +45,7 @@ public class CreateOrShowExecutor : CommandExecutorBase<CreateOrShowCommand>, IC
             File.WriteAllText(pathInfo.Path, outputText);
         }
 
-        Process.Start(_configurationProvider.Config.TextEditorPath, pathInfo.Path);
+        _fileOpener.LaunchFileInDefaultEditor(pathInfo.Path);
     }
 
     private MarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowCommand createOrShowCommand)
