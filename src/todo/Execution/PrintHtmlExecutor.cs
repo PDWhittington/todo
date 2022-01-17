@@ -16,16 +16,16 @@ public class PrintHtmlExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHt
     private readonly IMarkdownFileReader _markdownFileReader;
     private readonly IHtmlSubstitutionsMaker _htmlSubstitutionsMaker;
     private readonly IDateFormatter _dateFormatter;
-    private readonly IFileNamer _fileNamer;
+    private readonly IPathResolver _pathResolver;
 
     public PrintHtmlExecutor(IHtmlTemplateProvider htmlTemplateProvider, IMarkdownFileReader markdownFileReader,
-        IHtmlSubstitutionsMaker htmlSubstitutionsMaker, IDateFormatter dateFormatter, IFileNamer fileNamer)
+        IHtmlSubstitutionsMaker htmlSubstitutionsMaker, IDateFormatter dateFormatter, IPathResolver pathResolver)
     {
         _htmlTemplateProvider = htmlTemplateProvider;
         _markdownFileReader = markdownFileReader;
         _htmlSubstitutionsMaker = htmlSubstitutionsMaker;
         _dateFormatter = dateFormatter;
-        _fileNamer = fileNamer;
+        _pathResolver = pathResolver;
     }
 
     public override void Execute(PrintHtmlCommand command)
@@ -44,7 +44,7 @@ public class PrintHtmlExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHt
 
         var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, htmlTemplateFile.FileContents);
 
-        var pathInfo = _fileNamer.GetFilePath(command.Date, FileTypeEnum.Html);
+        var pathInfo = _pathResolver.GetFilePath(command.Date, FileTypeEnum.Html);
 
         File.WriteAllText(pathInfo.Path, outputHtml);
     }

@@ -3,6 +3,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.CommandFactories;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.DateNaming;
@@ -84,11 +85,12 @@ internal static class Initialise
 
         private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IFileNamer, FileNamer>()
+                .AddSingleton<IPathResolver, PathResolver>()
                 .AddSingleton<IContentFilePathResolver, ContentFilePathResolver>()
                 .AddSingleton<IFileReader, FileReader>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
-                .AddSingleton<IFileOpener, FileOpener>();
+                .AddSingleton<IFileOpener, FileOpener>()
+                .AddSingleton<IFileDeleter, FileDeleter>();
 
         private static IServiceCollection AddHelpTextWritingFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
