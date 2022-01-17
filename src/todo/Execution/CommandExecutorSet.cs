@@ -8,21 +8,21 @@ namespace Todo.Execution;
 
 public class CommandExecutorSet : ICommandExecutorSet
 {
-    private readonly Dictionary<Type, IExecutor> _executors;
+    private readonly Dictionary<Type, ICommandExecutor> _executors;
 
-    public CommandExecutorSet(IEnumerable<IExecutor> executors)
+    public CommandExecutorSet(IEnumerable<ICommandExecutor> executors)
     {
         _executors = Validate(executors);
     }
 
-    private Dictionary<Type, IExecutor> Validate(IEnumerable<IExecutor> executors)
+    private Dictionary<Type, ICommandExecutor> Validate(IEnumerable<ICommandExecutor> executors)
     {
         return executors
             .Where(x => true)
             .ToDictionary(x => x.CommandType);
     }
 
-    public IExecutor? GetExecutorForCommand(CommandBase commandBase)
+    public ICommandExecutor? GetExecutorForCommand(CommandBase commandBase)
     {
         return _executors.TryGetValue(commandBase.GetType(), out var executor) ? executor : default;
     }

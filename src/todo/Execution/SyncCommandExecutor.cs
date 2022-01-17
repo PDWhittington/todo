@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-public class SyncExecutor : CommandExecutorBase<SyncCommand>, ISyncExecutor
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public class SyncCommandExecutor : CommandExecutorBase<SyncCommand>, ISyncCommandExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
-    private readonly ICommitExecutor _commitExecutor;
-    private readonly IPushExecutor _pushExecutor;
+    private readonly ICommitCommandExecutor _commitExecutor;
+    private readonly IPushCommandExecutor _pushExecutor;
 
-    public SyncExecutor(IConfigurationProvider configurationProvider, ICommitExecutor commitExecutor, IPushExecutor pushExecutor)
+    public SyncCommandExecutor(IConfigurationProvider configurationProvider, ICommitCommandExecutor commitExecutor, IPushCommandExecutor pushExecutor)
     {
         _configurationProvider = configurationProvider;
         _commitExecutor = commitExecutor;

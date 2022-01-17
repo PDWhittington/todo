@@ -4,7 +4,7 @@ using Todo.Contracts.Services.Execution;
 
 namespace Todo.Execution;
 
-public abstract class CommandExecutorBase<T> : IExecutor<T>
+public abstract class CommandExecutorBase<T> : ICommandExecutor<T>
     where T : CommandBase
 {
     public Type CommandType => typeof(T);

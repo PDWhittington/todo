@@ -44,7 +44,7 @@ internal static class Initialise
 
                 /* Command interpretation and execution */
                 .AutoRegisterTypes<ICommandFactory<CommandBase>>()
-                .AutoRegisterTypes<IExecutor>()
+                .AutoRegisterTypes<ICommandExecutor>()
                 .AddTypeSets()
 
                 /* Main service */

@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface ICommitExecutor : IExecutor<CommitCommand> { }
+public interface IKillHtmlCommandExecutor : ICommandExecutor<KillHtmlCommand> { }

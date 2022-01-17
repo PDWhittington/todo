@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Markdig;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
@@ -10,7 +11,8 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Execution;
 
-public class PrintHtmlExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHtmlExecutor
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+public class PrintHtmlCommandExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHtmlCommandExecutor
 {
     private readonly IHtmlTemplateProvider _htmlTemplateProvider;
     private readonly IMarkdownFileReader _markdownFileReader;
@@ -18,7 +20,7 @@ public class PrintHtmlExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHt
     private readonly IDateFormatter _dateFormatter;
     private readonly IPathResolver _pathResolver;
 
-    public PrintHtmlExecutor(IHtmlTemplateProvider htmlTemplateProvider, IMarkdownFileReader markdownFileReader,
+    public PrintHtmlCommandExecutor(IHtmlTemplateProvider htmlTemplateProvider, IMarkdownFileReader markdownFileReader,
         IHtmlSubstitutionsMaker htmlSubstitutionsMaker, IDateFormatter dateFormatter, IPathResolver pathResolver)
     {
         _htmlTemplateProvider = htmlTemplateProvider;
