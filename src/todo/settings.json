@@ -3,7 +3,8 @@
   "TextEditorPath": "C:\\Users\\philipdw\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
   "GitPath" : "C:\\Program Files\\Git\\bin\\git.exe",
 
-  "MarkdownTemplatePath": "template.md",
+  "DayListMarkdownTemplatePath": "day-list-template.md",
+  "TopicListMarkdownTemplatePath": "topic-list-template.md",
   "HtmlTemplatePath": "template.html",
 
   "OutputFolder": "D:\\workspace\\year-of-phil\\todo",

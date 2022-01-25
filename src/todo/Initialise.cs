@@ -70,7 +70,8 @@ internal static class Initialise
 
         private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IMarkdownSubstitutionsMaker, MarkdownSubstitutionsMaker>()
+                .AddSingleton<IDayListMarkdownSubstitutionsMaker, DayListMarkdownSubstitutionsMaker>()
+                .AddSingleton<ITopicListMarkdownSubstitutionsMaker, TopicListMarkdownSubstitutionsMaker>()
                 .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
                 .AddSingleton<IMarkdownTemplateProvider, MarkdownTemplateProvider>()
                 .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
@@ -85,8 +86,8 @@ internal static class Initialise
 
         private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IPathResolver, PathResolver>()
-                .AddSingleton<IContentFilePathResolver, ContentFilePathResolver>()
+                .AddSingleton<IDateListPathResolver, DateListPathResolver>()
+                .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IFileReader, FileReader>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
                 .AddSingleton<IFileOpener, FileOpener>()

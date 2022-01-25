@@ -6,17 +6,16 @@ namespace Todo.FileSystem;
 
 public class MarkdownFileReader : FileReader, IMarkdownFileReader
 {
-    private readonly IContentFilePathResolver _contentFileResolver;
+    private readonly IDateListPathResolver _dateListPathResolver;
 
-
-    public MarkdownFileReader(IContentFilePathResolver contentFileResolver)
+    public MarkdownFileReader(IDateListPathResolver dateListPathResolver)
     {
-        _contentFileResolver = contentFileResolver;
+        _dateListPathResolver = dateListPathResolver;
     }
 
     public TodoFile ReadMarkdownFile(DateOnly dateOnly)
     {
-        var filePathInfo = _contentFileResolver.GetPathFor(dateOnly, FileTypeEnum.Markdown, false);
+        var filePathInfo = _dateListPathResolver.ResolvePathFor(dateOnly, FileTypeEnum.Markdown, false);
 
         return TodoFile.Of(filePathInfo, GetFileText(filePathInfo.Path));
     }

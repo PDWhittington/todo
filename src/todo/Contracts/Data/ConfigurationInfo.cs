@@ -18,7 +18,9 @@ public class ConfigurationInfo
 
     #region Paths to templates
 
-    public string MarkdownTemplatePath { get; }
+    public string DayListMarkdownTemplatePath { get; }
+
+    public string TopicListMarkdownTemplatePath { get; }
 
     public string HtmlTemplatePath { get; }
 
@@ -45,7 +47,8 @@ public class ConfigurationInfo
     [JsonConstructor]
     public ConfigurationInfo(
         string browserPath, string textEditorPath, string gitPath,
-        string markdownTemplatePath, string htmlTemplatePath,
+        string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
+        string htmlTemplatePath,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,
         bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth)
     {
@@ -53,7 +56,8 @@ public class ConfigurationInfo
         TextEditorPath = textEditorPath;
         GitPath = gitPath;
 
-        MarkdownTemplatePath = markdownTemplatePath;
+        DayListMarkdownTemplatePath = dayListMarkdownTemplatePath;
+        TopicListMarkdownTemplatePath = topicListMarkdownTemplatePath;
         HtmlTemplatePath = htmlTemplatePath;
 
         OutputFolder = outputFolder;

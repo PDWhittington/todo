@@ -1,3 +1,9 @@
 ﻿namespace Todo.Contracts.Services.Templates;
 
-public interface IMarkdownTemplateProvider : ITemplateProvider { }
+public enum MarkdownTemplateEnum
+{
+    DayListTemplate,
+    TopicListTemplate,
+}
+
+public interface IMarkdownTemplateProvider : ITemplateProvider<MarkdownTemplateEnum> { }

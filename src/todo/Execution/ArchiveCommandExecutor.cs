@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
@@ -10,20 +11,19 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
 
-
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ArchiveCommandExecutor : CommandExecutorBase<ArchiveCommand>, IArchiveCommandExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
-    private readonly IPathResolver _pathResolver;
+    private readonly IDateListPathResolver _dateListPathResolver;
 
     public ArchiveCommandExecutor(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IPathResolver pathResolver)
+        IGitInterface gitInterface, IDateListPathResolver dateListPathResolver)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
-        _pathResolver = pathResolver;
+        _dateListPathResolver = dateListPathResolver;
     }
 
     public override void Execute(ArchiveCommand command)
@@ -34,8 +34,8 @@ public class ArchiveCommandExecutor : CommandExecutorBase<ArchiveCommand>, IArch
 
     private void Archive(ArchiveCommand command, Action<FilePathInfo, FilePathInfo> archiveOp)
     {
-        var sourcePathInfo = _pathResolver.GetFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
-        var destinationPathInfo = _pathResolver.GetArchiveFilePath(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var sourcePathInfo = _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        var destinationPathInfo = _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.Markdown);
 
         archiveOp(sourcePathInfo, destinationPathInfo);
     }

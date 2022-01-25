@@ -1,21 +1,22 @@
-﻿using System;
-using Todo.Contracts.Data.FileSystem;
+﻿using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Services.FileSystem;
 
-public interface IPathResolver
+public interface IPathResolver<in TParameterType>
 {
-    string GetRegExForDayListFormat();
+    string GetRegExForThisFileType();
 
-    string FileNameWithoutExtension(DateOnly dateOnly);
+    string FileNameWithoutExtension(TParameterType parameter);
 
-    string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType);
+    string FileNameFor(TParameterType parameter, FileTypeEnum fileType);
 
-    FilePathInfo GetFilePath(DateOnly dateOnly, FileTypeEnum fileType);
+    FilePathInfo ResolvePathFor(TParameterType parameter, FileTypeEnum fileType, bool allowNotPresent);
 
-    FilePathInfo GetArchiveFilePath(DateOnly dateOnly, FileTypeEnum fileType);
+    FilePathInfo GetFilePathFor(TParameterType parameter, FileTypeEnum fileType);
 
-    public string GetOutputFolder();
+    public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType);
 
-    public string GetArchiveFolder();
+    string GetOutputFolder();
+
+    string GetArchiveFolder();
 }

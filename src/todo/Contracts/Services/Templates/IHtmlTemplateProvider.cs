@@ -1,3 +1,6 @@
 ﻿namespace Todo.Contracts.Services.Templates;
 
-public interface IHtmlTemplateProvider : ITemplateProvider { }
+public enum HtmlTemplateEnum
+{ }
+
+public interface IHtmlTemplateProvider : ITemplateProvider<HtmlTemplateEnum> { }
