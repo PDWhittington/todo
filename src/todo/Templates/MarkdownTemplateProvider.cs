@@ -1,4 +1,5 @@
-﻿using Todo.Contracts.Data.FileSystem;
+﻿using System;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
@@ -8,7 +9,8 @@ namespace Todo.Templates;
 /// <summary>
 /// A client of this class can retrieve a string which is a template of the markdown to use.
 /// </summary>
-public class MarkdownTemplateProvider : TemplateProviderBase, IMarkdownTemplateProvider
+public class MarkdownTemplateProvider : TemplateProviderBase<MarkdownTemplateEnum>,
+    IMarkdownTemplateProvider
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IPathHelper _pathHelper;
@@ -24,9 +26,16 @@ public class MarkdownTemplateProvider : TemplateProviderBase, IMarkdownTemplateP
         _pathHelper = pathHelper;
     }
 
-    protected override FilePathInfo GetTemplatePath()
+    protected override FilePathInfo GetTemplatePath(MarkdownTemplateEnum key)
     {
-        var path = _pathHelper.GetRooted(_configurationProvider.Config.MarkdownTemplatePath);
-        return FilePathInfo.Of(path, FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
+        var pathToUse = key switch
+        {
+            MarkdownTemplateEnum.DayListTemplate => _configurationProvider.Config.DayListMarkdownTemplatePath,
+            MarkdownTemplateEnum.TopicListTemplate => _configurationProvider.Config.TopicListMarkdownTemplatePath,
+            _ => throw new ArgumentException(null, nameof(key))
+        };
+
+        var rootedPath = _pathHelper.GetRooted(pathToUse);
+        return FilePathInfo.Of(rootedPath, FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
     }
 }

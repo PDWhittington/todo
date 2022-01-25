@@ -5,7 +5,7 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class HtmlTemplateProvider : TemplateProviderBase, IHtmlTemplateProvider
+public class HtmlTemplateProvider : TemplateProviderBase<HtmlTemplateEnum>, IHtmlTemplateProvider
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IPathHelper _pathHelper;
@@ -21,7 +21,7 @@ public class HtmlTemplateProvider : TemplateProviderBase, IHtmlTemplateProvider
         _pathHelper = pathHelper;
     }
 
-    protected override FilePathInfo GetTemplatePath()
+    protected override FilePathInfo GetTemplatePath(HtmlTemplateEnum _)
     {
         var path = _pathHelper.GetRooted(_configurationProvider.Config.HtmlTemplatePath);
         return FilePathInfo.Of(path, FileTypeEnum.HtmlTemplate, FolderEnum.SpecifiedInSettings);

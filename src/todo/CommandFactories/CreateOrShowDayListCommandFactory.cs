@@ -6,7 +6,7 @@ using Todo.Contracts.Services.DateParsing;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand>
+public class CreateOrShowDayListCommandFactory : CommandFactoryBase<CreateOrShowDayListCommand>
 {
     private static readonly string[] Words = { "createorshow" };
 
@@ -23,13 +23,13 @@ public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand
 
     private readonly IDateParser _dateParser;
 
-    public CreateOrShowCommandFactory(IDateParser dateParser)
+    public CreateOrShowDayListCommandFactory(IDateParser dateParser)
         : base(Words)
     {
         _dateParser = dateParser;
     }
 
-    public override CreateOrShowCommand TryGetCommand(string commandLine)
+    public override CreateOrShowDayListCommand TryGetCommand(string commandLine)
     {
         var commandLineToUse = IsThisCommand(commandLine, out var restOfCommand)
             ? restOfCommand : commandLine;
@@ -39,6 +39,6 @@ public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand
             throw new Exception("Date not recognised in command");
         }
 
-        return CreateOrShowCommand.Of(dateOnly);
+        return CreateOrShowDayListCommand.Of(dateOnly);
     }
 }

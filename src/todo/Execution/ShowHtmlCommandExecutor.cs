@@ -22,21 +22,17 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
     private static extern int SetForegroundWindow(IntPtr hwnd);
 
     private readonly IConfigurationProvider _configurationProvider;
-    private readonly IContentFilePathResolver _contentFileResolver;
+    private readonly IDateListPathResolver _dateListPathResolver;
 
-    public ShowHtmlCommandExecutor(IConfigurationProvider configurationProvider, IContentFilePathResolver contentFileResolver)
+    public ShowHtmlCommandExecutor(IConfigurationProvider configurationProvider, IDateListPathResolver dateListPathResolver)
     {
         _configurationProvider = configurationProvider;
-        _contentFileResolver = contentFileResolver;
+        _dateListPathResolver = dateListPathResolver;
     }
 
     public override void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var pathInfo = _contentFileResolver.GetPathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
-
-        if (!File.Exists(pathInfo.Path))
-            throw new Exception(
-                $"Path {pathInfo} does not exist. You may need to export to Html in VSCode first");
+        var pathInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 
         var process = Process.Start(_configurationProvider.Config.BrowserPath, pathInfo.Path);
 
