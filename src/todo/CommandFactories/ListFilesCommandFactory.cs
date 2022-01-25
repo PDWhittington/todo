@@ -58,7 +58,7 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
 
             //One flag but not the other implies only one folder be picked up.
             (true, false) => ListFilesCommand.FileLocationEnum.MainFolder,
-            (false, true) => ListFilesCommand.FileLocationEnum.ArchiveFolder,
+            (false, true) => ListFilesCommand.FileLocationEnum.ArchiveFolder
         };
 
         fileType = (containsD, containsT) switch
@@ -71,7 +71,7 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
 
             //One flag but not the other implies only one folder be picked up.
             (true, false) => ListFilesCommand.FileTypeEnum.DayList,
-            (false, true) => ListFilesCommand.FileTypeEnum.TopicList,
+            (false, true) => ListFilesCommand.FileTypeEnum.TopicList
         };
     }
 }

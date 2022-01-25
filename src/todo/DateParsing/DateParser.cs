@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Helpers;
 using IConfigurationProvider = Todo.Contracts.Services.StateAndConfig.IConfigurationProvider;
@@ -192,16 +191,17 @@ public class DateParser : IDateParser
         return PotentialDates().ToArray();
     }
 
-    private DateOnly[] GetPossiblesForDayOfWeek(DateOnly currentDay, DayOfWeek dayOfWeek)
+    private static DateOnly[] GetPossiblesForDayOfWeek(DateOnly currentDay, DayOfWeek dayOfWeek)
     {
         var dateDiffs = GetDateDiffsFor(currentDay, dayOfWeek);
 
         return dateDiffs
-            .Select(dateDiff => currentDay.AddDays(dateDiff))
+            .Select(currentDay.AddDays)
             .ToArray();
     }
 
-    private int[] GetDateDiffsFor(DateOnly currentDay, DayOfWeek dayOfWeek)
+    // ReSharper disable once ReturnTypeCanBeEnumerable.Local
+    private static int[] GetDateDiffsFor(DateOnly currentDay, DayOfWeek dayOfWeek)
     {
         var currentDayIndex = MapDayOfWeekToNumber(currentDay.DayOfWeek);
         var dayOfWeekIndex = MapDayOfWeekToNumber(dayOfWeek);
@@ -210,11 +210,11 @@ public class DateParser : IDateParser
         {
             dayOfWeekIndex - 7 - currentDayIndex,
             dayOfWeekIndex - currentDayIndex,
-            dayOfWeekIndex + 7 - currentDayIndex,
+            dayOfWeekIndex + 7 - currentDayIndex
         };
     }
 
-    private int MapDayOfWeekToNumber(DayOfWeek dayOfWeek) => dayOfWeek switch
+    private static int MapDayOfWeekToNumber(DayOfWeek dayOfWeek) => dayOfWeek switch
     {
         DayOfWeek.Sunday => 0,
         DayOfWeek.Monday => 1,

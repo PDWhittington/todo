@@ -3,7 +3,7 @@
 public enum MarkdownTemplateEnum
 {
     DayListTemplate,
-    TopicListTemplate,
+    TopicListTemplate
 }
 
 public interface IMarkdownTemplateProvider : ITemplateProvider<MarkdownTemplateEnum> { }

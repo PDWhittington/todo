@@ -7,5 +7,5 @@ public interface IConsoleTextFormatter
 {
     string CreateTable(IEnumerable<CommandHelpMessage> rows);
 
-    IEnumerable<string> WrapText(IReadOnlyList<string> lines, int columnWidth);
+    IEnumerable<string> WrapText(IEnumerable<string> lines, int columnWidth);
 }

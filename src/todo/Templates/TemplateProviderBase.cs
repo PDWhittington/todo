@@ -4,7 +4,7 @@ using Todo.FileSystem;
 
 namespace Todo.Templates;
 
-public abstract class TemplateProviderBase<TKeyType> : FileReader
+public abstract class TemplateProviderBase<TKeyType> : FileReaderBase
     where TKeyType : Enum
 {
     protected abstract FilePathInfo GetTemplatePath(TKeyType key);

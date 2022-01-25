@@ -29,7 +29,7 @@ public class CreateOrShowTopicListCommandExecutor
     protected override FilePathInfo GetFilePathInfo(CreateOrShowTopicListCommand createOrShowTopicListCommand)
         => _topicListPathResolver.ResolvePathFor(createOrShowTopicListCommand.Topic, FileTypeEnum.Markdown, true);
 
-    protected override TodoFile GetTemplate(CreateOrShowTopicListCommand createOrShowCommand)
+    protected override TodoFile GetTemplate()
         => _markdownTemplateProvider.GetTemplate(MarkdownTemplateEnum.TopicListTemplate);
 
     protected override TopicListMarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowTopicListCommand createOrShowTopicListCommand)

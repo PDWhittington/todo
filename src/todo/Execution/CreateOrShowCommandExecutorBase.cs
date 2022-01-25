@@ -23,7 +23,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
         if (!File.Exists(pathInfo.Path))
         {
-            var templateFile = GetTemplate(createOrShowCommand);
+            var templateFile = GetTemplate();
 
             var markdownSubstitutions = GetMarkdownSubstitutions(createOrShowCommand);
 
@@ -37,7 +37,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
     protected abstract FilePathInfo GetFilePathInfo(TCommandType createOrShowCommand);
 
-    protected abstract TodoFile GetTemplate(TCommandType createOrShowCommand);
+    protected abstract TodoFile GetTemplate();
 
     protected abstract TSubstitutionsType GetMarkdownSubstitutions(TCommandType createOrShowCommand);
 

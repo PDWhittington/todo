@@ -6,8 +6,10 @@ public interface IPathResolver<in TParameterType>
 {
     string GetRegExForThisFileType();
 
+    // ReSharper disable once UnusedMemberInSuper.Global
     string FileNameWithoutExtension(TParameterType parameter);
 
+    // ReSharper disable once UnusedMemberInSuper.Global
     string FileNameFor(TParameterType parameter, FileTypeEnum fileType);
 
     FilePathInfo ResolvePathFor(TParameterType parameter, FileTypeEnum fileType, bool allowNotPresent);

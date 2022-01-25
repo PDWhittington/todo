@@ -39,11 +39,11 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
             {
                 command.FileLocation.HasFlag(ListFilesCommand.FileLocationEnum.MainFolder)
                     ? Directory.GetFiles(_dateListPathResolver.GetOutputFolder())
-                    : new string[] { },
+                    : Array.Empty<string>(),
 
                 command.FileLocation.HasFlag(ListFilesCommand.FileLocationEnum.ArchiveFolder)
                     ? Directory.GetFiles(_dateListPathResolver.GetArchiveFolder())
-                    : new string[] { }
+                    : Array.Empty<string>()
 
             }.SelectMany(x => x)
             .Where(Filter);
