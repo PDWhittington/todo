@@ -10,7 +10,7 @@ using Todo.Contracts.Services.Templates;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public abstract class CreateOrShowDayListCommandExecutor
+public class CreateOrShowDayListCommandExecutor
     : CreateOrShowCommandExecutorBase<CreateOrShowDayListCommand, DayListMarkdownSubstitutions>,
         ICreateOrShowDayListCommandExecutor
 {
@@ -19,7 +19,7 @@ public abstract class CreateOrShowDayListCommandExecutor
     private readonly IDayListMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
     private readonly IDateFormatter _dateFormatter;
 
-    protected CreateOrShowDayListCommandExecutor(IMarkdownTemplateProvider templateProvider,
+    public CreateOrShowDayListCommandExecutor(IMarkdownTemplateProvider templateProvider,
         IDateListPathResolver dateListPathResolver, IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter, IFileOpener fileOpener)
         : base (fileOpener)
