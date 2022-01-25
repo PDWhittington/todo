@@ -123,14 +123,14 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
 
         for (var i = 0; i < lines.Count; i++)
         {
-            var wordsInLine = lines[i].Split(' ');
+            var wordsInLine = lines[i]
+                .Split(' ')
+                .Select(x => x.Replace("\t", "   "));
 
             var outputLines = GetLines(wordsInLine)
-                .Select(outputWord => string.Join(' ', outputWord));
+                .Select(ol => string.Join(' ', ol));
 
             foreach (var outputLine in outputLines) yield return outputLine;
-
-            if (i < lines.Count - 1) yield return "";
         }
     }
 

@@ -10,8 +10,6 @@ public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand
 {
     private static readonly string[] Words = { "createorshow" };
 
-    private readonly IDateParser _dateParser;
-
     public override bool IsDefaultCommandFactory => true;
 
     public override string [] HelpText => new[]
@@ -19,10 +17,11 @@ public class CreateOrShowCommandFactory : CommandFactoryBase<CreateOrShowCommand
         "Creates or shows a markdown file for the date supplied. " +
         "This is the default command and can be executed by typing anything that can be parsed as a date. " +
         "Supplying no date assumes the current day.",
-
+        "",
         "Usage: todo [date]"
     };
 
+    private readonly IDateParser _dateParser;
 
     public CreateOrShowCommandFactory(IDateParser dateParser)
         : base(Words)

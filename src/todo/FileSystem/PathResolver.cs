@@ -20,6 +20,14 @@ public class PathResolver : IPathResolver
         _configurationProvider = configurationProvider;
     }
 
+    public string GetRegExForDayListFormat()
+    {
+        var fileNameFragments = GetFragments(_configurationProvider.Config.TodoListFilenameFormat,
+            '{', '}', _ => ".*");
+
+        return string.Join("", fileNameFragments) + $".{MarkdownExtension}";
+    }
+
     public string FileNameWithoutExtension(DateOnly dateOnly)
     {
         var fileNameFragments = GetFragments(_configurationProvider.Config.TodoListFilenameFormat,
