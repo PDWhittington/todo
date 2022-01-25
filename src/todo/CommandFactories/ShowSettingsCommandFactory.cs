@@ -9,6 +9,14 @@ public class ShowSettingsCommandFactory : CommandFactoryBase<ShowSettingsCommand
 {
     private static readonly string[] Words = { "settings", "showsettings" };
 
+    public override bool IsDefaultCommandFactory { get; }
+
+    public override string[] HelpText { get; } = {
+        "Shows the settings file in the default editor.",
+        "",
+        "Usage: todo settings"
+    };
+
     public ShowSettingsCommandFactory() : base(Words)
     { }
 
@@ -21,11 +29,4 @@ public class ShowSettingsCommandFactory : CommandFactoryBase<ShowSettingsCommand
 
         return ShowSettingsCommand.Singleton;
     }
-
-    public override bool IsDefaultCommandFactory { get; }
-    public override string[] HelpText { get; } = {
-        "Shows the settings file in the default editor.",
-
-        "Usage: todo settings"
-    };
 }

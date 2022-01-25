@@ -5,6 +5,8 @@ namespace Todo.Contracts.Services.FileSystem;
 
 public interface IPathResolver
 {
+    string GetRegExForDayListFormat();
+
     string FileNameWithoutExtension(DateOnly dateOnly);
 
     string FileNameForDate(DateOnly dateOnly, FileTypeEnum fileType);

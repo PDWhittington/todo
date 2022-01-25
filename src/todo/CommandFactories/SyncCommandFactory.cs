@@ -13,7 +13,7 @@ public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
     public override string[] HelpText => new[]
     {
         "Executes a commit and push operation sequentially.",
-
+        "",
         "Usage: todo s [commit message]"
     };
 

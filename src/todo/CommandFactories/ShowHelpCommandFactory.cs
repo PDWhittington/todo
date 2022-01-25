@@ -9,10 +9,12 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 {
     private static readonly string[] Words = { "help" };
 
+    public override bool IsDefaultCommandFactory => false;
+
     public override string[] HelpText => new[]
     {
         "Displays this help screen.",
-
+        "",
         "Usage: todo help"
     };
 
@@ -27,6 +29,4 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 
         return ShowHelpCommand.Singleton;
     }
-
-    public override bool IsDefaultCommandFactory => false;
 }

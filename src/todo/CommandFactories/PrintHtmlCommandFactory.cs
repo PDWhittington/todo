@@ -10,18 +10,17 @@ public class PrintHtmlCommandFactory : CommandFactoryBase<PrintHtmlCommand>
 {
     private static readonly string[] Words = { "p", "print", "printhtml" };
 
-    private readonly IDateParser _dateParser;
-
     public override bool IsDefaultCommandFactory => false;
 
     public override string [] HelpText => new[]
     {
         "Converts a Markdown file to HTML. Can be used with anything that can be parsed as a date. " +
         "Supplying no date performs this operation on the Markdown file for the current day.",
-
+        "",
         "Usage: todo p [date]"
     };
 
+    private readonly IDateParser _dateParser;
 
     public PrintHtmlCommandFactory(IDateParser dateParser)
         : base(Words)
