@@ -4,7 +4,7 @@ using Todo.Contracts.Services.FileSystem;
 
 namespace Todo.FileSystem;
 
-public class MarkdownFileReader : FileReader, IMarkdownFileReader
+public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
 {
     private readonly IDateListPathResolver _dateListPathResolver;
 

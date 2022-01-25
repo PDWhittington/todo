@@ -19,7 +19,8 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _tableWriter;
 
-    public ShowHelpCommandExecutor(IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter)
+    public ShowHelpCommandExecutor(IConfigurationProvider configurationProvider,
+        ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
@@ -45,9 +46,10 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
 
     private IEnumerable<string> GetNotes()
     {
-        var withSpecialChars = _notes.Select(x => x.Replace("->", "\u2192"));
+        var withSpecialChars = _notes
+            .Select(x => x.Replace("->", "\u2192"));
 
-        return _tableWriter.WrapText(_notes, _configurationProvider.Config.ConsoleWidth);
+        return _tableWriter.WrapText(withSpecialChars, _configurationProvider.Config.ConsoleWidth);
     }
 
     private readonly string [] _notes =

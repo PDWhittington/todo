@@ -88,7 +88,6 @@ internal static class Initialise
             => serviceCollection
                 .AddSingleton<IDateListPathResolver, DateListPathResolver>()
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
-                .AddSingleton<IFileReader, FileReader>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
                 .AddSingleton<IFileOpener, FileOpener>()
                 .AddSingleton<IFileDeleter, FileDeleter>();

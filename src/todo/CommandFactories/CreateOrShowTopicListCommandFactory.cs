@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 
 namespace Todo.CommandFactories;
 
+
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class CreateOrShowTopicListCommandFactory
     : CommandFactoryBase<CreateOrShowTopicListCommand>
 {

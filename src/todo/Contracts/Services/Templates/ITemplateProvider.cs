@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Services.Templates;
 
-public interface ITemplateProvider<TKeyType>
+public interface ITemplateProvider<in TKeyType>
 {
     TodoFile GetTemplate(TKeyType key);
 }

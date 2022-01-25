@@ -79,7 +79,7 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
         var enclosed = false;
         var previousIndex = 0;
 
-        for (int i = 0; i < str.Length; i++)
+        for (var i = 0; i < str.Length; i++)
         {
             if (str[i] == openChar)
             {
@@ -119,6 +119,6 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
             (false, true, _) => pathInArchiveFolder, //Exists in archive but not in todo root
 
             (true, true, _) => throw new Exception(
-                "File found in both the todo root folder and the archive folder"), //Exists in both
+                "File found in both the todo root folder and the archive folder") //Exists in both
         };
 }

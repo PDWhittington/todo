@@ -6,5 +6,6 @@ public interface ICommandExecutorSet
 {
     ICommandExecutor? GetExecutorForCommand(CommandBase commandBase);
 
+    // ReSharper disable once UnusedMember.Global
     bool TryExecute<T>(T command) where T : CommandBase;
 }

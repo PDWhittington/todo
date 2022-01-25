@@ -94,9 +94,8 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
             _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null)
         };
 
-    public IEnumerable<string> WrapText(IReadOnlyList<string> lines, int columnWidth)
+    public IEnumerable<string> WrapText(IEnumerable<string> lines, int columnWidth)
     {
-
         IEnumerable<string[]> GetLines(IEnumerable<string> words)
         {
             var list = new List<string>();
@@ -121,9 +120,9 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
             yield return list.ToArray();
         }
 
-        for (var i = 0; i < lines.Count; i++)
+        foreach (var line in lines)
         {
-            var wordsInLine = lines[i]
+            var wordsInLine = line
                 .Split(' ')
                 .Select(x => x.Replace("\t", "   "));
 

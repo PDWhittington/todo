@@ -15,10 +15,10 @@ public class CommandExecutorSet : ICommandExecutorSet
         _executors = Validate(executors);
     }
 
-    private Dictionary<Type, ICommandExecutor> Validate(IEnumerable<ICommandExecutor> executors)
+    private static Dictionary<Type, ICommandExecutor> Validate(IEnumerable<ICommandExecutor> executors)
     {
         return executors
-            .Where(x => true)
+            .Where(_ => true)
             .ToDictionary(x => x.CommandType);
     }
 

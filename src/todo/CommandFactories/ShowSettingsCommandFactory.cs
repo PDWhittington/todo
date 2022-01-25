@@ -9,7 +9,7 @@ public class ShowSettingsCommandFactory : CommandFactoryBase<ShowSettingsCommand
 {
     private static readonly string[] Words = { "settings", "showsettings" };
 
-    public override bool IsDefaultCommandFactory { get; }
+    public override bool IsDefaultCommandFactory => false;
 
     public override string[] HelpText { get; } = {
         "Shows the settings file in the default editor.",
