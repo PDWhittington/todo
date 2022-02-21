@@ -20,8 +20,6 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
 
     public override void Execute(ShowSettingsCommand _)
     {
-        var settingsPath = _settingsPathProvider.GetSettingsPath();
-
-        _fileOpener.LaunchFileInDefaultEditor(settingsPath.Path);
+        _fileOpener.LaunchFileInDefaultEditor(_settingsPathProvider.SettingsPath.Path);
     }
 }
