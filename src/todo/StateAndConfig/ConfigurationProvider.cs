@@ -20,16 +20,14 @@ public class ConfigurationProvider : IConfigurationProvider
 
     private ConfigurationInfo PopulateAndReturnConfiguration()
     {
-        var settingsPath = _settingsPathProvider.GetSettingsPath();
-
-        using var fileStream = new FileStream(settingsPath.Path, FileMode.Open, FileAccess.Read);
+        using var fileStream = new FileStream(_settingsPathProvider.SettingsPath.Path, FileMode.Open, FileAccess.Read);
 
         var serializationOptions = new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip };
 
         var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream, serializationOptions);
 
         _configuration = configuration ??
-                         throw new Exception($"Configuration could not be loaded from {settingsPath}");
+                         throw new Exception($"Configuration could not be loaded from {_settingsPathProvider.SettingsPath.Path}");
 
         return _configuration;
     }

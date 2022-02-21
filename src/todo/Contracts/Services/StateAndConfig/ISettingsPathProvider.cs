@@ -4,5 +4,5 @@ namespace Todo.Contracts.Services.StateAndConfig;
 
 public interface ISettingsPathProvider
 {
-    FilePathInfo GetSettingsPath();
+    FilePathInfo SettingsPath { get; }
 }

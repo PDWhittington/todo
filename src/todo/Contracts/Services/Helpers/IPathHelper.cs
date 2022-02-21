@@ -7,4 +7,6 @@ public interface IPathHelper
     string GetAssemblyFolder();
 
     string GetAssemblyLocation();
+
+    string GetWorkingFolder();
 }
