@@ -1,7 +1,7 @@
 ﻿{
-  "BrowserPath": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-  "TextEditorPath": "C:\\Users\\philipdw\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-  "GitPath" : "C:\\Program Files\\Git\\bin\\git.exe",
+  "BrowserPath": "chrome.exe",
+  "TextEditorPath": "Code.exe",
+  "GitPath" : "git.exe",
 
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",

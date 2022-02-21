@@ -86,6 +86,8 @@ internal static class Initialise
 
         private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()
+                .AddSingleton<IEnvironmentPathResolver, EnvironmentPathResolver>()
                 .AddSingleton<IDateListPathResolver, DateListPathResolver>()
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
@@ -98,6 +100,7 @@ internal static class Initialise
 
         private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<IGitExecutableResolver, GitExecutableResolver>()
                 .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
                 .AddSingleton<IGitInterface, GitInterface>();
 

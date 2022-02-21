@@ -6,18 +6,18 @@ namespace Todo.Git;
 
 public class GitDependencyValidator : IGitDependencyValidator
 {
-    private readonly IConfigurationProvider _configurationProvider;
+    private readonly IGitExecutableResolver _gitExecutableResolver;
 
     private bool? _validated;
 
-    public GitDependencyValidator(IConfigurationProvider configurationProvider)
+    public GitDependencyValidator(IGitExecutableResolver gitExecutableResolver)
     {
-        _configurationProvider = configurationProvider;
+        _gitExecutableResolver = gitExecutableResolver;
     }
 
     public bool GitDependenciesValidated()
     {
-        _validated ??= File.Exists(_configurationProvider.Config.GitPath);
+        _validated ??= File.Exists(_gitExecutableResolver.GitPath);
 
         return (bool)_validated;
     }

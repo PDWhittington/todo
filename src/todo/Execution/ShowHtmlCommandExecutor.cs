@@ -22,18 +22,24 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
 
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IDateListPathResolver _dateListPathResolver;
+    private readonly IEnvironmentPathResolver _environmentPathResolver;
 
-    public ShowHtmlCommandExecutor(IConfigurationProvider configurationProvider, IDateListPathResolver dateListPathResolver)
+    public ShowHtmlCommandExecutor(IConfigurationProvider configurationProvider,
+        IDateListPathResolver dateListPathResolver,
+        IEnvironmentPathResolver environmentPathResolver)
     {
         _configurationProvider = configurationProvider;
         _dateListPathResolver = dateListPathResolver;
+        _environmentPathResolver = environmentPathResolver;
     }
 
     public override void Execute(ShowHtmlCommand showHtmlCommand)
     {
         var pathInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 
-        var process = Process.Start(_configurationProvider.Config.BrowserPath, pathInfo.Path);
+        var browserPath = _environmentPathResolver.ResolveIfNotRooted(_configurationProvider.Config.BrowserPath);
+
+        var process = Process.Start(browserPath, pathInfo.Path);
 
         BringMainWindowToFront(process);
     }
