@@ -8,11 +8,11 @@ public class ConfigurationInfo
 
     #region Paths to third-party tools
 
-    public string BrowserPath { get; }
+    public PerOsFilePaths BrowserPath { get; }
 
-    public string TextEditorPath { get; }
+    public PerOsFilePaths TextEditorPath { get; }
 
-    public string GitPath { get; }
+    public PerOsFilePaths GitPath { get; }
 
     #endregion
 
@@ -46,7 +46,7 @@ public class ConfigurationInfo
 
     [JsonConstructor]
     public ConfigurationInfo(
-        string browserPath, string textEditorPath, string gitPath,
+        PerOsFilePaths browserPath, PerOsFilePaths textEditorPath, PerOsFilePaths gitPath,
         string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
         string htmlTemplatePath,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,

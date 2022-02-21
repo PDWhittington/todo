@@ -1,7 +1,21 @@
 ﻿{
-  "BrowserPath": "chrome.exe",
-  "TextEditorPath": "Code.exe",
-  "GitPath" : "git.exe",
+  "BrowserPath": {
+    "WindowsPath" : "chrome.exe",
+    "LinuxPath" : "/opt/google/chrome/chrome",
+    "OSXPath": "chrome"
+  },
+
+  "TextEditorPath":{
+    "WindowsPath" : "Code.exe", //Capital C in code is intentional, not that it matters on Windows
+    "LinuxPath" : "code",
+    "OSXPath": "code"
+  },
+
+  "GitPath" : {
+    "WindowsPath" : "git.exe",
+    "LinuxPath" : "git",
+    "OSXPath": "git"
+  },
 
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",
