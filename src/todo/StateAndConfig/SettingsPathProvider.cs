@@ -46,10 +46,8 @@ public class SettingsPathProvider : ISettingsPathProvider
             if (!File.Exists(pathCandidate)) continue;
 
             _settingsPath = FilePathInfo.Of(pathCandidate, FileTypeEnum.Settings, FolderEnum.ProgramRoot);
-            break;
         }
 
-        _settingsPath = null;
         return _settingsPath;
     }
 

@@ -17,8 +17,4 @@ public interface IPathResolver<in TParameterType>
     FilePathInfo GetFilePathFor(TParameterType parameter, FileTypeEnum fileType);
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType);
-
-    string GetOutputFolder();
-
-    string GetArchiveFolder();
 }

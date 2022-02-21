@@ -21,8 +21,8 @@
   "TopicListMarkdownTemplatePath": "topic-list-template.md",
   "HtmlTemplatePath": "template.html",
 
-  "OutputFolder": "D:\\workspace\\year-of-phil\\todo",
-  "ArchiveFolderName": "_archive",
+  "OutputFolder": "./todo",
+  "ArchiveFolderName": "./todo/_archive",
   "TodoListFilenameFormat": "todo-{yyyy-MM-dd}",
 
   "UseGit": true,

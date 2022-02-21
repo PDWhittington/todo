@@ -23,7 +23,7 @@ public class HtmlTemplateProvider : TemplateProviderBase<HtmlTemplateEnum>, IHtm
 
     protected override FilePathInfo GetTemplatePath(HtmlTemplateEnum _)
     {
-        var path = _pathHelper.GetRooted(_configurationProvider.Config.HtmlTemplatePath);
+        var path = _pathHelper.GetRootedToAssemblyFolder(_configurationProvider.Config.HtmlTemplatePath);
         return FilePathInfo.Of(path, FileTypeEnum.HtmlTemplate, FolderEnum.SpecifiedInSettings);
     }
 }

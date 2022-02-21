@@ -2,7 +2,9 @@
 
 public interface IPathHelper
 {
-    string GetRooted(string path);
+    string GetRootedToAssemblyFolder(string path);
+
+    string GetRootedToWorkingFolder(string path);
 
     string GetAssemblyFolder();
 

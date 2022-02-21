@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem;
@@ -12,14 +13,16 @@ namespace Todo.FileSystem;
 public abstract class PathResolverBase<TParameterType> : IPathResolver<TParameterType>
 {
     protected readonly IConfigurationProvider ConfigurationProvider;
+    private readonly IPathHelper _pathHelper;
 
     protected const string MarkdownExtension = "md";
     protected const string HtmlExtension = "html";
     protected const string SettingsExtension = "json";
 
-    protected PathResolverBase(IConfigurationProvider configurationProvider)
+    protected PathResolverBase(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
     {
         ConfigurationProvider = configurationProvider;
+        _pathHelper = pathHelper;
     }
 
     public abstract string GetRegExForThisFileType();
@@ -54,10 +57,6 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
         return FilePathInfo.Of(path, fileType, FolderEnum.Archive);
     }
 
-    public string GetOutputFolder() => ConfigurationProvider.Config.OutputFolder;
-
-    public string GetArchiveFolder() => Path.Combine(ConfigurationProvider.Config.OutputFolder,
-        ConfigurationProvider.Config.ArchiveFolderName);
 
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
