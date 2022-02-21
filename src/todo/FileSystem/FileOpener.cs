@@ -7,14 +7,26 @@ namespace Todo.FileSystem;
 public class FileOpener : IFileOpener
 {
     private readonly IConfigurationProvider _configurationProvider;
+    private readonly IEnvironmentPathResolver _environmentPathResolver;
+    private string? _textEditorPath;
 
-    public FileOpener(IConfigurationProvider configurationProvider)
+    public FileOpener(IConfigurationProvider configurationProvider,
+        IEnvironmentPathResolver environmentPathResolver)
     {
         _configurationProvider = configurationProvider;
+        _environmentPathResolver = environmentPathResolver;
+    }
+
+    private string TextEditorPath => _textEditorPath ?? GetTextEditorPath();
+
+    private string GetTextEditorPath()
+    {
+        _textEditorPath = _environmentPathResolver.ResolveIfNotRooted(_configurationProvider.Config.TextEditorPath);
+        return _textEditorPath;
     }
 
     public void LaunchFileInDefaultEditor(string path)
     {
-        Process.Start(_configurationProvider.Config.TextEditorPath, path);
+        Process.Start(TextEditorPath, path);
     }
 }
