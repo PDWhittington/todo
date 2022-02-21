@@ -13,10 +13,12 @@ namespace Todo.Execution;
 public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, IListFilesCommandExecutor
 {
     private readonly IDateListPathResolver _dateListPathResolver;
+    private readonly IPathRootingProvider _pathRootingProvider;
 
-    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver)
+    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver, IPathRootingProvider pathRootingProvider)
     {
         _dateListPathResolver = dateListPathResolver;
+        _pathRootingProvider = pathRootingProvider;
     }
 
     public override void Execute(ListFilesCommand command)
@@ -38,11 +40,11 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
         var pathsInRelevantFolders = new[]
             {
                 command.FileLocation.HasFlag(ListFilesCommand.FileLocationEnum.MainFolder)
-                    ? Directory.GetFiles(_dateListPathResolver.GetOutputFolder())
+                    ? Directory.GetFiles(_pathRootingProvider.GetRootedOutputFolder())
                     : Array.Empty<string>(),
 
                 command.FileLocation.HasFlag(ListFilesCommand.FileLocationEnum.ArchiveFolder)
-                    ? Directory.GetFiles(_dateListPathResolver.GetArchiveFolder())
+                    ? Directory.GetFiles(_pathRootingProvider.GetRootedArchiveFolder())
                     : Array.Empty<string>()
 
             }.SelectMany(x => x)

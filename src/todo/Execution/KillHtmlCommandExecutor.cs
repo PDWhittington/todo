@@ -9,18 +9,18 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class KillHtmlCommandExecutor : CommandExecutorBase<KillHtmlCommand>, IKillHtmlCommandExecutor
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
+    private readonly IPathRootingProvider _pathRootingProvider;
     private readonly IFileDeleter _fileDeleter;
 
-    public KillHtmlCommandExecutor(IDateListPathResolver dateListPathResolver, IFileDeleter fileDeleter)
+    public KillHtmlCommandExecutor(IPathRootingProvider pathRootingProvider, IFileDeleter fileDeleter)
     {
-        _dateListPathResolver = dateListPathResolver;
+        _pathRootingProvider = pathRootingProvider;
         _fileDeleter = fileDeleter;
     }
 
     public override void Execute(KillHtmlCommand command)
     {
-        _fileDeleter.Delete(_dateListPathResolver.GetOutputFolder(), "*.html");
-        _fileDeleter.Delete(_dateListPathResolver.GetArchiveFolder(), "*.html");
+        _fileDeleter.Delete(_pathRootingProvider.GetRootedOutputFolder(), "*.html");
+        _fileDeleter.Delete(_pathRootingProvider.GetRootedArchiveFolder(), "*.html");
     }
 }

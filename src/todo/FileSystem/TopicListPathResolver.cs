@@ -1,4 +1,5 @@
 ﻿using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem;
@@ -6,8 +7,8 @@ namespace Todo.FileSystem;
 public class TopicListPathResolver : PathResolverBase<string>,
     ITopicListPathResolver
 {
-    public TopicListPathResolver(IConfigurationProvider configurationProvider)
-        : base(configurationProvider)
+    public TopicListPathResolver(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
+        : base(configurationProvider, pathHelper)
     { }
 
     public override string GetRegExForThisFileType() => ".*";

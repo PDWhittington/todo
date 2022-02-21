@@ -7,8 +7,11 @@ namespace Todo.Helpers;
 
 public class PathHelper : IPathHelper
 {
-    public string GetRooted(string path)
+    public string GetRootedToAssemblyFolder(string path)
         => Path.IsPathRooted(path) ? path : Path.Combine(GetAssemblyFolder(), path);
+
+    public string GetRootedToWorkingFolder(string path)
+        => Path.IsPathRooted(path) ? path : Path.Combine(GetWorkingFolder(), path);
 
     public string GetAssemblyFolder()
         => Path.GetDirectoryName(GetAssemblyLocation()) ??

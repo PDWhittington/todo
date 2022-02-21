@@ -35,7 +35,7 @@ public class MarkdownTemplateProvider : TemplateProviderBase<MarkdownTemplateEnu
             _ => throw new ArgumentException(null, nameof(key))
         };
 
-        var rootedPath = _pathHelper.GetRooted(pathToUse);
+        var rootedPath = _pathHelper.GetRootedToAssemblyFolder(pathToUse);
         return FilePathInfo.Of(rootedPath, FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
     }
 }

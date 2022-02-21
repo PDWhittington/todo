@@ -87,6 +87,7 @@ internal static class Initialise
 
         private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<IPathRootingProvider, PathRootingProvider>()
                 .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()
                 .AddSingleton<IEnvironmentPathResolver, EnvironmentPathResolver>()
                 .AddSingleton<IDateListPathResolver, DateListPathResolver>()
