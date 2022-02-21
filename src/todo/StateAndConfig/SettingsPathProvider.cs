@@ -8,17 +8,17 @@ namespace Todo.StateAndConfig;
 
 public class SettingsPathProvider : ISettingsPathProvider
 {
-    private const string _settingsFileName = "todo-settings.json";
-
     private readonly IPathHelper _pathHelper;
+    private readonly IConstantsProvider _constantsProvider;
     private FilePathInfo? _settingsPath;
 
-    public SettingsPathProvider(IPathHelper pathHelper)
+    public SettingsPathProvider(IPathHelper pathHelper, IConstantsProvider constantsProvider)
     {
         _pathHelper = pathHelper;
+        _constantsProvider = constantsProvider;
     }
 
-    public FilePathInfo SettingsPath => _settingsPath ?? GetSettingsPath();
+    public FilePathInfo? SettingsPathInHierarchy => _settingsPath ?? GetSettingsPath();
 
     private IEnumerable<string> GetAncestorsIncludingSelf(string folder)
     {
@@ -35,20 +35,30 @@ public class SettingsPathProvider : ISettingsPathProvider
         }
     }
 
-    private FilePathInfo GetSettingsPath()
+    private FilePathInfo? GetSettingsPath()
     {
         var folderCandidates = GetAncestorsIncludingSelf(_pathHelper.GetWorkingFolder());
 
         foreach (var folderCandidate in folderCandidates)
         {
-            var pathCandidate = Path.Combine(folderCandidate, "todo-settings.json");
+            var pathCandidate = Path.Combine(folderCandidate, _constantsProvider.SettingsFileName);
 
             if (!File.Exists(pathCandidate)) continue;
 
             _settingsPath = FilePathInfo.Of(pathCandidate, FileTypeEnum.Settings, FolderEnum.ProgramRoot);
-            return _settingsPath.Value;
+            break;
         }
 
-        throw new FileNotFoundException($"Cannot find settings file with name {_settingsFileName}");
+        _settingsPath = null;
+        return _settingsPath;
     }
+
+    public FilePathInfo GetSettingsPathInFolder(string folder)
+    {
+        var path = Path.Combine(folder, _constantsProvider.SettingsFileName);
+        return FilePathInfo.Of(path, FileTypeEnum.Settings, FolderEnum.ProgramRoot);
+    }
+
+    public FilePathInfo GetSettingsPathInWorkingFolder()
+        => GetSettingsPathInFolder(_pathHelper.GetWorkingFolder());
 }

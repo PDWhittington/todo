@@ -57,6 +57,7 @@ internal static class Initialise
 
         private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
             => serviceCollection
+                .AddSingleton<IConstantsProvider, ConstantsProvider>()
                 .AddSingleton<ICommandLineProvider, CommandLineProvider>()
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
                 .AddSingleton<ICommandProvider, CommandProvider>()

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
@@ -11,15 +12,22 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
 {
     private readonly ISettingsPathProvider _settingsPathProvider;
     private readonly IFileOpener _fileOpener;
+    private readonly IConstantsProvider _constantsProvider;
 
-    public ShowSettingsCommandExecutor(ISettingsPathProvider settingsPathProvider, IFileOpener fileOpener)
+    public ShowSettingsCommandExecutor(ISettingsPathProvider settingsPathProvider, IFileOpener fileOpener,
+        IConstantsProvider constantsProvider)
     {
         _settingsPathProvider = settingsPathProvider;
         _fileOpener = fileOpener;
+        _constantsProvider = constantsProvider;
     }
 
     public override void Execute(ShowSettingsCommand _)
     {
-        _fileOpener.LaunchFileInDefaultEditor(_settingsPathProvider.SettingsPath.Path);
+        var path = _settingsPathProvider.SettingsPathInHierarchy?.Path ??
+           throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
+               _constantsProvider.SettingsFileName);
+
+        _fileOpener.LaunchFileInDefaultEditor(path);
     }
 }

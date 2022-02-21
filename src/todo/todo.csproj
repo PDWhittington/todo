@@ -36,4 +36,9 @@
       <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="todo-settings.json" />
+      <EmbeddedResource Include="todo-settings.json" />
+    </ItemGroup>
+
 </Project>
