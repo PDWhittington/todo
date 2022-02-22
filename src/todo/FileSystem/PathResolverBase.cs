@@ -19,7 +19,8 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
     protected const string HtmlExtension = "html";
     protected const string SettingsExtension = "json";
 
-    protected PathResolverBase(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
+    protected PathResolverBase(IConfigurationProvider configurationProvider, 
+        IPathHelper pathHelper)
     {
         ConfigurationProvider = configurationProvider;
         _pathHelper = pathHelper;
