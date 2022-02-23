@@ -10,18 +10,19 @@ namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class CreateOrShowTopicListCommandExecutor
-    : CreateOrShowCommandExecutorBase<CreateOrShowTopicListCommand, TopicListMarkdownSubstitutions>, ICreateOrShowTopicListCommandExecutor
+    : CreateOrShowCommandExecutorBase<CreateOrShowTopicListCommand, TopicListMarkdownSubstitutions>,
+        ICreateOrShowTopicListCommandExecutor
 {
-    private readonly IMarkdownTemplateProvider _markdownTemplateProvider;
+    private readonly ITopicListMarkdownTemplateProvider _topicListMarkdownTemplateProvider;
     private readonly ITopicListPathResolver _topicListPathResolver;
     private readonly ITopicListMarkdownSubstitutionsMaker _topicListMarkdownSubstitutionsMaker;
 
-    public CreateOrShowTopicListCommandExecutor(IMarkdownTemplateProvider markdownTemplateProvider,
+    public CreateOrShowTopicListCommandExecutor(ITopicListMarkdownTemplateProvider topicListMarkdownTemplateProvider,
         ITopicListPathResolver topicListPathResolver,
         ITopicListMarkdownSubstitutionsMaker topicListMarkdownSubstitutionsMaker,
         IFileOpener fileOpener) : base(fileOpener)
     {
-        _markdownTemplateProvider = markdownTemplateProvider;
+        _topicListMarkdownTemplateProvider = topicListMarkdownTemplateProvider;
         _topicListPathResolver = topicListPathResolver;
         _topicListMarkdownSubstitutionsMaker = topicListMarkdownSubstitutionsMaker;
     }
@@ -29,8 +30,7 @@ public class CreateOrShowTopicListCommandExecutor
     protected override FilePathInfo GetFilePathInfo(CreateOrShowTopicListCommand createOrShowTopicListCommand)
         => _topicListPathResolver.ResolvePathFor(createOrShowTopicListCommand.Topic, FileTypeEnum.Markdown, true);
 
-    protected override TodoFile GetTemplate()
-        => _markdownTemplateProvider.GetTemplate(MarkdownTemplateEnum.TopicListTemplate);
+    protected override TodoFile GetTemplate() => _topicListMarkdownTemplateProvider.GetTemplate();
 
     protected override TopicListMarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowTopicListCommand createOrShowTopicListCommand)
         => TopicListMarkdownSubstitutions.Of(createOrShowTopicListCommand.Topic);

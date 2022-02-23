@@ -1,4 +1,7 @@
-﻿namespace Todo.Contracts.Data.FileSystem;
+﻿using System;
+using System.IO;
+
+namespace Todo.Contracts.Data.FileSystem;
 
 public struct FilePathInfo
 {
@@ -14,11 +17,15 @@ public struct FilePathInfo
 
     private FilePathInfo(string path, FileTypeEnum fileType, FolderEnum folderType)
     {
-        Path = path;
+        Path = System.IO.Path.IsPathRooted(path) ? path
+            : throw new Exception("Only rooted paths are valid");
+
         FileType = fileType;
         FolderType = folderType;
     }
 
     public static FilePathInfo Of(string path, FileTypeEnum fileType, FolderEnum folderType)
         => new(path, fileType, folderType);
+
+    public bool Exists() => File.Exists(Path);
 }

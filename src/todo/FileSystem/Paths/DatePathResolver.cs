@@ -1,15 +1,15 @@
 ﻿using System;
 using Todo.Contracts.Services.FileSystem;
-using Todo.Contracts.Services.Helpers;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.FileSystem;
+namespace Todo.FileSystem.Paths;
 
-public class DateListPathResolver : PathResolverBase<DateOnly>,
-    IDateListPathResolver
+public class DateListPathResolver : PathResolverBase<DateOnly>, IDateListPathResolver
 {
-    public DateListPathResolver(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
-        : base(configurationProvider, pathHelper)
+    public DateListPathResolver(IConfigurationProvider configurationProvider, IPathHelper pathHelper,
+        IOutputFolderPathProvider outputFolderPathProvider)
+        : base(configurationProvider, pathHelper, outputFolderPathProvider)
     { }
 
     public override string GetRegExForThisFileType()
@@ -20,7 +20,7 @@ public class DateListPathResolver : PathResolverBase<DateOnly>,
         return string.Join("", fileNameFragments) + $".{MarkdownExtension}";
     }
 
-    public override string FileNameWithoutExtension(DateOnly dateOnly)
+    protected override string FileNameWithoutExtension(DateOnly dateOnly)
     {
         var fileNameFragments = GetFragments(ConfigurationProvider.Config.TodoListFilenameFormat,
             '{', '}', dateOnly.ToString);

@@ -4,9 +4,7 @@ namespace Todo.Contracts.Services.StateAndConfig;
 
 public interface ISettingsPathProvider
 {
-    FilePathInfo? SettingsPathInHierarchy { get; }
-
-    FilePathInfo GetSettingsPathInFolder(string folder);
+    FilePathInfo GetSettingsPathInHierarchy();
 
     FilePathInfo GetSettingsPathInWorkingFolder();
 }

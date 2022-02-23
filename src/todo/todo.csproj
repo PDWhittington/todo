@@ -17,28 +17,27 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="day-list-template.md">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="settings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="template.html">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="topic-list-template.md">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      <PackageReference Include="Markdig" Version="0.26.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Markdig" Version="0.26.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+      <None Remove="day-list-template.md" />
+      <EmbeddedResource Include="day-list-template.md" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="topic-list-template.md" />
+      <EmbeddedResource Include="topic-list-template.md" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="template.html" />
+      <EmbeddedResource Include="template.html" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="todo-settings.json" />
       <EmbeddedResource Include="todo-settings.json" />
     </ItemGroup>
-
 </Project>

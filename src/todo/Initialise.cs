@@ -10,8 +10,8 @@ using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
-using Todo.Contracts.Services.Helpers;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.TextFormatting;
@@ -19,8 +19,8 @@ using Todo.DateNaming;
 using Todo.DateParsing;
 using Todo.Execution;
 using Todo.FileSystem;
+using Todo.FileSystem.Paths;
 using Todo.Git;
-using Todo.Helpers;
 using Todo.StateAndConfig;
 using Todo.Templates;
 using Todo.TextFormatting;
@@ -35,7 +35,7 @@ internal static class Initialise
 
                 /* Base functionality */
                 .AddStateAndConfig()
-                .AddHelpers()
+                .AddDateParsing()
                 .AddTemplateFunctionality()
                 .AddDateNaming()
                 .AddFileSystemFunctionality()
@@ -64,9 +64,9 @@ internal static class Initialise
                 .AddSingleton<IDateParser, DateParser>()
                 .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
 
-        private static IServiceCollection AddHelpers(this IServiceCollection serviceCollection)
+        private static IServiceCollection AddDateParsing(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IPathHelper, PathHelper>()
+                .AddSingleton<IDateParser, DateParser>()
                 .AddSingleton<IDateHelper, DateHelper>();
 
         private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
@@ -74,7 +74,8 @@ internal static class Initialise
                 .AddSingleton<IDayListMarkdownSubstitutionsMaker, DayListMarkdownSubstitutionsMaker>()
                 .AddSingleton<ITopicListMarkdownSubstitutionsMaker, TopicListMarkdownSubstitutionsMaker>()
                 .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
-                .AddSingleton<IMarkdownTemplateProvider, MarkdownTemplateProvider>()
+                .AddSingleton<IDayListMarkdownTemplateProvider, DayListMarkdownTemplateProvider>()
+                .AddSingleton<ITopicListMarkdownTemplateProvider, TopicListMarkdownTemplateProvider>()
                 .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
 
         private static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
@@ -87,9 +88,9 @@ internal static class Initialise
 
         private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IPathRootingProvider, PathRootingProvider>()
+                .AddSingleton<IPathHelper, PathHelper>()
+                .AddSingleton<IOutputFolderPathProvider, OutputFolderPathProvider>()
                 .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()
-                .AddSingleton<IEnvironmentPathResolver, EnvironmentPathResolver>()
                 .AddSingleton<IDateListPathResolver, DateListPathResolver>()
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()

@@ -1,4 +1,4 @@
-﻿# Todo list for {date}
+# Todo list for {date}
 
 ## Work
 

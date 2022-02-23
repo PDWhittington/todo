@@ -1,4 +1,4 @@
-﻿namespace Todo.Contracts.Services.Helpers;
+﻿namespace Todo.Contracts.Services.FileSystem;
 
 public interface IPathHelper
 {
@@ -11,4 +11,6 @@ public interface IPathHelper
     string GetAssemblyLocation();
 
     string GetWorkingFolder();
+
+    string ResolveIfNotRooted(string path);
 }

@@ -24,7 +24,7 @@ public class InitCommandExecutor: CommandExecutorBase<InitCommand>, IInitCommand
     {
         var settingsFileStream = Assembly
             .GetExecutingAssembly()
-            .GetManifestResourceStream(_constantsProvider.SettingsManifestResourceStream);
+            .GetManifestResourceStream(_constantsProvider.DefaultSettingsFile.FullName);
 
         if (settingsFileStream == null) throw new Exception(
                 "Cannot retrieve default settings file from executable");

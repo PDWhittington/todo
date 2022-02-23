@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Todo.Contracts.Services.Helpers;
+namespace Todo.Contracts.Services.DateParsing;
 
 public interface IDateHelper
 {
