@@ -1,4 +1,4 @@
-﻿namespace Todo.Contracts.Services.Helpers;
+﻿namespace Todo.Contracts.Services.FileSystem;
 
 public interface IPathHelper
 {
