@@ -7,21 +7,21 @@ namespace Todo.Git;
 public class GitExecutableResolver : IGitExecutableResolver
 {
     private readonly IConfigurationProvider _configurationProvider;
-    private readonly IEnvironmentPathResolver _environmentPathResolver;
+    private readonly IPathHelper _pathHelper;
     private string? _gitPath;
 
     public GitExecutableResolver(IConfigurationProvider configurationProvider,
-        IEnvironmentPathResolver environmentPathResolver)
+        IPathHelper pathHelper)
     {
         _configurationProvider = configurationProvider;
-        _environmentPathResolver = environmentPathResolver;
+        _pathHelper = pathHelper;
     }
 
     public string GitPath => _gitPath ?? GetGitPath();
 
     private string GetGitPath()
     {
-        _gitPath = _environmentPathResolver.ResolveIfNotRooted(_configurationProvider.Config.GitPath.GetPathForThisOs());
+        _gitPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.GitPath.GetPathForThisOs());
         return _gitPath;
     }
 }

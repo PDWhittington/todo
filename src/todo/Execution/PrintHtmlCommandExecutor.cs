@@ -20,8 +20,9 @@ public class PrintHtmlCommandExecutor : CommandExecutorBase<PrintHtmlCommand>, I
     private readonly IDateFormatter _dateFormatter;
     private readonly IDateListPathResolver _dateListPathResolver;
 
-    public PrintHtmlCommandExecutor(IHtmlTemplateProvider htmlTemplateProvider, IMarkdownFileReader markdownFileReader,
-        IHtmlSubstitutionsMaker htmlSubstitutionsMaker, IDateFormatter dateFormatter, IDateListPathResolver dateListPathResolver)
+    public PrintHtmlCommandExecutor(IHtmlTemplateProvider htmlTemplateProvider,
+        IMarkdownFileReader markdownFileReader, IHtmlSubstitutionsMaker htmlSubstitutionsMaker,
+        IDateFormatter dateFormatter, IDateListPathResolver dateListPathResolver)
     {
         _htmlTemplateProvider = htmlTemplateProvider;
         _markdownFileReader = markdownFileReader;
@@ -42,9 +43,10 @@ public class PrintHtmlCommandExecutor : CommandExecutorBase<PrintHtmlCommand>, I
 
         var htmlSubstitutions = HtmlSubstitutions.Of(htmlTitle, htmlBody);
 
-        var htmlTemplateFile = _htmlTemplateProvider.GetTemplate(0);
+        var htmlTemplateFile = _htmlTemplateProvider.GetTemplate();
 
-        var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, htmlTemplateFile.FileContents);
+        var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions,
+            htmlTemplateFile.FileContents);
 
         var pathInfo = _dateListPathResolver.GetFilePathFor(command.Date, FileTypeEnum.Html);
 

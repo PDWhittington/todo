@@ -10,19 +10,21 @@ public class ConfigurationProvider : IConfigurationProvider
 {
     private readonly ISettingsPathProvider _settingsPathProvider;
     private readonly IConstantsProvider _constantsProvider;
-    private ConfigurationInfo? _configuration;
+    private readonly Lazy<ConfigurationInfo> _configuration;
 
-    public ConfigurationProvider(ISettingsPathProvider settingsPathProvider, IConstantsProvider constantsProvider)
+    public ConfigurationProvider(ISettingsPathProvider settingsPathProvider,
+        IConstantsProvider constantsProvider)
     {
         _settingsPathProvider = settingsPathProvider;
         _constantsProvider = constantsProvider;
+        _configuration = new Lazy<ConfigurationInfo>(PopulateAndReturnConfiguration);
     }
 
-    public ConfigurationInfo Config => _configuration ?? PopulateAndReturnConfiguration();
+    public ConfigurationInfo Config => _configuration.Value;
 
     private ConfigurationInfo PopulateAndReturnConfiguration()
     {
-        var path =  _settingsPathProvider.SettingsPathInHierarchy?.Path ??
+        var path =  _settingsPathProvider.GetSettingsPathInHierarchy().Path ??
                     throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
                         _constantsProvider.SettingsFileName);
 
@@ -32,9 +34,7 @@ public class ConfigurationProvider : IConfigurationProvider
 
         var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream, serializationOptions);
 
-        _configuration = configuration ?? throw new Exception(
+        return configuration ?? throw new Exception(
             $"Configuration could not be loaded from {path}");
-
-        return _configuration;
     }
 }

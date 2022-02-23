@@ -4,6 +4,7 @@ public enum FolderEnum
 {
     TodoRoot,
     Archive,
-    ProgramRoot,
-    SpecifiedInSettings
+    AssemblyFolder,
+    SpecifiedInSettings,
+    Manifest
 }

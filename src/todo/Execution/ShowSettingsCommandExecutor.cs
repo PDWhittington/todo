@@ -24,9 +24,7 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
 
     public override void Execute(ShowSettingsCommand _)
     {
-        var path = _settingsPathProvider.SettingsPathInHierarchy?.Path ??
-           throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
-               _constantsProvider.SettingsFileName);
+        var path = _settingsPathProvider.GetSettingsPathInHierarchy().Path;
 
         _fileOpener.LaunchFileInDefaultEditor(path);
     }

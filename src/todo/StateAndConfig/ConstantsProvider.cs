@@ -1,10 +1,16 @@
-﻿using Todo.Contracts.Services.StateAndConfig;
+﻿using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
 
 public class ConstantsProvider : IConstantsProvider
 {
-    public string SettingsFileName => "todo-settings.json";
+    private const string _settingsFileName = "todo-settings.json";
 
-    public string SettingsManifestResourceStream => $"Todo.{SettingsFileName}";
+    public string SettingsFileName => _settingsFileName;
+
+    public ManifestInfo DefaultSettingsFile { get; } = ManifestInfo.Of(_settingsFileName);
+    public ManifestInfo DayListMarkdownTemplate { get; } = ManifestInfo.Of("day-list-template.md");
+    public ManifestInfo TopicListMarkdownTemplate { get; } = ManifestInfo.Of("topic-list-template.md");
+    public ManifestInfo DefaultHtmlTemplate { get; } = ManifestInfo.Of("template.html");
 }

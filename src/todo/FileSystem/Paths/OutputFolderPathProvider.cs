@@ -1,14 +1,15 @@
 ﻿using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.FileSystem;
+namespace Todo.FileSystem.Paths;
 
-public class PathRootingProvider : IPathRootingProvider
+public class OutputFolderPathProvider : IOutputFolderPathProvider
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IPathHelper _pathHelper;
 
-    public PathRootingProvider(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
+    public OutputFolderPathProvider(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
     {
         _configurationProvider = configurationProvider;
         _pathHelper = pathHelper;

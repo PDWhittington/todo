@@ -11,4 +11,6 @@ public interface IPathHelper
     string GetAssemblyLocation();
 
     string GetWorkingFolder();
+
+    string ResolveIfNotRooted(string path);
 }

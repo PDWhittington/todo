@@ -4,30 +4,33 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.FileSystem;
+namespace Todo.FileSystem.Paths;
 
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public abstract class PathResolverBase<TParameterType> : IPathResolver<TParameterType>
 {
     protected readonly IConfigurationProvider ConfigurationProvider;
     private readonly IPathHelper _pathHelper;
+    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
 
     protected const string MarkdownExtension = "md";
     protected const string HtmlExtension = "html";
     protected const string SettingsExtension = "json";
 
-    protected PathResolverBase(IConfigurationProvider configurationProvider, 
-        IPathHelper pathHelper)
+    protected PathResolverBase(IConfigurationProvider configurationProvider,
+        IPathHelper pathHelper, IOutputFolderPathProvider outputFolderPathProvider)
     {
         ConfigurationProvider = configurationProvider;
         _pathHelper = pathHelper;
+        _outputFolderPathProvider = outputFolderPathProvider;
     }
 
     public abstract string GetRegExForThisFileType();
 
-    public abstract string FileNameWithoutExtension(TParameterType parameter);
+    protected abstract string FileNameWithoutExtension(TParameterType parameter);
 
     public string FileNameFor(TParameterType parameter, FileTypeEnum fileType)
         => $"{FileNameWithoutExtension(parameter)}.{GetExtension(fileType)}";
@@ -43,20 +46,20 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
     public FilePathInfo GetFilePathFor(TParameterType parameter, FileTypeEnum fileType)
     {
         var fileName = FileNameFor(parameter, fileType);
-        var path = Path.Combine(ConfigurationProvider.Config.OutputFolder, fileName);
+        var rootedOutputFolder = _outputFolderPathProvider.GetRootedOutputFolder();
 
+        var path = Path.Combine(rootedOutputFolder, fileName);
         return FilePathInfo.Of(path, fileType, FolderEnum.TodoRoot);
     }
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
     {
         var fileName = FileNameFor(parameter, fileType);
-        var path = Path.Combine(ConfigurationProvider.Config.OutputFolder,
-            ConfigurationProvider.Config.ArchiveFolderName, fileName);
+        var rootedArchiveFolder = _outputFolderPathProvider.GetRootedArchiveFolder();
 
+        var path = Path.Combine(rootedArchiveFolder, fileName);
         return FilePathInfo.Of(path, fileType, FolderEnum.Archive);
     }
-
 
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
@@ -72,6 +75,15 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
             _ => throw new ArgumentOutOfRangeException(nameof(fileTypeEnum), fileTypeEnum, null)
         };
 
+    /// <summary>
+    /// Returns a set of string fragments
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="openChar"></param>
+    /// <param name="closeChar"></param>
+    /// <param name="operatorForEnclosedFragments"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     protected static IEnumerable<string> GetFragments(string str, char openChar, char closeChar,
         Func<string, string> operatorForEnclosedFragments)
     {
@@ -108,7 +120,7 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
 
     protected FilePathInfo CheckExistsAndGetFilePathInfo(FilePathInfo pathInTodoFolder,
         FilePathInfo pathInArchiveFolder, bool allowNotPresent)
-        => (File.Exists(pathInTodoFolder.Path), File.Exists(pathInArchiveFolder.Path), allowNotPresent) switch
+        => (pathInTodoFolder.Exists(), pathInArchiveFolder.Exists(), allowNotPresent) switch
         {
             (true, false, _) or (false, false, true) => pathInTodoFolder, //Exists in todo root or in neither
 

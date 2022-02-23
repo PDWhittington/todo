@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 
 namespace Todo.Execution;
 
@@ -13,9 +14,9 @@ namespace Todo.Execution;
 public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, IListFilesCommandExecutor
 {
     private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IPathRootingProvider _pathRootingProvider;
+    private readonly IOutputFolderPathProvider _pathRootingProvider;
 
-    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver, IPathRootingProvider pathRootingProvider)
+    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver, IOutputFolderPathProvider pathRootingProvider)
     {
         _dateListPathResolver = dateListPathResolver;
         _pathRootingProvider = pathRootingProvider;

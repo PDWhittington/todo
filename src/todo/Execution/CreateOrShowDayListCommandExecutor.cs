@@ -14,17 +14,17 @@ public class CreateOrShowDayListCommandExecutor
     : CreateOrShowCommandExecutorBase<CreateOrShowDayListCommand, DayListMarkdownSubstitutions>,
         ICreateOrShowDayListCommandExecutor
 {
-    private readonly IMarkdownTemplateProvider _templateProvider;
+    private readonly IDayListMarkdownTemplateProvider _dayListMarkdownTemplateProvider;
     private readonly IDateListPathResolver _dateListPathResolver;
     private readonly IDayListMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
     private readonly IDateFormatter _dateFormatter;
 
-    public CreateOrShowDayListCommandExecutor(IMarkdownTemplateProvider templateProvider,
+    public CreateOrShowDayListCommandExecutor(IDayListMarkdownTemplateProvider dayListMarkdownTemplateProvider,
         IDateListPathResolver dateListPathResolver, IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter, IFileOpener fileOpener)
         : base (fileOpener)
     {
-        _templateProvider = templateProvider;
+        _dayListMarkdownTemplateProvider = dayListMarkdownTemplateProvider;
         _dateListPathResolver = dateListPathResolver;
         _markdownSubstitutionMaker = markdownSubstitutionMaker;
         _dateFormatter = dateFormatter;
@@ -33,8 +33,7 @@ public class CreateOrShowDayListCommandExecutor
     protected override FilePathInfo GetFilePathInfo(CreateOrShowDayListCommand createOrShowCommand)
         => _dateListPathResolver.ResolvePathFor(createOrShowCommand.Date, FileTypeEnum.Markdown, true);
 
-    protected override TodoFile GetTemplate()
-        => _templateProvider.GetTemplate(MarkdownTemplateEnum.DayListTemplate);
+    protected override TodoFile GetTemplate() => _dayListMarkdownTemplateProvider.GetTemplate();
 
     protected override DayListMarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowDayListCommand createOrShowCommand)
     {
