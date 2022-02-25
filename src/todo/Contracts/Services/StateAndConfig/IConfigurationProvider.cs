@@ -1,4 +1,4 @@
-﻿using Todo.Contracts.Data;
+﻿using Todo.Contracts.Data.Config;
 
 namespace Todo.Contracts.Services.StateAndConfig;
 

@@ -36,7 +36,7 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
     {
         var pathInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 
-        var browserPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.BrowserPath.GetPathForThisOs());
+        var browserPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.BrowserLaunch.GetPathForThisOs());
 
         var process = Process.Start(browserPath, pathInfo.Path);
 

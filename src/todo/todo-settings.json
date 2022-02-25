@@ -1,8 +1,17 @@
 ﻿{
-  "BrowserPath": {
-    "WindowsPath" : "chrome.exe",
-    "LinuxPath" : "/opt/google/chrome/chrome",
-    "OSXPath": "chrome"
+  "BrowserLaunch": {
+    "Windows" : {
+      "Path": "chrome.exe",
+      "Parameters": "{0}"
+    },
+    "Linux" : {
+      "Path": "/usr/bin/x-www-browser",
+      "Parameters": "--path {0}"
+    },
+    "OSX": {
+      "Path": "chrome.exe",
+      "Parameters": "{0}"      
+    }
   },
 
   "TextEditorPath":{
