@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -10,15 +11,15 @@ public class GitInterface : IGitInterface
 {
     private readonly IGitDependencyValidator _gitDependencyValidator;
     private readonly IGitExecutableResolver _gitExecutableResolver;
-    private readonly IConfigurationProvider _configurationProvider;
+    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
 
     public GitInterface(IGitDependencyValidator gitDependencyValidator,
         IGitExecutableResolver gitExecutableResolver,
-        IConfigurationProvider configurationProvider)
+        IOutputFolderPathProvider outputFolderPathProvider)
     {
         _gitDependencyValidator = gitDependencyValidator;
         _gitExecutableResolver = gitExecutableResolver;
-        _configurationProvider = configurationProvider;
+        _outputFolderPathProvider = outputFolderPathProvider;
     }
 
     public bool RunGitCommand(string command)
@@ -30,7 +31,7 @@ public class GitInterface : IGitInterface
 
         var processStartInfo = new ProcessStartInfo(_gitExecutableResolver.GitPath, command)
         {
-            WorkingDirectory = _configurationProvider.Config.OutputFolder
+            WorkingDirectory = _outputFolderPathProvider.GetRootedOutputFolder()
         };
 
         var process = Process.Start(processStartInfo) ?? throw new Exception("Process failed to start");
