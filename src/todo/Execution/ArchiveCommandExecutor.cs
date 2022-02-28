@@ -7,6 +7,7 @@ using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Git.Commands;
 
 namespace Todo.Execution;
 
@@ -40,7 +41,7 @@ public class ArchiveCommandExecutor : CommandExecutorBase<ArchiveCommand>, IArch
     }
 
     private void GitArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
-        => _gitInterface.RunGitCommand($"mv {sourcePathInfo.Path} {destinationPathInfo.Path}");
+        => _gitInterface.RunGitCommand(new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path));
 
     private static void FileArchive(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
         => File.Move(sourcePathInfo.Path, destinationPathInfo.Path);

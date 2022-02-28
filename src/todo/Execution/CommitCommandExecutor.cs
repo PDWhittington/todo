@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Git.Commands;
+using CommitCommand = Todo.Contracts.Data.Commands.CommitCommand;
 
 namespace Todo.Execution;
 
@@ -30,10 +31,11 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
 
         var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
 
-        _gitInterface.RunGitCommand("reset");
-        _gitInterface.RunGitCommand($"add \"{_outputFolderPathProvider.GetRootedOutputFolder()}\"");
+        _gitInterface.RunGitCommand(new GitResetCommand());
+        _gitInterface.RunGitCommand(new GitAddCommand(_outputFolderPathProvider.GetRootedOutputFolder()));
+
         //Archive may not be nested within the OutputFolder
-        _gitInterface.RunGitCommand($"add \"{_outputFolderPathProvider.GetRootedArchiveFolder()}\"");
-        _gitInterface.RunGitCommand($"commit -m \"{commitMessage}\"");
+        _gitInterface.RunGitCommand(new GitAddCommand(_outputFolderPathProvider.GetRootedArchiveFolder()));
+        _gitInterface.RunGitCommand(new GitCommitCommand(commitMessage));
     }
 }

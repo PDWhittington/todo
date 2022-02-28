@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
-using Todo.Contracts.Services.StateAndConfig;
+using Todo.Git.Commands;
 
 namespace Todo.Git;
 
@@ -22,7 +21,10 @@ public class GitInterface : IGitInterface
         _outputFolderPathProvider = outputFolderPathProvider;
     }
 
-    public bool RunGitCommand(string command)
+    public bool RunGitCommand<T>(T command) where T : GitCommandBase
+        => RunSpecialGitCommand(command.GetCommand());
+
+    public bool RunSpecialGitCommand(string command)
     {
         if (!_gitDependencyValidator.GitDependenciesValidated())
         {
