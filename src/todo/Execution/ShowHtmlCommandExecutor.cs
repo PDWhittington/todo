@@ -44,7 +44,7 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
 
         var process = Process.Start(browserPath, parameters);
 
-        BringMainWindowToFront(process);
+        BringMainWindowToFrontIfWindows(process);
     }
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
@@ -58,8 +58,10 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
-    private static int BringMainWindowToFront(Process process)
+    private static int BringMainWindowToFrontIfWindows(Process process)
     {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return 0;
+
         // check if the window is hidden / minimized
         if (process.MainWindowHandle == IntPtr.Zero)
         {
