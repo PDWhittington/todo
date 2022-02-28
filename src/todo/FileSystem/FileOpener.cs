@@ -21,7 +21,7 @@ public class FileOpener : IFileOpener
     private string GetTextEditorPath()
     {
         _textEditorPath = _pathHelper.ResolveIfNotRooted(
-            _configurationProvider.Config.TextEditorPath.GetPathForThisOs());
+            _configurationProvider.Config.TextEditorPath.GetPathForThisOs().Path);
         return _textEditorPath;
     }
 

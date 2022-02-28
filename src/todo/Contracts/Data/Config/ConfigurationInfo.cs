@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace Todo.Contracts.Data;
+namespace Todo.Contracts.Data.Config;
 
 public class ConfigurationInfo
 {
 
     #region Paths to third-party tools
 
-    public PerOsFilePaths BrowserPath { get; }
+    public PerOsFilePaths BrowserLaunch { get; }
 
     public PerOsFilePaths TextEditorPath { get; }
 
@@ -46,13 +46,13 @@ public class ConfigurationInfo
 
     [JsonConstructor]
     public ConfigurationInfo(
-        PerOsFilePaths browserPath, PerOsFilePaths textEditorPath, PerOsFilePaths gitPath,
+        PerOsFilePaths browserLaunch, PerOsFilePaths textEditorPath, PerOsFilePaths gitPath,
         string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
         string htmlTemplatePath,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,
         bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth)
     {
-        BrowserPath = browserPath;
+        BrowserLaunch = browserLaunch;
         TextEditorPath = textEditorPath;
         GitPath = gitPath;
 

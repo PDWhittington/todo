@@ -21,7 +21,7 @@ public class GitExecutableResolver : IGitExecutableResolver
 
     private string GetGitPath()
     {
-        _gitPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.GitPath.GetPathForThisOs());
+        _gitPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.GitPath.GetPathForThisOs().Path);
         return _gitPath;
     }
 }

@@ -34,13 +34,17 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
 
     public override void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var pathInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
+        var htmlDocumentInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 
-        var browserPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.BrowserPath.GetPathForThisOs());
+        var browserLaunchInfo = _configurationProvider.Config.BrowserLaunch.GetPathForThisOs();
 
-        var process = Process.Start(browserPath, pathInfo.Path);
+        var browserPath = _pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
 
-        BringMainWindowToFront(process);
+        var parameters = browserLaunchInfo.InterpolateParameters(htmlDocumentInfo.Path);
+
+        var process = Process.Start(browserPath, parameters);
+
+        BringMainWindowToFrontIfWindows(process);
     }
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
@@ -54,8 +58,10 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
-    private static int BringMainWindowToFront(Process process)
+    private static int BringMainWindowToFrontIfWindows(Process process)
     {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return 0;
+
         // check if the window is hidden / minimized
         if (process.MainWindowHandle == IntPtr.Zero)
         {
