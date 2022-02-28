@@ -1,4 +1,4 @@
-﻿using Todo.Contracts.Services.FileSystem;
+﻿using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 

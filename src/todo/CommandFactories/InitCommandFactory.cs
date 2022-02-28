@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
@@ -9,7 +8,6 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class InitCommandFactory: CommandFactoryBase<InitCommand>
 {
-    private readonly IConstantsProvider _constantsProvider;
     private static readonly string[] Words = { "i", "init" };
 
     public override bool IsDefaultCommandFactory => false;
@@ -18,10 +16,8 @@ public class InitCommandFactory: CommandFactoryBase<InitCommand>
 
     public InitCommandFactory(IConstantsProvider constantsProvider) : base(Words)
     {
-        _constantsProvider = constantsProvider;
-
         HelpText = new [] {
-            $"Initialises the current folder with a default {_constantsProvider.SettingsFileName} file",
+            $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file",
             "",
             "Usage: todo init"
         };

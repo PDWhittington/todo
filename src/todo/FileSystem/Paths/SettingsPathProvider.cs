@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem.Paths;
@@ -22,7 +22,7 @@ public class SettingsPathProvider : ISettingsPathProvider
 
     public FilePathInfo GetSettingsPathInHierarchy() => _settingsPath.Value;
 
-    private IEnumerable<string> GetAncestorsIncludingSelf(string folder)
+    private static IEnumerable<string> GetAncestorsIncludingSelf(string folder)
     {
         var currentFolder = new DirectoryInfo(folder);
 

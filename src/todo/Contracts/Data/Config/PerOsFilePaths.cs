@@ -7,10 +7,12 @@ public class PerOsFilePaths
 {
     public ProcessLaunchInfo Windows { get; }
     public ProcessLaunchInfo Linux { get; }
+
+    // ReSharper disable once InconsistentNaming
     public ProcessLaunchInfo OSX { get; }
 
     [JsonConstructor]
-    public PerOsFilePaths(ProcessLaunchInfo windows, 
+    public PerOsFilePaths(ProcessLaunchInfo windows,
         ProcessLaunchInfo linux, ProcessLaunchInfo osx)
     {
         Windows = windows;

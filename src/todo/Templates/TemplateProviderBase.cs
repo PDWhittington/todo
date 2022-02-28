@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.FileSystem;
 
 namespace Todo.Templates;
@@ -20,7 +20,6 @@ public abstract class TemplateProviderBase : FileReaderBase
     /// <summary>
     /// Returns a string representing the Markdown template
     /// </summary>
-    /// <param name="key"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     public TodoFile GetTemplate()

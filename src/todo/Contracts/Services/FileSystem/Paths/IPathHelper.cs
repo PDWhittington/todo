@@ -1,12 +1,10 @@
-﻿namespace Todo.Contracts.Services.FileSystem;
+﻿namespace Todo.Contracts.Services.FileSystem.Paths;
 
 public interface IPathHelper
 {
     string GetRootedToAssemblyFolder(string path);
 
     string GetRootedToWorkingFolder(string path);
-
-    string GetAssemblyFolder();
 
     string GetAssemblyLocation();
 

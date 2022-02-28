@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using Todo.Contracts.Services.Git;
-using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Git;
 

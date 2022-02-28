@@ -5,6 +5,7 @@ namespace Todo.StateAndConfig;
 
 public class ConstantsProvider : IConstantsProvider
 {
+    // ReSharper disable once InconsistentNaming
     private const string _settingsFileName = "todo-settings.json";
 
     public string SettingsFileName => _settingsFileName;
