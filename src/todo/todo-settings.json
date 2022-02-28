@@ -10,20 +10,38 @@
     },
     "OSX": {
       "Path": "chrome.exe",
-      "Parameters": "{0}"      
+      "Parameters": "{0}"
     }
   },
 
   "TextEditorPath":{
-    "WindowsPath" : "Code.exe", //Capital C in code is intentional, not that it matters on Windows
-    "LinuxPath" : "code",
-    "OSXPath": "code"
+    "Windows" : {
+      "Path": "Code.exe",
+      "Parameters": "{0}"
+    },
+    "Linux" : {
+      "Path": "code",
+      "Parameters": "{0}"
+    },
+    "OSX": {
+      "Path": "code",
+      "Parameters": "{0}"
+    }
   },
 
   "GitPath" : {
-    "WindowsPath" : "git.exe",
-    "LinuxPath" : "git",
-    "OSXPath": "git"
+    "Windows" : {
+      "Path": "git.exe",
+      "Parameters": "{0}"
+    },
+    "Linux" : {
+      "Path": "git",
+      "Parameters": "{0}"
+    },
+    "OSX": {
+      "Path": "git",
+      "Parameters": "{0}"
+    }
   },
 
   "DayListMarkdownTemplatePath": "day-list-template.md",

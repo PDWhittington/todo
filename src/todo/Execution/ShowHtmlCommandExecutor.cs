@@ -34,11 +34,15 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
 
     public override void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var pathInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
+        var htmlDocumentInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
 
-        var browserPath = _pathHelper.ResolveIfNotRooted(_configurationProvider.Config.BrowserLaunch.GetPathForThisOs());
+        var browserLaunchInfo = _configurationProvider.Config.BrowserLaunch.GetPathForThisOs();
 
-        var process = Process.Start(browserPath, pathInfo.Path);
+        var browserPath = _pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
+
+        var parameters = browserLaunchInfo.InterpolateParameters(htmlDocumentInfo.Path);
+
+        var process = Process.Start(browserPath, parameters);
 
         BringMainWindowToFront(process);
     }
