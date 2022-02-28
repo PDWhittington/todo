@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -13,7 +12,6 @@ namespace Todo.FileSystem.Paths;
 public abstract class PathResolverBase<TParameterType> : IPathResolver<TParameterType>
 {
     protected readonly IConfigurationProvider ConfigurationProvider;
-    private readonly IPathHelper _pathHelper;
     private readonly IOutputFolderPathProvider _outputFolderPathProvider;
 
     protected const string MarkdownExtension = "md";
@@ -21,10 +19,9 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
     protected const string SettingsExtension = "json";
 
     protected PathResolverBase(IConfigurationProvider configurationProvider,
-        IPathHelper pathHelper, IOutputFolderPathProvider outputFolderPathProvider)
+        IOutputFolderPathProvider outputFolderPathProvider)
     {
         ConfigurationProvider = configurationProvider;
-        _pathHelper = pathHelper;
         _outputFolderPathProvider = outputFolderPathProvider;
     }
 

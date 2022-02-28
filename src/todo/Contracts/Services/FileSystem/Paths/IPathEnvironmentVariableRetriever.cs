@@ -1,6 +1,8 @@
-﻿namespace Todo.Contracts.Services.FileSystem;
+﻿using System.Collections.Generic;
+
+namespace Todo.Contracts.Services.FileSystem.Paths;
 
 public interface IPathEnvironmentVariableRetriever
 {
-    public string[] Paths { get; }
+    public IEnumerable<string> Paths { get; }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 
 namespace Todo.FileSystem.Paths;
 

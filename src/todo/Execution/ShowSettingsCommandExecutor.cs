@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
-using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.FileSystem.Paths;
 
 namespace Todo.Execution;
 
@@ -12,14 +11,11 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
 {
     private readonly ISettingsPathProvider _settingsPathProvider;
     private readonly IFileOpener _fileOpener;
-    private readonly IConstantsProvider _constantsProvider;
 
-    public ShowSettingsCommandExecutor(ISettingsPathProvider settingsPathProvider, IFileOpener fileOpener,
-        IConstantsProvider constantsProvider)
+    public ShowSettingsCommandExecutor(ISettingsPathProvider settingsPathProvider, IFileOpener fileOpener)
     {
         _settingsPathProvider = settingsPathProvider;
         _fileOpener = fileOpener;
-        _constantsProvider = constantsProvider;
     }
 
     public override void Execute(ShowSettingsCommand _)

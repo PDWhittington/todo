@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.FileSystem.Paths;
 
 namespace Todo.FileSystem.Paths;
 
@@ -16,7 +17,7 @@ public class PathEnvironmentVariableRetriever : IPathEnvironmentVariableRetrieve
     /// <summary>
     /// Sticky environment paths property, which is populated once per process.
     /// </summary>
-    public string[] Paths => _paths ?? RetrieveAndPopulatePaths();
+    public IEnumerable<string> Paths => _paths ?? RetrieveAndPopulatePaths();
 
     /// <summary>
     /// Retrieves and populates the paths from the environment variable.
