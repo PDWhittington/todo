@@ -26,7 +26,7 @@ public class GitInterface : IGitInterface
     }
 
     public bool RunGitCommand<T>(T command) where T : GitCommandBase
-        => RunSpecialGitCommand(command.GetCommand());
+        => command.ExecuteCommand(this);
 
     public bool RunSpecialGitCommand(string command)
     {

@@ -1,6 +1,8 @@
-﻿namespace Todo.Git.Commands;
+﻿using Todo.Contracts.Services.Git;
 
-public class GitCommitCommand : GitCommandBase
+namespace Todo.Git.Commands;
+
+public class GitCommitCommand : GitSingleCommandBase
 {
     public string Message { get; }
 
@@ -9,5 +11,5 @@ public class GitCommitCommand : GitCommandBase
         Message = message;
     }
 
-    internal override string GetCommand() => $"commit -m \"{Message}\"";
+    protected override string SingleCommand() => $"commit -m \"{Message}\"";
 }

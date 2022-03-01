@@ -1,6 +1,6 @@
 ﻿namespace Todo.Git.Commands;
 
-public class GitPushCommand : GitCommandBase
+public class GitPushCommand : GitSingleCommandBase
 {
-    internal override string GetCommand() => "push";
+    protected override string SingleCommand() => "push";
 }

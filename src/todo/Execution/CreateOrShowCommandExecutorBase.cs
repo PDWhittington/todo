@@ -3,7 +3,10 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Reporting;
+using Todo.Contracts.Services.StateAndConfig;
+using Todo.Git.Commands;
 
 namespace Todo.Execution;
 
@@ -11,11 +14,16 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
     where TCommandType : CreateOrShowCommandBase
     where TSubstitutionsType : MarkdownSubstitutionsBase
 {
+    private readonly IConfigurationProvider _configurationProvider;
+    private readonly IGitInterface _gitInterface;
     private readonly IFileOpener _fileOpener;
 
-    protected CreateOrShowCommandExecutorBase(IFileOpener fileOpener, IOutputWriter outputWriter)
+    protected CreateOrShowCommandExecutorBase(IConfigurationProvider configurationProvider,
+        IGitInterface gitInterface, IFileOpener fileOpener, IOutputWriter outputWriter)
         : base(outputWriter)
     {
+        _configurationProvider = configurationProvider;
+        _gitInterface = gitInterface;
         _fileOpener = fileOpener;
     }
 
@@ -32,6 +40,11 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
             var outputText = MakeSubstitutions(markdownSubstitutions, templateFile.FileContents);
 
             File.WriteAllText(pathInfo.Path, outputText);
+
+            if (_configurationProvider.Config.UseGit)
+            {
+                _gitInterface.RunGitCommand(new GitAddCommand(pathInfo.Path));
+            }
         }
 
         _fileOpener.LaunchFileInDefaultEditor(pathInfo.Path);
