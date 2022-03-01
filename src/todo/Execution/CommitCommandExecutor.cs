@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Git.Commands;
 using CommitCommand = Todo.Contracts.Data.Commands.CommitCommand;
@@ -17,7 +18,8 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
     private readonly IOutputFolderPathProvider _outputFolderPathProvider;
 
     public CommitCommandExecutor(IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IOutputFolderPathProvider outputFolderPathProvider)
+        IOutputFolderPathProvider outputFolderPathProvider, IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
@@ -30,6 +32,8 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
         var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+
+        OutputWriter.WriteLine("Commiting todo files.");
 
         _gitInterface.RunGitCommand(new GitResetCommand());
         _gitInterface.RunGitCommand(new GitAddCommand(_outputFolderPathProvider.GetRootedOutputFolder()));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -18,7 +19,7 @@ public class PushCommandFactory : CommandFactoryBase<PushCommand>
         "Usage: todo push"
     };
 
-    public PushCommandFactory() : base(Words) { }
+    public PushCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
 
     public override PushCommand? TryGetCommand(string commandLine)
     {

@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.DateParsing;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -23,8 +24,8 @@ public class CreateOrShowDayListCommandFactory : CommandFactoryBase<CreateOrShow
 
     private readonly IDateParser _dateParser;
 
-    public CreateOrShowDayListCommandFactory(IDateParser dateParser)
-        : base(Words)
+    public CreateOrShowDayListCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+        : base(outputWriter, Words)
     {
         _dateParser = dateParser;
     }

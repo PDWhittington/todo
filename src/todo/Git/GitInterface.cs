@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
+using Todo.Contracts.Services.Reporting;
 using Todo.Git.Commands;
 
 namespace Todo.Git;
@@ -11,14 +12,17 @@ public class GitInterface : IGitInterface
     private readonly IGitDependencyValidator _gitDependencyValidator;
     private readonly IGitExecutableResolver _gitExecutableResolver;
     private readonly IOutputFolderPathProvider _outputFolderPathProvider;
+    private readonly IOutputWriter _outputWriter;
 
     public GitInterface(IGitDependencyValidator gitDependencyValidator,
         IGitExecutableResolver gitExecutableResolver,
-        IOutputFolderPathProvider outputFolderPathProvider)
+        IOutputFolderPathProvider outputFolderPathProvider,
+        IOutputWriter outputWriter)
     {
         _gitDependencyValidator = gitDependencyValidator;
         _gitExecutableResolver = gitExecutableResolver;
         _outputFolderPathProvider = outputFolderPathProvider;
+        _outputWriter = outputWriter;
     }
 
     public bool RunGitCommand<T>(T command) where T : GitCommandBase
@@ -30,6 +34,8 @@ public class GitInterface : IGitInterface
         {
             throw new Exception("Git not found at path given in settings file");
         }
+
+        _outputWriter.WriteLine($"Executing git command: {command}");
 
         var processStartInfo = new ProcessStartInfo(_gitExecutableResolver.GitPath, command)
         {

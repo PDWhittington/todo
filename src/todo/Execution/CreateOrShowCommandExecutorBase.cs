@@ -3,6 +3,7 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.Execution;
 
@@ -12,7 +13,8 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 {
     private readonly IFileOpener _fileOpener;
 
-    protected CreateOrShowCommandExecutorBase(IFileOpener fileOpener)
+    protected CreateOrShowCommandExecutorBase(IFileOpener fileOpener, IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _fileOpener = fileOpener;
     }

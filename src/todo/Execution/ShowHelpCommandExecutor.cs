@@ -7,6 +7,7 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.HelpMessages;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.TextFormatting;
 
@@ -20,7 +21,9 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly IConsoleTextFormatter _tableWriter;
 
     public ShowHelpCommandExecutor(IConfigurationProvider configurationProvider,
-        ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter)
+        ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter,
+        IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
@@ -41,7 +44,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
 
         foreach (var notesLine in notesLines) sb.AppendLine(notesLine);
 
-        Console.WriteLine(sb);
+        OutputWriter.WriteLine(sb);
     }
 
     private IEnumerable<string> GetNotes()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -17,7 +18,7 @@ public class ShowSettingsCommandFactory : CommandFactoryBase<ShowSettingsCommand
         "Usage: todo settings"
     };
 
-    public ShowSettingsCommandFactory() : base(Words)
+    public ShowSettingsCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words)
     { }
 
     public override ShowSettingsCommand? TryGetCommand(string commandLine)

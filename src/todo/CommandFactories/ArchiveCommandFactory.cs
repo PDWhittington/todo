@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.DateParsing;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -24,8 +25,8 @@ public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
 
     private readonly IDateParser _dateParser;
 
-    public ArchiveCommandFactory(IDateParser dateParser)
-        : base(Words)
+    public ArchiveCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+        : base(outputWriter, Words)
     {
         _dateParser = dateParser;
     }

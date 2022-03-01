@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -18,7 +19,7 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
         "Usage: todo help"
     };
 
-    public ShowHelpCommandFactory() : base(Words) { }
+    public ShowHelpCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
 
     public override ShowHelpCommand? TryGetCommand(string commandLine)
     {

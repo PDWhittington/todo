@@ -12,6 +12,7 @@ using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.TextFormatting;
@@ -21,6 +22,7 @@ using Todo.Execution;
 using Todo.FileSystem;
 using Todo.FileSystem.Paths;
 using Todo.Git;
+using Todo.Reporting;
 using Todo.StateAndConfig;
 using Todo.Templates;
 using Todo.TextFormatting;
@@ -41,6 +43,7 @@ internal static class Initialise
                 .AddFileSystemFunctionality()
                 .AddHelpTextWritingFunctionality()
                 .AddGitFunctionality()
+                .AddReportingFunctionality()
 
                 /* Command interpretation and execution */
                 .AutoRegisterTypes<ICommandFactory<CommandBase>>()
@@ -106,6 +109,10 @@ internal static class Initialise
                 .AddSingleton<IGitExecutableResolver, GitExecutableResolver>()
                 .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
                 .AddSingleton<IGitInterface, GitInterface>();
+
+        private static IServiceCollection AddReportingFunctionality(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IOutputWriter, OutputWriter>();
 
         #endregion
 

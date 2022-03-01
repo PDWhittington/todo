@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -17,7 +18,7 @@ public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
         "Usage: todo s [commit message]"
     };
 
-    public SyncCommandFactory() : base(Words) { }
+    public SyncCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
 
     public override SyncCommand? TryGetCommand(string commandLine)
     {

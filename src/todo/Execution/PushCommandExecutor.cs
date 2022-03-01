@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.Git;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Git.Commands;
 
@@ -14,7 +15,9 @@ public class PushCommandExecutor : CommandExecutorBase<PushCommand>, IPushComman
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
 
-    public PushCommandExecutor(IConfigurationProvider configurationProvider, IGitInterface gitInterface)
+    public PushCommandExecutor(IConfigurationProvider configurationProvider,
+        IGitInterface gitInterface, IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;

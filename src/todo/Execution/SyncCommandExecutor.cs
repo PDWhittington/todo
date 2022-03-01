@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
@@ -13,7 +14,10 @@ public class SyncCommandExecutor : CommandExecutorBase<SyncCommand>, ISyncComman
     private readonly ICommitCommandExecutor _commitExecutor;
     private readonly IPushCommandExecutor _pushExecutor;
 
-    public SyncCommandExecutor(IConfigurationProvider configurationProvider, ICommitCommandExecutor commitExecutor, IPushCommandExecutor pushExecutor)
+    public SyncCommandExecutor(IConfigurationProvider configurationProvider,
+        ICommitCommandExecutor commitExecutor, IPushCommandExecutor pushExecutor,
+        IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commitExecutor = commitExecutor;
@@ -24,6 +28,8 @@ public class SyncCommandExecutor : CommandExecutorBase<SyncCommand>, ISyncComman
     {
         if (!_configurationProvider.Config.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
+
+        OutputWriter.WriteLine("Executing a commit and a push command.");
 
         _commitExecutor.Execute(CommitCommand.Of(syncCommand.CommitMessage));
         _pushExecutor.Execute(PushCommand.Singleton);

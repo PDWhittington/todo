@@ -9,5 +9,5 @@ public class GitCommitCommand : GitCommandBase
         Message = message;
     }
 
-    internal override string GetCommand() => $"commit -m {Message}";
+    internal override string GetCommand() => $"commit -m \"{Message}\"";
 }

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.Execution;
 
@@ -15,7 +16,9 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
     private readonly IDateListPathResolver _dateListPathResolver;
     private readonly IOutputFolderPathProvider _pathRootingProvider;
 
-    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver, IOutputFolderPathProvider pathRootingProvider)
+    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver,
+        IOutputFolderPathProvider pathRootingProvider, IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _dateListPathResolver = dateListPathResolver;
         _pathRootingProvider = pathRootingProvider;
@@ -52,6 +55,32 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
 
         var fileList = string.Join(Environment.NewLine, pathsInRelevantFolders);
 
-        Console.WriteLine(fileList);
+        OutputWriter.WriteLine(GetMessage(command));
+        OutputWriter.WriteLine(fileList);
+    }
+
+    static string GetMessage(ListFilesCommand command)
+    {
+        string FileTypeMessage(ListFilesCommand.FileTypeEnum fileType)
+            => fileType switch
+            {
+                ListFilesCommand.FileTypeEnum.DayList => "day todo lists",
+                ListFilesCommand.FileTypeEnum.TopicList => "topic todo lists",
+                ListFilesCommand.FileTypeEnum.DayList |
+                    ListFilesCommand.FileTypeEnum.TopicList => "both types of todo lists",
+                _ => throw new Exception()
+            };
+
+        string FileLocationMessage(ListFilesCommand.FileLocationEnum fileLocation)
+            => fileLocation switch
+            {
+                ListFilesCommand.FileLocationEnum.MainFolder => "the main folder",
+                ListFilesCommand.FileLocationEnum.ArchiveFolder => "the archive folder",
+                ListFilesCommand.FileLocationEnum.MainFolder |
+                    ListFilesCommand.FileLocationEnum.ArchiveFolder => "both folders",
+                _ => throw new Exception()
+            };
+
+        return $"Listing {FileTypeMessage(command.FileType)} in {FileLocationMessage(command.FileLocation)}:-";
     }
 }
