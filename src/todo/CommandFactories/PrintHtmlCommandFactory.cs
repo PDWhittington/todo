@@ -13,8 +13,7 @@ public class PrintHtmlCommandFactory : CommandFactoryBase<PrintHtmlCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText => new[]
-    {
+    public override string [] HelpText { get; } = {
         "Converts a Markdown file to HTML. Can be used with anything that can be parsed as a date. " +
         "Supplying no date performs this operation on the Markdown file for the current day.",
         "",

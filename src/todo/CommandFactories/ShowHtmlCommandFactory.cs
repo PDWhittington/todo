@@ -13,8 +13,7 @@ public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText => new[]
-    {
+    public override string[] HelpText { get; } = {
         "Opens the browser specified in the settings file and loads the Html file for the given date.",
         "",
         "Usage: todo h [date]"

@@ -13,8 +13,7 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText => new[]
-    {
+    public override string [] HelpText { get; } = {
         "Provides a list of all todo lists. Switches are as follows:-",
         "\tm -- main todo folder.",
         "\ta -- archive folder.",
