@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -23,8 +24,8 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
         "Usage: todo l [m|a][d|t]"
     };
 
-    public ListFilesCommandFactory()
-        : base(Words)
+    public ListFilesCommandFactory(IOutputWriter outputWriter)
+        : base(outputWriter, Words)
     { }
 
     public override ListFilesCommand? TryGetCommand(string commandLine)

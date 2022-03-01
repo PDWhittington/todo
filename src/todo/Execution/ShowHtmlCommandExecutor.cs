@@ -6,6 +6,7 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
@@ -25,7 +26,9 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
     private readonly IPathHelper _pathHelper;
 
     public ShowHtmlCommandExecutor(IConfigurationProvider configurationProvider,
-        IDateListPathResolver dateListPathResolver, IPathHelper pathHelper)
+        IDateListPathResolver dateListPathResolver, IPathHelper pathHelper,
+        IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _dateListPathResolver = dateListPathResolver;
@@ -41,6 +44,8 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
         var browserPath = _pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
 
         var parameters = browserLaunchInfo.InterpolateParameters(htmlDocumentInfo.Path);
+
+        OutputWriter.WriteLine($"Opening {htmlDocumentInfo.Path} in a browser.");
 
         var process = Process.Start(browserPath, parameters);
 

@@ -6,6 +6,7 @@ using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.Templates;
 
 namespace Todo.Execution;
@@ -22,8 +23,8 @@ public class CreateOrShowDayListCommandExecutor
 
     public CreateOrShowDayListCommandExecutor(IDayListMarkdownTemplateProvider dayListMarkdownTemplateProvider,
         IDateListPathResolver dateListPathResolver, IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
-        IDateFormatter dateFormatter, IFileOpener fileOpener)
-        : base (fileOpener)
+        IDateFormatter dateFormatter, IFileOpener fileOpener, IOutputWriter outputWriter)
+        : base (fileOpener, outputWriter)
     {
         _dayListMarkdownTemplateProvider = dayListMarkdownTemplateProvider;
         _dateListPathResolver = dateListPathResolver;

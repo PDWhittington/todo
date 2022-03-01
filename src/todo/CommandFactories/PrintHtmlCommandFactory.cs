@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.DateParsing;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -22,8 +23,8 @@ public class PrintHtmlCommandFactory : CommandFactoryBase<PrintHtmlCommand>
 
     private readonly IDateParser _dateParser;
 
-    public PrintHtmlCommandFactory(IDateParser dateParser)
-        : base(Words)
+    public PrintHtmlCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+        : base(outputWriter, Words)
     {
         _dateParser = dateParser;
     }

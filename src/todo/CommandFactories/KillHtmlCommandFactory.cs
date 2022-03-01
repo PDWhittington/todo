@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -17,7 +18,7 @@ public class KillHtmlCommandFactory : CommandFactoryBase<KillHtmlCommand>
         "Usage: todo k"
     };
 
-    public KillHtmlCommandFactory() : base(Words) { }
+    public KillHtmlCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
 
     public override KillHtmlCommand? TryGetCommand(string commandLine)
     {

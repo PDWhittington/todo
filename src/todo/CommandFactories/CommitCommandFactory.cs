@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
@@ -17,7 +18,7 @@ public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
         "Usage: todo c [commit message]"
     };
 
-    public CommitCommandFactory() : base(Words) { }
+    public CommitCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
 
     public override CommitCommand? TryGetCommand(string commandLine)
     {

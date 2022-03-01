@@ -5,6 +5,7 @@ using System.Reflection;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Execution;
@@ -15,7 +16,9 @@ public class InitCommandExecutor: CommandExecutorBase<InitCommand>, IInitCommand
     private readonly IConstantsProvider _constantsProvider;
     private readonly ISettingsPathProvider _settingsPathProvider;
 
-    public InitCommandExecutor(IConstantsProvider constantsProvider, ISettingsPathProvider settingsPathProvider)
+    public InitCommandExecutor(IConstantsProvider constantsProvider,
+        ISettingsPathProvider settingsPathProvider, IOutputWriter outputWriter)
+        : base(outputWriter)
     {
         _constantsProvider = constantsProvider;
         _settingsPathProvider = settingsPathProvider;
@@ -23,6 +26,10 @@ public class InitCommandExecutor: CommandExecutorBase<InitCommand>, IInitCommand
 
     public override void Execute(InitCommand _)
     {
+        var settingsPath = _settingsPathProvider.GetSettingsPathInWorkingFolder().Path;
+
+        OutputWriter.WriteLine($"Initialising folder for todo. Creating {settingsPath}");
+
         var settingsFileStream = Assembly
             .GetExecutingAssembly()
             .GetManifestResourceStream(_constantsProvider.DefaultSettingsFile.FullName);
@@ -30,8 +37,7 @@ public class InitCommandExecutor: CommandExecutorBase<InitCommand>, IInitCommand
         if (settingsFileStream == null) throw new Exception(
                 "Cannot retrieve default settings file from executable");
 
-        using var outputStream = new FileStream(_settingsPathProvider.GetSettingsPathInWorkingFolder().Path,
-            FileMode.Create, FileAccess.Write);
+        using var outputStream = new FileStream(settingsPath, FileMode.Create, FileAccess.Write);
 
         settingsFileStream.CopyTo(outputStream);
     }

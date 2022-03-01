@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.CommandFactories;
@@ -14,7 +15,7 @@ public class InitCommandFactory: CommandFactoryBase<InitCommand>
 
     public override string [] HelpText { get; }
 
-    public InitCommandFactory(IConstantsProvider constantsProvider) : base(Words)
+    public InitCommandFactory(IConstantsProvider constantsProvider, IOutputWriter outputWriter) : base(outputWriter, Words)
     {
         HelpText = new [] {
             $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file",

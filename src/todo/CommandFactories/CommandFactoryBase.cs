@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.CommandFactories;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.CommandFactories;
 
 public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : CommandBase
 {
+    protected readonly IOutputWriter _outputWriter;
     public abstract T? TryGetCommand(string commandLine);
 
     public abstract bool IsDefaultCommandFactory { get; }
@@ -15,8 +17,9 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
 
     public HashSet<string> CommandWords { get; }
 
-    protected CommandFactoryBase(IEnumerable<string> wordsForCommand)
+    protected CommandFactoryBase(IOutputWriter outputWriter, IEnumerable<string> wordsForCommand)
     {
+        _outputWriter = outputWriter;
         CommandWords = new HashSet<string>(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
     }
 
@@ -31,6 +34,10 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
         }
 
         restOfCommand = commandLine[firstWord.Length..].Trim();
+
+        _outputWriter.WriteLine($"Command line interpreted as {typeof(T).Name}");
+        _outputWriter.WriteLine();
+
         return true;
     }
 
