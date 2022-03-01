@@ -24,7 +24,11 @@ public class PathHelper : IPathHelper
     /// <param name="path"></param>
     /// <returns></returns>
     public string GetRootedToAssemblyFolder(string path)
-        => Path.IsPathRooted(path) ? path : Path.Combine(GetAssemblyFolder(), path);
+    {
+        var rootedPath = Path.IsPathRooted(path) ? path : Path.Combine(GetAssemblyFolder(), path);
+        return Path.GetFullPath(rootedPath); //Use this to format the paths with native / or \
+    }
+
 
     /// <summary>
     /// Roots the path to the working folder,
@@ -33,7 +37,10 @@ public class PathHelper : IPathHelper
     /// <param name="path"></param>
     /// <returns></returns>
     public string GetRootedToWorkingFolder(string path)
-        => Path.IsPathRooted(path) ? path : Path.Combine(GetWorkingFolder(), path);
+    {
+        var rootedPath = Path.IsPathRooted(path) ? path : Path.Combine(GetWorkingFolder(), path);
+        return Path.GetFullPath(rootedPath); //Use this to format the paths with native / or \
+    }
 
     /// <summary>
     /// Returns the folder containing the executing assembly
@@ -61,8 +68,9 @@ public class PathHelper : IPathHelper
         foreach (var candidateFolder in paths)
         {
             var candidatePath = Path.Combine(candidateFolder, path);
+            var formattedPath = Path.GetFullPath(candidatePath);
 
-            if (File.Exists(candidatePath)) return candidatePath;
+            if (File.Exists(formattedPath)) return candidatePath;
         }
 
         throw new Exception($"{path} not found");
