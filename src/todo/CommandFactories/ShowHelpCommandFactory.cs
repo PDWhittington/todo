@@ -12,8 +12,7 @@ public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText => new[]
-    {
+    public override string[] HelpText { get; } = {
         "Displays this help screen.",
         "",
         "Usage: todo help"

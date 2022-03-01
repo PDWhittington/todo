@@ -13,8 +13,7 @@ public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText => new[]
-    {
+    public override string [] HelpText { get; } = {
         "Archives the markdown file for a given date. The file is moved into the archive subfolder " +
         "of the main todo folder. The name of the archive folder is specified in settings.json. Also in " +
         "settings.json can be specified whether the file is moved simply in the file system, or by using " +

@@ -12,8 +12,7 @@ public class PushCommandFactory : CommandFactoryBase<PushCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText => new[]
-    {
+    public override string[] HelpText { get; } = {
         "Executes a git push.",
         "",
         "Usage: todo push"
