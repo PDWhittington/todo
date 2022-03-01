@@ -1,6 +1,6 @@
 ﻿namespace Todo.Git.Commands;
 
-public class GitAddCommand : GitCommandBase
+public class GitAddCommand : GitSingleCommandBase
 {
     public string Path { get; }
 
@@ -9,5 +9,5 @@ public class GitAddCommand : GitCommandBase
         Path = path;
     }
 
-    internal override string GetCommand() => $"add {Path}";
+    protected override string SingleCommand()  => $"add {Path}";
 }

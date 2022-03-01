@@ -1,6 +1,6 @@
 ﻿namespace Todo.Git.Commands;
 
-public class GitResetCommand : GitCommandBase
+public class GitResetCommand : GitSingleCommandBase
 {
     public bool Hard { get; }
 
@@ -9,5 +9,5 @@ public class GitResetCommand : GitCommandBase
         Hard = hard;
     }
 
-    internal override string GetCommand() => Hard ? "reset --hard" : "reset";
+    protected override string SingleCommand() => Hard ? "reset --hard" : "reset";
 }
