@@ -10,4 +10,6 @@ public interface IGitInterface
 
     bool RunSpecialGitCommand(string command);
 
+    bool NoPager { get; set; }
+
 }
