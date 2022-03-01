@@ -33,7 +33,7 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
 
         var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
 
-        OutputWriter.WriteLine("Commiting todo files.");
+        OutputWriter.WriteLine("Committing todo files.");
 
         _gitInterface.RunGitCommand(new GitResetCommand());
         _gitInterface.RunGitCommand(new GitAddCommand(_outputFolderPathProvider.GetRootedOutputFolder()));
