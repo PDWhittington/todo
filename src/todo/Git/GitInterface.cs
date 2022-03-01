@@ -35,9 +35,11 @@ public class GitInterface : IGitInterface
             throw new Exception("Git not found at path given in settings file");
         }
 
-        _outputWriter.WriteLine($"Executing git command: {command}");
+        var commandWithGitSwitches = PrefixCommandWithGitSwitches(command);
 
-        var processStartInfo = new ProcessStartInfo(_gitExecutableResolver.GitPath, command)
+        _outputWriter.WriteLine($"Executing git command: {commandWithGitSwitches}");
+
+        var processStartInfo = new ProcessStartInfo(_gitExecutableResolver.GitPath, commandWithGitSwitches)
         {
             WorkingDirectory = _outputFolderPathProvider.GetRootedOutputFolder()
         };
@@ -48,4 +50,9 @@ public class GitInterface : IGitInterface
 
         return true;
     }
+
+    private string PrefixCommandWithGitSwitches(string command)
+        => NoPager ? "--no-pager " + command : command;
+
+    public bool NoPager { get; set; } = true;
 }
