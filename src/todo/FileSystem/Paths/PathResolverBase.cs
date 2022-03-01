@@ -46,7 +46,9 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
         var rootedOutputFolder = _outputFolderPathProvider.GetRootedOutputFolder();
 
         var path = Path.Combine(rootedOutputFolder, fileName);
-        return FilePathInfo.Of(path, fileType, FolderEnum.TodoRoot);
+        var formattedPath = Path.GetFullPath(path);
+
+        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.TodoRoot);
     }
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
@@ -55,7 +57,9 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
         var rootedArchiveFolder = _outputFolderPathProvider.GetRootedArchiveFolder();
 
         var path = Path.Combine(rootedArchiveFolder, fileName);
-        return FilePathInfo.Of(path, fileType, FolderEnum.Archive);
+        var formattedPath = Path.GetFullPath(path);
+
+        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.Archive);
     }
 
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
