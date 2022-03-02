@@ -70,7 +70,7 @@ public class PathHelper : IPathHelper
             var candidatePath = Path.Combine(candidateFolder, path);
             var formattedPath = Path.GetFullPath(candidatePath);
 
-            if (File.Exists(formattedPath)) return candidatePath;
+            if (File.Exists(formattedPath)) return formattedPath;
         }
 
         throw new Exception($"{path} not found");
