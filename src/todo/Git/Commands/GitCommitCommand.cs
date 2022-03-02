@@ -1,8 +1,11 @@
-﻿using Todo.Contracts.Services.Git;
+﻿using System;
+using LibGit2Sharp;
+using Todo.Contracts.Services.Reporting;
+using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitCommitCommand : GitSingleCommandBase
+public class GitCommitCommand : GitCommandBase<CommitResult>
 {
     public string Message { get; }
 
@@ -11,5 +14,21 @@ public class GitCommitCommand : GitSingleCommandBase
         Message = message;
     }
 
-    protected override string SingleCommand() => $"commit -m \"{Message}\"";
+    internal override CommitResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    {
+        try
+        {
+            var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
+
+            outputWriter?.WriteLine($"Creating commit with message: {Message}");
+
+            var commit = repo.Commit(Message, signature, signature);
+
+            return new CommitResult(true, commit, null);
+        }
+        catch(Exception e)
+        {
+            return new CommitResult(false, null, e);
+        }
+    }
 }

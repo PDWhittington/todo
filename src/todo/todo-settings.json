@@ -1,10 +1,10 @@
 ﻿{
   "BrowserLaunch": {
-    "Windows" : {
+    "Windows": {
       "Path": "chrome.exe",
       "Parameters": "{0}"
     },
-    "Linux" : {
+    "Linux": {
       "Path": "/usr/bin/x-www-browser",
       "Parameters": "--path {0}"
     },
@@ -13,13 +13,12 @@
       "Parameters": "{0}"
     }
   },
-
-  "TextEditorPath":{
-    "Windows" : {
+  "TextEditorPath": {
+    "Windows": {
       "Path": "Code.exe",
       "Parameters": "{0}"
     },
-    "Linux" : {
+    "Linux": {
       "Path": "code",
       "Parameters": "{0}"
     },
@@ -28,35 +27,15 @@
       "Parameters": "{0}"
     }
   },
-
-  "GitPath" : {
-    "Windows" : {
-      "Path": "git.exe",
-      "Parameters": "{0}"
-    },
-    "Linux" : {
-      "Path": "git",
-      "Parameters": "{0}"
-    },
-    "OSX": {
-      "Path": "git",
-      "Parameters": "{0}"
-    }
-  },
-
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",
   "HtmlTemplatePath": "template.html",
-
   "OutputFolder": "./todo",
   "ArchiveFolderName": "./todo/_archive",
   "TodoListFilenameFormat": "todo-{yyyy-MM-dd}",
-
   "UseGit": true,
   "UseNamesForDays": true,
-
   //If this settings is removed, the day threshold is midnight.
   "NewDayThreshold": "04:00:00",
-
   "ConsoleWidth": 80
 }

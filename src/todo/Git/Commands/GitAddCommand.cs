@@ -1,6 +1,11 @@
-﻿namespace Todo.Git.Commands;
+﻿using System;
+using LibGit2Sharp;
+using Todo.Contracts.Services.Reporting;
+using Todo.Git.Results;
 
-public class GitAddCommand : GitSingleCommandBase
+namespace Todo.Git.Commands;
+
+public class GitAddCommand : GitCommandBase<VoidResult>
 {
     public string Path { get; }
 
@@ -9,5 +14,17 @@ public class GitAddCommand : GitSingleCommandBase
         Path = path;
     }
 
-    protected override string SingleCommand()  => $"add {Path}";
+    internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    {
+        try
+        {
+            outputWriter?.WriteLine($"Staging {Path}");
+            LibGit2Sharp.Commands.Stage(repo, Path);
+            return new VoidResult(true, null);
+        }
+        catch (Exception e)
+        {
+            return new VoidResult(false, e);
+        }
+    }
 }

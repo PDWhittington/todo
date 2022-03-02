@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using LibGit2Sharp;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Git.Commands;
+using Todo.Git.Results;
 using CommitCommand = Todo.Contracts.Data.Commands.CommitCommand;
 
 namespace Todo.Execution;
@@ -35,11 +37,20 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
 
         OutputWriter.WriteLine("Committing todo files.");
 
-        _gitInterface.RunGitCommand(new GitResetCommand());
-        _gitInterface.RunGitCommand(new GitAddCommand(_outputFolderPathProvider.GetRootedOutputFolder()));
+        _gitInterface.RunGitCommand<GitResetCommand, VoidResult>(new GitResetCommand());
+        _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(
+            new GitAddCommand(_outputFolderPathProvider.GetRootedOutputFolder()));
 
         //Archive may not be nested within the OutputFolder
-        _gitInterface.RunGitCommand(new GitAddCommand(_outputFolderPathProvider.GetRootedArchiveFolder()));
-        _gitInterface.RunGitCommand(new GitCommitCommand(commitMessage));
+        _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(
+            new GitAddCommand(_outputFolderPathProvider.GetRootedArchiveFolder()));
+
+        var commitResult = _gitInterface.RunGitCommand<GitCommitCommand, CommitResult>(
+            new GitCommitCommand(commitMessage));
+
+        if (commitResult.Exception is EmptyCommitException)
+        {
+            OutputWriter.WriteLine("No commit written -- was empty");
+        }
     }
 }

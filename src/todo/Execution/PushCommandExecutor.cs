@@ -6,6 +6,7 @@ using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Git.Commands;
+using Todo.Git.Results;
 
 namespace Todo.Execution;
 
@@ -28,6 +29,6 @@ public class PushCommandExecutor : CommandExecutorBase<PushCommand>, IPushComman
         if (!_configurationProvider.Config.UseGit)
             throw new Exception("Pushing does not make sense when UseGit is set to false in the settings file.");
 
-        _gitInterface.RunGitCommand(new GitPushCommand());
+        _gitInterface.RunGitCommand<GitPushCommand, VoidResult>(new GitPushCommand());
     }
 }

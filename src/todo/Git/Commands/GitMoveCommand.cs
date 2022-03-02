@@ -1,8 +1,13 @@
-﻿using Todo.Contracts.Services.Git;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using LibGit2Sharp;
+using Todo.Contracts.Services.Reporting;
+using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitMoveCommand : GitCommandBase
+public class GitMoveCommand : GitCommandBase<VoidResult>
 {
     public string SourcePath { get; }
     public string DestinationPath { get; }
@@ -13,9 +18,21 @@ public class GitMoveCommand : GitCommandBase
         DestinationPath = destinationPath;
     }
 
-    internal override bool ExecuteCommand(IGitInterface gitInterface)
+    internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
     {
-        new GitAddCommand(SourcePath).ExecuteCommand(gitInterface);
-        return gitInterface.RunSpecialGitCommand($"mv {SourcePath} {DestinationPath}");
+        try
+        {
+            outputWriter?.WriteLine($"Moving {SourcePath} to {DestinationPath}");
+
+            File.Move(SourcePath, DestinationPath);
+            LibGit2Sharp.Commands.Stage(repo, SourcePath);
+            LibGit2Sharp.Commands.Stage(repo, DestinationPath);
+
+            return new VoidResult(true, null);
+        }
+        catch (Exception e)
+        {
+            return new VoidResult(false, e);
+        }
     }
 }

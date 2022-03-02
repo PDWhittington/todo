@@ -7,6 +7,7 @@ using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Git.Commands;
+using Todo.Git.Results;
 
 namespace Todo.Execution;
 
@@ -43,7 +44,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             if (_configurationProvider.Config.UseGit)
             {
-                _gitInterface.RunGitCommand(new GitAddCommand(pathInfo.Path));
+                _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(new GitAddCommand(pathInfo.Path));
             }
         }
 

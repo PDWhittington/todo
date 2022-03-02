@@ -1,8 +1,9 @@
-﻿using Todo.Contracts.Services.Git;
+﻿using LibGit2Sharp;
+using Todo.Contracts.Services.Reporting;
 
 namespace Todo.Git.Commands;
 
-public abstract class GitCommandBase
+public abstract class GitCommandBase<T>
 {
-    internal abstract bool ExecuteCommand(IGitInterface gitInterface);
+    internal abstract T ExecuteCommand(IRepository repo, IOutputWriter? outputWriter);
 }

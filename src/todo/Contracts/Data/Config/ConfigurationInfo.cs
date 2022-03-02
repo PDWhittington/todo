@@ -12,8 +12,6 @@ public class ConfigurationInfo
 
     public PerOsFilePaths TextEditorPath { get; }
 
-    public PerOsFilePaths GitPath { get; }
-
     #endregion
 
     #region Paths to templates
@@ -46,7 +44,7 @@ public class ConfigurationInfo
 
     [JsonConstructor]
     public ConfigurationInfo(
-        PerOsFilePaths browserLaunch, PerOsFilePaths textEditorPath, PerOsFilePaths gitPath,
+        PerOsFilePaths browserLaunch, PerOsFilePaths textEditorPath,
         string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
         string htmlTemplatePath,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,
@@ -54,7 +52,6 @@ public class ConfigurationInfo
     {
         BrowserLaunch = browserLaunch;
         TextEditorPath = textEditorPath;
-        GitPath = gitPath;
 
         DayListMarkdownTemplatePath = dayListMarkdownTemplatePath;
         TopicListMarkdownTemplatePath = topicListMarkdownTemplatePath;
