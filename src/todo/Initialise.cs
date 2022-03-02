@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Todo.AssemblyOperations;
 using Todo.CommandFactories;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services;
+using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.DateNaming;
 using Todo.Contracts.Services.DateParsing;
@@ -36,6 +38,7 @@ internal static class Initialise
                 .AddLogging()
 
                 /* Base functionality */
+                .AddAssemblyOperations()
                 .AddStateAndConfig()
                 .AddDateParsing()
                 .AddTemplateFunctionality()
@@ -58,14 +61,18 @@ internal static class Initialise
 
         #region Base functionality
 
+        private static IServiceCollection AddAssemblyOperations(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IManifestStreamProvider, ManifestStreamProvider>();
+
         private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
             => serviceCollection
                 .AddSingleton<IConstantsProvider, ConstantsProvider>()
                 .AddSingleton<ICommandLineProvider, CommandLineProvider>()
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
                 .AddSingleton<ICommandProvider, CommandProvider>()
-                .AddSingleton<IDateParser, DateParser>()
-                .AddSingleton<ISettingsPathProvider, SettingsPathProvider>();
+                .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
+                .AddSingleton<IVersionProvider, VersionProvider>();
 
         private static IServiceCollection AddDateParsing(this IServiceCollection serviceCollection)
             => serviceCollection

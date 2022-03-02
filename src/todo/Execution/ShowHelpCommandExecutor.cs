@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.HelpMessages;
@@ -19,24 +20,35 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _tableWriter;
+    private readonly IVersionProvider _versionProvider;
 
-    public ShowHelpCommandExecutor(IConfigurationProvider configurationProvider,
-        ICommandFactorySet commandFactorySet, IConsoleTextFormatter tableWriter,
-        IOutputWriter outputWriter)
+    public ShowHelpCommandExecutor(IOutputWriter outputWriter,
+        IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
+        IConsoleTextFormatter tableWriter, IVersionProvider versionProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
         _tableWriter = tableWriter;
+        _versionProvider = versionProvider;
     }
 
     public override void Execute(ShowHelpCommand command)
     {
         var commandHelpMessages = _commandFactorySet
             .GetAllCommandFactories()
-            .Select(cf => new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
+            .Select(cf =>
+                new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
+
+
 
         var sb = new StringBuilder()
+            .AppendLine($"Todo Version: {_versionProvider.GetVersion()}")
+            .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
+            .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
+            .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
+            .AppendLine($"OS description: {RuntimeInformation.OSDescription}")
+            .AppendLine()
             .AppendLine(_tableWriter.CreateTable(commandHelpMessages))
             .AppendLine();
 

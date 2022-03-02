@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.FileSystem;
 
@@ -11,10 +11,12 @@ namespace Todo.Templates;
 public abstract class TemplateProviderBase : FileReaderBase
 {
     private readonly IPathHelper _pathHelper;
+    private readonly IManifestStreamProvider _manifestStreamProvider;
 
-    protected TemplateProviderBase(IPathHelper pathHelper)
+    protected TemplateProviderBase(IPathHelper pathHelper, IManifestStreamProvider manifestStreamProvider)
     {
         _pathHelper = pathHelper;
+        _manifestStreamProvider = manifestStreamProvider;
     }
 
     /// <summary>
@@ -48,18 +50,7 @@ public abstract class TemplateProviderBase : FileReaderBase
 
         var manifestName = GetManifestStreamName();
 
-        var manifestStream = Assembly
-            .GetExecutingAssembly()
-            .GetManifestResourceStream(manifestName);
-
-        if (manifestStream == null) throw new Exception(
-            $"Default {GetTemplateDescription()} template not found in assembly");
-
-        var buffer = new byte[manifestStream.Length];
-
-        manifestStream.Read(buffer, 0, buffer.Length);
-
-        var text = Encoding.UTF8.GetString(buffer);
+        var text = _manifestStreamProvider.GetStringFromManifest(manifestName);
 
         var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
             GetFileType(), FolderEnum.Manifest);
