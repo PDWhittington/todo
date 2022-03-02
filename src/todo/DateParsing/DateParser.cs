@@ -21,13 +21,18 @@ public class DateParser : IDateParser
     {
         if (str == null) return false;
 
+        //NOTE: order of these tests is important.
+
         if (IsYesterday(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(-1);
         else if (IsToday(str)) dateOnly = GetTodayWithMidnightAdjusted();
         else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
         else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(offset);
         else if (IsDayOfWeek(str, out var dayOfWeek)) dateOnly = GetDateFromDayOfWeek((DayOfWeek)dayOfWeek!);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
+        else if (IsLastThisOrNext(str, out var dateFromColloquial)
+                 && dateFromColloquial != null) dateOnly = dateFromColloquial.Value;
         else if (IsDayMonthOnly(str, out day, out var month)) dateOnly = GetDateFromDayMonth(month, day);
+
         else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
         else dateOnly = default;
 
@@ -136,6 +141,36 @@ public class DateParser : IDateParser
             elements.Length == 2 && dayParsed && monthParsed;
     }
 
+    private bool IsLastThisOrNext(string commandLine, out DateOnly? date)
+    {
+        bool FirstWordIsKey(string firstWord)
+            => "last".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
+               "this".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
+               "next".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase);
+
+        var elements = commandLine.Split(' ');
+
+        if (elements.Length == 2 &&
+            FirstWordIsKey(elements[0]) &&
+            IsDayOfWeek(elements[1], out var dayOfWeek) &&
+            dayOfWeek != null /* for compiler */)
+        {
+            var currentDate = GetTodayWithMidnightAdjusted();
+
+            var dateDiffs = GetDateDiffsFor(currentDate, dayOfWeek.Value);
+
+            var diffToApply = "last".Equals(elements[0], StringComparison.CurrentCultureIgnoreCase)
+                ? dateDiffs.Where(x => x < 0).Max()
+                : dateDiffs.Where(x => x > 0).Min();
+
+            date = currentDate.AddDays(diffToApply);
+            return true;
+        }
+
+        date = null;
+        return false;
+    }
+
     private DateOnly GetDateFromDayOfWeek(DayOfWeek dayOfWeek)
     {
         var today = GetTodayWithMidnightAdjusted();
@@ -198,6 +233,9 @@ public class DateParser : IDateParser
             .Select(currentDay.AddDays)
             .ToArray();
     }
+
+
+
 
     // ReSharper disable once ReturnTypeCanBeEnumerable.Local
     private static int[] GetDateDiffsFor(DateOnly currentDay, DayOfWeek dayOfWeek)
