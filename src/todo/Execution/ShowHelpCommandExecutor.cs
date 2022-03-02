@@ -40,14 +40,14 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
             .Select(cf =>
                 new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
 
-
-
         var sb = new StringBuilder()
             .AppendLine($"Todo version (commit): {_versionProvider.GetVersion()}")
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
             .AppendLine($"OS description: {RuntimeInformation.OSDescription}")
+            .AppendLine()
+            .AppendLine("The following commands are available in this app:-")
             .AppendLine()
             .AppendLine(_tableWriter.CreateTable(commandHelpMessages))
             .AppendLine();
@@ -71,20 +71,27 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     {
         "Notes:",
 
+        "",
+
         "createorshow is the default command. This means it can be accessed simply by typing anything that can be parsed as a date after the word todo.",
+
+        "",
 
         "Valid date formats:-",
 
-        "\t\"y\", \"yesterday\" -> yesterday",
-"\t[empty string], \".\", \"today\" -> today",
-"\t\"tm\", \"tomorrow\" -> tomorrow",
+            "",
 
-"\t[day] -> maps to the day/month/year which is nearest in time to today",
-"\t[day]/[month] -> maps to the day/month which is nearest in time to today",
-"\t+[daycount] -> positive offset a number of days from today",
-"\t-[daycount] -> negative offset a number of days from today",
+            "\t\"y\", \"yesterday\" -> yesterday",
+            "\t[empty string], \".\", \"today\" -> today",
+            "\t\"tm\", \"tomorrow\" -> tomorrow",
 
-        @"[Commit Message] -> In the Commit and Sync commands, the commit message is optional. If none is supplied, then 
-a standard message detailing date and time of the commit will be used."
+            "\t[day] -> maps to the day/month/year which is nearest in time to today",
+            "\t[day]/[month] -> maps to the day/month which is nearest in time to today",
+            "\t+[daycount] -> positive offset a number of days from today",
+            "\t-[daycount] -> negative offset a number of days from today",
+
+            "",
+
+        @"[Commit Message] -> In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing date and time of the commit will be used."
     };
 }
