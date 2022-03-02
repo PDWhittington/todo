@@ -43,7 +43,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
 
 
         var sb = new StringBuilder()
-            .AppendLine($"Todo Version: {_versionProvider.GetVersion()}")
+            .AppendLine($"Todo version (commit): {_versionProvider.GetVersion()}")
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")

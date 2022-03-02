@@ -14,5 +14,5 @@ public interface IConstantsProvider
 
     ManifestInfo DefaultHtmlTemplate { get; }
 
-    ManifestInfo CommitInfo { get; }
+    ManifestInfo CommitHash { get; }
 }

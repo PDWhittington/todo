@@ -42,11 +42,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="commit.txt" />
-    <EmbeddedResource Include="commit.txt" />
+    <None Remove="commithash.txt" />
+    <EmbeddedResource Include="commithash.txt" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="git describe --long --dirty --tags --always &gt; commit.txt&#xA;" />
+    <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;" />
   </Target>
 </Project>

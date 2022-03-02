@@ -15,5 +15,5 @@ public class VersionProvider : IVersionProvider
     }
 
     public string GetVersion() =>
-        _manifestStreamProvider.GetStringFromManifest(_constantsProvider.CommitInfo.FullName).Trim();
+        _manifestStreamProvider.GetStringFromManifest(_constantsProvider.CommitHash.FullName).Trim();
 }
