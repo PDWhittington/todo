@@ -6,6 +6,7 @@ using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Git.Commands;
+using Todo.Git.Results;
 
 namespace Todo.Execution;
 
@@ -41,7 +42,8 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
     }
 
     private void MoveFileInGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
-        => _gitInterface.RunGitCommand(new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path));
+        => _gitInterface.RunGitCommand<GitMoveCommand, VoidResult>(
+            new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path));
 
     private void MoveFileWithoutGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
     {

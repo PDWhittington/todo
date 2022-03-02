@@ -113,8 +113,6 @@ internal static class Initialise
 
         private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IGitExecutableResolver, GitExecutableResolver>()
-                .AddSingleton<IGitDependencyValidator, GitDependencyValidator>()
                 .AddSingleton<IGitInterface, GitInterface>();
 
         private static IServiceCollection AddReportingFunctionality(this IServiceCollection serviceCollection)
