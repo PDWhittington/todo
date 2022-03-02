@@ -1,4 +1,5 @@
 ﻿using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
@@ -10,8 +11,9 @@ public class TopicListMarkdownTemplateProvider : TemplateProviderBase,
 {
     private readonly IConstantsProvider _constantsProvider;
 
-    public TopicListMarkdownTemplateProvider(IConstantsProvider constantsProvider,
-        IPathHelper pathHelper) : base(pathHelper)
+    public TopicListMarkdownTemplateProvider(IPathHelper pathHelper,
+        IManifestStreamProvider manifestStreamProvider, IConstantsProvider constantsProvider)
+        : base(pathHelper, manifestStreamProvider)
     {
         _constantsProvider = constantsProvider;
     }

@@ -1,43 +1,52 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>Todo</RootNamespace>
-        <LangVersion>10</LangVersion>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Todo</RootNamespace>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Markdig" Version="0.26.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.26.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="day-list-template.md" />
-      <EmbeddedResource Include="day-list-template.md" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="day-list-template.md" />
+    <EmbeddedResource Include="day-list-template.md" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="topic-list-template.md" />
-      <EmbeddedResource Include="topic-list-template.md" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="topic-list-template.md" />
+    <EmbeddedResource Include="topic-list-template.md" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="template.html" />
-      <EmbeddedResource Include="template.html" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="template.html" />
+    <EmbeddedResource Include="template.html" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Remove="todo-settings.json" />
-      <EmbeddedResource Include="todo-settings.json" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Remove="todo-settings.json" />
+    <EmbeddedResource Include="todo-settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="commit.txt" />
+    <EmbeddedResource Include="commit.txt" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="git describe --long --dirty --tags --always &gt; commit.txt&#xA;" />
+  </Target>
 </Project>

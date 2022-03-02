@@ -1,4 +1,5 @@
 ﻿using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
@@ -9,8 +10,9 @@ public class HtmlTemplateProvider : TemplateProviderBase, IHtmlTemplateProvider
 {
     private readonly IConstantsProvider _constantsProvider;
 
-    public HtmlTemplateProvider(IConstantsProvider constantsProvider,
-        IPathHelper pathHelper) : base(pathHelper)
+    public HtmlTemplateProvider(IPathHelper pathHelper,
+        IManifestStreamProvider manifestStreamProvider, IConstantsProvider constantsProvider)
+        : base(pathHelper, manifestStreamProvider)
     {
         _constantsProvider = constantsProvider;
     }

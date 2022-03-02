@@ -13,4 +13,6 @@ public interface IConstantsProvider
     ManifestInfo TopicListMarkdownTemplate { get; }
 
     ManifestInfo DefaultHtmlTemplate { get; }
+
+    ManifestInfo CommitInfo { get; }
 }
