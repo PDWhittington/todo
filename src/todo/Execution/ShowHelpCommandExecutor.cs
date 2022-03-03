@@ -19,17 +19,17 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommandFactorySet _commandFactorySet;
-    private readonly IConsoleTextFormatter _tableWriter;
+    private readonly IConsoleTextFormatter _consoleTextFormatter;
     private readonly IVersionProvider _versionProvider;
 
     public ShowHelpCommandExecutor(IOutputWriter outputWriter,
         IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
-        IConsoleTextFormatter tableWriter, IVersionProvider versionProvider)
+        IConsoleTextFormatter consoleTextFormatter, IVersionProvider versionProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
-        _tableWriter = tableWriter;
+        _consoleTextFormatter = consoleTextFormatter;
         _versionProvider = versionProvider;
     }
 
@@ -49,7 +49,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
             .AppendLine()
             .AppendLine("The following commands are available in this app:-")
             .AppendLine()
-            .AppendLine(_tableWriter.CreateTable(commandHelpMessages))
+            .AppendLine(_consoleTextFormatter.CreateTable(commandHelpMessages))
             .AppendLine();
 
         var notesLines = GetNotes();
@@ -64,7 +64,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
         var withSpecialChars = _notes
             .Select(x => x.Replace("->", "\u2192"));
 
-        return _tableWriter.WrapText(withSpecialChars, _configurationProvider.Config.ConsoleWidth);
+        return _consoleTextFormatter.WrapText(withSpecialChars, _configurationProvider.Config.ConsoleWidth);
     }
 
     private readonly string [] _notes =
