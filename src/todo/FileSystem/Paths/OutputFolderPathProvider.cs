@@ -1,4 +1,5 @@
-﻿using Todo.Contracts.Services.FileSystem.Paths;
+﻿using System.IO;
+using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem.Paths;
@@ -7,16 +8,29 @@ public class OutputFolderPathProvider : IOutputFolderPathProvider
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IPathHelper _pathHelper;
+    private readonly ISettingsPathProvider _settingsPathProvider;
 
-    public OutputFolderPathProvider(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
+    public OutputFolderPathProvider(IConfigurationProvider configurationProvider, IPathHelper pathHelper,
+        ISettingsPathProvider settingsPathProvider)
     {
         _configurationProvider = configurationProvider;
         _pathHelper = pathHelper;
+        _settingsPathProvider = settingsPathProvider;
     }
 
     public string GetRootedOutputFolder()
-        => _pathHelper.GetRootedToWorkingFolder(_configurationProvider.Config.OutputFolder);
+    {
+        var settingsPath = _settingsPathProvider.GetSettingsPathInHierarchy().Path;
+        var settingsFolder = Path.GetDirectoryName(settingsPath);
+        var rootedPath = Path.Combine(settingsFolder!, _configurationProvider.Config.OutputFolder);
+        return Path.GetFullPath(rootedPath);
+    }
 
     public string GetRootedArchiveFolder()
-        => _pathHelper.GetRootedToWorkingFolder(_configurationProvider.Config.ArchiveFolderName);
+    {
+        var settingsPath = _settingsPathProvider.GetSettingsPathInHierarchy().Path;
+        var settingsFolder = Path.GetDirectoryName(settingsPath);
+        var rootedPath = Path.Combine(settingsFolder!, _configurationProvider.Config.ArchiveFolderName);
+        return Path.GetFullPath(rootedPath);
+    }
 }
