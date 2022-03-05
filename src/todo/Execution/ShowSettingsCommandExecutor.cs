@@ -27,6 +27,6 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
 
         OutputWriter.WriteLine($"Opening {path}");
 
-        _fileOpener.LaunchFileInDefaultEditor(path);
+        _fileOpener.LaunchFilesInDefaultEditor(path);
     }
 }

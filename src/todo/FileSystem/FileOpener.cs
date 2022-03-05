@@ -26,8 +26,11 @@ public class FileOpener : IFileOpener
         return _textEditorPath;
     }
 
-    public void LaunchFileInDefaultEditor(string path)
+    public void LaunchFilesInDefaultEditor(params string [] paths)
     {
-        Process.Start(TextEditorPath, path);
+        foreach (var path in paths)
+        {
+            Process.Start(TextEditorPath, path);
+        }
     }
 }

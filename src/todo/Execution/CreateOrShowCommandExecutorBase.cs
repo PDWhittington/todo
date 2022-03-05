@@ -48,7 +48,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
             }
         }
 
-        _fileOpener.LaunchFileInDefaultEditor(pathInfo.Path);
+        _fileOpener.LaunchFilesInDefaultEditor(pathInfo.Path);
     }
 
     protected abstract FilePathInfo GetFilePathInfo(TCommandType createOrShowCommand);

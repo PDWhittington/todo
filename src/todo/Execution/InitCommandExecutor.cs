@@ -11,7 +11,7 @@ using Todo.Contracts.Services.StateAndConfig;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class InitCommandExecutor: CommandExecutorBase<InitCommand>, IInitCommandExecutor
+public class InitCommandExecutor : CommandExecutorBase<InitCommand>, IInitCommandExecutor
 {
     private readonly IConstantsProvider _constantsProvider;
     private readonly ISettingsPathProvider _settingsPathProvider;
