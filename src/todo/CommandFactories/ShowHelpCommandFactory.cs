@@ -8,7 +8,7 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowHelpCommandFactory : CommandFactoryBase<ShowHelpCommand>
 {
-    private static readonly string[] Words = { "help" };
+    private static readonly string[] Words = { "help", "about" };
 
     public override bool IsDefaultCommandFactory => false;
 
