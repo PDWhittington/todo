@@ -1,7 +1,7 @@
 ﻿using System;
-using Todo.Contracts.Services.DateNaming;
+using Todo.Contracts.Services.Dates.Naming;
 
-namespace Todo.DateNaming;
+namespace Todo.Dates.Naming;
 
 public class SaintsDayDateNamer : ISaintsDayDateNamer
 {

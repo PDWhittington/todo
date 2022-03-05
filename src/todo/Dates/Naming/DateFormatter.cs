@@ -1,8 +1,8 @@
 ﻿using System;
-using Todo.Contracts.Services.DateNaming;
+using Todo.Contracts.Services.Dates.Naming;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.DateNaming;
+namespace Todo.Dates.Naming;
 
 public class DateFormatter : IDateFormatter
 {

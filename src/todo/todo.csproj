@@ -47,6 +47,11 @@
     <EmbeddedResource Include="commithash.txt" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\Services\Dates" />
+    <Folder Include="Dates" />
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;" />
   </Target>
