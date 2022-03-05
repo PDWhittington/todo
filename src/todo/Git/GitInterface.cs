@@ -1,7 +1,7 @@
 ﻿using LibGit2Sharp;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
-using Todo.Contracts.Services.Reporting;
+using Todo.Contracts.Services.UI;
 using Todo.Git.Commands;
 
 namespace Todo.Git;

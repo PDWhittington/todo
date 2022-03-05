@@ -1,4 +1,4 @@
-﻿namespace Todo.Contracts.Services.Reporting;
+﻿namespace Todo.Contracts.Services.UI;
 
 public interface IOutputWriter
 {

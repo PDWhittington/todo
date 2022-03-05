@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.Reporting;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 

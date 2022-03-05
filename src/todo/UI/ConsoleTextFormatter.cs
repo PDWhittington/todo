@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Todo.Contracts.Data.HelpMessages;
 using Todo.Contracts.Services.StateAndConfig;
-using Todo.Contracts.Services.TextFormatting;
+using Todo.Contracts.Services.UI;
 
-namespace Todo.TextFormatting;
+namespace Todo.UI;
 
 public class ConsoleTextFormatter : IConsoleTextFormatter
 {

@@ -1,5 +1,5 @@
 ﻿using LibGit2Sharp;
-using Todo.Contracts.Services.Reporting;
+using Todo.Contracts.Services.UI;
 
 namespace Todo.Git.Commands;
 

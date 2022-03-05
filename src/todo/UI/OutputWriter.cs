@@ -1,7 +1,7 @@
 ﻿using System;
-using Todo.Contracts.Services.Reporting;
+using Todo.Contracts.Services.UI;
 
-namespace Todo.Reporting;
+namespace Todo.UI;
 
 public class OutputWriter : IOutputWriter
 {

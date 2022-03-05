@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Todo.Contracts.Data.HelpMessages;
 
-namespace Todo.Contracts.Services.TextFormatting;
+namespace Todo.Contracts.Services.UI;
 
 public interface IConsoleTextFormatter
 {
