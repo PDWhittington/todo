@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Todo.Contracts.Services.DateParsing;
+using Todo.Contracts.Services.Dates.Parsing;
 
-namespace Todo.DateParsing;
+namespace Todo.Dates.Parsing;
 
 public class DateHelper : IDateHelper
 {

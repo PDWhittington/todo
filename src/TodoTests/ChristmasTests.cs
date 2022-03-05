@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using Todo.DateNaming;
+using Todo.Dates.Naming;
 
 namespace TodoTests;
 

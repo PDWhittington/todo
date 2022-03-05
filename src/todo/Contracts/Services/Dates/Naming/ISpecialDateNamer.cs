@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Todo.Contracts.Services.DateNaming;
+namespace Todo.Contracts.Services.Dates.Naming;
 
 public interface ISpecialDateNamer
 {
