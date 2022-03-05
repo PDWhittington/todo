@@ -2,5 +2,5 @@
 
 public interface IFileOpener
 {
-    void LaunchFileInDefaultEditor(string path);
+    void LaunchFilesInDefaultEditor(params string [] paths);
 }
