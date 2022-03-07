@@ -1,20 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Standard assembly properties -->
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Todo</RootNamespace>
     <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
+
+  <!-- nuget references -->
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0175" />
@@ -22,37 +20,36 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
   </ItemGroup>
 
+  <!-- Embedded templates-->
+
   <ItemGroup>
     <None Remove="day-list-template.md" />
     <EmbeddedResource Include="day-list-template.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="topic-list-template.md" />
     <EmbeddedResource Include="topic-list-template.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="template.html" />
     <EmbeddedResource Include="template.html" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="todo-settings.json" />
     <EmbeddedResource Include="todo-settings.json" />
   </ItemGroup>
 
+  <!-- Assembly info files populated by pre-build-->
+
   <ItemGroup>
     <None Remove="commithash.txt" />
     <EmbeddedResource Include="commithash.txt" />
+    <None Remove="buildtime.txt" />
+    <EmbeddedResource Include="buildtime.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\Services\Dates" />
-    <Folder Include="Dates" />
-  </ItemGroup>
+  <!-- Pere-build event to populate the above files -->
+
+  <PropertyGroup>
+    <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
+  </PropertyGroup>
+
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;" />
+    <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;echo $(CurrentDate) &gt; buildtime.txt&#xA;" />
   </Target>
 </Project>
