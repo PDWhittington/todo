@@ -19,11 +19,11 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _consoleTextFormatter;
-    private readonly IVersionProvider _versionProvider;
+    private readonly IAssemblyInformationProvider _versionProvider;
 
     public ShowHelpCommandExecutor(IOutputWriter outputWriter,
         IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
-        IConsoleTextFormatter consoleTextFormatter, IVersionProvider versionProvider)
+        IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider versionProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
@@ -40,7 +40,8 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
                 new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
 
         var sb = new StringBuilder()
-            .AppendLine($"Todo version (commit): {_versionProvider.GetVersion()}")
+            .AppendLine($"Todo version (commit): {_versionProvider.GetCommitHash()}")
+            .AppendLine($"Build time: {_versionProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}")
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
