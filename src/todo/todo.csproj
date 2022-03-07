@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- Standard assembly properties -->
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
@@ -9,9 +11,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
-  </PropertyGroup>
 
   <!-- nuget references -->
 
@@ -42,6 +41,13 @@
     <None Remove="buildtime.txt" />
     <EmbeddedResource Include="buildtime.txt" />
   </ItemGroup>
+
+  <!-- Pere-build event to populate the above files -->
+
+  <PropertyGroup>
+    <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
+  </PropertyGroup>
+
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;echo $(CurrentDate) &gt; buildtime.txt&#xA;" />
