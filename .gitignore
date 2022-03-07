@@ -6,7 +6,7 @@
 # Files specific to this project
 
 src/todo/commithash.txt
-
+src/todo/buildtime.txt
 
 # User-specific files
 *.rsuser
