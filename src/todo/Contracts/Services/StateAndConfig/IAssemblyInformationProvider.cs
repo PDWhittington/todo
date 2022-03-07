@@ -7,4 +7,6 @@ public interface IAssemblyInformationProvider
     string GetCommitHash();
 
     DateTime GetBuildTime();
+
+    string AssemblyLocation();
 }

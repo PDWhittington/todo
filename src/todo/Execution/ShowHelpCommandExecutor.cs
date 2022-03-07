@@ -40,8 +40,10 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
                 new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
 
         var sb = new StringBuilder()
+            .AppendLine($"Assembly location: {_versionProvider.AssemblyLocation()}")
             .AppendLine($"Todo version (commit): {_versionProvider.GetCommitHash()}")
             .AppendLine($"Build time: {_versionProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}")
+            .AppendLine()
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")

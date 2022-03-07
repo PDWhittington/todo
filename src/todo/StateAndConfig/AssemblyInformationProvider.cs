@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -26,4 +27,6 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
 
         return DateTime.Parse(dteStr);
     }
+
+    public string AssemblyLocation() => Assembly.GetCallingAssembly().Location;
 }
