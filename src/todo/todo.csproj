@@ -9,6 +9,10 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
+  </PropertyGroup>
+
   <!-- nuget references -->
 
   <ItemGroup>
@@ -40,6 +44,6 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="call prebuild.bat" />
+    <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;echo $(CurrentDate) &gt; buildtime.txt&#xA;" />
   </Target>
 </Project>
