@@ -19,17 +19,17 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _consoleTextFormatter;
-    private readonly IAssemblyInformationProvider _versionProvider;
+    private readonly IAssemblyInformationProvider _assemblyInformationProvider;
 
     public ShowHelpCommandExecutor(IOutputWriter outputWriter,
         IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
-        IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider versionProvider)
+        IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider assemblyInformationProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
         _consoleTextFormatter = consoleTextFormatter;
-        _versionProvider = versionProvider;
+        _assemblyInformationProvider = assemblyInformationProvider;
     }
 
     public override void Execute(ShowHelpCommand command)
@@ -40,9 +40,9 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
                 new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
 
         var sb = new StringBuilder()
-            .AppendLine($"Assembly location: {_versionProvider.AssemblyLocation()}")
-            .AppendLine($"Todo version (commit): {_versionProvider.GetCommitHash()}")
-            .AppendLine($"Build time: {_versionProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}")
+            .AppendLine($"Assembly location: {_assemblyInformationProvider.AssemblyLocation()}")
+            .AppendLine($"Todo version (commit): {_assemblyInformationProvider.GetCommitHash()}")
+            .AppendLine($"Build time: {_assemblyInformationProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}")
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine()
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
