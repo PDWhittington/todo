@@ -43,6 +43,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
             .AppendLine($"Assembly location: {_assemblyInformationProvider.AssemblyLocation()}")
             .AppendLine($"Todo version (commit): {_assemblyInformationProvider.GetCommitHash()}")
             .AppendLine($"Build time: {_assemblyInformationProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}")
+            .AppendLine($"DEBUG flag: {_assemblyInformationProvider.DebugFlag()}")
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine()
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")

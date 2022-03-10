@@ -29,4 +29,13 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
     }
 
     public string AssemblyLocation() => Assembly.GetCallingAssembly().Location;
+
+    #if DEBUG
+    public bool DebugFlag() => true;
+
+    #else
+
+    public bool DebugFlag() => false;
+
+    #endif
 }
