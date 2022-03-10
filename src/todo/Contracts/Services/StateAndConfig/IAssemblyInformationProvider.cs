@@ -9,4 +9,6 @@ public interface IAssemblyInformationProvider
     DateTime GetBuildTime();
 
     string AssemblyLocation();
+
+    bool DebugFlag();
 }
