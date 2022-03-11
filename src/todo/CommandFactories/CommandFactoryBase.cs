@@ -8,7 +8,9 @@ namespace Todo.CommandFactories;
 
 public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : CommandBase
 {
-    protected readonly IOutputWriter _outputWriter;
+    // ReSharper disable once MemberCanBePrivate.Global
+    protected readonly IOutputWriter OutputWriter;
+
     public abstract T? TryGetCommand(string commandLine);
 
     public abstract bool IsDefaultCommandFactory { get; }
@@ -19,7 +21,7 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
 
     protected CommandFactoryBase(IOutputWriter outputWriter, IEnumerable<string> wordsForCommand)
     {
-        _outputWriter = outputWriter;
+        OutputWriter = outputWriter;
         CommandWords = new HashSet<string>(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
     }
 
@@ -35,8 +37,8 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
 
         restOfCommand = commandLine[firstWord.Length..].Trim();
 
-        _outputWriter.WriteLine($"Command line interpreted as {typeof(T).Name}");
-        _outputWriter.WriteLine();
+        OutputWriter.WriteLine($"Command line interpreted as {typeof(T).Name}");
+        OutputWriter.WriteLine();
 
         return true;
     }

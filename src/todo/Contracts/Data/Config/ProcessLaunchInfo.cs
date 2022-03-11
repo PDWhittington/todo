@@ -6,6 +6,7 @@ public class ProcessLaunchInfo
 {
     public string Path { get; }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public string Parameters { get; }
 
     [JsonConstructor]

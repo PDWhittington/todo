@@ -7,6 +7,7 @@ namespace Todo.Git.Commands;
 
 public class GitResetCommand : GitCommandBase<VoidResult>
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public bool Hard { get; }
 
     public GitResetCommand(bool hard = false)

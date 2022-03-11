@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates.Parsing;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class RemoveCommandFactory : CommandFactoryBase<RemoveCommand>
 {
     private static readonly string[] Words = { "rm", "remove", "delete" };

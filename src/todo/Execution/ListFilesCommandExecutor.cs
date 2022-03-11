@@ -59,7 +59,7 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
         OutputWriter.WriteLine(fileList);
     }
 
-    static string GetMessage(ListFilesCommand command)
+    private static string GetMessage(ListFilesCommand command)
     {
         string FileTypeMessage(ListFilesCommand.FileTypeEnum fileType)
             => fileType switch

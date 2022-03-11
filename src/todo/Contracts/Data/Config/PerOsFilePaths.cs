@@ -5,10 +5,14 @@ namespace Todo.Contracts.Data.Config;
 
 public class PerOsFilePaths
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public ProcessLaunchInfo Windows { get; }
+
+    // ReSharper disable once MemberCanBePrivate.Global
     public ProcessLaunchInfo Linux { get; }
 
     // ReSharper disable once InconsistentNaming
+    // ReSharper disable once MemberCanBePrivate.Global
     public ProcessLaunchInfo OSX { get; }
 
     [JsonConstructor]

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 using Todo.Contracts.Data.Commands;
@@ -11,6 +12,7 @@ using Todo.Git.Commands;
 
 namespace Todo.Execution;
 
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowConflictsCommandExecutor : CommandExecutorBase<ShowConflictsCommand>, IShowConflictsCommandExecutor
 {
     private readonly IConfigurationProvider _configurationProvider;
@@ -47,7 +49,7 @@ public class ShowConflictsCommandExecutor : CommandExecutorBase<ShowConflictsCom
                 new[]
                 {
                     conflict.Ours.Path,
-                    conflict.Theirs.Path,
+                    conflict.Theirs.Path
                 })
             .Distinct()
             .Where(File.Exists)

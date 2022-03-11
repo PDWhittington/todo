@@ -8,10 +8,12 @@ namespace Todo.Git.Commands;
 
 public class GitPushCommand : GitCommandBase<VoidResult>
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public BranchLocatorBase BranchLocator { get; }
 
     public GitPushCommand() : this(new HeadBranchLocator()) { }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public GitPushCommand(BranchLocatorBase branchLocator)
     {
         BranchLocator = branchLocator;
