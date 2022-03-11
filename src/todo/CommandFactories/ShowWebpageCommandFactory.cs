@@ -20,7 +20,7 @@ public class ShowWebpageCommandFactory : CommandFactoryBase<ShowWebpageCommand>
         : base(outputWriter, Words) 
     {
         HelpText = new [] {
-            $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser",
+            $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser.",
             "",
             "Usage: todo w"
         };
