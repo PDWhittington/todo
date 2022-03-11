@@ -59,7 +59,7 @@ The following commands can be invoked from the command line:-
         </th>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             (No text)<br/>
             createorshow
         </td>
