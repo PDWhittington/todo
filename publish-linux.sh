@@ -1,6 +1,7 @@
+#!/usr/bin/env sh
 # This is provided more as an example than anything else
 
-dotnet publish src -c Release
+dotnet publish src/todo/ -c Release -r linux-x64 -p:PublishReadyToRun=true --self-contained
 
 sudo rm -R /usr/local/bin/todo
 
