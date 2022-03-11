@@ -246,7 +246,7 @@ The following commands can be invoked from the command line:-
             www
         </td>
         <td valign="top">
-            Opens the project page (https://github.com/PDWhittington/todo) in the default browser<br /><br />
+            Opens <a href="https://github.com/PDWhittington/todo">the project page</a> in the default browser<br /><br />
             Usage: todo w
         </td>
     </tr>
