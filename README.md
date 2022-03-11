@@ -63,18 +63,18 @@ The following commands can be invoked from the command line:-
             (No text)<br/>
             createorshow
         </td>
-        <td>
+        <td valign="top">
             Creates or shows a markdown file for the date supplied. This is the default command and can be executed by
             typing anything that can be parsed as a date. Supplying no date assumes the current day.<br /><br />
             Usage: todo [date]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             a<br />
             archive
         </td>
-        <td>
+        <td valign="top">
             Archives the markdown file for a given date. The file is moved into the archive subfolder of the main todo
             folder. The name of the archive folder is specified in settings.json. Also in settings.json can be specified
             whether the file is moved simply in the file system, or by using git mv.<br /><br />
@@ -82,62 +82,62 @@ The following commands can be invoked from the command line:-
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             c<br />
             commit
         </td>
-        <td>
+        <td valign="top">
             Gathers the current modifications into a commit. Commit message is optional.<br /><br />
             Usage: todo c [commit message]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             h<br />
             html<br />
             showhtml
         </td>
-        <td>
+        <td valign="top">
             Opens the browser specified in the settings file and loads the Html file for the given date. <br /><br />
             Usage: todo h [date]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             help<br />
             about
         </td>
-        <td>
+        <td valign="top">
             Displays this help screen.<br /><br />
             Usage: todo help
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             i<br />
             init
         </td>
-        <td>
+        <td valign="top">
             Initialises the current folder with a default todo-settings.json file.<br /><br />
             Usage: todo init
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             k<br />
             killhtml
         </td>
-        <td>
+        <td valign="top">
             Deletes all the html files in the todo folder and the archive subfolder<br /><br />
             Usage: todo k
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             l<br />
             list
         </td>
-        <td>
+        <td valign="top">
             Provides a list of all todo lists. Switches are as follows:-<br /><br />
             <ul>
                 <li>m -- main todo folder.</li>
@@ -149,94 +149,94 @@ The following commands can be invoked from the command line:-
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             p<br />
             print<br />
             printhtml<br />
         </td>
-        <td>
+        <td valign="top">
             Converts a Markdown file to HTML. Can be used with anything that can be parsed as a date. Supplying no date
             performs this operation on the Markdown file for the current day.<br /><br />
             Usage: todo p [date]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             ph<br />
             printandshowhtml
         </td>
-        <td>
+        <td valign="top">
             This command is equivalent to printhtml followed by showhtml (p, h).<br /><br />
             Usage: todo ph [date]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             push
         </td>
-        <td>
+        <td valign="top">
             Executes a git push.<br /><br />
             Usage: todo push
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             rm<br />
             remove<br />
             delete
         </td>
-        <td>
+        <td valign="top">
             Deletes the file. If git is enabled, the command performs a
             remove in git.<br /><br />
             Usage: todo rm [date]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             s<br />
             sync
         </td>
-        <td>
+        <td valign="top">
             Executes a commit and push operation sequentially.<br /><br />
             Usage: todo s [commit message]
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             sc<br />
             showconflicts
         </td>
-        <td>
+        <td valign="top">
             Opens in the text editor all of the files for which conflicts exist<br /><br />
             Usage: todo sc
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             settings<br />
             showsettings
         </td>
-        <td>
+        <td valign="top">
             Shows the settings file in the default editor.<br /><br />
             Usage: todo settings
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             t<br />
             topic
         </td>
-        <td>
+        <td valign="top">
             Creates or shows a todo list relating to a single topic.<br /><br />
             Usage: todo t (topic name)
         </td>
     </tr>
     <tr>
-        <td>
+        <td valign="top">
             u<br />
             unarchive
         </td>
-        <td>
+        <td valign="top">
             Un-archives the markdown file for a given date. The file is moved form the subfolder back to the main todo
             folder. The name of the archive folder is specified in settings.json. Also in settings.json can be specified
             whether the file is moved simply in the file system, or by using git mv.<br /><br />
