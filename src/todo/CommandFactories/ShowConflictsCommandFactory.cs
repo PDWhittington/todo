@@ -13,7 +13,7 @@ public class ShowConflictsCommandFactory : CommandFactoryBase<ShowConflictsComma
     public override bool IsDefaultCommandFactory => false;
 
     public override string [] HelpText { get; } = {
-        "Opens in the text editor all of the files for which conflicts exist ",
+        "Opens in the text editor all of the files for which conflicts exist.",
         "",
         "Usage: todo sc"
     };

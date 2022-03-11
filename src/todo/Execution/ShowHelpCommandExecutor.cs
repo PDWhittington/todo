@@ -85,13 +85,13 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
             "",
 
             "\t\"y\", \"yesterday\" -> yesterday",
-            "\t[empty string], \".\", \"today\" -> today",
+            "\t(empty string), \".\", \"today\" -> today",
             "\t\"tm\", \"tomorrow\" -> tomorrow",
 
-            "\t[day] -> maps to the day/month/year which is nearest in time to today",
-            "\t[day]/[month] -> maps to the day/month which is nearest in time to today",
-            "\t+[daycount] -> positive offset a number of days from today",
-            "\t-[daycount] -> negative offset a number of days from today",
+            "\t(day) -> the day/month/year which is nearest in time to today",
+            "\t(day)/(month) -> the day/month which is nearest in time to today",
+            "\t+(daycount) -> positive offset a number of days from today",
+            "\t-(daycount) -> negative offset a number of days from today",
 
             "",
 

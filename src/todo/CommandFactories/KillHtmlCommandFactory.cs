@@ -13,7 +13,7 @@ public class KillHtmlCommandFactory : CommandFactoryBase<KillHtmlCommand>
     public override bool IsDefaultCommandFactory => false;
 
     public override string[] HelpText { get; } = {
-        "Deletes all the html files in the todo folder and the archive subfolder",
+        "Deletes all the html files in the todo folder and the archive subfolder.",
         "",
         "Usage: todo k"
     };
