@@ -203,7 +203,7 @@ The following commands can be invoked from the command line:-
             showconflicts
         </td>
         <td valign="top">
-            Opens in the text editor all of the files for which conflicts exist<br /><br />
+            Opens in the text editor all of the files for which conflicts exist.<br /><br />
             Usage: todo sc
         </td>
     </tr>
