@@ -1,5 +1,7 @@
 # todo &mdash; an idiosyncratic todo list manager
 
+## Introduction
+
 This project is a lightweight C# solution which manages todo lists written in Markdown.
 
 Please feel free to DM me on Twitter, [@PDWhittington](https://twitter.com/PDWhittington), or to add issues on this repo for any features you would like to see.
@@ -10,19 +12,19 @@ Phil Whittington
 
 ## How to build
 
-Install git and ensure that git is in your PATH environment variable. To clone this repository, type the following in a command-line:
+Install git and ensure that it is in your PATH environment variable. To clone this repository, type the following at a command-line:
 
 ```
 git clone https://github.com/PDWhittington/todo.git
 ```
-You will also need a recent .Net SDK installed. I am on .Net 6.0. To build the app, run something like the following. This will build the app so that it can run on all target operating systems. One dependency, gitlib2sharp, has OS-specific dependencies (i.e. the .Net assembly wraps a native library which varies from platform to platform) Building for all target operating systems will ensure that all native libraries are produced. This means that the app can run on Windows, OSX or Linux.
+You will also need a recent .Net SDK installed. I am on .Net 6.0. To build the app, run something like the following. This will build the app so that it can run on all target operating systems. One dependency, gitlib2sharp, has OS-specific dependencies (i.e. the .Net assembly wraps a native library which varies from platform to platform). Building for all target operating systems will ensure that all the native libraries are produced. This means that the app can run on Windows, OSX or Linux.
 
 
 ```
 cd todo
 dotnet build src
 ```
-If you are confident that you need the app to run on only one operating system, you can publish the app for just the [runtime identifier](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids) 
+If you are confident that you need the app to run on only one operating system, you can publish the app for just the [runtime identifier](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids) that you need.
 
 
 ```
@@ -39,9 +41,13 @@ dotnet publish src --runtime linux-x64 --configuration Release --no-self-contain
 
 ## Usage
 
-Once you have the app, add to your PATH environment variable the location you have published to which you have published the app.
+Once you have the app, add its published location to your PATH environment variable.
 
 The following commands can be invoked from the command line:-
+
+<style>
+    td {vertical-align: top}
+</style>
 
 <table>
     <tr>
