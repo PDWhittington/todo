@@ -18,7 +18,7 @@ public class InitCommandFactory: CommandFactoryBase<InitCommand>
     public InitCommandFactory(IConstantsProvider constantsProvider, IOutputWriter outputWriter) : base(outputWriter, Words)
     {
         HelpText = new [] {
-            $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file",
+            $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file.",
             "",
             "Usage: todo init"
         };

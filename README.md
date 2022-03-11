@@ -46,170 +46,160 @@ c<br/>
 commit
 </td>
 <td>
-Gathers the current modifications into a commit. Commit       
-message is optional.                                          
-                                                              
+Gathers the current modifications into a commit. Commit message is optional.<br/><br/>
 Usage: todo c [commit message]                                
 </td>
 </tr>
 <tr>
 <td>
+h<br/>
+html<br/>
+showhtml
 </td>
 <td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
+Opens the browser specified in the settings file and loads the Html file for the given date. <br/><br/>
+Usage: todo h [date]
 </td>
 </tr>
 <tr>
 <td>
+help<br/>
+about            
 </td>
 <td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
+Displays this help screen.<br/><br/>
+Usage: todo help             
 </td>
 </tr>
 <tr>
 <td>
+i<br/>
+init
 </td>
 <td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
+Initialises the current folder with a default todo-settings.json file.<br/><br/>
+Usage: todo init                             
 </td>
 </tr>
 <tr>
 <td>
+k<br/>
+killhtml
 </td>
 <td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
+Deletes all the html files in the todo folder and the archive subfolder<br/><br/>
+Usage: todo k                                               
 </td>
 </tr>
 <tr>
 <td>
+l<br/><br/>
+list
 </td>
 <td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
+Provides a list of all todo lists. Switches are as follows:-<br/><br/>
+<ul>
+<li>m -- main todo folder.</li>
+<li>a -- archive folder.</li>
+<li>d -- lists relating to days.</li>
+<li>t -- lists relating to topics.</li>
+</ul><br/><br/>
+Usage: todo l [m | a] [d | t]
 </td>
 </tr>
 <tr>
 <td>
+p<br/>
+print<br/>
+printhtml<br/>
 </td>
 <td>
+Converts a Markdown file to HTML. Can be used with anything that can be parsed as a date. Supplying no date performs this operation on the Markdown file for the current day.<br/><br/>
+Usage: todo p [date]                                         
+</td>
+</tr>
+<tr>
+<td>
+ph<br/>
+printandshowhtml
+</td>
+<td>
+This command is equivalent to printhtml followed by showhtml (p, h).<br/><br/>
+Usage: todo ph [date]
+</td>
+</tr>
+<tr>
+<td>
+push
+</td>
+<td>
+Executes a git push.<br/><br/>
+Usage: todo push
+</td>
+</tr>
+<tr>
+<td>
+rm<br/>
+remove<br/>
+delete
+</td>
+<td>
+Deletes the file. If git is enabled, the command performs a
+remove in git.<br/><br/>
+Usage: todo rm [date]
+</td>
+</tr>
+<tr>
+<td>
+s<br/>
+sync
+</td>
+<td>
+Executes a commit and push operation sequentially.<br/><br/>
+Usage: todo s [commit message]
+</td>
+</tr>
+<tr>
+<td>
+sc<br/>
+showconflicts
+</td>
+<td>
+Opens in the text editor all of the files for which conflicts exist<br/><br/>
+Usage: todo sc
+</td>
+</tr>
+<tr>
+<td>
+settings<br/>
+showsettings
+</td>
+<td>
+Shows the settings file in the default editor.<br/><br/>
+Usage: todo settings
+</td>
+</tr>
+<tr>
+<td>
+t<br/>
+topic
+</td>
+<td>
+Creates or shows a todo list relating to a single topic.<br/><br/>
+Usage: todo t (topic name)
+</td>
+</tr>
+<tr>
+<td>
+u<br/>
+unarchive
+</td>
+<td>
+Un-archives the markdown file for a given date. The file is moved form the subfolder back to the main todo folder. The name of the archive folder is specified in settings.json. Also in settings.json can be specified whether the file is moved simply in the file system, or by using git mv.<br/><br/>
+Usage: todo u [date]                                      
 </td>
 </tr>
 <table>
-
-| c                | Gathers the current modifications into a commit. Commit       |
-| commit           | message is optional.                                          |
-|                  |                                                               |
-|                  | Usage: todo c [commit message]                                |
-| ---------------- | ------------------------------------------------------------- |
-| h                | Opens the browser specified in the settings file and loads    |
-| html             | the Html file for the given date.                             |
-| showhtml         |                                                               |
-|                  | Usage: todo h [date]                                          |
-| ---------------- | ------------------------------------------------------------- |
-| help             | Displays this help screen.                                    |
-| about            |                                                               |
-|                  | Usage: todo help                                              |
-| ---------------- | ------------------------------------------------------------- |
-| i                | Initialises the current folder with a default                 |
-| init             | todo-settings.json file                                       |
-|                  |                                                               |
-|                  | Usage: todo init                                              |
-| ---------------- | ------------------------------------------------------------- |
-| k                | Deletes all the html files in the todo folder and the archive |
-| killhtml         | subfolder                                                     |
-|                  |                                                               |
-|                  | Usage: todo k                                                 |
-| ---------------- | ------------------------------------------------------------- |
-| l                | Provides a list of all todo lists. Switches are as follows:-  |
-| list             | m -- main todo folder.                                        |
-|                  | a -- archive folder.                                          |
-|                  | d -- lists relating to days.                                  |
-|                  | t -- lists relating to topics.                                |
-|                  |                                                               |
-|                  | Usage: todo l [m                                              | a][d | t] |
-| ---------------- | ------------------------------------------------------------- |
-| p                | Converts a Markdown file to HTML. Can be used with anything   |
-| print            | that can be parsed as a date. Supplying no date performs this |
-| printhtml        | operation on the Markdown file for the current day.           |
-|                  |                                                               |
-|                  | Usage: todo p [date]                                          |
-| ---------------- | ------------------------------------------------------------- |
-| ph               | This command is equivalent to printhtml followed by showhtml  |
-| printandshowhtml | (p, h).                                                       |
-|                  |                                                               |
-|                  | Usage: todo ph [date]                                         |
-| ---------------- | ------------------------------------------------------------- |
-| push             | Executes a git push.                                          |
-|                  |                                                               |
-|                  | Usage: todo push                                              |
-| ---------------- | ------------------------------------------------------------- |
-| rm               | Deletes the file. If git is enabled, the command performs a   |
-| remove           | remove in git.                                                |
-| delete           |                                                               |
-|                  | Usage: todo rm [date]                                         |
-| ---------------- | ------------------------------------------------------------- |
-| s                | Executes a commit and push operation sequentially.            |
-| sync             |                                                               |
-|                  | Usage: todo s [commit message]                                |
-| ---------------- | ------------------------------------------------------------- |
-| sc               | Opens in the text editor all of the files for which conflicts |
-| showconflicts    | exist                                                         |
-|                  |                                                               |
-|                  | Usage: todo sc                                                |
-| ---------------- | ------------------------------------------------------------- |
-| settings         | Shows the settings file in the default editor.                |
-| showsettings     |                                                               |
-|                  | Usage: todo settings                                          |
-| ---------------- | ------------------------------------------------------------- |
-| t                | Creates or shows a todo list relating to a single topic.      |
-| topic            |                                                               |
-|                  | Usage: todo t (topic name)                                    |
-| ---------------- | ------------------------------------------------------------- |
-| u                | Un-archives the markdown file for a given date. The file is   |
-| unarchive        | moved form the subfolder back to the main todo folder. The    |
-|                  | name of the archive folder is specified in settings.json.     |
-|                  | Also in settings.json can be specified whether the file is    |
-|                  | moved simply in the file system, or by using git mv.          |
-|                  |                                                               |
-|                  | Usage: todo u [date]                                          |
-| ---------------- | ------------------------------------------------------------- |
-
 
 Notes:
 
