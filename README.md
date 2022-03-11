@@ -26,8 +26,8 @@ Description
 createorshow
 </td>
 <td>
-Creates or shows a markdown file for the date supplied. This is the default command and can be executed by typing anything that can be parsed as a date. Supplying no date assumes the current day.<br/><br/>                                                             
-Usage: todo [date]                                           
+Creates or shows a markdown file for the date supplied. This is the default command and can be executed by typing anything that can be parsed as a date. Supplying no date assumes the current day.<br/><br/>
+Usage: todo [date]
 </td>
 </tr>
 <tr>
@@ -64,7 +64,7 @@ Usage: todo h [date]
 <tr>
 <td>
 help<br/>
-about            
+about
 </td>
 <td>
 Displays this help screen.<br/><br/>
@@ -93,7 +93,7 @@ Usage: todo k
 </tr>
 <tr>
 <td>
-l<br/><br/>
+l<br/>
 list
 </td>
 <td>
@@ -103,7 +103,7 @@ Provides a list of all todo lists. Switches are as follows:-<br/><br/>
 <li>a -- archive folder.</li>
 <li>d -- lists relating to days.</li>
 <li>t -- lists relating to topics.</li>
-</ul><br/><br/>
+</ul><br/>
 Usage: todo l [m | a] [d | t]
 </td>
 </tr>
@@ -208,15 +208,13 @@ typing anything that can be parsed as a date after the word todo.
 
 Valid date formats:-
 
-   "y", "yesterday"  yesterday
-   [empty string], ".", "today"  today
-   "tm", "tomorrow"  tomorrow
-   [day]  maps to the day/month/year which is nearest in time to today
-   [day]/[month]  maps to the day/month which is nearest in time to today
-   +[daycount]  positive offset a number of days from today
-   -[daycount]  negative offset a number of days from today
+   "y", "yesterday" &#8594; yesterday<br/>
+   [empty string], ".", "today" &#8594; today<br/>
+   "tm", "tomorrow" &#8594; tomorrow<br/>
+   [day] &#8594; the day/month/year which is nearest in time to today<br/>
+   [day]/[month] &#8594; the day/month which is nearest in time to today<br/>
+   +[daycount] &#8594; positive offset a number of days from today<br/>
+   -[daycount] &#8594; negative offset a number of days from today<br/><br/>
 
-[Commit Message]  In the Commit and Sync commands, the commit message is
-optional. If none is supplied, then a standard message detailing date and time
-of the commit will be used.
+[Commit Message] &#8594; In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing date and time of the commit will be used.
 
