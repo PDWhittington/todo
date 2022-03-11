@@ -239,6 +239,17 @@ The following commands can be invoked from the command line:-
             Usage: todo u [date]
         </td>
     </tr>
+    <tr>
+        <td valign="top">
+            w<br />
+            web<br />
+            www
+        </td>
+        <td valign="top">
+            Opens <a href="https://github.com/PDWhittington/todo">the project page</a> in the default browser<br /><br />
+            Usage: todo w
+        </td>
+    </tr>
 <table>
 
 Notes:

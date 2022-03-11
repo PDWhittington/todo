@@ -2,7 +2,7 @@
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -17,10 +17,10 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
-    private readonly IFileOpener _fileOpener;
+    private readonly ITextFileLauncher _fileOpener;
 
     protected CreateOrShowCommandExecutorBase(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IFileOpener fileOpener, IOutputWriter outputWriter)
+        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
@@ -48,7 +48,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
             }
         }
 
-        _fileOpener.LaunchFilesInDefaultEditor(pathInfo.Path);
+        _fileOpener.LaunchFiles(pathInfo.Path);
     }
 
     protected abstract FilePathInfo GetFilePathInfo(TCommandType createOrShowCommand);

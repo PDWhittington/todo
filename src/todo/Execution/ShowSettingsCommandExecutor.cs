@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.UI;
 
@@ -11,10 +11,10 @@ namespace Todo.Execution;
 public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsCommand>, IShowSettingsCommandExecutor
 {
     private readonly ISettingsPathProvider _settingsPathProvider;
-    private readonly IFileOpener _fileOpener;
+    private readonly ITextFileLauncher _fileOpener;
 
     public ShowSettingsCommandExecutor(ISettingsPathProvider settingsPathProvider,
-        IFileOpener fileOpener, IOutputWriter outputWriter)
+        ITextFileLauncher fileOpener, IOutputWriter outputWriter)
         : base(outputWriter)
     {
         _settingsPathProvider = settingsPathProvider;
@@ -27,6 +27,6 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
 
         OutputWriter.WriteLine($"Opening {path}");
 
-        _fileOpener.LaunchFilesInDefaultEditor(path);
+        _fileOpener.LaunchFiles(path);
     }
 }

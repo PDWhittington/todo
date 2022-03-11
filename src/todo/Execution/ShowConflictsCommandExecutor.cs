@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Execution;
-using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -17,10 +17,10 @@ public class ShowConflictsCommandExecutor : CommandExecutorBase<ShowConflictsCom
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
-    private readonly IFileOpener _fileOpener;
+    private readonly ITextFileLauncher _fileOpener;
 
     public ShowConflictsCommandExecutor(IOutputWriter outputWriter, IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IFileOpener fileOpener) : base(outputWriter)
+        IGitInterface gitInterface, ITextFileLauncher fileOpener) : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
@@ -55,6 +55,6 @@ public class ShowConflictsCommandExecutor : CommandExecutorBase<ShowConflictsCom
             .Where(File.Exists)
             .ToArray();
 
-        _fileOpener.LaunchFilesInDefaultEditor(paths);
+        _fileOpener.LaunchFiles(paths);
     }
 }

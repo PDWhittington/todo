@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Todo.AppLaunching;
 using Todo.AssemblyOperations;
 using Todo.CommandFactories;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.Dates.Naming;
@@ -36,6 +38,7 @@ internal static class Initialise
                 .AddLogging()
 
                 /* Base functionality */
+                .AddAppLaunchingOperations()
                 .AddAssemblyOperations()
                 .AddStateAndConfig()
                 .AddDateParsing()
@@ -58,6 +61,11 @@ internal static class Initialise
 
         #region Base functionality
 
+        private static IServiceCollection AddAppLaunchingOperations(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
+                .AddSingleton<ITextFileLauncher, TextFileLauncher>();
+                
         private static IServiceCollection AddAssemblyOperations(this IServiceCollection serviceCollection)
             => serviceCollection
                 .AddSingleton<IManifestStreamProvider, ManifestStreamProvider>();
@@ -101,7 +109,6 @@ internal static class Initialise
                 .AddSingleton<IDateListPathResolver, DateListPathResolver>()
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
-                .AddSingleton<IFileOpener, FileOpener>()
                 .AddSingleton<IFileDeleter, FileDeleter>();
 
         private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)

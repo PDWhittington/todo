@@ -1,17 +1,17 @@
 ﻿using System.Diagnostics;
-using Todo.Contracts.Services.FileSystem;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.FileSystem;
+namespace Todo.AppLaunching;
 
-public class FileOpener : IFileOpener
+public class TextFileLauncher : ITextFileLauncher
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IPathHelper _pathHelper;
     private string? _textEditorPath;
 
-    public FileOpener(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
+    public TextFileLauncher(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
     {
         _configurationProvider = configurationProvider;
         _pathHelper = pathHelper;
@@ -26,7 +26,7 @@ public class FileOpener : IFileOpener
         return _textEditorPath;
     }
 
-    public void LaunchFilesInDefaultEditor(params string [] paths)
+    public void LaunchFiles(params string [] paths)
     {
         foreach (var path in paths)
         {

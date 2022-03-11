@@ -2,8 +2,8 @@
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Execution;
-using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
@@ -25,7 +25,7 @@ public class CreateOrShowTopicListCommandExecutor
         ITopicListPathResolver topicListPathResolver,
         ITopicListMarkdownSubstitutionsMaker topicListMarkdownSubstitutionsMaker,
         IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IFileOpener fileOpener, IOutputWriter outputWriter)
+        ITextFileLauncher fileOpener, IOutputWriter outputWriter)
         : base(configurationProvider, gitInterface, fileOpener, outputWriter)
     {
         _topicListMarkdownTemplateProvider = topicListMarkdownTemplateProvider;
