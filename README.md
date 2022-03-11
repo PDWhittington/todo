@@ -257,4 +257,3 @@ Valid date formats:-
 * -(daycount) &#8594; negative offset a number of days from today<br/>
 
 [Commit Message] &#8594; In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing the date and time of the commit will be used.
-
