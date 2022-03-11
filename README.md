@@ -254,7 +254,7 @@ Valid date formats:-
 * (day) &#8594; the day/month/year which is nearest in time to today<br/>
 * (day)/(month) &#8594; the day/month which is nearest in time to today<br/>
 * +(daycount) &#8594; positive offset a number of days from today<br/>
-* -(daycount) &#8594; negative offset a number of days from today<br/><br/>
+* -(daycount) &#8594; negative offset a number of days from today<br/>
 
 [Commit Message] &#8594; In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing the date and time of the commit will be used.
 
