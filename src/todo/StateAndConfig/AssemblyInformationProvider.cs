@@ -22,7 +22,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
     public DateTime GetBuildTime()
     {
         var dteStr = _manifestStreamProvider
-            .GetStringFromManifest(_constantsProvider.BuiltTime.FullName)
+            .GetStringFromManifest(_constantsProvider.BuildTime.FullName)
             .Trim();
 
         return DateTime.Parse(dteStr);

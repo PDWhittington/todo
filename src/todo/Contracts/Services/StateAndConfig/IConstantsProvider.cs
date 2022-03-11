@@ -16,5 +16,11 @@ public interface IConstantsProvider
 
     ManifestInfo CommitHash { get; }
 
-    ManifestInfo BuiltTime { get; }
+    ManifestInfo BuildTime { get; }
+
+    string ProjectAuthor { get; }
+
+    string ProjectAuthorContactDetails { get; }
+
+    string ProjectWebsite { get; }
 }

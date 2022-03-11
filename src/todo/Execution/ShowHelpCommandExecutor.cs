@@ -19,16 +19,19 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _consoleTextFormatter;
     private readonly IAssemblyInformationProvider _assemblyInformationProvider;
+    private readonly IConstantsProvider _constantsProvider;
 
     public ShowHelpCommandExecutor(IOutputWriter outputWriter,
         IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
-        IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider assemblyInformationProvider)
+        IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider assemblyInformationProvider,
+        IConstantsProvider constantsProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
         _consoleTextFormatter = consoleTextFormatter;
         _assemblyInformationProvider = assemblyInformationProvider;
+        _constantsProvider = constantsProvider;
     }
 
     public override void Execute(ShowHelpCommand command)
@@ -48,6 +51,10 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
             .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
             .AppendLine($"OS description: {RuntimeInformation.OSDescription}")
+            .AppendLine()
+            .AppendLine($"Project author: {_constantsProvider.ProjectAuthor} " + 
+                $"({_constantsProvider.ProjectAuthorContactDetails})")
+            .AppendLine($"Project website: {_constantsProvider.ProjectWebsite}")
             .AppendLine()
             .AppendLine("The following commands are available in this app:-")
             .AppendLine()

@@ -11,9 +11,22 @@ public class ConstantsProvider : IConstantsProvider
     public string SettingsFileName => _settingsFileName;
 
     public ManifestInfo DefaultSettingsFile { get; } = ManifestInfo.Of(_settingsFileName);
+    
     public ManifestInfo DayListMarkdownTemplate { get; } = ManifestInfo.Of("day-list-template.md");
+    
     public ManifestInfo TopicListMarkdownTemplate { get; } = ManifestInfo.Of("topic-list-template.md");
+    
     public ManifestInfo DefaultHtmlTemplate { get; } = ManifestInfo.Of("template.html");
+    
     public ManifestInfo CommitHash { get; } = ManifestInfo.Of("commithash.txt");
-    public ManifestInfo BuiltTime { get; } = ManifestInfo.Of("buildtime.txt");
+    
+    public ManifestInfo BuildTime { get; } = ManifestInfo.Of("buildtime.txt");
+
+    public string ProjectAuthor { get; } = "Phil Whittington";
+
+    public string ProjectAuthorContactDetails { get; } = "Twitter: @PDWhittington, DMs open";
+
+
+    public string ProjectWebsite { get; } = "https://github.com/PDWhittington/todo";
+
 }
