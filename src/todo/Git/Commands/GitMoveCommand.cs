@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using LibGit2Sharp;
 using Todo.Contracts.Services.UI;
 using Todo.Git.Results;
@@ -9,7 +8,10 @@ namespace Todo.Git.Commands;
 
 public class GitMoveCommand : GitCommandBase<VoidResult>
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public string SourcePath { get; }
+
+    // ReSharper disable once MemberCanBePrivate.Global
     public string DestinationPath { get; }
 
     public GitMoveCommand(string sourcePath, string destinationPath)

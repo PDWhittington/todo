@@ -6,6 +6,9 @@ public interface IPathHelper
 
     string GetRootedToWorkingFolder(string path);
 
+    // ReSharper disable once UnusedMemberInSuper.Global
+    string GetAssemblyFolder();
+
     string GetAssemblyLocation();
 
     string GetWorkingFolder();

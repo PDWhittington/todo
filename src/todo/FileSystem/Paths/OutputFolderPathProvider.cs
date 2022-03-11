@@ -7,14 +7,12 @@ namespace Todo.FileSystem.Paths;
 public class OutputFolderPathProvider : IOutputFolderPathProvider
 {
     private readonly IConfigurationProvider _configurationProvider;
-    private readonly IPathHelper _pathHelper;
     private readonly ISettingsPathProvider _settingsPathProvider;
 
-    public OutputFolderPathProvider(IConfigurationProvider configurationProvider, IPathHelper pathHelper,
+    public OutputFolderPathProvider(IConfigurationProvider configurationProvider,
         ISettingsPathProvider settingsPathProvider)
     {
         _configurationProvider = configurationProvider;
-        _pathHelper = pathHelper;
         _settingsPathProvider = settingsPathProvider;
     }
 

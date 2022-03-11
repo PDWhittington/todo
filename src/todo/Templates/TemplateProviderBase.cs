@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.FileSystem;
 
 namespace Todo.Templates;
+
 
 public abstract class TemplateProviderBase : FileReaderBase
 {
@@ -64,5 +64,6 @@ public abstract class TemplateProviderBase : FileReaderBase
 
     protected abstract FileTypeEnum GetFileType();
 
+    // ReSharper disable once UnusedMember.Global
     protected abstract string GetTemplateDescription();
 }

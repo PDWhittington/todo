@@ -16,10 +16,16 @@ public class ConfigurationInfo
 
     #region Paths to templates
 
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string DayListMarkdownTemplatePath { get; }
 
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string TopicListMarkdownTemplatePath { get; }
 
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string HtmlTemplatePath { get; }
 
     #endregion

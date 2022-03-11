@@ -7,6 +7,7 @@ namespace Todo.Git.Commands;
 
 public class GitRemoveCommand : GitCommandBase<VoidResult>
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public string [] Paths { get; }
 
     public GitRemoveCommand(params string [] paths)

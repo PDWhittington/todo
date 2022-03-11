@@ -7,6 +7,7 @@ namespace Todo.Git.Commands;
 
 public class GitCommitCommand : GitCommandBase<CommitResult>
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public string Message { get; }
 
     public GitCommitCommand(string message)

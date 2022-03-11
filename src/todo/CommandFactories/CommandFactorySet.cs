@@ -44,7 +44,7 @@ public class CommandFactorySet : ICommandFactorySet
 
         if (wordsDuplicated.Any())
         {
-            exceptions.Add(new Exception($"The following words are taken by more " +
+            exceptions.Add(new Exception("The following words are taken by more " +
                 $"than one CommandFactory: {string.Join(',',wordsDuplicated)}"));
         }
 
@@ -55,7 +55,7 @@ public class CommandFactorySet : ICommandFactorySet
         switch (defaultCommandFactories.Length)
         {
             case 0:
-                exceptions.Add(new Exception($"There are no CommandFactory objects marked as " +
+                exceptions.Add(new Exception("There are no CommandFactory objects marked as " +
                                              $"the default. {nameof(CommandFactoryBase<CommandBase>.IsDefaultCommandFactory)} " +
                                              "should be true for one and only one class"));
                 break;

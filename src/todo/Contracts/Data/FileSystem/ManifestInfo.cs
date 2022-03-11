@@ -4,6 +4,7 @@ namespace Todo.Contracts.Data.FileSystem;
 
 public struct ManifestInfo
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public string AssemblyName { get; }
 
     public string FileName { get; }
@@ -17,6 +18,7 @@ public struct ManifestInfo
         FullName = $"{AssemblyName}.{FileName}";
     }
 
+    // ReSharper disable once MemberCanBePrivate.Global
     public static ManifestInfo Of(string assemblyName, string fileName)
         => new(assemblyName, fileName);
 

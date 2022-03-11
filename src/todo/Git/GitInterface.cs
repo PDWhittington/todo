@@ -8,17 +8,15 @@ namespace Todo.Git;
 
 public class GitInterface : IGitInterface
 {
-    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
     private readonly IOutputWriter _outputWriter;
     private readonly IRepository _repository;
 
     public GitInterface(IOutputFolderPathProvider outputFolderPathProvider,
         IOutputWriter outputWriter)
     {
-        _outputFolderPathProvider = outputFolderPathProvider;
         _outputWriter = outputWriter;
 
-        var repoPath = Repository.Discover(_outputFolderPathProvider.GetRootedOutputFolder());
+        var repoPath = Repository.Discover(outputFolderPathProvider.GetRootedOutputFolder());
         _repository = new Repository(repoPath);
     }
 
