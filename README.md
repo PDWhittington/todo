@@ -45,10 +45,6 @@ Once you have the app, add its published location to your PATH environment varia
 
 The following commands can be invoked from the command line:-
 
-<style>
-    td {vertical-align: top}
-</style>
-
 <table>
     <tr>
         <th>
@@ -260,5 +256,5 @@ Valid date formats:-
 * +(daycount) &#8594; positive offset a number of days from today<br/>
 * -(daycount) &#8594; negative offset a number of days from today<br/><br/>
 
-[Commit Message] &#8594; In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing date and time of the commit will be used.
+[Commit Message] &#8594; In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing the date and time of the commit will be used.
 
