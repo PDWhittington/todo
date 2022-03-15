@@ -1,12 +1,9 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
-using Todo.Git.Commands;
-using Todo.Git.Results;
 
 namespace Todo.Execution;
 
