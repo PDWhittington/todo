@@ -10,14 +10,14 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class KillHtmlCommandExecutor : CommandExecutorBase<KillHtmlCommand>, IKillHtmlCommandExecutor
 {
-    private readonly IOutputFolderPathProvider _pathRootingProvider;
+    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
     private readonly IFileDeleter _fileDeleter;
 
     public KillHtmlCommandExecutor(IOutputFolderPathProvider pathRootingProvider,
         IFileDeleter fileDeleter, IOutputWriter outputWriter)
         : base(outputWriter)
     {
-        _pathRootingProvider = pathRootingProvider;
+        _outputFolderPathProvider = pathRootingProvider;
         _fileDeleter = fileDeleter;
     }
 
@@ -25,7 +25,7 @@ public class KillHtmlCommandExecutor : CommandExecutorBase<KillHtmlCommand>, IKi
     {
         OutputWriter.WriteLine("Deleting html files in the output and archive folders.");
 
-        _fileDeleter.Delete(_pathRootingProvider.GetRootedOutputFolder(), "*.html");
-        _fileDeleter.Delete(_pathRootingProvider.GetRootedArchiveFolder(), "*.html");
+        _fileDeleter.Delete(_outputFolderPathProvider.GetRootedOutputFolder(), "*.html");
+        _fileDeleter.Delete(_outputFolderPathProvider.GetRootedArchiveFolder(), "*.html");
     }
 }
