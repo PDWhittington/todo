@@ -250,6 +250,15 @@ The following commands can be invoked from the command line:-
             Usage: todo w
         </td>
     </tr>
+        <tr>
+        <td valign="top">
+            which<br />
+        </td>
+        <td valign="top">
+            Reveals the location of the todo executable. Running this command is equivalent to invoking 'which todo' in bash, but can be run on any platform.<br /><br />
+            Usage: todo which
+        </td>
+    </tr>
 <table>
 
 Notes:
