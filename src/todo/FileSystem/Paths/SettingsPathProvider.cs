@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Exceptions;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -39,7 +41,8 @@ public class SettingsPathProvider : ISettingsPathProvider
 
     private FilePathInfo GetSettingsPath()
     {
-        var folderCandidates = GetAncestorsIncludingSelf(_pathHelper.GetWorkingFolder());
+        var folderCandidates = GetAncestorsIncludingSelf(
+            _pathHelper.GetWorkingFolder()).ToArray();
 
         foreach (var folderCandidate in folderCandidates)
         {
@@ -48,7 +51,7 @@ public class SettingsPathProvider : ISettingsPathProvider
             if (pathCandidate.Exists()) return pathCandidate;
         }
 
-        throw new Exception($"Cannot find {_constantsProvider.SettingsFileName}");
+        throw new SettingsNotFoundException(folderCandidates);
     }
 
     private FilePathInfo GetSettingsPathInFolder(string folder)
