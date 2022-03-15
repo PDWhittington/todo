@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Text.Json;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
+using Utf8Json;
 
 namespace Todo.StateAndConfig;
 
@@ -18,12 +18,12 @@ public class ConfigurationProvider : IConfigurationProvider
     {
         _settingsPathProvider = settingsPathProvider;
         _constantsProvider = constantsProvider;
-        _configuration = new Lazy<ConfigurationInfo>(PopulateAndReturnConfiguration);
+        _configuration = new Lazy<ConfigurationInfo>(GetConfiguration);
     }
 
     public ConfigurationInfo Config => _configuration.Value;
 
-    private ConfigurationInfo PopulateAndReturnConfiguration()
+    private ConfigurationInfo GetConfiguration()
     {
         var path =  _settingsPathProvider.GetSettingsPathInHierarchy().Path ??
                     throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
@@ -31,9 +31,7 @@ public class ConfigurationProvider : IConfigurationProvider
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-        var serializationOptions = new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip };
-
-        var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream, serializationOptions);
+        var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
 
         return configuration ?? throw new Exception(
             $"Configuration could not be loaded from {path}");
