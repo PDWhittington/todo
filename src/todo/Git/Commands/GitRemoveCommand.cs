@@ -19,22 +19,24 @@ public class GitRemoveCommand : GitCommandBase<VoidResult>
 
     internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
     {
+        bool StatusEntryIsPath(StatusEntry statusEntry, string path)
+        {
+            var rootedPath = Path.Combine(repo.Info.WorkingDirectory, statusEntry.FilePath);
+            var fileInfo = new FileInfo(rootedPath);
+            return fileInfo.FullName.Equals(path);
+        }
+
         try
         {
             foreach (var path in Paths)
             {
-                var indexEntries = repo
+                var pathInIndex = repo
                     .RetrieveStatus()
-                    .Where(x => x.State == FileStatus.NewInIndex)
-                    .Select(x => Path.Combine(repo.Info.WorkingDirectory, x.FilePath))
-                    .ToArray();
+                    .SingleOrDefault(x => StatusEntryIsPath(x, path));
 
-                var pathInIndex = repo.Index.SingleOrDefault(
-                    x => path.Equals(Path.Combine(repo.Info.WorkingDirectory, x.Path)));
+                if (pathInIndex == null) continue;
 
-                if (pathInIndex is null) continue;
-
-                repo.Index.Remove(pathInIndex.Path);
+                repo.Index.Remove(pathInIndex.FilePath);
             }
 
             LibGit2Sharp.Commands.Remove(repo, Paths);
