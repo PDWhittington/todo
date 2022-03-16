@@ -255,7 +255,7 @@ The following commands can be invoked from the command line:-
             which<br />
         </td>
         <td valign="top">
-            Reveals the location of the todo executable. Running this command is equivalent to invoking 'which todo' in bash, but can be run on any platform.<br /><br />
+            Reveals the location of the todo executable. Running this command is equivalent to invoking 'which todo' in bash, but can be run on any platform. In fact, 		  a 'boiler plate' of information is produced. <br /><br />
             Usage: todo which
         </td>
     </tr>

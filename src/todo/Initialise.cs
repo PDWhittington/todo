@@ -77,7 +77,8 @@ internal static class Initialise
                 .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
                 .AddSingleton<ICommandProvider, CommandProvider>()
                 .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
-                .AddSingleton<IAssemblyInformationProvider, AssemblyInformationProvider>();
+                .AddSingleton<IAssemblyInformationProvider, AssemblyInformationProvider>()
+                .AddSingleton<IBoilerPlateProvider, BoilerPlateProvider>();
 
         private static IServiceCollection AddDateParsing(this IServiceCollection serviceCollection)
             => serviceCollection

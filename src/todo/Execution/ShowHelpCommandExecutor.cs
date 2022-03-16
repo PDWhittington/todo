@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.HelpMessages;
@@ -20,11 +19,12 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly IConsoleTextFormatter _consoleTextFormatter;
     private readonly IAssemblyInformationProvider _assemblyInformationProvider;
     private readonly IConstantsProvider _constantsProvider;
+    private readonly IBoilerPlateProvider _boilerPlateProvider;
 
     public ShowHelpCommandExecutor(IOutputWriter outputWriter,
         IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
         IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider assemblyInformationProvider,
-        IConstantsProvider constantsProvider)
+        IConstantsProvider constantsProvider, IBoilerPlateProvider boilerPlateProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
@@ -32,6 +32,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
         _consoleTextFormatter = consoleTextFormatter;
         _assemblyInformationProvider = assemblyInformationProvider;
         _constantsProvider = constantsProvider;
+        _boilerPlateProvider = boilerPlateProvider;
     }
 
     public override void Execute(ShowHelpCommand command)
@@ -41,21 +42,11 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
             .Select(cf =>
                 new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
 
-        var sb = new StringBuilder()
-            .AppendLine($"Assembly location: {_assemblyInformationProvider.AssemblyLocation()}")
-            .AppendLine($"Todo version (commit): {_assemblyInformationProvider.GetCommitHash()}")
-            .AppendLine($"Build time: {_assemblyInformationProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}")
-            .AppendLine($"DEBUG flag: {_assemblyInformationProvider.DebugFlag()}")
-            .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
-            .AppendLine()
-            .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
-            .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
-            .AppendLine($"OS description: {RuntimeInformation.OSDescription}")
-            .AppendLine()
-            .AppendLine($"Project author: {_constantsProvider.ProjectAuthor} " + 
-                $"({_constantsProvider.ProjectAuthorContactDetails})")
-            .AppendLine($"Project website: {_constantsProvider.ProjectWebsite}")
-            .AppendLine()
+        var sb = new StringBuilder();
+
+        _boilerPlateProvider.MakeBoilerPlate(sb);
+
+        sb
             .AppendLine("The following commands are available in this app:-")
             .AppendLine()
             .AppendLine(_consoleTextFormatter.CreateTable(commandHelpMessages))
