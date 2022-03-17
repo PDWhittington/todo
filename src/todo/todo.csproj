@@ -43,7 +43,7 @@
     <EmbeddedResource Include="buildtime.txt" />
   </ItemGroup>
 
-  <!-- Pere-build event to populate the above files -->
+  <!-- Pre-build event to populate the above files -->
 
   <PropertyGroup>
     <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
