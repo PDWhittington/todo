@@ -65,7 +65,7 @@ internal static class Initialise
             => serviceCollection
                 .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
                 .AddSingleton<ITextFileLauncher, TextFileLauncher>();
-                
+
         private static IServiceCollection AddAssemblyOperations(this IServiceCollection serviceCollection)
             => serviceCollection
                 .AddSingleton<IManifestStreamProvider, ManifestStreamProvider>();
@@ -110,7 +110,8 @@ internal static class Initialise
                 .AddSingleton<IDateListPathResolver, DateListPathResolver>()
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
-                .AddSingleton<IFileDeleter, FileDeleter>();
+                .AddSingleton<IFileDeleter, FileDeleter>()
+                .AddSingleton<IFolderCreator, FolderCreator>();
 
         private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection

@@ -42,7 +42,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             File.WriteAllText(pathInfo.Path, outputText);
 
-            if (_configurationProvider.Config.UseGit)
+            if (_configurationProvider.ConfigInfo.Configuration.UseGit)
             {
                 _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(new GitAddCommand(pathInfo.Path));
             }

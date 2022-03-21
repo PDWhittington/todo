@@ -12,21 +12,21 @@ public class ConfigurationProvider : IConfigurationProvider
 {
     private readonly ISettingsPathProvider _settingsPathProvider;
     private readonly IConstantsProvider _constantsProvider;
-    private readonly ResettableLazy<Configuration> _configuration;
+    private readonly ResettableLazy<ConfigurationInfo> _configuration;
 
     public ConfigurationProvider(ISettingsPathProvider settingsPathProvider,
         IConstantsProvider constantsProvider)
     {
         _settingsPathProvider = settingsPathProvider;
         _constantsProvider = constantsProvider;
-        _configuration = new ResettableLazy<Configuration>(GetConfiguration);
+        _configuration = new ResettableLazy<ConfigurationInfo>(GetConfiguration);
     }
 
-    public Configuration Config => _configuration.Value;
+    public ConfigurationInfo ConfigInfo => _configuration.Value;
 
     public void Reset() => _configuration.Reset();
 
-    private Configuration GetConfiguration()
+    private ConfigurationInfo GetConfiguration()
     {
         var path =  _settingsPathProvider.GetSettingsPathInHierarchy().Path ??
                     throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
@@ -34,9 +34,9 @@ public class ConfigurationProvider : IConfigurationProvider
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream);
+        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream)
+                            ?? throw new Exception($"Configuration could not be loaded from {path}");
 
-        return configuration ?? throw new Exception(
-            $"Configuration could not be loaded from {path}");
+        return ConfigurationInfo.Of(path, configuration);
     }
 }

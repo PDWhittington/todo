@@ -22,7 +22,7 @@ public class TextFileLauncher : ITextFileLauncher
     private string GetTextEditorPath()
     {
         _textEditorPath = _pathHelper.ResolveIfNotRooted(
-            _configurationProvider.Config.TextEditorPath.GetPathForThisOs().Path);
+            _configurationProvider.ConfigInfo.Configuration.TextEditorPath.GetPathForThisOs().Path);
         return _textEditorPath;
     }
 

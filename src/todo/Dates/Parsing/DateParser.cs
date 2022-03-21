@@ -41,7 +41,7 @@ public class DateParser : IDateParser
 
     private DateOnly GetTodayWithMidnightAdjusted()
     {
-        var newDayThreshold = _configurationProvider.Config.NewDayThreshold ?? new TimeSpan(0, 0, 0);
+        var newDayThreshold = _configurationProvider.ConfigInfo.Configuration.NewDayThreshold ?? new TimeSpan(0, 0, 0);
 
         return DateTime.Now.TimeOfDay < newDayThreshold
             ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))

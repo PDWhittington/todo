@@ -21,12 +21,12 @@ public class HtmlFileLauncher : IHtmlFileLauncher
     private static extern int SetForegroundWindow(IntPtr hwnd);
 
     private readonly IConfigurationProvider _configurationProvider;
-    
+
     private readonly IPathHelper _pathHelper;
 
     private readonly IOutputWriter _outputWriter;
 
-    public HtmlFileLauncher(IConfigurationProvider configurationProvider, 
+    public HtmlFileLauncher(IConfigurationProvider configurationProvider,
         IPathHelper pathHelper, IOutputWriter outputWriter)
     {
         _configurationProvider = configurationProvider;
@@ -44,7 +44,7 @@ public class HtmlFileLauncher : IHtmlFileLauncher
 
     private void LaunchSingleFile(string path)
     {
-        var browserLaunchInfo = _configurationProvider.Config.BrowserLaunch.GetPathForThisOs();
+        var browserLaunchInfo = _configurationProvider.ConfigInfo.Configuration.BrowserLaunch.GetPathForThisOs();
 
         var browserPath = _pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
 

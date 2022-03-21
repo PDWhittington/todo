@@ -139,7 +139,7 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
             .SelectMany(x => x.HelpWords)
             .Max(word => word.Length);
 
-        var messageColumnWidth = _configurationProvider.Config.ConsoleWidth - wordColumnWidth - 3;
+        var messageColumnWidth = _configurationProvider.ConfigInfo.Configuration.ConsoleWidth - wordColumnWidth - 3;
 
         return new ColumnWidths
         {

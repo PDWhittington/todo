@@ -4,7 +4,7 @@ namespace Todo.Contracts.Services.StateAndConfig;
 
 public interface IConfigurationProvider
 {
-    public Configuration Config { get; }
+    public ConfigurationInfo ConfigInfo { get; }
 
     public void Reset();
 }
