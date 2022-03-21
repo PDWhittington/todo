@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Todo.Contracts.Data.Config;
 
-public class ConfigurationInfo
+public class Configuration
 {
 
     #region Paths to third-party tools
@@ -49,7 +49,7 @@ public class ConfigurationInfo
     public int ConsoleWidth { get; }
 
     [JsonConstructor]
-    public ConfigurationInfo(
+    public Configuration(
         PerOsFilePaths browserLaunch, PerOsFilePaths textEditorPath,
         string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
         string htmlTemplatePath,
