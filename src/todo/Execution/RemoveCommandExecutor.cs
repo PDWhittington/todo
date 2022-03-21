@@ -34,7 +34,7 @@ public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemove
         var pathForFile = _dateListPathResolver.ResolvePathFor(
             command.Date, FileTypeEnum.Markdown, false);
 
-        if (_configurationProvider.Config.UseGit)
+        if (_configurationProvider.ConfigInfo.Configuration.UseGit)
         {
             var gitRemoveCommand = new GitRemoveCommand(pathForFile.Path);
             var gitResult = _gitInterface.RunGitCommand<GitRemoveCommand, VoidResult>(gitRemoveCommand);

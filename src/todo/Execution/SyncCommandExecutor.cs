@@ -26,7 +26,7 @@ public class SyncCommandExecutor : CommandExecutorBase<SyncCommand>, ISyncComman
 
     public override void Execute(SyncCommand syncCommand)
     {
-        if (!_configurationProvider.Config.UseGit)
+        if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
         OutputWriter.WriteLine("Executing a commit and a push command.");

@@ -13,7 +13,8 @@ public class DateListPathResolver : PathResolverBase<DateOnly>, IDateListPathRes
 
     public override string GetRegExForThisFileType()
     {
-        var fileNameFragments = GetFragments(ConfigurationProvider.Config.TodoListFilenameFormat,
+        var fileNameFragments = GetFragments(
+            ConfigurationProvider.ConfigInfo.Configuration.TodoListFilenameFormat,
             '{', '}', _ => ".*");
 
         return string.Join("", fileNameFragments) + $".{MarkdownExtension}";
@@ -21,7 +22,8 @@ public class DateListPathResolver : PathResolverBase<DateOnly>, IDateListPathRes
 
     protected override string FileNameWithoutExtension(DateOnly dateOnly)
     {
-        var fileNameFragments = GetFragments(ConfigurationProvider.Config.TodoListFilenameFormat,
+        var fileNameFragments = GetFragments(
+            ConfigurationProvider.ConfigInfo.Configuration.TodoListFilenameFormat,
             '{', '}', dateOnly.ToString);
 
         return string.Join("", fileNameFragments);

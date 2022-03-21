@@ -29,7 +29,7 @@ public class ShowConflictsCommandExecutor : CommandExecutorBase<ShowConflictsCom
 
     public override void Execute(ShowConflictsCommand command)
     {
-        if (!_configurationProvider.Config.UseGit)
+        if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
         {
             OutputWriter.WriteLine("This workspace is configured not to use git.");
             return;

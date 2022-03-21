@@ -25,7 +25,7 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
 
     public override void Execute(T command)
     {
-        if (_configurationProvider.Config.UseGit) MoveFile(command, MoveFileInGit);
+        if (_configurationProvider.ConfigInfo.Configuration.UseGit) MoveFile(command, MoveFileInGit);
         else MoveFile(command, MoveFileWithoutGit);
     }
 

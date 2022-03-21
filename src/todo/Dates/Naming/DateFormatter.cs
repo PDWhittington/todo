@@ -20,7 +20,7 @@ public class DateFormatter : IDateFormatter
     public string GetHtmlTitle(DateOnly dateOnly) => GetDateFormatted(dateOnly, "", "");
 
     private string GetDateFormatted(DateOnly dateOnly, string superscriptPre, string superscriptPost)
-        => _configurationProvider.Config.UseNamesForDays && //Check if UseNamesForDays is turned on
+        => _configurationProvider.ConfigInfo.Configuration.UseNamesForDays && //Check if UseNamesForDays is turned on
            _specialDateNamer.TryGetSpecialName(dateOnly, out var dateName) // Check if current day is a special day
             ?
             $"{dateName}, {dateOnly.Year}" :

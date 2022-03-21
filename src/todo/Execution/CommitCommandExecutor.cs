@@ -30,7 +30,7 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
 
     public override void Execute(CommitCommand commitCommand)
     {
-        if (!_configurationProvider.Config.UseGit)
+        if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
         var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";

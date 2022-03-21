@@ -64,7 +64,8 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
         var withSpecialChars = _notes
             .Select(x => x.Replace("->", "\u2192"));
 
-        return _consoleTextFormatter.WrapText(withSpecialChars, _configurationProvider.Config.ConsoleWidth);
+        return _consoleTextFormatter.WrapText(withSpecialChars,
+            _configurationProvider.ConfigInfo.Configuration.ConsoleWidth);
     }
 
     private readonly string [] _notes =

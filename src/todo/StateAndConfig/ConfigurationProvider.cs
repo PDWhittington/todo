@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Todo.Contracts.Data.Caching;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
@@ -11,17 +12,19 @@ public class ConfigurationProvider : IConfigurationProvider
 {
     private readonly ISettingsPathProvider _settingsPathProvider;
     private readonly IConstantsProvider _constantsProvider;
-    private readonly Lazy<ConfigurationInfo> _configuration;
+    private readonly ResettableLazy<ConfigurationInfo> _configuration;
 
     public ConfigurationProvider(ISettingsPathProvider settingsPathProvider,
         IConstantsProvider constantsProvider)
     {
         _settingsPathProvider = settingsPathProvider;
         _constantsProvider = constantsProvider;
-        _configuration = new Lazy<ConfigurationInfo>(GetConfiguration);
+        _configuration = new ResettableLazy<ConfigurationInfo>(GetConfiguration);
     }
 
-    public ConfigurationInfo Config => _configuration.Value;
+    public ConfigurationInfo ConfigInfo => _configuration.Value;
+
+    public void Reset() => _configuration.Reset();
 
     private ConfigurationInfo GetConfiguration()
     {
@@ -31,9 +34,9 @@ public class ConfigurationProvider : IConfigurationProvider
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-        var configuration = JsonSerializer.Deserialize<ConfigurationInfo>(fileStream);
+        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream)
+                            ?? throw new Exception($"Configuration could not be loaded from {path}");
 
-        return configuration ?? throw new Exception(
-            $"Configuration could not be loaded from {path}");
+        return ConfigurationInfo.Of(path, configuration);
     }
 }

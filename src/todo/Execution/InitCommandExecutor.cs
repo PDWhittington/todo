@@ -3,7 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -14,14 +16,22 @@ namespace Todo.Execution;
 public class InitCommandExecutor : CommandExecutorBase<InitCommand>, IInitCommandExecutor
 {
     private readonly IConstantsProvider _constantsProvider;
+    private readonly IManifestStreamProvider _manifestStreamProvider;
     private readonly ISettingsPathProvider _settingsPathProvider;
+    private readonly IConfigurationProvider _configurationProvider;
+    private readonly IFolderCreator _folderCreator;
 
-    public InitCommandExecutor(IConstantsProvider constantsProvider,
-        ISettingsPathProvider settingsPathProvider, IOutputWriter outputWriter)
+    public InitCommandExecutor(IConstantsProvider constantsProvider, IManifestStreamProvider manifestStreamProvider,
+        ISettingsPathProvider settingsPathProvider, IOutputWriter outputWriter,
+        IConfigurationProvider configurationProvider,
+        IFolderCreator folderCreator)
         : base(outputWriter)
     {
         _constantsProvider = constantsProvider;
+        _manifestStreamProvider = manifestStreamProvider;
         _settingsPathProvider = settingsPathProvider;
+        _configurationProvider = configurationProvider;
+        _folderCreator = folderCreator;
     }
 
     public override void Execute(InitCommand _)
@@ -30,15 +40,13 @@ public class InitCommandExecutor : CommandExecutorBase<InitCommand>, IInitComman
 
         OutputWriter.WriteLine($"Initialising folder for todo. Creating {settingsPath}");
 
-        var settingsFileStream = Assembly
-            .GetExecutingAssembly()
-            .GetManifestResourceStream(_constantsProvider.DefaultSettingsFile.FullName);
+        _manifestStreamProvider.WriteStringFromManifestToFile(
+            _constantsProvider.DefaultSettingsFile.FullName,
+            settingsPath);
 
-        if (settingsFileStream == null) throw new Exception(
-                "Cannot retrieve default settings file from executable");
+        _configurationProvider.Reset();
 
-        using var outputStream = new FileStream(settingsPath, FileMode.Create, FileAccess.Write);
-
-        settingsFileStream.CopyTo(outputStream);
+        _folderCreator.CreateOutputFolder();
+        _folderCreator.CreateArchiveFolder();
     }
 }
