@@ -114,7 +114,7 @@ The following commands can be invoked from the command line:-
             init
         </td>
         <td valign="top">
-            Initialises the current folder with a default todo-settings.json file.<br /><br />
+            Initialises the current folder with a default todo-settings.json file. If the todo and archive folders whose paths are specified in the settings file do not exist, then these folders are created.<br /><br />
             Usage: todo init
         </td>
     </tr>

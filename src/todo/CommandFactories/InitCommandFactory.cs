@@ -18,7 +18,9 @@ public class InitCommandFactory: CommandFactoryBase<InitCommand>
     public InitCommandFactory(IConstantsProvider constantsProvider, IOutputWriter outputWriter) : base(outputWriter, Words)
     {
         HelpText = new [] {
-            $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file.",
+            $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file. " +
+            "If the todo and archive folders whose paths are specified in the settings file do not exist, " +
+            "then these folders are created.",
             "",
             "Usage: todo init"
         };
