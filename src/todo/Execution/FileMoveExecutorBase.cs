@@ -2,6 +2,7 @@
 using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -14,13 +15,15 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
 {
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
+    private readonly IFolderCreator _folderCreator;
 
     protected FileMoveExecutorBase(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IOutputWriter outputWriter)
+        IGitInterface gitInterface, IOutputWriter outputWriter, IFolderCreator folderCreator)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
+        _folderCreator = folderCreator;
     }
 
     public override void Execute(T command)
@@ -48,6 +51,8 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
     private void MoveFileWithoutGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
     {
         OutputWriter.WriteLine($"Moving {sourcePathInfo.Path} to {destinationPathInfo.Path}");
+
+        _folderCreator.CreateFromPathIfDoesntExist(destinationPathInfo.Path);
         File.Move(sourcePathInfo.Path, destinationPathInfo.Path);
     }
 }

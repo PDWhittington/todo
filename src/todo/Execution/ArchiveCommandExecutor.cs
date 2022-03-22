@@ -2,6 +2,7 @@
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
@@ -16,8 +17,8 @@ public class ArchiveCommandExecutor : FileMoveExecutorBase<ArchiveCommand>, IArc
 
     public ArchiveCommandExecutor(IDateListPathResolver dateListPathResolver,
         IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IOutputWriter outputWriter)
-        : base(configurationProvider, gitInterface, outputWriter)
+        IOutputWriter outputWriter, IFolderCreator folderCreator)
+        : base(configurationProvider, gitInterface, outputWriter, folderCreator)
     {
         _dateListPathResolver = dateListPathResolver;
     }

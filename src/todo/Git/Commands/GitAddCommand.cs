@@ -1,5 +1,6 @@
 ﻿using System;
 using LibGit2Sharp;
+using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.UI;
 using Todo.Git.Results;
 
@@ -15,12 +16,13 @@ public class GitAddCommand : GitCommandBase<VoidResult>
         Path = path;
     }
 
-    internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
-            outputWriter?.WriteLine($"Staging {Path}");
-            LibGit2Sharp.Commands.Stage(repo, Path);
+            gitInterface.GitInterfaceTools.OutputWriter.WriteLine($"Staging {Path}");
+
+            LibGit2Sharp.Commands.Stage(gitInterface.Repository, Path);
             return new VoidResult(true, null);
         }
         catch (Exception e)

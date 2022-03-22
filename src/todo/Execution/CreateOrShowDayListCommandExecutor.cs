@@ -5,6 +5,7 @@ using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Dates.Naming;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
@@ -26,8 +27,9 @@ public class CreateOrShowDayListCommandExecutor
     public CreateOrShowDayListCommandExecutor(IDayListMarkdownTemplateProvider dayListMarkdownTemplateProvider,
         IDateListPathResolver dateListPathResolver, IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter, IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter)
-        : base (configurationProvider, gitInterface, fileOpener, outputWriter)
+        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter,
+        IFolderCreator folderCreator)
+        : base (configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator)
     {
         _dayListMarkdownTemplateProvider = dayListMarkdownTemplateProvider;
         _dateListPathResolver = dateListPathResolver;

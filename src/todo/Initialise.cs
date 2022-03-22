@@ -115,7 +115,8 @@ internal static class Initialise
 
         private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection
-                .AddSingleton<IGitInterface, GitInterface>();
+                .AddSingleton<IGitInterface, GitInterface>()
+                .AddSingleton<IGitInterfaceTools, GitInterfaceTools>();
 
         private static IServiceCollection AddUiFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection

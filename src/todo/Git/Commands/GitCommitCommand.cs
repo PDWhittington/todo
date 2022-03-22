@@ -1,6 +1,6 @@
 ﻿using System;
 using LibGit2Sharp;
-using Todo.Contracts.Services.UI;
+using Todo.Contracts.Services.Git;
 using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
@@ -15,15 +15,16 @@ public class GitCommitCommand : GitCommandBase<CommitResult>
         Message = message;
     }
 
-    internal override CommitResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    internal override CommitResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
-            var signature = repo.Config.BuildSignature(DateTimeOffset.Now);
+            var signature = gitInterface.Repository.Config.BuildSignature(DateTimeOffset.Now);
 
-            outputWriter?.WriteLine($"Creating commit with message: {Message}");
+            gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
+                $"Creating commit with message: {Message}");
 
-            var commit = repo.Commit(Message, signature, signature);
+            var commit = gitInterface.Repository.Commit(Message, signature, signature);
 
             return new CommitResult(true, commit, null);
         }

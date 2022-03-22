@@ -1,5 +1,6 @@
 ﻿using System;
 using LibGit2Sharp;
+using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.UI;
 using Todo.Git.Branches;
 using Todo.Git.Results;
@@ -19,14 +20,16 @@ public class GitPushCommand : GitCommandBase<VoidResult>
         BranchLocator = branchLocator;
     }
 
-    internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
-            var currentBranch = BranchLocator.GetBranchForRepository(repo);
+            var currentBranch = BranchLocator.GetBranchForRepository(gitInterface.Repository);
 
-            outputWriter?.WriteLine($"Pushing branch {currentBranch.FriendlyName} to origin");
-            repo.Network.Push(currentBranch);
+            gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
+                $"Pushing branch {currentBranch.FriendlyName} to origin");
+
+            gitInterface.Repository.Network.Push(currentBranch);
 
             return new VoidResult(true, null);
         }
