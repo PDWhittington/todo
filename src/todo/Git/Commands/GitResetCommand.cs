@@ -1,5 +1,6 @@
 ﻿using System;
 using LibGit2Sharp;
+using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.UI;
 using Todo.Git.Results;
 
@@ -15,11 +16,11 @@ public class GitResetCommand : GitCommandBase<VoidResult>
         Hard = hard;
     }
 
-    internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
-            repo.Reset(Hard ? ResetMode.Hard : ResetMode.Soft);
+            gitInterface.Repository.Reset(Hard ? ResetMode.Hard : ResetMode.Soft);
             return new VoidResult(true, null);
         }
         catch (Exception e)

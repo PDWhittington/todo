@@ -3,6 +3,7 @@ using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -18,14 +19,17 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
     private readonly ITextFileLauncher _fileOpener;
+    private readonly IFolderCreator _folderCreator;
 
     protected CreateOrShowCommandExecutorBase(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter)
+        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter,
+        IFolderCreator folderCreator)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
         _fileOpener = fileOpener;
+        _folderCreator = folderCreator;
     }
 
     public override void Execute(TCommandType createOrShowCommand)
@@ -39,6 +43,8 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
             var markdownSubstitutions = GetMarkdownSubstitutions(createOrShowCommand);
 
             var outputText = MakeSubstitutions(markdownSubstitutions, templateFile.FileContents);
+
+            _folderCreator.CreateFromPathIfDoesntExist(pathInfo.Path);
 
             File.WriteAllText(pathInfo.Path, outputText);
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 
@@ -19,11 +20,19 @@ public class FolderCreator : IFolderCreator
     public void CreateArchiveFolder()
         => CreateIfDoesntExist(_outputFolderPathProvider.GetRootedArchiveFolder());
 
-    private void CreateIfDoesntExist(string directory)
+    public void CreateIfDoesntExist(string directory)
     {
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
+    }
+
+    public void CreateFromPathIfDoesntExist(string path)
+    {
+        var dir = Path.GetDirectoryName(path)
+            ?? throw new ArgumentException("Directory cannot be parsed from path");
+
+        CreateIfDoesntExist(dir);
     }
 }

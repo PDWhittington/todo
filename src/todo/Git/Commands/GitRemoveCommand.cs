@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using LibGit2Sharp;
-using Todo.Contracts.Services.UI;
+using Todo.Contracts.Services.Git;
 using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
@@ -17,11 +17,14 @@ public class GitRemoveCommand : GitCommandBase<VoidResult>
         Paths = paths;
     }
 
-    internal override VoidResult ExecuteCommand(IRepository repo, IOutputWriter? outputWriter)
+    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         bool StatusEntryIsPath(StatusEntry statusEntry, string path)
         {
-            var rootedPath = Path.Combine(repo.Info.WorkingDirectory, statusEntry.FilePath);
+            var rootedPath = Path.Combine(
+                gitInterface.Repository.Info.WorkingDirectory,
+                statusEntry.FilePath);
+
             var fileInfo = new FileInfo(rootedPath);
             return fileInfo.FullName.Equals(path);
         }
@@ -30,16 +33,16 @@ public class GitRemoveCommand : GitCommandBase<VoidResult>
         {
             foreach (var path in Paths)
             {
-                var pathInIndex = repo
+                var pathInIndex = gitInterface.Repository
                     .RetrieveStatus()
                     .SingleOrDefault(x => StatusEntryIsPath(x, path));
 
                 if (pathInIndex == null) continue;
 
-                repo.Index.Remove(pathInIndex.FilePath);
+                gitInterface.Repository.Index.Remove(pathInIndex.FilePath);
             }
 
-            LibGit2Sharp.Commands.Remove(repo, Paths);
+            LibGit2Sharp.Commands.Remove(gitInterface.Repository, Paths);
             return new VoidResult(true, null);
         }
         catch (Exception e)
