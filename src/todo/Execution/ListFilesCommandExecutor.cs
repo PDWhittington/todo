@@ -2,9 +2,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.UI;
 
@@ -13,74 +16,98 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, IListFilesCommandExecutor
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IOutputFolderPathProvider _pathRootingProvider;
+    private readonly IFileListCreator _fileListCreator;
 
-    public ListFilesCommandExecutor(IDateListPathResolver dateListPathResolver,
-        IOutputFolderPathProvider pathRootingProvider, IOutputWriter outputWriter)
+    public ListFilesCommandExecutor(IFileListCreator fileListCreator,
+        IOutputWriter outputWriter)
         : base(outputWriter)
     {
-        _dateListPathResolver = dateListPathResolver;
-        _pathRootingProvider = pathRootingProvider;
+        _fileListCreator = fileListCreator;
     }
 
     public override void Execute(ListFilesCommand command)
     {
-        var pattern = _dateListPathResolver.GetRegExForThisFileType();
+        var filesListText = GenerateText(command);
 
-        bool Filter(string path)
-        {
-            var fileName = Path.GetFileName(path);
-
-            var match = Regex.Match(fileName, pattern, RegexOptions.None);
-
-            var isDayList = match.Success;
-
-            return isDayList && command.FileType.HasFlag(ListFilesCommand.FileTypeEnum.DayList) ||
-                   !isDayList && command.FileType.HasFlag(ListFilesCommand.FileTypeEnum.TopicList);
-        }
-
-        var pathsInRelevantFolders = new[]
-            {
-                command.FileLocation.HasFlag(ListFilesCommand.FileLocationEnum.MainFolder)
-                    ? Directory.GetFiles(_pathRootingProvider.GetRootedOutputFolder())
-                    : Array.Empty<string>(),
-
-                command.FileLocation.HasFlag(ListFilesCommand.FileLocationEnum.ArchiveFolder)
-                    ? Directory.GetFiles(_pathRootingProvider.GetRootedArchiveFolder())
-                    : Array.Empty<string>()
-
-            }.SelectMany(x => x)
-            .Where(Filter);
-
-        var fileList = string.Join(Environment.NewLine, pathsInRelevantFolders);
-
-        OutputWriter.WriteLine(GetMessage(command));
-        OutputWriter.WriteLine(fileList);
+        OutputWriter.WriteLine(filesListText);
     }
 
-    private static string GetMessage(ListFilesCommand command)
+    private string GenerateText(ListFilesCommand command)
     {
-        string FileTypeMessage(ListFilesCommand.FileTypeEnum fileType)
-            => fileType switch
+        var sb = new StringBuilder()
+            .AppendLine(GetHeader(command))
+            .AppendLine();
+
+        var pathGroups = _fileListCreator
+            .GetFiles(command.OutputFolder, command.ListFileType)
+            .GroupBy(filePathInfo => new { filePathInfo.FolderType, filePathInfo.FileType })
+            .ToArray();
+
+        //Exit with confirmation of no files if none are returned.
+        if (pathGroups.Length == 0)
+        {
+            sb.AppendLine("There are no files satisfying these criteria.");
+            return sb.ToString();
+        }
+
+        for (var i = 0; i < pathGroups.Length; i++)
+        {
+            var pathGroup = pathGroups[i];
+
+            sb.AppendLine($"{MapToFolderName(pathGroup.Key.FolderType)}, {MapToFileTypeName(pathGroup.Key.FileType)}");
+            sb.AppendLine();
+
+            foreach (var pathInfo in pathGroup)
             {
-                ListFilesCommand.FileTypeEnum.DayList => "day todo lists",
-                ListFilesCommand.FileTypeEnum.TopicList => "topic todo lists",
-                ListFilesCommand.FileTypeEnum.DayList |
-                    ListFilesCommand.FileTypeEnum.TopicList => "both types of todo lists",
+                sb.AppendLine($"\t{pathInfo.Path}");
+            }
+
+            if (i != pathGroups.Length - 1) sb.AppendLine();
+        }
+
+        return sb.ToString();
+    }
+
+    private static string MapToFileTypeName(FileTypeEnum fileType) =>
+        // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+        fileType switch
+        {
+            FileTypeEnum.MarkdownDayList => "day lists",
+            FileTypeEnum.MarkdownTopicList => "topic lists",
+            _ => throw new Exception() //should be impossible
+        };
+
+    private static string MapToFolderName(FolderEnum folder) =>
+        // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+        folder switch
+        {
+            FolderEnum.TodoRoot => "Root folder",
+            FolderEnum.Archive => "Archive folder",
+            _ => throw new Exception() //should be impossible
+        };
+
+    private static string GetHeader(ListFilesCommand command)
+    {
+        string FileTypeMessage(ListFileTypeEnum listFileType)
+            => listFileType switch
+            {
+                ListFileTypeEnum.DayList => "day todo lists",
+                ListFileTypeEnum.TopicList => "topic todo lists",
+                ListFileTypeEnum.DayList |
+                    ListFileTypeEnum.TopicList => "both types of todo lists",
                 _ => throw new Exception()
             };
 
-        string FileLocationMessage(ListFilesCommand.FileLocationEnum fileLocation)
-            => fileLocation switch
+        string FileLocationMessage(OutputFolderEnum outputFolder)
+            => outputFolder switch
             {
-                ListFilesCommand.FileLocationEnum.MainFolder => "the main folder",
-                ListFilesCommand.FileLocationEnum.ArchiveFolder => "the archive folder",
-                ListFilesCommand.FileLocationEnum.MainFolder |
-                    ListFilesCommand.FileLocationEnum.ArchiveFolder => "both folders",
+                OutputFolderEnum.MainFolder => "the main folder",
+                OutputFolderEnum.ArchiveFolder => "the archive folder",
+                OutputFolderEnum.MainFolder |
+                    OutputFolderEnum.ArchiveFolder => "both folders",
                 _ => throw new Exception()
             };
 
-        return $"Listing {FileTypeMessage(command.FileType)} in {FileLocationMessage(command.FileLocation)}:-";
+        return $"Listing {FileTypeMessage(command.ListFileType)} in {FileLocationMessage(command.OutputFolder)}:-";
     }
 }

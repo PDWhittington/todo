@@ -24,8 +24,8 @@ public class ArchiveCommandExecutor : FileMoveExecutorBase<ArchiveCommand>, IArc
     }
 
     protected override FilePathInfo GetSourcePath(ArchiveCommand command)
-        => _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        => _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
 
     protected override FilePathInfo GetDestinationPath(ArchiveCommand command)
-        => _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        => _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
 }
