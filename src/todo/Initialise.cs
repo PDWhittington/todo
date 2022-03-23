@@ -111,7 +111,8 @@ internal static class Initialise
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
                 .AddSingleton<IFileDeleter, FileDeleter>()
-                .AddSingleton<IFolderCreator, FolderCreator>();
+                .AddSingleton<IFolderCreator, FolderCreator>()
+                .AddSingleton<IFileListCreator, FileListCreator>();
 
         private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection

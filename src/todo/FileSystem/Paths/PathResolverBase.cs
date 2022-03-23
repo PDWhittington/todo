@@ -66,7 +66,8 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
         => fileTypeEnum switch
         {
             FileTypeEnum.Html => HtmlExtension,
-            FileTypeEnum.Markdown => MarkdownExtension,
+            FileTypeEnum.MarkdownDayList => MarkdownExtension,
+            FileTypeEnum.MarkdownTopicList => MarkdownExtension,
 
             FileTypeEnum.HtmlTemplate => HtmlExtension,
             FileTypeEnum.MarkdownTemplate => MarkdownExtension,

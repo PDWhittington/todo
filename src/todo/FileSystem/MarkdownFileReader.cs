@@ -16,7 +16,8 @@ public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
 
     public TodoFile ReadMarkdownFile(DateOnly dateOnly)
     {
-        var filePathInfo = _dateListPathResolver.ResolvePathFor(dateOnly, FileTypeEnum.Markdown, false);
+        var filePathInfo = _dateListPathResolver.ResolvePathFor(dateOnly,
+            FileTypeEnum.MarkdownDayList, false);
 
         return TodoFile.Of(filePathInfo, GetFileText(filePathInfo.Path));
     }

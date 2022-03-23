@@ -23,8 +23,8 @@ public class UnarchiveCommandExecutor : FileMoveExecutorBase<UnarchiveCommand>
     }
 
     protected override FilePathInfo GetSourcePath(UnarchiveCommand command)
-        => _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        => _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
 
     protected override FilePathInfo GetDestinationPath(UnarchiveCommand command)
-        => _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.Markdown);
+        => _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
 }

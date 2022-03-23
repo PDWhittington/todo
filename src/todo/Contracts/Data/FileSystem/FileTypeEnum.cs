@@ -2,7 +2,8 @@
 
 public enum FileTypeEnum
 {
-    Markdown,
+    MarkdownDayList,
+    MarkdownTopicList,
     Html,
     MarkdownTemplate,
     HtmlTemplate,

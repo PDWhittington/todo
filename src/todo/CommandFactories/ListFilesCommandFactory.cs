@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
@@ -36,8 +37,8 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
         return ListFilesCommand.Of(fileLocation, fileType);
     }
 
-    private static void GetListParameters(string restOfCommand, out ListFilesCommand.FileLocationEnum fileLocation,
-        out ListFilesCommand.FileTypeEnum fileType)
+    private static void GetListParameters(string restOfCommand, out OutputFolderEnum outputFolder,
+        out ListFileTypeEnum listFileType)
     {
         var elements = restOfCommand
             .Split(' ', StringSplitOptions.TrimEntries)
@@ -48,30 +49,30 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
         var containsD = elements.Contains("d");
         var containsT = elements.Contains("t");
 
-        fileLocation = (containsM, containsA) switch
+        outputFolder = (containsM, containsA) switch
         {
             //Both flags or neither implies both folders should be picked up.
-            (true, true) => ListFilesCommand.FileLocationEnum.MainFolder |
-                            ListFilesCommand.FileLocationEnum.ArchiveFolder,
-            (false, false) => ListFilesCommand.FileLocationEnum.MainFolder |
-                              ListFilesCommand.FileLocationEnum.ArchiveFolder,
+            (true, true) => OutputFolderEnum.MainFolder |
+                            OutputFolderEnum.ArchiveFolder,
+            (false, false) => OutputFolderEnum.MainFolder |
+                              OutputFolderEnum.ArchiveFolder,
 
             //One flag but not the other implies only one folder be picked up.
-            (true, false) => ListFilesCommand.FileLocationEnum.MainFolder,
-            (false, true) => ListFilesCommand.FileLocationEnum.ArchiveFolder
+            (true, false) => OutputFolderEnum.MainFolder,
+            (false, true) => OutputFolderEnum.ArchiveFolder
         };
 
-        fileType = (containsD, containsT) switch
+        listFileType = (containsD, containsT) switch
         {
             //Both flags or neither implies lists of both types be picked up.
-            (true, true) => ListFilesCommand.FileTypeEnum.DayList |
-                            ListFilesCommand.FileTypeEnum.TopicList,
-            (false, false) => ListFilesCommand.FileTypeEnum.DayList |
-                              ListFilesCommand.FileTypeEnum.TopicList,
+            (true, true) => ListFileTypeEnum.DayList |
+                            ListFileTypeEnum.TopicList,
+            (false, false) => ListFileTypeEnum.DayList |
+                              ListFileTypeEnum.TopicList,
 
             //One flag but not the other implies only one folder be picked up.
-            (true, false) => ListFilesCommand.FileTypeEnum.DayList,
-            (false, true) => ListFilesCommand.FileTypeEnum.TopicList
+            (true, false) => ListFileTypeEnum.DayList,
+            (false, true) => ListFileTypeEnum.TopicList
         };
     }
 }

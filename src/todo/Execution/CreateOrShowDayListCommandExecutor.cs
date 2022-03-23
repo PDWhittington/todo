@@ -38,7 +38,7 @@ public class CreateOrShowDayListCommandExecutor
     }
 
     protected override FilePathInfo GetFilePathInfo(CreateOrShowDayListCommand createOrShowCommand)
-        => _dateListPathResolver.ResolvePathFor(createOrShowCommand.Date, FileTypeEnum.Markdown, true);
+        => _dateListPathResolver.ResolvePathFor(createOrShowCommand.Date, FileTypeEnum.MarkdownDayList, true);
 
     protected override TodoFile GetTemplate() => _dayListMarkdownTemplateProvider.GetTemplate();
 

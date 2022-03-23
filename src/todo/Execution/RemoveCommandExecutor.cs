@@ -32,7 +32,7 @@ public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemove
     public override void Execute(RemoveCommand command)
     {
         var pathForFile = _dateListPathResolver.ResolvePathFor(
-            command.Date, FileTypeEnum.Markdown, false);
+            command.Date, FileTypeEnum.MarkdownDayList, false);
 
         if (_configurationProvider.ConfigInfo.Configuration.UseGit)
         {

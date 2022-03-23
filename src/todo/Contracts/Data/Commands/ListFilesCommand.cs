@@ -1,33 +1,19 @@
-﻿using System;
+﻿using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Commands;
 
 public class ListFilesCommand : CommandBase
 {
-    [Flags]
-    public enum FileLocationEnum
+    public OutputFolderEnum OutputFolder { get; }
+
+    public ListFileTypeEnum ListFileType { get; }
+
+    private ListFilesCommand(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType)
     {
-        MainFolder = 1,
-        ArchiveFolder = 2
+        OutputFolder = outputFolder;
+        ListFileType = listFileType;
     }
 
-    [Flags]
-    public enum FileTypeEnum
-    {
-        DayList = 1,
-        TopicList = 2
-    }
-
-    public FileLocationEnum FileLocation { get; }
-
-    public FileTypeEnum FileType { get; }
-
-    private ListFilesCommand(FileLocationEnum fileLocation, FileTypeEnum fileType)
-    {
-        FileLocation = fileLocation;
-        FileType = fileType;
-    }
-
-    public static ListFilesCommand Of(FileLocationEnum fileLocation, FileTypeEnum fileType)
-        => new(fileLocation, fileType);
+    public static ListFilesCommand Of(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType)
+        => new(outputFolder, listFileType);
 }
