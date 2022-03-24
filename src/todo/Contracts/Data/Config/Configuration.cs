@@ -8,7 +8,7 @@ public class Configuration
 
     #region Paths to third-party tools
 
-    public PerOsFilePaths BrowserLaunch { get; }
+    public PerOsFilePaths BrowserPath { get; }
 
     public PerOsFilePaths TextEditorPath { get; }
 
@@ -50,13 +50,13 @@ public class Configuration
 
     [JsonConstructor]
     public Configuration(
-        PerOsFilePaths browserLaunch, PerOsFilePaths textEditorPath,
+        PerOsFilePaths browserPath, PerOsFilePaths textEditorPath,
         string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
         string htmlTemplatePath,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,
         bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth)
     {
-        BrowserLaunch = browserLaunch;
+        BrowserPath = browserPath;
         TextEditorPath = textEditorPath;
 
         DayListMarkdownTemplatePath = dayListMarkdownTemplatePath;

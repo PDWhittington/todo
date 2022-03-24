@@ -44,7 +44,7 @@ public class HtmlFileLauncher : IHtmlFileLauncher
 
     private void LaunchSingleFile(string path)
     {
-        var browserLaunchInfo = _configurationProvider.ConfigInfo.Configuration.BrowserLaunch.GetPathForThisOs();
+        var browserLaunchInfo = _configurationProvider.ConfigInfo.Configuration.BrowserPath.GetPathForThisOs();
 
         var browserPath = _pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
 
