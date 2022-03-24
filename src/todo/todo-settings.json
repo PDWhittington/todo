@@ -1,5 +1,5 @@
 ﻿{
-  "BrowserLaunch": {
+  "BrowserPath": {
     "Windows": {
       "Path": "chrome.exe",
       "Parameters": "{0}"
