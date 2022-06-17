@@ -76,7 +76,7 @@ public class SaintsDayTests
 
         var result = dateNamer.TryGetSpecialName(dateParsed, out var name);
 
-        Assert.AreEqual(name != null, result);
+        Assert.AreEqual(name is not null, result);
         Assert.AreEqual(nameExpected, name);
     }
 }

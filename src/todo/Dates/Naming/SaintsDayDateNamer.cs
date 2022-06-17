@@ -16,6 +16,6 @@ public class SaintsDayDateNamer : ISaintsDayDateNamer
             _ => null
         };
 
-        return name != null;
+        return name is not null;
     }
 }

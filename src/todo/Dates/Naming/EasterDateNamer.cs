@@ -21,7 +21,7 @@ public class EasterDateNamer : IEasterDateNamer
             _ => null
         };
 
-        return name != null;
+        return name is not null;
     }
 
     private static int DayDifference(DateOnly date, DateOnly easterDay)

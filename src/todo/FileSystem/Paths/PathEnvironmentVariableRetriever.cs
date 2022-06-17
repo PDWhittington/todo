@@ -28,7 +28,7 @@ public class PathEnvironmentVariableRetriever : IPathEnvironmentVariableRetrieve
     {
         var pathVariable = Environment.GetEnvironmentVariable("PATH");
 
-        if (pathVariable == null) throw new Exception("PATH environment variable not found");
+        if (pathVariable is null) throw new Exception("PATH environment variable not found");
 
         //Paths are separated by ; on Windows, and by : on Mac and Linux
 

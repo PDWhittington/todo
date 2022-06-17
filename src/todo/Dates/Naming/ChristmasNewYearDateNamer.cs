@@ -18,6 +18,6 @@ public class ChristmasNewYearDateNamer : IChristmasNewYearDateNamer
             _ => null
         };
 
-        return name != null;
+        return name is not null;
     }
 }
