@@ -19,7 +19,7 @@ public class DateParser : IDateParser
 
     public bool TryGetDate(string? str, out DateOnly dateOnly)
     {
-        if (str == null) return false;
+        if (str is null) return false;
 
         //NOTE: order of these tests is important.
 
@@ -30,7 +30,7 @@ public class DateParser : IDateParser
         else if (IsDayOfWeek(str, out var dayOfWeek)) dateOnly = GetDateFromDayOfWeek((DayOfWeek)dayOfWeek!);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsLastThisOrNext(str, out var dateFromColloquial)
-                 && dateFromColloquial != null) dateOnly = dateFromColloquial.Value;
+                 && dateFromColloquial is not null) dateOnly = dateFromColloquial.Value;
         else if (IsDayMonthOnly(str, out day, out var month)) dateOnly = GetDateFromDayMonth(month, day);
 
         else if (DateOnly.TryParse(str, out var dte)) dateOnly = dte;
@@ -153,7 +153,7 @@ public class DateParser : IDateParser
         if (elements.Length == 2 &&
             FirstWordIsKey(elements[0]) &&
             IsDayOfWeek(elements[1], out var dayOfWeek) &&
-            dayOfWeek != null /* for compiler */)
+            dayOfWeek is not null /* for compiler */)
         {
             var currentDate = GetTodayWithMidnightAdjusted();
 

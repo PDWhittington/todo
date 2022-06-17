@@ -32,7 +32,7 @@ public class SettingsPathProvider : ISettingsPathProvider
 
         yield return currentFolder.FullName;
 
-        while (currentFolder.Parent != null)
+        while (currentFolder.Parent is not null)
         {
             currentFolder = currentFolder.Parent;
             yield return currentFolder.FullName;

@@ -14,7 +14,7 @@ public class ManifestStreamProvider : IManifestStreamProvider
             .GetExecutingAssembly()
             .GetManifestResourceStream(manifestName);
 
-        if (manifestStream == null) throw new Exception(
+        if (manifestStream is null) throw new Exception(
             $"Manifest with name {manifestName} not found in assembly");
 
         var buffer = new byte[manifestStream.Length];

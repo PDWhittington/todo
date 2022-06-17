@@ -37,7 +37,7 @@ public class GitRemoveCommand : GitCommandBase<VoidResult>
                     .RetrieveStatus()
                     .SingleOrDefault(x => StatusEntryIsPath(x, path));
 
-                if (pathInIndex == null) continue;
+                if (pathInIndex is null) continue;
 
                 gitInterface.Repository.Index.Remove(pathInIndex.FilePath);
             }
