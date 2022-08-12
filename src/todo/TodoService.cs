@@ -23,6 +23,8 @@ public class TodoService : ITodoService
 
     public void PerformTask()
     {
+        using var handle = _outputWriter.CreateDisposableHandle();
+        
         try
         {
             var command = _commandProvider.GetCommand();

@@ -7,4 +7,8 @@ public interface IOutputWriter
     void WriteLine(object obj);
 
     void WriteLine(string message);
+
+    IOutputWriterDisposableHandle CreateDisposableHandle();
+    
+    void JoinWritingThread();
 }
