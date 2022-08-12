@@ -8,7 +8,7 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowSettingsCommandFactory : CommandFactoryBase<ShowSettingsCommand>
 {
-    private static readonly string[] Words = { "settings", "showsettings" };
+    private static readonly string[] Words = { "config", "settings", "showsettings" };
 
     public override bool IsDefaultCommandFactory => false;
 
