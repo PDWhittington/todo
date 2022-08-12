@@ -17,7 +17,8 @@ Install git and ensure that it is in your PATH environment variable. To clone th
 ```
 git clone https://github.com/PDWhittington/todo.git
 ```
-You will also need a recent .Net SDK installed. I am on .Net 6.0. To build the app, run something like the following. This will build the app so that it can run on all target operating systems. One dependency, gitlib2sharp, has OS-specific dependencies (i.e. the .Net assembly wraps a native library which varies from platform to platform). Building for all target operating systems will ensure that all the native libraries are produced. This means that the app can run on Windows, OSX or Linux.
+
+The solution is curreently targetting .Net 6.0, so you will need this SDK installed, or a later one. To build the app, run something like the following. This will build the app so that it can run on all target operating systems. One dependency, gitlib2sharp, has OS-specific dependencies (i.e. the .Net assembly wraps a native library which varies from platform to platform). Building for all target operating systems will ensure that all the native libraries are produced. This means that the app can run on Windows, OSX or Linux.
 
 
 ```
