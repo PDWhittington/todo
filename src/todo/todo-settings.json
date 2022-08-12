@@ -23,7 +23,7 @@
       "Parameters": "{0}"
     },
     "OSX": {
-      "Path": "code",
+      "Path": "/Applications/VSCodium.app/Contents/MacOS/Electron",
       "Parameters": "{0}"
     }
   },
