@@ -82,7 +82,11 @@ public class DateHelper : IDateHelper
     {
         var daysInMonth = DaysInMonth(month, year);
 
-        if (day < 0 || day > daysInMonth) return false;
+        if (day < 0 || day > daysInMonth)
+        {
+            dateInYear = default;
+            return false;
+        }
 
         dateInYear = new DateOnly(year, month, day);
         return true;

@@ -19,7 +19,11 @@ public class DateParser : IDateParser
 
     public bool TryGetDate(string? str, out DateOnly dateOnly)
     {
-        if (str is null) return false;
+        if (str is null)
+        {
+            dateOnly = default;
+            return false;
+        }
 
         //NOTE: order of these tests is important.
 
