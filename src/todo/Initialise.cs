@@ -5,7 +5,6 @@ using Todo.AppLaunching;
 using Todo.AssemblyOperations;
 using Todo.CommandFactories;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.AssemblyOperations;
