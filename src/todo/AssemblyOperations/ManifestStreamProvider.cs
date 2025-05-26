@@ -19,7 +19,8 @@ public class ManifestStreamProvider : IManifestStreamProvider
 
         var buffer = new byte[manifestStream.Length];
 
-        manifestStream.ReadExactly(buffer, 0, buffer.Length);
+        manifestStream.ReadExactly(buffer);
+
         return buffer;
     }
 

@@ -5,5 +5,4 @@ dotnet publish src/todo/ -c Release -r osx-arm64 -p:PublishReadyToRun=true --sel
 
 sudo rm -R -f /usr/local/bin/todo
 
-sudo cp -R src/todo/bin/Release/net7.0/osx-arm64/publish /usr/local/bin/todo/
-
+sudo cp -R src/todo/bin/Release/net9.0/osx-arm64/publish /usr/local/bin/todo/
