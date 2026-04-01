@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.FileSystem;
@@ -50,12 +51,12 @@ public abstract class TemplateProviderBase : FileReaderBase
 
         var manifestName = GetManifestStreamName();
 
-        var text = _manifestStreamProvider.GetStringFromManifest(manifestName);
+        var lines = _manifestStreamProvider.GetLinesFromManifest(manifestName);
 
         var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
             GetFileType(), FolderEnum.Manifest);
 
-        return TodoFile.Of(manifestFileInfo, text);
+        return TodoFile.Of(manifestFileInfo, lines);
     }
 
     protected abstract string GetTemplateFileName();

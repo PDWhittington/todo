@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Todo.Contracts.Data.FileSystem;
 
-public readonly struct FilePathInfo
+public class FilePathInfo
 {
     public string Path { get; }
 

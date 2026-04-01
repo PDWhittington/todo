@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Todo.Contracts.Services.AssemblyOperations;
@@ -20,7 +21,6 @@ public class ManifestStreamProvider : IManifestStreamProvider
         var buffer = new byte[manifestStream.Length];
 
         manifestStream.ReadExactly(buffer);
-
         return buffer;
     }
 
@@ -30,6 +30,18 @@ public class ManifestStreamProvider : IManifestStreamProvider
 
         var text = Encoding.UTF8.GetString(buffer);
         return text;
+    }
+    
+    public string [] GetLinesFromManifest(string manifestName)
+    {
+        var text = GetStringFromManifest(manifestName);
+
+        var lines = text
+            .Split('\n')
+            .Select(x => x.Trim('\r'))
+            .ToArray();
+        
+        return lines;
     }
 
     public void WriteStringFromManifestToFile(string manifestName, string path)
