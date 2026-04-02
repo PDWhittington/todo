@@ -21,6 +21,15 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
    IConfigurationProvider configurationProvider, IMarkdownFileReader markdownFileReader)
    : CommandExecutorBase<ScoreCommand>(outputWriter), IScoreCommandExecutor
 {
+   [Flags]
+   private enum HeadingCategoryEnum
+   {
+      None = 0,
+      Done = 1,
+      NotDone = 2,
+      CarriedForward = 4,
+   }
+   
    private readonly IConfigurationProvider _configurationProvider = configurationProvider;
 
    public override void Execute(ScoreCommand command)
@@ -33,13 +42,14 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       
    }
 
-   private IEnumerable<ScoreInfo> GetScoreInfos(FilePathInfo filePathInfo)
+   private ScoreInfo GetScoreInfo(FilePathInfo filePathInfo)
    {
       var todoFile = markdownFileReader.ReadMarkdownFile(filePathInfo);
       var markdownHeadingStack = new MarkdownHeadingStack();
 
       int doneScore = 0;
       int notDoneScore = 0;
+      int carriedForwardScore = 0;
       
       for (int i = 0; i < todoFile.MarkdownLines.Length; i++) 
       {
@@ -50,26 +60,65 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
             markdownHeadingStack.UpdateStack(currentLine);
             continue;
          }
+
+         if (!ContainsTokenScore(currentLine.Line, out int tokenScore)) continue;
          
-         currentLine.Line.Split(' ')
-
-         var isWithinDoneSection = markdownHeadingStack
-            .Select(x => x.HeadingTitle)
-            .Contains("DONE", StringComparer.CurrentCultureIgnoreCase); 
-
-         if (isWithinDoneSection)
+         var currentHeading =  GetHeadingCategoryFromStack(markdownHeadingStack, filePathInfo, i);
+         
+         switch (currentHeading)
          {
-            
+            case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
+            case HeadingCategoryEnum.NotDone: notDoneScore += tokenScore; break;
+            case HeadingCategoryEnum.CarriedForward: carriedForwardScore += tokenScore; break;
          }
-
       }
       
-      // todoFile.FileLines.Select(line => MarkdownLineInfo.)
-      
+      return ScoreInfo.Of(filePathInfo, doneScore, notDoneScore, carriedForwardScore);
    }
 
-   private static bool ContainsTokenScore(string line, int out tokenScore)
+   private static bool ContainsTokenScore(string line, out int tokenScore)
    {
+      var elements = line.Split(' ');
+   }
+
+   private static IEnumerable<Span<char>> 
+   
+   private static HeadingCategoryEnum GetHeadingCategoryFromStack(MarkdownHeadingStack stack, 
+      FilePathInfo filePathInfo, int lineNumber)
+   {
+      var isWithinDoneSection = stack
+         .Select(x => x.HeadingTitle)
+         .Contains("DONE", StringComparer.CurrentCultureIgnoreCase) 
+            ? HeadingCategoryEnum.Done 
+            : HeadingCategoryEnum.None; 
       
+      var isWithinNotDoneSection = stack
+         .Select(x => x.HeadingTitle)
+         .Contains("NOT DONE", StringComparer.CurrentCultureIgnoreCase)
+            ? HeadingCategoryEnum.NotDone
+            : HeadingCategoryEnum.None;
+
+      var isWithinCarriedForwardSection = stack
+         .Select(x => x.HeadingTitle)
+         .Contains("CARRIED FORWARD", StringComparer.CurrentCultureIgnoreCase)
+            ? HeadingCategoryEnum.CarriedForward
+            : HeadingCategoryEnum.None;
+
+      var combinedSectionInfo = isWithinDoneSection 
+                                | isWithinNotDoneSection | isWithinCarriedForwardSection;
+
+      switch (combinedSectionInfo)
+      {
+         case HeadingCategoryEnum.None:
+         case HeadingCategoryEnum.Done:
+         case HeadingCategoryEnum.NotDone:
+         case HeadingCategoryEnum.CarriedForward:
+            
+            return combinedSectionInfo;
+            
+         default:
+            throw new Exception($"In {filePathInfo.Path} line number {lineNumber + 1} is ambiguous in which category " +
+                                $"it belongs to ({combinedSectionInfo})");
+      }
    }
 }
