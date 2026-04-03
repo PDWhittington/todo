@@ -47,6 +47,7 @@ internal static class Initialise
                 .AddDateNaming()
                 .AddFileSystemFunctionality()
                 .AddGitFunctionality()
+                .AddMarkdownFunctionality()
                 .AddUiFunctionality()
 
                 /* Command interpretation and execution */
@@ -119,6 +120,11 @@ internal static class Initialise
             => serviceCollection
                 .AddSingleton<IGitInterface, GitInterface>()
                 .AddSingleton<IGitInterfaceTools, GitInterfaceTools>();
+
+        private static IServiceCollection AddMarkdownFunctionality(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
+                .AddSingleton<IMarkdownLineInterpreter, MarkdownLineInterpreter>();
 
         private static IServiceCollection AddUiFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection

@@ -48,7 +48,7 @@ public class Configuration
 
     public int ConsoleWidth { get; }
     
-    public IterationMethodEnum IterationMethod { get; }
+    public IterationMethodEnum FileIterationMethod { get; }
 
     [JsonConstructor]
     public Configuration(
@@ -57,7 +57,7 @@ public class Configuration
         string htmlTemplatePath,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,
         bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth,
-        IterationMethodEnum iterationMethod)
+        IterationMethodEnum fileIterationMethod)
     {
         BrowserPath = browserPath;
         TextEditorPath = textEditorPath;
@@ -74,6 +74,6 @@ public class Configuration
         UseNamesForDays = useNamesForDays;
         NewDayThreshold = newDayThreshold;
         ConsoleWidth = consoleWidth;
-        IterationMethod = iterationMethod;
+        FileIterationMethod = fileIterationMethod;
     }
 }

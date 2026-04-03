@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Data.Scoring;
@@ -28,17 +29,36 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       NotDone = 2,
       CarriedForward = 4,
    }
-   
-   private readonly IConfigurationProvider _configurationProvider = configurationProvider;
 
    public override void Execute(ScoreCommand command)
    {
       var files = fileListCreator.GetFiles(
          OutputFolderEnum.MainFolder | OutputFolderEnum.ArchiveFolder,
          ListFileTypeEnum.DayList);
+
+      var scoreInfos = GetScoresForAllFiles(files);
       
-      //_configurationProvider.ConfigInfo.Configuration
       
+
+   }
+
+   private ScoreInfo[] GetScoresForAllFiles(FilePathInfo[] filePathInfos)
+   {
+      return configurationProvider.ConfigInfo.Configuration.FileIterationMethod switch
+      {
+         IterationMethodEnum.Series => filePathInfos
+            .Select(GetScoreInfo)
+            .OrderBy(x => x.FilePath.Path)
+            .ToArray(),
+         
+         IterationMethodEnum.Parallel => filePathInfos
+            .AsParallel()
+            .Select(GetScoreInfo)
+            .OrderBy(x => x.FilePath.Path)
+            .ToArray(),
+
+         _ => throw new ArgumentOutOfRangeException()
+      };
    }
 
    private ScoreInfo GetScoreInfo(FilePathInfo filePathInfo)

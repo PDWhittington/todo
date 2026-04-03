@@ -31,7 +31,7 @@ public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
 
     public TodoFile ReadMarkdownFile(FilePathInfo filePathInfo)
     {
-        var lines = File.ReadAllLines(filePathInfo.Path);
+        var lines = GetFileText(filePathInfo.Path); 
         var markdownLines = new Lazy<MarkdownLineInfo[]>(() => lines
             .Select(line => _markdownLineInterpreter.CreateMarkdownLine(line))
             .ToArray());
