@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -63,7 +62,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
 
          if (!ContainsTokenScore(currentLine.Line, out int tokenScore)) continue;
          
-         var currentHeading =  GetHeadingCategoryFromStack(markdownHeadingStack, filePathInfo, i);
+         var currentHeading = GetHeadingCategoryFromStack(markdownHeadingStack, filePathInfo, i);
          
          switch (currentHeading)
          {
@@ -78,10 +77,48 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
 
    private static bool ContainsTokenScore(string line, out int tokenScore)
    {
-      var elements = line.Split(' ');
+      var sections = GetSections(line);
+
+      foreach (var section in sections)
+      {
+         if (!section.EndsWith('t') &&  section.EndsWith('T')) continue;
+         if (!section.Take(section.Length - 1).All(x => char.IsDigit(x))) continue;
+         
+         tokenScore = int.Parse(section.Substring(0, section.Length - 1));
+         return true;
+      }
+      
+      tokenScore = -1;
+      return false;
    }
 
-   private static IEnumerable<Span<char>> 
+   private static IEnumerable<string> GetSections(string line)
+   {
+      var previousCharWasAlphaNumeric = false;
+      int currentSectionStart = 0;
+      
+      for (int i = 0; i < line.Length; i++)
+      {
+         var currentChar = line[i];
+         var currentCharIsAlphaNumeric = char.IsLetterOrDigit(currentChar);
+
+         if (!previousCharWasAlphaNumeric && currentCharIsAlphaNumeric)
+         {
+            currentSectionStart = i;
+         }
+         else if (previousCharWasAlphaNumeric && !currentCharIsAlphaNumeric)
+         {
+            yield return line.Substring(currentSectionStart, i - currentSectionStart);
+         }
+         else if (i == line.Length - 1 && currentCharIsAlphaNumeric)
+         {
+            yield return line.Substring(currentSectionStart, i - currentSectionStart + 1);
+         }
+         
+         previousCharWasAlphaNumeric = currentCharIsAlphaNumeric;
+      }
+      
+   }
    
    private static HeadingCategoryEnum GetHeadingCategoryFromStack(MarkdownHeadingStack stack, 
       FilePathInfo filePathInfo, int lineNumber)
