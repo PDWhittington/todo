@@ -22,11 +22,10 @@ public class ConstantsProvider : IConstantsProvider
     
     public ManifestInfo BuildTime { get; } = ManifestInfo.Of("buildtime.txt");
 
-    public string ProjectAuthor { get; } = "Phil Whittington";
+    public string ProjectAuthor => "Phil Whittington";
 
-    public string ProjectAuthorContactDetails { get; } = "Twitter: @PDWhittington, DMs open";
+    public string ProjectAuthorContactDetails => "Twitter: @PDWhittington, DMs open";
 
 
-    public string ProjectWebsite { get; } = "https://github.com/PDWhittington/todo";
-
+    public string ProjectWebsite => "https://github.com/PDWhittington/todo";
 }

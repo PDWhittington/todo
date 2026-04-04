@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Services.AssemblyOperations;

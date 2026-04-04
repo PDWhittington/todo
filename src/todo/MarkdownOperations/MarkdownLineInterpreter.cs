@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Markdig.Helpers;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
@@ -12,13 +13,13 @@ public class MarkdownLineInterpreter : IMarkdownLineInterpreter
     {
         var list = new List<MarkdownLineInfo>();
 
-        for (int i = 0; i < lines.Length; i++)
+        for (var i = 0; i < lines.Length; i++)
         {
             var currentLine = lines[i];
 
             var markdownType = GetMarkdownType(currentLine);
 
-            int headingLevel = (markdownType == MarkdownLineTypeEnum.Heading)
+            var headingLevel = markdownType == MarkdownLineTypeEnum.Heading
                 ? CountHashesAtFront(currentLine)
                 : -1;
 
@@ -33,13 +34,11 @@ public class MarkdownLineInterpreter : IMarkdownLineInterpreter
 
     private static int CountHashesAtFront(string line)
     {
-        int value = 0;
-        bool hashesStarted = false;
+        var value = 0;
+        var hashesStarted = false;
 
-        for (int i = 0; i < line.Length; i++)
+        foreach (var ch in line)
         {
-            var ch = line[i];
-
             if (ch == '#')
             {
                 hashesStarted = true;
@@ -55,6 +54,7 @@ public class MarkdownLineInterpreter : IMarkdownLineInterpreter
         return value;
     }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     private static MarkdownLineTypeEnum GetMarkdownType(string line)
     {
         var trimmed = line.Trim();

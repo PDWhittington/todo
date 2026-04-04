@@ -28,7 +28,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       None = 0, //Must be kept as zero as this is used in bitwise operations to disapper.
       Done = 1,
       NotDone = 2,
-      CarriedForward = 4,
+      CarriedForward = 4
    }
 
    public override void Execute(ScoreCommand command)
@@ -70,7 +70,8 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
             .OrderBy(x => x.FilePath.Path)
             .ToArray(),
 
-         _ => throw new ArgumentOutOfRangeException()
+         _ => throw new ArgumentOutOfRangeException(
+            $"{configurationProvider.ConfigInfo.Configuration.FileIterationMethod} should be either series or parallel.")
       };
    }
 
@@ -79,12 +80,12 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       var todoFile = markdownFileReader.ReadMarkdownFile(filePathInfo);
       var markdownHeadingStack = new MarkdownHeadingStack();
 
-      int doneScore = 0;
-      int notDoneScore = 0;
-      int carriedForwardScore = 0;
-      int outstandingScore = 0;
+      var doneScore = 0;
+      var notDoneScore = 0;
+      var carriedForwardScore = 0;
+      var outstandingScore = 0;
       
-      for (int i = 0; i < todoFile.MarkdownLines.Length; i++) 
+      for (var i = 0; i < todoFile.MarkdownLines.Length; i++) 
       {
          var currentLine = todoFile.MarkdownLines[i];
 
@@ -94,7 +95,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
             continue;
          }
 
-         if (!ContainsTokenScore(currentLine.Line, out int tokenScore)) continue;
+         if (!ContainsTokenScore(currentLine.Line, out var tokenScore)) continue;
          
          var currentHeading = GetHeadingCategoryFromStack(markdownHeadingStack, filePathInfo, i);
          
@@ -103,7 +104,9 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
             case HeadingCategoryEnum.NotDone: notDoneScore += tokenScore; break;
             case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
             case HeadingCategoryEnum.CarriedForward: carriedForwardScore += tokenScore; break;
-            default: outstandingScore += tokenScore; break;
+            case HeadingCategoryEnum.None:
+            default: 
+               outstandingScore += tokenScore; break;
          }
       }
       
@@ -133,30 +136,44 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
    private static IEnumerable<CustomStringSection> GetSections(string line)
    {
       var previousCharWasAlphaNumeric = false;
-      int currentSectionStart = 0;
+      var currentSectionStart = 0;
       
       for (var i = 0; i < line.Length; i++)
       {
          var currentChar = line[i];
          var currentCharIsAlphaNumeric = char.IsLetterOrDigit(currentChar);
 
-         if (!previousCharWasAlphaNumeric && currentCharIsAlphaNumeric)
+         switch (previousCharWasAlphaNumeric)
          {
-            currentSectionStart = i;
-         }
-         else if (previousCharWasAlphaNumeric && !currentCharIsAlphaNumeric)
-         {
-            yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart);
-         }
-         else if (i == line.Length - 1 && currentCharIsAlphaNumeric)
-         {
-            yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart + 1);
+            //Previous character was not alphanumeric and current character is alphanumeric
+            //Start new section
+            case false when currentCharIsAlphaNumeric:
+               currentSectionStart = i;
+               break;
+
+            //Previous character was alphanumeric and current character is not alphanumeric
+            //End section and yield it back
+            case true when !currentCharIsAlphaNumeric:
+               yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart);
+               break;
+
+            //TODO: this isn't quite right -- this should fire on the final char irrespective of the previous two conditions.
+            default:
+            {
+               if (i == line.Length - 1 && currentCharIsAlphaNumeric)
+               {
+                  yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart + 1);
+               }
+
+               break;
+            }
          }
          
          previousCharWasAlphaNumeric = currentCharIsAlphaNumeric;
       }
    }
    
+   [SuppressMessage("ReSharper", "ConvertSwitchStatementToSwitchExpression")]
    private static HeadingCategoryEnum GetHeadingCategoryFromStack(MarkdownHeadingStack stack, 
       FilePathInfo filePathInfo, int lineNumber)
    {

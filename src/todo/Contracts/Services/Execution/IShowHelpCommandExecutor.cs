@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IShowHelpCommandExecutor: ICommandExecutor<ShowHelpCommand> { }
+public interface IShowHelpCommandExecutor: ICommandExecutor<ShowHelpCommand>;

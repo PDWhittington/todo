@@ -4,13 +4,11 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem.Paths;
 
-public class DateListPathResolver : PathResolverBase<DateOnly>, IDateListPathResolver
+public class DateListPathResolver(
+    IConfigurationProvider configurationProvider,
+    IOutputFolderPathProvider outputFolderPathProvider)
+    : PathResolverBase<DateOnly>(configurationProvider, outputFolderPathProvider), IDateListPathResolver
 {
-    public DateListPathResolver(IConfigurationProvider configurationProvider,
-        IOutputFolderPathProvider outputFolderPathProvider)
-        : base(configurationProvider, outputFolderPathProvider)
-    { }
-
     public override string GetRegExForThisFileType()
     {
         var fileNameFragments = GetFragments(

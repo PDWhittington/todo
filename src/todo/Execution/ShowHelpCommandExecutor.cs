@@ -17,21 +17,16 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     private readonly IConfigurationProvider _configurationProvider;
     private readonly ICommandFactorySet _commandFactorySet;
     private readonly IConsoleTextFormatter _consoleTextFormatter;
-    private readonly IAssemblyInformationProvider _assemblyInformationProvider;
-    private readonly IConstantsProvider _constantsProvider;
     private readonly IBoilerPlateProvider _boilerPlateProvider;
 
     public ShowHelpCommandExecutor(IOutputWriter outputWriter,
         IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
-        IConsoleTextFormatter consoleTextFormatter, IAssemblyInformationProvider assemblyInformationProvider,
-        IConstantsProvider constantsProvider, IBoilerPlateProvider boilerPlateProvider)
+        IConsoleTextFormatter consoleTextFormatter, IBoilerPlateProvider boilerPlateProvider)
         : base(outputWriter)
     {
         _configurationProvider = configurationProvider;
         _commandFactorySet = commandFactorySet;
         _consoleTextFormatter = consoleTextFormatter;
-        _assemblyInformationProvider = assemblyInformationProvider;
-        _constantsProvider = constantsProvider;
         _boilerPlateProvider = boilerPlateProvider;
     }
 
@@ -69,7 +64,7 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
     }
 
     private readonly string [] _notes =
-    {
+    [
         "Notes:",
 
         "",
@@ -93,6 +88,6 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
 
             "",
 
-        @"[Commit Message] -> In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing date and time of the commit will be used."
-    };
+        "[Commit Message] -> In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing date and time of the commit will be used."
+    ];
 }

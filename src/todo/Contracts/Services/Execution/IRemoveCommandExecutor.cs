@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IRemoveCommandExecutor : ICommandExecutor<RemoveCommand> { }
+public interface IRemoveCommandExecutor : ICommandExecutor<RemoveCommand>;

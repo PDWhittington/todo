@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Markdown;
@@ -12,13 +10,14 @@ public class TodoFile
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FilePathInfo FilePathInfo { get; }
     
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public ReadOnlyCollection<string> Lines { get; }
     
-    private Lazy<MarkdownLineInfo[]> _markdownLines;
+    private readonly Lazy<MarkdownLineInfo[]> _markdownLines;
 
     public MarkdownLineInfo[] MarkdownLines => _markdownLines.Value;
 
-    private Lazy<string> _fileContents;
+    private readonly Lazy<string> _fileContents;
     
     public string FileContents => _fileContents.Value;
     

@@ -19,9 +19,11 @@ public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
 
     public CommitCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override CommitCommand? TryGetCommand(string commandLine)
     {
-        return !IsThisCommand(commandLine, out var restOfCommand)
-            ? default : CommitCommand.Of(restOfCommand);
+        if (IsThisCommand(commandLine, out var restOfCommand)) return null;
+
+        return CommitCommand.Of(restOfCommand);
     }
 }

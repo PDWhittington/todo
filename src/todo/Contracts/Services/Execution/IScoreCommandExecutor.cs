@@ -2,4 +2,4 @@ using Todo.Contracts.Data.Commands;
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IScoreCommandExecutor : ICommandExecutor<ScoreCommand> { }
+public interface IScoreCommandExecutor : ICommandExecutor<ScoreCommand>;

@@ -13,26 +13,16 @@ using Todo.Git.Results;
 
 namespace Todo.Execution;
 
-public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutionsType> : CommandExecutorBase<TCommandType>
+public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutionsType>(
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    ITextFileLauncher fileOpener,
+    IOutputWriter outputWriter,
+    IFolderCreator folderCreator)
+    : CommandExecutorBase<TCommandType>(outputWriter)
     where TCommandType : CreateOrShowCommandBase
     where TSubstitutionsType : MarkdownSubstitutionsBase
 {
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly IGitInterface _gitInterface;
-    private readonly ITextFileLauncher _fileOpener;
-    private readonly IFolderCreator _folderCreator;
-
-    protected CreateOrShowCommandExecutorBase(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter,
-        IFolderCreator folderCreator)
-        : base(outputWriter)
-    {
-        _configurationProvider = configurationProvider;
-        _gitInterface = gitInterface;
-        _fileOpener = fileOpener;
-        _folderCreator = folderCreator;
-    }
-
     public override void Execute(TCommandType createOrShowCommand)
     {
         var pathInfo = GetFilePathInfo(createOrShowCommand);
@@ -45,17 +35,17 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             var outputText = MakeSubstitutions(markdownSubstitutions, templateFile.FileContents);
 
-            _folderCreator.CreateFromPathIfDoesntExist(pathInfo.Path);
+            folderCreator.CreateFromPathIfDoesntExist(pathInfo.Path);
 
             File.WriteAllText(pathInfo.Path, outputText);
 
-            if (_configurationProvider.ConfigInfo.Configuration.UseGit)
+            if (configurationProvider.ConfigInfo.Configuration.UseGit)
             {
-                _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(new GitAddCommand(pathInfo.Path));
+                gitInterface.RunGitCommand<GitAddCommand, VoidResult>(new GitAddCommand(pathInfo.Path));
             }
         }
 
-        _fileOpener.LaunchFiles(pathInfo.Path);
+        fileOpener.LaunchFiles(pathInfo.Path);
     }
 
     protected abstract FilePathInfo GetFilePathInfo(TCommandType createOrShowCommand);

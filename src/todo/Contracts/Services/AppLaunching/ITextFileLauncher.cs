@@ -1,4 +1,3 @@
 ﻿namespace Todo.Contracts.Services.AppLaunching;
 
-public interface ITextFileLauncher : IAppLauncher
-{ }
+public interface ITextFileLauncher : IAppLauncher;

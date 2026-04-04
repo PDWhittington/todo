@@ -6,23 +6,24 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class KillHtmlCommandFactory : CommandFactoryBase<KillHtmlCommand>
+public class KillHtmlCommandFactory(IOutputWriter outputWriter)
+    : CommandFactoryBase<KillHtmlCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "k", "killhtml" };
+    private static readonly string[] Words = ["k", "killhtml"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Deletes all the html files in the todo folder and the archive subfolder.",
         "",
         "Usage: todo k"
-    };
+    ];
 
-    public KillHtmlCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
-
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override KillHtmlCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         if (!string.IsNullOrWhiteSpace(restOfCommand))
             throw new ArgumentException("Command expects nothing following.");

@@ -6,7 +6,6 @@ using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.Dates.Naming;
 using Todo.Contracts.Services.Execution;
-using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.Templates;

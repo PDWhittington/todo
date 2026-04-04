@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IShowHtmlCommandExecutor : ICommandExecutor<ShowHtmlCommand> { }
+public interface IShowHtmlCommandExecutor : ICommandExecutor<ShowHtmlCommand>;

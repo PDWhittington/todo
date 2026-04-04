@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IInitCommandExecutor : ICommandExecutor<InitCommand> { }
+public interface IInitCommandExecutor : ICommandExecutor<InitCommand>;

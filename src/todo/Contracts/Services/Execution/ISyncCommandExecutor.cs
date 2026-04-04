@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface ISyncCommandExecutor : ICommandExecutor<SyncCommand> { }
+public interface ISyncCommandExecutor : ICommandExecutor<SyncCommand>;

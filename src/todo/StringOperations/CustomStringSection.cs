@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Markdig.Helpers;
 
 namespace Todo.StringOperations;
 
-public struct CustomStringSection
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+public readonly struct CustomStringSection
 {
     public string ParentString { get; }
     public int StartIndex { get; }

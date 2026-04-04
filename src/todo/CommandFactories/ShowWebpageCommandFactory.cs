@@ -7,28 +7,26 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowWebpageCommandFactory : CommandFactoryBase<ShowWebpageCommand>
+public class ShowWebpageCommandFactory(
+    IOutputWriter outputWriter,
+    IConstantsProvider constantsProvider)
+    : CommandFactoryBase<ShowWebpageCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "w", "web", "www" };
+    private static readonly string[] Words = ["w", "web", "www"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } 
+    public override string[] HelpText { get; } =
+    [
+        $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser.",
+        "",
+        "Usage: todo w"
+    ];
 
-    public ShowWebpageCommandFactory(IOutputWriter outputWriter, 
-        IConstantsProvider constantsProvider) 
-        : base(outputWriter, Words) 
-    {
-        HelpText = new [] {
-            $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser.",
-            "",
-            "Usage: todo w"
-        };
-    }
-
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowWebpageCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         if (!string.IsNullOrWhiteSpace(restOfCommand))
             throw new ArgumentException($"{nameof(ShowWebpageCommand)} expects nothing following.");

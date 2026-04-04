@@ -6,23 +6,24 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class PushCommandFactory : CommandFactoryBase<PushCommand>
+public class PushCommandFactory(IOutputWriter outputWriter) 
+    : CommandFactoryBase<PushCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "push" };
+    private static readonly string[] Words = ["push"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Executes a git push.",
         "",
         "Usage: todo push"
-    };
+    ];
 
-    public PushCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
-
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override PushCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         if (!string.IsNullOrWhiteSpace(restOfCommand))
             throw new ArgumentException("Command expects nothing following.");

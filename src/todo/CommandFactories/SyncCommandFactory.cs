@@ -5,23 +5,23 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class SyncCommandFactory : CommandFactoryBase<SyncCommand>
+public class SyncCommandFactory(IOutputWriter outputWriter) 
+    : CommandFactoryBase<SyncCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "s", "sync" };
+    private static readonly string[] Words = ["s", "sync"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Executes a commit and push operation sequentially.",
         "",
         "Usage: todo s [commit message]"
-    };
-
-    public SyncCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
+    ];
 
     public override SyncCommand? TryGetCommand(string commandLine)
     {
         return !IsThisCommand(commandLine, out var restOfCommand)
-            ? default : SyncCommand.Of(restOfCommand);
+            ? null : SyncCommand.Of(restOfCommand);
     }
 }

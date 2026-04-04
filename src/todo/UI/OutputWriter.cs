@@ -7,8 +7,8 @@ namespace Todo.UI;
 
 public class OutputWriter : IOutputWriter
 {
-    private Thread _writingThread;
-    private BlockingCollection<string> _pipe;
+    private readonly Thread _writingThread;
+    private readonly BlockingCollection<string> _pipe;
 
     public OutputWriter()
     {

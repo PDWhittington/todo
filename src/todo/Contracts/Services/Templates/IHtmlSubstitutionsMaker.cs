@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Templates;
 
-public interface IHtmlSubstitutionsMaker : ISubstitutionsMaker<HtmlSubstitutions> { }
+public interface IHtmlSubstitutionsMaker : ISubstitutionsMaker<HtmlSubstitutions>;

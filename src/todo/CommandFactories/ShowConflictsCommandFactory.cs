@@ -8,23 +8,25 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowConflictsCommandFactory : CommandFactoryBase<ShowConflictsCommand>
 {
-    private static readonly string[] Words = { "sc", "showconflicts" };
+    private static readonly string[] Words = ["sc", "showconflicts"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } = {
+    public override string [] HelpText { get; } =
+    [
         "Opens in the text editor all of the files for which conflicts exist.",
         "",
         "Usage: todo sc"
-    };
+    ];
 
     public ShowConflictsCommandFactory(IOutputWriter outputWriter)
         : base(outputWriter, Words)
     { }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowConflictsCommand? TryGetCommand(string commandLine)
     {
-        if(!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if(!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         if (!string.IsNullOrWhiteSpace(restOfCommand))
             throw new ArgumentException($"{nameof(ShowConflictsCommand)} expects nothing following.");

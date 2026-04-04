@@ -1,3 +1,3 @@
 ﻿namespace Todo.Contracts.Data.Commands;
 
-public abstract class CommandBase { }
+public abstract class CommandBase;

@@ -8,19 +8,12 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.UI;
 
-public class ConsoleTextFormatter : IConsoleTextFormatter
+public class ConsoleTextFormatter(IConfigurationProvider configurationProvider) : IConsoleTextFormatter
 {
     private struct ColumnWidths
     {
         public int WordColumnWidth;
         public int MessageColumnWidth;
-    }
-
-    private readonly IConfigurationProvider _configurationProvider;
-
-    public ConsoleTextFormatter(IConfigurationProvider configurationProvider)
-    {
-        _configurationProvider = configurationProvider;
     }
 
     public string CreateTable(IEnumerable<CommandHelpMessage> commandHelpMessages)
@@ -58,18 +51,19 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
         return sb.ToString();
     }
 
-    private static string CreateRow(IReadOnlyList<string> helpWordLines, IReadOnlyList<string> commandDescriptionLines, int index, ColumnWidths columnWidths)
+    private static string CreateRow(string[] helpWordLines, 
+        string[] commandDescriptionLines, int index, ColumnWidths columnWidths)
     {
         var sb = new StringBuilder()
             .Append('\u2502');
 
-        var helpWord = index >= 0 && index < helpWordLines.Count ? helpWordLines[index] : "";
+        var helpWord = index >= 0 && index < helpWordLines.Length ? helpWordLines[index] : "";
 
         var helpWordPadded = helpWord.PadRight(columnWidths.WordColumnWidth);
 
         sb.Append(helpWordPadded).Append('\u2502');
 
-        var description = index >= 0 && index < commandDescriptionLines.Count ? commandDescriptionLines[index] : "";
+        var description = index >= 0 && index < commandDescriptionLines.Length ? commandDescriptionLines[index] : "";
 
         var descriptionPadded = description.PadRight(columnWidths.MessageColumnWidth);
 
@@ -96,6 +90,20 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
 
     public IEnumerable<string> WrapText(IEnumerable<string> lines, int columnWidth)
     {
+        foreach (var line in lines)
+        {
+            var wordsInLine = line
+                .Split(' ')
+                .Select(x => x.Replace("\t", "   "));
+
+            var outputLines = GetLines(wordsInLine)
+                .Select(ol => string.Join(' ', ol));
+
+            foreach (var outputLine in outputLines) yield return outputLine;
+        }
+
+        yield break;
+
         IEnumerable<string[]> GetLines(IEnumerable<string> words)
         {
             var list = new List<string>();
@@ -119,18 +127,6 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
 
             yield return list.ToArray();
         }
-
-        foreach (var line in lines)
-        {
-            var wordsInLine = line
-                .Split(' ')
-                .Select(x => x.Replace("\t", "   "));
-
-            var outputLines = GetLines(wordsInLine)
-                .Select(ol => string.Join(' ', ol));
-
-            foreach (var outputLine in outputLines) yield return outputLine;
-        }
     }
 
     private ColumnWidths GetColumnWidths(IEnumerable<CommandHelpMessage> rows)
@@ -139,7 +135,7 @@ public class ConsoleTextFormatter : IConsoleTextFormatter
             .SelectMany(x => x.HelpWords)
             .Max(word => word.Length);
 
-        var messageColumnWidth = _configurationProvider.ConfigInfo.Configuration.ConsoleWidth - wordColumnWidth - 3;
+        var messageColumnWidth = configurationProvider.ConfigInfo.Configuration.ConsoleWidth - wordColumnWidth - 3;
 
         return new ColumnWidths
         {

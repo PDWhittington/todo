@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IPrintHtmlCommandExecutor : ICommandExecutor<PrintHtmlCommand> { }
+public interface IPrintHtmlCommandExecutor : ICommandExecutor<PrintHtmlCommand>;

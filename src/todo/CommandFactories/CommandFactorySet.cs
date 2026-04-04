@@ -42,7 +42,7 @@ public class CommandFactorySet : ICommandFactorySet
             .Select(g => g.Key)
             .ToArray();
 
-        if (wordsDuplicated.Any())
+        if (wordsDuplicated.Length != 0)
         {
             exceptions.Add(new Exception("The following words are taken by more " +
                 $"than one CommandFactory: {string.Join(',',wordsDuplicated)}"));
@@ -56,19 +56,19 @@ public class CommandFactorySet : ICommandFactorySet
         {
             case 0:
                 exceptions.Add(new Exception("There are no CommandFactory objects marked as " +
-                                             $"the default. {nameof(CommandFactoryBase<CommandBase>.IsDefaultCommandFactory)} " +
+                                             $"the default. {nameof(CommandFactoryBase<>.IsDefaultCommandFactory)} " +
                                              "should be true for one and only one class"));
                 break;
             case > 1:
                 exceptions.Add(new Exception(
                     "The following CommandFactory objects are marked as being the default CommandFactory: " +
                     $"{string.Join(",", defaultCommandFactories.Select(x => x.GetType().Name))}. " +
-                    $"{nameof(CommandFactoryBase<CommandBase>.IsDefaultCommandFactory)} " +
+                    $"{nameof(CommandFactoryBase<>.IsDefaultCommandFactory)} " +
                     "should be true for one and only one class"));
                 break;
         }
 
-        if (exceptions.Any()) throw new AggregateException(
+        if (exceptions.Count != 0) throw new AggregateException(
             "A number of exceptions were thrown while validating the CommandFactory objects", exceptions);
 
         defaultCommandFactory = commandFactoriesArr

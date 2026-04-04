@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Services.Dates.Parsing;
 using IConfigurationProvider = Todo.Contracts.Services.StateAndConfig.IConfigurationProvider;
@@ -104,7 +105,7 @@ public class DateParser : IDateParser
                 dayOfWeek = DayOfWeek.Saturday; return true;
 
             default:
-                dayOfWeek = default; return false;
+                dayOfWeek = null; return false;
         }
     }
 
@@ -121,7 +122,7 @@ public class DateParser : IDateParser
                     offset = -parsed;
                     return true;
                 default:
-                    offset = default;
+                    offset = 0;
                     return false;
 
             }
@@ -147,11 +148,6 @@ public class DateParser : IDateParser
 
     private bool IsLastThisOrNext(string commandLine, out DateOnly? date)
     {
-        bool FirstWordIsKey(string firstWord)
-            => "last".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
-               "this".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
-               "next".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase);
-
         var elements = commandLine.Split(' ');
 
         if (elements.Length == 2 &&
@@ -173,6 +169,11 @@ public class DateParser : IDateParser
 
         date = null;
         return false;
+
+        bool FirstWordIsKey(string firstWord)
+            => "last".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
+               "this".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
+               "next".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase);
     }
 
     private DateOnly GetDateFromDayOfWeek(DayOfWeek dayOfWeek)
@@ -181,8 +182,10 @@ public class DateParser : IDateParser
 
         var possibles = GetPossiblesForDayOfWeek(today, dayOfWeek);
 
-        if (possibles.Length == 0) throw new Exception($"No dates found for day = {dayOfWeek}");
-        return _dateHelper.GetNearestTo(possibles, today);
+        return possibles.Length != 0 
+            ? _dateHelper.GetNearestTo(possibles, today)
+            : throw new Exception($"No dates found for day = {dayOfWeek}");
+
     }
 
     private DateOnly GetDateFromDayOnly(int dayOnly)
@@ -191,8 +194,9 @@ public class DateParser : IDateParser
 
         var possibles = GetPossiblesForDayOnly(today, dayOnly).ToArray();
 
-        if (possibles.Length == 0) throw new Exception($"No dates found for day = {dayOnly}");
-        return _dateHelper.GetNearestTo(possibles, today);
+        return possibles.Length == 0
+            ? _dateHelper.GetNearestTo(possibles, today)
+            : throw new Exception($"No dates found for day = {dayOnly}");
     }
 
     private DateOnly GetDateFromDayMonth(int month, int day)
@@ -204,29 +208,31 @@ public class DateParser : IDateParser
     }
 
     // ReSharper disable once ReturnTypeCanBeEnumerable.Local
+    [SuppressMessage("ReSharper", "DuplicatedSequentialIfBodies")]
     private DateOnly [] GetPossiblesForDayOnly(DateOnly currentDay, int n)
     {
+        return PotentialDates().ToArray();
+
         IEnumerable<DateOnly> PotentialDates()
         {
             if (_dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return nOfMonth;
             if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
             if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
         }
-
-        return PotentialDates().ToArray();
     }
 
     // ReSharper disable once ReturnTypeCanBeEnumerable.Local
+    [SuppressMessage("ReSharper", "DuplicatedSequentialIfBodies")]
     private DateOnly [] GetPossiblesForDayMonth(DateOnly currentDay, int month, int day)
     {
+        return PotentialDates().ToArray();
+
         IEnumerable<DateOnly> PotentialDates()
         {
             if (_dateHelper.TryGetDateInPreviousYear(currentDay, month, day, out var nOfMonth)) yield return nOfMonth;
             if (_dateHelper.TryGetDateInCurrentYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
             if (_dateHelper.TryGetDateInFollowingYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
         }
-
-        return PotentialDates().ToArray();
     }
 
     private static DateOnly[] GetPossiblesForDayOfWeek(DateOnly currentDay, DayOfWeek dayOfWeek)
@@ -247,12 +253,12 @@ public class DateParser : IDateParser
         var currentDayIndex = MapDayOfWeekToNumber(currentDay.DayOfWeek);
         var dayOfWeekIndex = MapDayOfWeekToNumber(dayOfWeek);
 
-        return new []
-        {
+        return
+        [
             dayOfWeekIndex - 7 - currentDayIndex,
             dayOfWeekIndex - currentDayIndex,
             dayOfWeekIndex + 7 - currentDayIndex
-        };
+        ];
     }
 
     private static int MapDayOfWeekToNumber(DayOfWeek dayOfWeek) => dayOfWeek switch
