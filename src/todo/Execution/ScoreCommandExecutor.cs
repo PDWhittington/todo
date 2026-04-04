@@ -13,6 +13,7 @@ using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 using Todo.MarkdownOperations;
+using Todo.StringOperations;
 
 namespace Todo.Execution;
 
@@ -98,26 +99,28 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
    private static bool ContainsTokenScore(string line, out int tokenScore)
    {
       var sections = GetSections(line);
-
+      var totalScore = 0;
+      var hasTokenScore = false;
+      
       foreach (var section in sections)
       {
          if (!section.EndsWith('t') &&  section.EndsWith('T')) continue;
-         if (!section.Take(section.Length - 1).All(x => char.IsDigit(x))) continue;
+         if (!section.TryIntParseAllButLast(out var score)) continue;
          
-         tokenScore = int.Parse(section.Substring(0, section.Length - 1));
-         return true;
+         hasTokenScore = true;
+         totalScore += score;
       }
       
-      tokenScore = -1;
-      return false;
+      tokenScore = totalScore;
+      return hasTokenScore;
    }
 
-   private static IEnumerable<string> GetSections(string line)
+   private static IEnumerable<CustomStringSection> GetSections(string line)
    {
       var previousCharWasAlphaNumeric = false;
       int currentSectionStart = 0;
       
-      for (int i = 0; i < line.Length; i++)
+      for (var i = 0; i < line.Length; i++)
       {
          var currentChar = line[i];
          var currentCharIsAlphaNumeric = char.IsLetterOrDigit(currentChar);
@@ -128,16 +131,15 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
          }
          else if (previousCharWasAlphaNumeric && !currentCharIsAlphaNumeric)
          {
-            yield return line.Substring(currentSectionStart, i - currentSectionStart);
+            yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart);
          }
          else if (i == line.Length - 1 && currentCharIsAlphaNumeric)
          {
-            yield return line.Substring(currentSectionStart, i - currentSectionStart + 1);
+            yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart + 1);
          }
          
          previousCharWasAlphaNumeric = currentCharIsAlphaNumeric;
       }
-      
    }
    
    private static HeadingCategoryEnum GetHeadingCategoryFromStack(MarkdownHeadingStack stack, 
