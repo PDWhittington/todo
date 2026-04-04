@@ -11,21 +11,18 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ArchiveCommandExecutor : FileMoveExecutorBase<ArchiveCommand>, IArchiveCommandExecutor
+public class ArchiveCommandExecutor(
+    IDateListPathResolver dateListPathResolver,
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    IOutputWriter outputWriter,
+    IFolderCreator folderCreator)
+    : FileMoveExecutorBase<ArchiveCommand>(configurationProvider, gitInterface, outputWriter, folderCreator),
+        IArchiveCommandExecutor
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
-
-    public ArchiveCommandExecutor(IDateListPathResolver dateListPathResolver,
-        IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IOutputWriter outputWriter, IFolderCreator folderCreator)
-        : base(configurationProvider, gitInterface, outputWriter, folderCreator)
-    {
-        _dateListPathResolver = dateListPathResolver;
-    }
-
     protected override FilePathInfo GetSourcePath(ArchiveCommand command)
-        => _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
+        => dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
 
     protected override FilePathInfo GetDestinationPath(ArchiveCommand command)
-        => _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
+        => dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
 }
