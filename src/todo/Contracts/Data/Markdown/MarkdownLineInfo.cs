@@ -20,6 +20,8 @@ public class MarkdownLineInfo
         LineNumber = lineNumber;
         HeadingLevel = headingLevel;
     }
+
+    public override string ToString() => Line;
     
     public static MarkdownLineInfo Of(FilePathInfo filePathInfo, MarkdownLineTypeEnum lineType, 
         string line, int lineNumber, int headingLevel)

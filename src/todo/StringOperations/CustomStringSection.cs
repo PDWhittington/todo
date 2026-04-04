@@ -38,6 +38,8 @@ public struct CustomStringSection
         value = val;
         return true;
     }
+
+    public override string ToString() => ParentString.Substring(StartIndex, SectionLength);
     
     public static CustomStringSection Of(string parentString, int startIndex, int sectionLength)
         => new (parentString, startIndex, sectionLength);

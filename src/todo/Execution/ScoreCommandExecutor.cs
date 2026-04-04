@@ -49,6 +49,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
          OutputWriter.WriteLine($"Done: {scoreInfo.ScoreDone}");
          OutputWriter.WriteLine($"NotDone: {scoreInfo.ScoreNotDone}");
          OutputWriter.WriteLine($"Carried Forward: {scoreInfo.CarriedForward}");
+         OutputWriter.WriteLine($"Outstanding: {scoreInfo.Outstanding}");
          OutputWriter.WriteLine();
       }
    }
@@ -80,6 +81,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       int doneScore = 0;
       int notDoneScore = 0;
       int carriedForwardScore = 0;
+      int outstanding = 0;
       
       for (int i = 0; i < todoFile.MarkdownLines.Length; i++) 
       {
@@ -100,10 +102,11 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
             case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
             case HeadingCategoryEnum.NotDone: notDoneScore += tokenScore; break;
             case HeadingCategoryEnum.CarriedForward: carriedForwardScore += tokenScore; break;
+            default: outstanding += tokenScore; break;
          }
       }
       
-      return ScoreInfo.Of(filePathInfo, doneScore, notDoneScore, carriedForwardScore);
+      return ScoreInfo.Of(filePathInfo, doneScore, notDoneScore, carriedForwardScore, outstanding);
    }
 
    private static bool ContainsTokenScore(string line, out int tokenScore)
@@ -114,8 +117,9 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       
       foreach (var section in sections)
       {
-         if (!section.EndsWith('t') &&  section.EndsWith('T')) continue;
+         if (!section.EndsWith('t') && !section.EndsWith('T')) continue;
          if (!section.TryIntParseAllButLast(out var score)) continue;
+         if (score == 0) continue;
          
          hasTokenScore = true;
          totalScore += score;
