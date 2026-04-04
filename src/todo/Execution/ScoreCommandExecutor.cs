@@ -50,6 +50,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
          OutputWriter.WriteLine($"NotDone: {scoreInfo.ScoreNotDone}");
          OutputWriter.WriteLine($"Carried Forward: {scoreInfo.CarriedForward}");
          OutputWriter.WriteLine($"Outstanding: {scoreInfo.Outstanding}");
+         OutputWriter.WriteLine($"Total: {scoreInfo.Total()}");
          OutputWriter.WriteLine();
       }
    }
@@ -99,14 +100,14 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
          
          switch (currentHeading)
          {
-            case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
             case HeadingCategoryEnum.NotDone: notDoneScore += tokenScore; break;
+            case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
             case HeadingCategoryEnum.CarriedForward: carriedForwardScore += tokenScore; break;
             default: outstandingScore += tokenScore; break;
          }
       }
       
-      return ScoreInfo.Of(filePathInfo, doneScore, notDoneScore, carriedForwardScore, outstandingScore);
+      return ScoreInfo.Of(filePathInfo, notDoneScore, doneScore, carriedForwardScore, outstandingScore);
    }
 
    private static bool ContainsTokenScore(string line, out int tokenScore)
