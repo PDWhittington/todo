@@ -7,25 +7,24 @@ namespace Todo.CommandFactories;
 
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CreateOrShowTopicListCommandFactory
-    : CommandFactoryBase<CreateOrShowTopicListCommand>
+public class CreateOrShowTopicListCommandFactory(IOutputWriter outputWriter)
+    : CommandFactoryBase<CreateOrShowTopicListCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "t", "topic" };
+    private static readonly string[] Words = ["t", "topic"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Creates or shows a todo list relating to a single topic.",
         "",
         "Usage: todo t (topic name)"
-    };
-
-    public CreateOrShowTopicListCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
+    ];
 
     public override CreateOrShowTopicListCommand? TryGetCommand(string commandLine)
     {
         return !IsThisCommand(commandLine, out var restOfCommand)
-            ? default
+            ? null
             : CreateOrShowTopicListCommand.Of(restOfCommand?.Trim()
                 ?? throw new Exception("Topic name cannot be blank"));
     }

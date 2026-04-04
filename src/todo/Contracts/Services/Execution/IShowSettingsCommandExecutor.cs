@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IShowSettingsCommandExecutor : ICommandExecutor<ShowSettingsCommand> { }
+public interface IShowSettingsCommandExecutor : ICommandExecutor<ShowSettingsCommand>;

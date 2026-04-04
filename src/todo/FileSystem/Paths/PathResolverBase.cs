@@ -9,21 +9,16 @@ using Todo.Contracts.Services.StateAndConfig;
 namespace Todo.FileSystem.Paths;
 
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-public abstract class PathResolverBase<TParameterType> : IPathResolver<TParameterType>
+public abstract class PathResolverBase<TParameterType>(
+    IConfigurationProvider configurationProvider,
+    IOutputFolderPathProvider outputFolderPathProvider)
+    : IPathResolver<TParameterType>
 {
-    protected readonly IConfigurationProvider ConfigurationProvider;
-    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
+    protected readonly IConfigurationProvider ConfigurationProvider = configurationProvider;
 
     protected const string MarkdownExtension = "md";
     protected const string HtmlExtension = "html";
     protected const string SettingsExtension = "json";
-
-    protected PathResolverBase(IConfigurationProvider configurationProvider,
-        IOutputFolderPathProvider outputFolderPathProvider)
-    {
-        ConfigurationProvider = configurationProvider;
-        _outputFolderPathProvider = outputFolderPathProvider;
-    }
 
     public abstract string GetRegExForThisFileType();
 
@@ -43,7 +38,7 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
     public FilePathInfo GetFilePathFor(TParameterType parameter, FileTypeEnum fileType)
     {
         var fileName = FileNameFor(parameter, fileType);
-        var rootedOutputFolder = _outputFolderPathProvider.GetRootedOutputFolder();
+        var rootedOutputFolder = outputFolderPathProvider.GetRootedOutputFolder();
 
         var path = Path.Combine(rootedOutputFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
@@ -54,7 +49,7 @@ public abstract class PathResolverBase<TParameterType> : IPathResolver<TParamete
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
     {
         var fileName = FileNameFor(parameter, fileType);
-        var rootedArchiveFolder = _outputFolderPathProvider.GetRootedArchiveFolder();
+        var rootedArchiveFolder = outputFolderPathProvider.GetRootedArchiveFolder();
 
         var path = Path.Combine(rootedArchiveFolder, fileName);
         var formattedPath = Path.GetFullPath(path);

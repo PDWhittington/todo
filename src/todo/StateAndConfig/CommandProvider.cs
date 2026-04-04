@@ -26,13 +26,11 @@ public class CommandProvider : ICommandProvider
         {
             var command = commandFactory.TryGetCommand(commandLine);
 
-            if (command != default) return command;
+            if (command != null) return command;
         }
 
         var commandForDefault = _commandFactorySet.DefaultCommandFactory.TryGetCommand(commandLine);
 
-        if (commandForDefault != default) return commandForDefault;
-
-        throw new Exception("Command not recognised");
+        return commandForDefault ?? throw new Exception("Command not recognised");
     }
 }

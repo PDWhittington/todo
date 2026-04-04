@@ -6,10 +6,12 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
-public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : CommandBase
+public abstract class CommandFactoryBase<T>(IOutputWriter outputWriter, IEnumerable<string> wordsForCommand)
+    : ICommandFactory<T>
+    where T : CommandBase
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    protected readonly IOutputWriter OutputWriter;
+    protected readonly IOutputWriter OutputWriter = outputWriter;
 
     public abstract T? TryGetCommand(string commandLine);
 
@@ -17,13 +19,7 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
 
     public abstract string [] HelpText { get; }
 
-    public HashSet<string> CommandWords { get; }
-
-    protected CommandFactoryBase(IOutputWriter outputWriter, IEnumerable<string> wordsForCommand)
-    {
-        OutputWriter = outputWriter;
-        CommandWords = new HashSet<string>(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
-    }
+    public HashSet<string> CommandWords { get; } = new(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
 
     protected bool IsThisCommand(string commandLine, out string? restOfCommand)
     {
@@ -45,12 +41,11 @@ public abstract class CommandFactoryBase<T> : ICommandFactory<T> where T : Comma
 
     private static string FirstWordToLower(string str)
     {
-        var index = str.IndexOf(" ", StringComparison.Ordinal);
+        var index = str.IndexOf(' ');
 
         return index switch
         {
-            -1 => str,
-            0 => str,
+            -1 or 0 => str,
             _ => str[..index].ToLower()
         };
     }

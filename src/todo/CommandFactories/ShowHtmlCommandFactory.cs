@@ -9,15 +9,16 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
 {
-    private static readonly string[] Words = { "h", "html", "showhtml" };
+    private static readonly string[] Words = ["h", "html", "showhtml"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Opens the browser specified in the settings file and loads the Html file for the given date.",
         "",
         "Usage: todo h [date]"
-    };
+    ];
 
     private readonly IDateParser _dateParser;
 
@@ -27,9 +28,10 @@ public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
         _dateParser = dateParser;
     }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowHtmlCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
             throw new ArgumentException("Date in archive command is not recognised");

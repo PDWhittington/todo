@@ -20,7 +20,7 @@ public class FileListCreator : IFileListCreator
         _pathRootingProvider = pathRootingProvider;
     }
 
-    struct PathAndFolder
+    private struct PathAndFolder
     {
         public string Path;
         public FolderEnum Folder;
@@ -30,6 +30,35 @@ public class FileListCreator : IFileListCreator
         ListFileTypeEnum listFileType)
     {
         var pattern = _dateListPathResolver.GetRegExForThisFileType();
+
+        var pathsInRelevantFolders = new []
+        {
+            outputFolder.HasFlag(OutputFolderEnum.MainFolder)
+                ? Directory.GetFiles(_pathRootingProvider.GetRootedOutputFolder())
+                    .Select(path => new PathAndFolder { Path = path, Folder = FolderEnum.TodoRoot })
+                : [],
+
+            outputFolder.HasFlag(OutputFolderEnum.ArchiveFolder)
+                ? Directory.GetFiles(_pathRootingProvider.GetRootedArchiveFolder())
+                    .Select(path => new PathAndFolder { Path = path, Folder = FolderEnum.Archive })
+                : []
+
+        }.SelectMany(x => x)
+        .Select(CategoriseAndMatch)
+        .Where(filterInfo => filterInfo.Match)
+        .Select(pathAndFolder => FilePathInfo.Of(pathAndFolder.PathAndFolder.Path,
+            MapToFileTypeEnum(pathAndFolder.FileType), pathAndFolder.PathAndFolder.Folder))
+        .ToArray();
+
+        return pathsInRelevantFolders;
+
+        FileTypeEnum MapToFileTypeEnum(ListFileTypeEnum lfi)
+            => lfi switch
+            {
+                ListFileTypeEnum.DayList => FileTypeEnum.MarkdownDayList,
+                ListFileTypeEnum.TopicList => FileTypeEnum.MarkdownTopicList,
+                _ => throw new Exception()
+            };
 
         (bool Match, ListFileTypeEnum FileType, PathAndFolder PathAndFolder) CategoriseAndMatch(PathAndFolder pathAndFolder)
         {
@@ -46,34 +75,5 @@ public class FileListCreator : IFileListCreator
 
             return (match, fileType, pathAndFolder);
         }
-
-        FileTypeEnum MapToFileTypeEnum(ListFileTypeEnum listFileType)
-            => listFileType switch
-            {
-                ListFileTypeEnum.DayList => FileTypeEnum.MarkdownDayList,
-                ListFileTypeEnum.TopicList => FileTypeEnum.MarkdownTopicList,
-                _ => throw new Exception()
-            };
-
-        var pathsInRelevantFolders = new []
-            {
-                outputFolder.HasFlag(OutputFolderEnum.MainFolder)
-                    ? Directory.GetFiles(_pathRootingProvider.GetRootedOutputFolder())
-                        .Select(path => new PathAndFolder { Path = path, Folder = FolderEnum.TodoRoot })
-                    : Array.Empty<PathAndFolder>(),
-
-                outputFolder.HasFlag(OutputFolderEnum.ArchiveFolder)
-                    ? Directory.GetFiles(_pathRootingProvider.GetRootedArchiveFolder())
-                        .Select(path => new PathAndFolder { Path = path, Folder = FolderEnum.Archive })
-                    : Array.Empty<PathAndFolder>(),
-
-            }.SelectMany(x => x)
-            .Select(CategoriseAndMatch)
-            .Where(filterInfo => filterInfo.Match)
-            .Select(pathAndFolder => FilePathInfo.Of(pathAndFolder.PathAndFolder.Path,
-                MapToFileTypeEnum(pathAndFolder.FileType), pathAndFolder.PathAndFolder.Folder))
-            .ToArray();
-
-        return pathsInRelevantFolders;
     }
 }

@@ -17,5 +17,5 @@ public class VoidResult
     }
 
     private static bool Validate(bool success, Exception? exception)
-        => success ^ (exception is not null);
+        => success ^ exception is not null;
 }

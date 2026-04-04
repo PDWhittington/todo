@@ -24,7 +24,7 @@ public class CommandExecutorSet : ICommandExecutorSet
 
     public ICommandExecutor? GetExecutorForCommand(CommandBase commandBase)
     {
-        return _executors.TryGetValue(commandBase.GetType(), out var executor) ? executor : default;
+        return _executors.GetValueOrDefault(commandBase.GetType());
     }
 
     public bool TryExecute<T>(T command) where T : CommandBase

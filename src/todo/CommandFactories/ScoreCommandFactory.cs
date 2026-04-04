@@ -11,17 +11,16 @@ public class ScoreCommandFactory(IOutputWriter outputWriter)
    private static readonly string[] Words = ["score", "gamify"];
 
    public override ScoreCommand? TryGetCommand(string commandLine)
-   {
-      if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
-
-      return new ScoreCommand();
-   }
+      => IsThisCommand(commandLine, out _)
+         ? new ScoreCommand()
+         : null;
 
    public override bool IsDefaultCommandFactory => false;
-   public override string [] HelpText { get; } = {
+   public override string [] HelpText { get; } =
+   [
       "Allows the user to 'gamify' the todo lists and display a score for how much has been achieved" +
       "per day or per week.",
       "",
       "Usage: todo score"
-   };
+   ];
 }

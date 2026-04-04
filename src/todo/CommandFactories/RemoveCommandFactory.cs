@@ -9,15 +9,16 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class RemoveCommandFactory : CommandFactoryBase<RemoveCommand>
 {
-    private static readonly string[] Words = { "rm", "remove", "delete" };
+    private static readonly string[] Words = ["rm", "remove", "delete"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Deletes the file. If git is enabled, the command performs a remove in git. ",
         "",
         "Usage: todo rm [date]"
-    };
+    ];
 
     private readonly IDateParser _dateParser;
 
@@ -27,9 +28,10 @@ public class RemoveCommandFactory : CommandFactoryBase<RemoveCommand>
         _dateParser = dateParser;
     }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override RemoveCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
             throw new ArgumentException("Date in remove command is not recognised");

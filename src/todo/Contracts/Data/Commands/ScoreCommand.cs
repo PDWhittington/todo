@@ -1,6 +1,3 @@
 namespace Todo.Contracts.Data.Commands;
 
-public class ScoreCommand : CommandBase
-{
-    
-}
+public class ScoreCommand : CommandBase;

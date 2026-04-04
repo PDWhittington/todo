@@ -2,7 +2,6 @@
 using LibGit2Sharp;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
-using Todo.Contracts.Services.UI;
 using Todo.Git.Commands;
 
 namespace Todo.Git;
@@ -11,24 +10,21 @@ public class GitInterface : IGitInterface
 {
     public IGitInterfaceTools GitInterfaceTools { get; }
 
-    public IRepository Repository => _repository.Value;
+    public Repository Repository => _repository.Value;
 
     private readonly IOutputFolderPathProvider _outputFolderPathProvider;
-    private readonly IOutputWriter _outputWriter;
-    private readonly Lazy<IRepository> _repository;
+    private readonly Lazy<Repository> _repository;
 
-    public GitInterface(IOutputFolderPathProvider outputFolderPathProvider,
-        IOutputWriter outputWriter, IGitInterfaceTools gitInterfaceTools)
+    public GitInterface(IOutputFolderPathProvider outputFolderPathProvider, IGitInterfaceTools gitInterfaceTools)
     {
         GitInterfaceTools = gitInterfaceTools;
         _outputFolderPathProvider = outputFolderPathProvider;
-        _outputWriter = outputWriter;
-        _repository = new Lazy<IRepository>(GetRepository);
+        _repository = new Lazy<Repository>(GetRepository);
     }
 
-    private IRepository GetRepository()
+    private Repository GetRepository()
     {
-        var repoPath = LibGit2Sharp.Repository.Discover(_outputFolderPathProvider.GetRootedOutputFolder());
+        var repoPath = Repository.Discover(_outputFolderPathProvider.GetRootedOutputFolder());
         return new Repository(repoPath);
     }
 

@@ -1,3 +1,3 @@
 ﻿namespace Todo.Contracts.Services.Templates;
 
-public interface ITopicListMarkdownTemplateProvider : ITemplateProvider { }
+public interface ITopicListMarkdownTemplateProvider : ITemplateProvider;

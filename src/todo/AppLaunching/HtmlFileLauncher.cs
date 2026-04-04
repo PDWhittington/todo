@@ -9,30 +9,20 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.AppLaunching;
 
-public class HtmlFileLauncher : IHtmlFileLauncher
+public partial class HtmlFileLauncher(
+    IConfigurationProvider configurationProvider,
+    IPathHelper pathHelper,
+    IOutputWriter outputWriter)
+    : IHtmlFileLauncher
 {
-
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+    // ReSharper disable once UnusedMethodReturnValue.Local
+    private static partial bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
 
-    [DllImport("user32.dll")]
+    [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.I4)]
-    private static extern int SetForegroundWindow(IntPtr hwnd);
-
-    private readonly IConfigurationProvider _configurationProvider;
-
-    private readonly IPathHelper _pathHelper;
-
-    private readonly IOutputWriter _outputWriter;
-
-    public HtmlFileLauncher(IConfigurationProvider configurationProvider,
-        IPathHelper pathHelper, IOutputWriter outputWriter)
-    {
-        _configurationProvider = configurationProvider;
-        _pathHelper = pathHelper;
-        _outputWriter = outputWriter;
-    }
+    private static partial int SetForegroundWindow(IntPtr hwnd);
 
     public void LaunchFiles(params string [] paths)
     {
@@ -44,13 +34,13 @@ public class HtmlFileLauncher : IHtmlFileLauncher
 
     private void LaunchSingleFile(string path)
     {
-        var browserLaunchInfo = _configurationProvider.ConfigInfo.Configuration.BrowserPath.GetPathForThisOs();
+        var browserLaunchInfo = configurationProvider.ConfigInfo.Configuration.BrowserPath.GetPathForThisOs();
 
-        var browserPath = _pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
+        var browserPath = pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
 
         var parameters = browserLaunchInfo.InterpolateParameters(path);
 
-        _outputWriter.WriteLine($"Opening {path} in a browser.");
+        outputWriter.WriteLine($"Opening {path} in a browser.");
 
         var process = Process.Start(browserPath, parameters);
 

@@ -6,6 +6,7 @@ public interface IFolderCreator
 
     void CreateArchiveFolder();
 
+    // ReSharper disable once UnusedMemberInSuper.Global
     void CreateIfDoesntExist(string directory);
 
     void CreateFromPathIfDoesntExist(string path);

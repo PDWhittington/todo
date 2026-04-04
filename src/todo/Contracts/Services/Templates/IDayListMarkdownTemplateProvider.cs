@@ -1,3 +1,3 @@
 ﻿namespace Todo.Contracts.Services.Templates;
 
-public interface IDayListMarkdownTemplateProvider : ITemplateProvider { }
+public interface IDayListMarkdownTemplateProvider : ITemplateProvider;

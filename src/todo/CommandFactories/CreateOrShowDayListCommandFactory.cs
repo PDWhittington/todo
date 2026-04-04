@@ -9,17 +9,18 @@ namespace Todo.CommandFactories;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class CreateOrShowDayListCommandFactory : CommandFactoryBase<CreateOrShowDayListCommand>
 {
-    private static readonly string[] Words = { "createorshow" };
+    private static readonly string[] Words = ["createorshow"];
 
     public override bool IsDefaultCommandFactory => true;
 
-    public override string[] HelpText { get; } = {
+    public override string[] HelpText { get; } =
+    [
         "Creates or shows a markdown file for the date supplied. " +
         "This is the default command and can be executed by typing anything that can be parsed as a date. " +
         "Supplying no date assumes the current day.",
         "",
         "Usage: todo [date]"
-    };
+    ];
 
     private readonly IDateParser _dateParser;
 
@@ -29,6 +30,7 @@ public class CreateOrShowDayListCommandFactory : CommandFactoryBase<CreateOrShow
         _dateParser = dateParser;
     }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override CreateOrShowDayListCommand TryGetCommand(string commandLine)
     {
         var commandLineToUse = IsThisCommand(commandLine, out var restOfCommand)

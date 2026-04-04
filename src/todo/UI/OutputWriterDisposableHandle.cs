@@ -1,19 +1,13 @@
+using System;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.UI;
 
-public class OutputWriterDisposableHandle : IOutputWriterDisposableHandle
+public class OutputWriterDisposableHandle(IOutputWriter outputWriter) : IOutputWriterDisposableHandle
 {
-    private readonly IOutputWriter _outputWriter;
-
-    public OutputWriterDisposableHandle(IOutputWriter outputWriter)
-    {
-        _outputWriter = outputWriter;
-    }
-
-
     public void Dispose()
     {
-        _outputWriter.JoinWritingThread();
+        GC.SuppressFinalize(this);
+        outputWriter.JoinWritingThread();
     }
 }

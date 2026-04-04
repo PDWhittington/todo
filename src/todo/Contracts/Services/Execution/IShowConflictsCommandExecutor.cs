@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IShowConflictsCommandExecutor : ICommandExecutor<ShowConflictsCommand> { }
+public interface IShowConflictsCommandExecutor : ICommandExecutor<ShowConflictsCommand>;

@@ -1,3 +1,3 @@
 ﻿namespace Todo.Contracts.Data.Substitutions;
 
-public abstract class SubstitutionsBase { }
+public abstract class SubstitutionsBase;

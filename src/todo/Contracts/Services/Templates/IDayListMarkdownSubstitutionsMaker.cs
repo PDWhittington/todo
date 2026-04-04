@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Templates;
 
-public interface IDayListMarkdownSubstitutionsMaker : ISubstitutionsMaker<DayListMarkdownSubstitutions> { }
+public interface IDayListMarkdownSubstitutionsMaker : ISubstitutionsMaker<DayListMarkdownSubstitutions>;

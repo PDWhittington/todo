@@ -5,9 +5,11 @@ namespace Todo.Contracts.Data.Markdown;
 
 public class MarkdownLineInfo
 {
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FilePathInfo FilePath { get; }
     public MarkdownLineTypeEnum LineType { get; }
     public string Line { get; }
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public double LineNumber { get; }
     public int HeadingLevel { get; }
 

@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IArchiveCommandExecutor : ICommandExecutor<ArchiveCommand> { }
+public interface IArchiveCommandExecutor : ICommandExecutor<ArchiveCommand>;

@@ -2,6 +2,7 @@
 
 public interface IManifestStreamProvider
 {
+    // ReSharper disable once UnusedMemberInSuper.Global
     byte[] GetBytesFromManifest(string manifestName);
 
     string GetStringFromManifest(string manifestName);

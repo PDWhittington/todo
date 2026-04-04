@@ -8,13 +8,15 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
+public class ListFilesCommandFactory(IOutputWriter outputWriter)
+    : CommandFactoryBase<ListFilesCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "l", "list" };
+    private static readonly string[] Words = ["l", "list"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } = {
+    public override string [] HelpText { get; } =
+    [
         "Provides a list of all todo lists. Switches are as follows:-",
         "\tm -- main todo folder.",
         "\ta -- archive folder.",
@@ -22,15 +24,11 @@ public class ListFilesCommandFactory : CommandFactoryBase<ListFilesCommand>
         "\tt -- lists relating to topics.",
         "",
         "Usage: todo l [m|a][d|t]"
-    };
-
-    public ListFilesCommandFactory(IOutputWriter outputWriter)
-        : base(outputWriter, Words)
-    { }
+    ];
 
     public override ListFilesCommand? TryGetCommand(string commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return default;
+        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
         GetListParameters(restOfCommand!, out var fileLocation, out var fileType);
 

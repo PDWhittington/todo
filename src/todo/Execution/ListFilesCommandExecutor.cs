@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
-using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.Execution;
@@ -88,15 +85,7 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
 
     private static string GetHeader(ListFilesCommand command)
     {
-        string FileTypeMessage(ListFileTypeEnum listFileType)
-            => listFileType switch
-            {
-                ListFileTypeEnum.DayList => "day todo lists",
-                ListFileTypeEnum.TopicList => "topic todo lists",
-                ListFileTypeEnum.DayList |
-                    ListFileTypeEnum.TopicList => "both types of todo lists",
-                _ => throw new Exception()
-            };
+        return $"Listing {FileTypeMessage(command.ListFileType)} in {FileLocationMessage(command.OutputFolder)}:-";
 
         string FileLocationMessage(OutputFolderEnum outputFolder)
             => outputFolder switch
@@ -108,6 +97,14 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
                 _ => throw new Exception()
             };
 
-        return $"Listing {FileTypeMessage(command.ListFileType)} in {FileLocationMessage(command.OutputFolder)}:-";
+        string FileTypeMessage(ListFileTypeEnum listFileType)
+            => listFileType switch
+            {
+                ListFileTypeEnum.DayList => "day todo lists",
+                ListFileTypeEnum.TopicList => "topic todo lists",
+                ListFileTypeEnum.DayList |
+                    ListFileTypeEnum.TopicList => "both types of todo lists",
+                _ => throw new Exception()
+            };
     }
 }

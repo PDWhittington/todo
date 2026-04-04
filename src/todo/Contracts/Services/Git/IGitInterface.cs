@@ -5,7 +5,7 @@ namespace Todo.Contracts.Services.Git;
 
 public interface IGitInterface
 {
-    IRepository Repository { get; }
+    Repository Repository { get; }
 
     IGitInterfaceTools GitInterfaceTools { get; }
 

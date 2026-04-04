@@ -63,120 +63,126 @@ internal static class Initialise
 
         #region Base functionality
 
-        private static IServiceCollection AddAppLaunchingOperations(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
-                .AddSingleton<ITextFileLauncher, TextFileLauncher>();
+        extension(IServiceCollection serviceCollection)
+        {
+            private IServiceCollection AddAppLaunchingOperations()
+                => serviceCollection
+                    .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
+                    .AddSingleton<ITextFileLauncher, TextFileLauncher>();
 
-        private static IServiceCollection AddAssemblyOperations(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IManifestStreamProvider, ManifestStreamProvider>();
+            private IServiceCollection AddAssemblyOperations()
+                => serviceCollection
+                    .AddSingleton<IManifestStreamProvider, ManifestStreamProvider>();
 
-        private static IServiceCollection AddStateAndConfig(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IConstantsProvider, ConstantsProvider>()
-                .AddSingleton<ICommandLineProvider, CommandLineProvider>()
-                .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
-                .AddSingleton<ICommandProvider, CommandProvider>()
-                .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
-                .AddSingleton<IAssemblyInformationProvider, AssemblyInformationProvider>()
-                .AddSingleton<IBoilerPlateProvider, BoilerPlateProvider>();
+            private IServiceCollection AddStateAndConfig()
+                => serviceCollection
+                    .AddSingleton<IConstantsProvider, ConstantsProvider>()
+                    .AddSingleton<ICommandLineProvider, CommandLineProvider>()
+                    .AddSingleton<IConfigurationProvider, ConfigurationProvider>()
+                    .AddSingleton<ICommandProvider, CommandProvider>()
+                    .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
+                    .AddSingleton<IAssemblyInformationProvider, AssemblyInformationProvider>()
+                    .AddSingleton<IBoilerPlateProvider, BoilerPlateProvider>();
 
-        private static IServiceCollection AddDateParsing(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IDateParser, DateParser>()
-                .AddSingleton<IDateHelper, DateHelper>();
+            private IServiceCollection AddDateParsing()
+                => serviceCollection
+                    .AddSingleton<IDateParser, DateParser>()
+                    .AddSingleton<IDateHelper, DateHelper>();
 
-        private static IServiceCollection AddTemplateFunctionality(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IDayListMarkdownSubstitutionsMaker, DayListMarkdownSubstitutionsMaker>()
-                .AddSingleton<ITopicListMarkdownSubstitutionsMaker, TopicListMarkdownSubstitutionsMaker>()
-                .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
-                .AddSingleton<IDayListMarkdownTemplateProvider, DayListMarkdownTemplateProvider>()
-                .AddSingleton<ITopicListMarkdownTemplateProvider, TopicListMarkdownTemplateProvider>()
-                .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
+            private IServiceCollection AddTemplateFunctionality()
+                => serviceCollection
+                    .AddSingleton<IDayListMarkdownSubstitutionsMaker, DayListMarkdownSubstitutionsMaker>()
+                    .AddSingleton<ITopicListMarkdownSubstitutionsMaker, TopicListMarkdownSubstitutionsMaker>()
+                    .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
+                    .AddSingleton<IDayListMarkdownTemplateProvider, DayListMarkdownTemplateProvider>()
+                    .AddSingleton<ITopicListMarkdownTemplateProvider, TopicListMarkdownTemplateProvider>()
+                    .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
 
-        private static IServiceCollection AddDateNaming(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
-                .AddSingleton<IEasterDateNamer, EasterDateNamer>()
-                .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
-                .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
-                .AddSingleton<IDateFormatter, DateFormatter>();
+            private IServiceCollection AddDateNaming()
+                => serviceCollection
+                    .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
+                    .AddSingleton<IEasterDateNamer, EasterDateNamer>()
+                    .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
+                    .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
+                    .AddSingleton<IDateFormatter, DateFormatter>();
 
-        private static IServiceCollection AddFileSystemFunctionality(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IPathHelper, PathHelper>()
-                .AddSingleton<IOutputFolderPathProvider, OutputFolderPathProvider>()
-                .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()
-                .AddSingleton<IDateListPathResolver, DateListPathResolver>()
-                .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
-                .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
-                .AddSingleton<IFileDeleter, FileDeleter>()
-                .AddSingleton<IFolderCreator, FolderCreator>()
-                .AddSingleton<IFileListCreator, FileListCreator>();
+            private IServiceCollection AddFileSystemFunctionality()
+                => serviceCollection
+                    .AddSingleton<IPathHelper, PathHelper>()
+                    .AddSingleton<IOutputFolderPathProvider, OutputFolderPathProvider>()
+                    .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()
+                    .AddSingleton<IDateListPathResolver, DateListPathResolver>()
+                    .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
+                    .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
+                    .AddSingleton<IFileDeleter, FileDeleter>()
+                    .AddSingleton<IFolderCreator, FolderCreator>()
+                    .AddSingleton<IFileListCreator, FileListCreator>();
 
-        private static IServiceCollection AddGitFunctionality(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IGitInterface, GitInterface>()
-                .AddSingleton<IGitInterfaceTools, GitInterfaceTools>();
+            private IServiceCollection AddGitFunctionality()
+                => serviceCollection
+                    .AddSingleton<IGitInterface, GitInterface>()
+                    .AddSingleton<IGitInterfaceTools, GitInterfaceTools>();
 
-        private static IServiceCollection AddMarkdownFunctionality(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
-                .AddSingleton<IMarkdownLineInterpreter, MarkdownLineInterpreter>();
+            private IServiceCollection AddMarkdownFunctionality()
+                => serviceCollection
+                    .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
+                    .AddSingleton<IMarkdownLineInterpreter, MarkdownLineInterpreter>();
 
-        private static IServiceCollection AddUiFunctionality(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<IConsoleTextFormatter, ConsoleTextFormatter>()
-                .AddSingleton<IOutputWriter, OutputWriter>();
+            private IServiceCollection AddUiFunctionality()
+                => serviceCollection
+                    .AddSingleton<IConsoleTextFormatter, ConsoleTextFormatter>()
+                    .AddSingleton<IOutputWriter, OutputWriter>();
+        }
 
         #endregion
 
-        private static IServiceCollection AutoRegisterTypes<T>(this IServiceCollection serviceCollection)
+        extension(IServiceCollection serviceCollection)
         {
-            var typesToRegister = Assembly
-                .GetExecutingAssembly()
-                .GetTypes()
-                .Where(x => x.IsClass && !x.IsAbstract)
-                .Where(x => x.IsAssignableTo(typeof(T)));
-
-            foreach (var typeToRegister in typesToRegister)
+            private IServiceCollection AutoRegisterTypes<T>()
             {
-                serviceCollection.AddSingleton(typeToRegister);
-                serviceCollection.AddSingleton(typeof(T), typeToRegister);
-            }
-
-            var interfacesToMap = Assembly
-                .GetExecutingAssembly()
-                .GetTypes()
-                .Where(x => x.IsInterface && !x.IsGenericType && x != typeof(T))
-                .Where(x => x.IsAssignableTo(typeof(T)));
-
-            foreach (var interfaceToRegister in interfacesToMap)
-            {
-                var typesAssignableToInterface = Assembly
+                var typesToRegister = Assembly
                     .GetExecutingAssembly()
                     .GetTypes()
-                    .Where(x => x.IsClass && !x.IsAbstract)
-                    .Where(x => x.IsAssignableTo(interfaceToRegister));
+                    .Where(x => x is { IsClass: true, IsAbstract: false })
+                    .Where(x => x.IsAssignableTo(typeof(T)));
 
-                foreach (var typeAssignableToInterface in typesAssignableToInterface)
+                foreach (var typeToRegister in typesToRegister)
                 {
-                    serviceCollection.AddSingleton(interfaceToRegister,
-                        x => x.GetRequiredService(typeAssignableToInterface));
+                    serviceCollection.AddSingleton(typeToRegister);
+                    serviceCollection.AddSingleton(typeof(T), typeToRegister);
                 }
+
+                var interfacesToMap = Assembly
+                    .GetExecutingAssembly()
+                    .GetTypes()
+                    .Where(x => x is { IsInterface: true, IsGenericType: false } && x != typeof(T))
+                    .Where(x => x.IsAssignableTo(typeof(T)));
+
+                foreach (var interfaceToRegister in interfacesToMap)
+                {
+                    var typesAssignableToInterface = Assembly
+                        .GetExecutingAssembly()
+                        .GetTypes()
+                        .Where(x => x is { IsClass: true, IsAbstract: false })
+                        .Where(x => x.IsAssignableTo(interfaceToRegister));
+
+                    foreach (var typeAssignableToInterface in typesAssignableToInterface)
+                    {
+                        serviceCollection.AddSingleton(interfaceToRegister,
+                            x => x.GetRequiredService(typeAssignableToInterface));
+                    }
+                }
+
+                return serviceCollection;
             }
 
-            return serviceCollection;
+            private IServiceCollection AddTypeSets()
+                => serviceCollection
+                    .AddSingleton<ICommandFactorySet, CommandFactorySet>()
+                    .AddSingleton<ICommandExecutorSet, CommandExecutorSet>();
+
+            private IServiceCollection AddTodoService()
+                => serviceCollection
+                    .AddSingleton<ITodoService, TodoService>();
         }
-
-        private static IServiceCollection AddTypeSets(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<ICommandFactorySet, CommandFactorySet>()
-                .AddSingleton<ICommandExecutorSet, CommandExecutorSet>();
-
-        private static IServiceCollection AddTodoService(this IServiceCollection serviceCollection)
-            => serviceCollection
-                .AddSingleton<ITodoService, TodoService>();
 }

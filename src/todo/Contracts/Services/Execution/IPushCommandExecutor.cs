@@ -2,4 +2,4 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface IPushCommandExecutor : ICommandExecutor<PushCommand> { }
+public interface IPushCommandExecutor : ICommandExecutor<PushCommand>;
