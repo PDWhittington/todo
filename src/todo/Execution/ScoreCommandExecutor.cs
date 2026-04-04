@@ -38,9 +38,19 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
          ListFileTypeEnum.DayList);
 
       var scoreInfos = GetScoresForAllFiles(files);
-      
-      
 
+      var scoresFilteredAndSorted = scoreInfos
+         .Where(x => x.Total() != 0)
+         .OrderBy(x => x.FilePath.Path);
+
+      foreach (var scoreInfo in scoresFilteredAndSorted)
+      {
+         OutputWriter.WriteLine(scoreInfo.FilePath.Path);
+         OutputWriter.WriteLine($"Done: {scoreInfo.ScoreDone}");
+         OutputWriter.WriteLine($"NotDone: {scoreInfo.ScoreNotDone}");
+         OutputWriter.WriteLine($"Carried Forward: {scoreInfo.CarriedForward}");
+         OutputWriter.WriteLine();
+      }
    }
 
    private ScoreInfo[] GetScoresForAllFiles(FilePathInfo[] filePathInfos)

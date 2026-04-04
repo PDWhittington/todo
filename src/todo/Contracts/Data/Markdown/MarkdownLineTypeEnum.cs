@@ -5,5 +5,5 @@ public enum MarkdownLineTypeEnum
     EmptyLine,
     Heading,
     BulletPoint,
-    Other
+    NormalText
 }

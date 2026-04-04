@@ -7,9 +7,10 @@ public class ScoreInfo
     public FilePathInfo FilePath { get; }
     public int ScoreNotDone { get; }
     public int ScoreDone { get; }
-    
     public int CarriedForward { get; }
 
+    public int Total() => ScoreNotDone + ScoreDone + CarriedForward;
+    
     private ScoreInfo(FilePathInfo filePathInfo, int scoreNotDone, int scoreDone, int carriedForward)
     {
         FilePath = filePathInfo;

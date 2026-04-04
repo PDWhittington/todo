@@ -42,9 +42,8 @@ public abstract class TemplateProviderBase : FileReaderBase
 
             var lines = GetFileText(filePathInfo.Path);
 
-            var markdownLines = new Lazy<MarkdownLineInfo[]>(() => lines
-                .Select(line => _markdownLineInterpreter.CreateMarkdownLine(line))
-                .ToArray());
+            var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
+                _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, lines));
             
             var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
             
@@ -60,9 +59,8 @@ public abstract class TemplateProviderBase : FileReaderBase
 
             var lines = GetFileText(filePathInfo.Path);
 
-            var markdownLines = new Lazy<MarkdownLineInfo[]>(() => lines
-                .Select(line => _markdownLineInterpreter.CreateMarkdownLine(line))
-                .ToArray());
+            var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
+                _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, lines));
             
             var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
             
@@ -77,9 +75,8 @@ public abstract class TemplateProviderBase : FileReaderBase
             var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
                 GetFileType(), FolderEnum.Manifest);
 
-            var markdownLines = new Lazy<MarkdownLineInfo[]>(() => lines
-                .Select(line => _markdownLineInterpreter.CreateMarkdownLine(line))
-                .ToArray());
+            var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
+                _markdownLineInterpreter.CreateMarkdownLine(manifestFileInfo, lines));
         
             var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
         

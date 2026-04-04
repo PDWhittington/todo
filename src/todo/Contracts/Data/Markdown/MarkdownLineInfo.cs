@@ -27,7 +27,7 @@ public class MarkdownLineInfo
         if (lineType != MarkdownLineTypeEnum.Heading && headingLevel != -1)
         {
             throw new ArgumentException($"should be set to -1 if {nameof(lineType)} " +
-                                        $"is not set to {MarkdownLineTypeEnum.Heading}",  nameof(lineNumber));
+                                        $"is not set to {MarkdownLineTypeEnum.Heading}",  nameof(headingLevel));
         }
         
         return new MarkdownLineInfo(filePathInfo, lineType, line, lineNumber, headingLevel);
