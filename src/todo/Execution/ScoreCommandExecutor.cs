@@ -25,7 +25,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
    [Flags]
    private enum HeadingCategoryEnum
    {
-      None = 0,
+      None = 0, //Must be kept as zero as this is used in bitwise operations to disapper.
       Done = 1,
       NotDone = 2,
       CarriedForward = 4,
@@ -81,7 +81,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       int doneScore = 0;
       int notDoneScore = 0;
       int carriedForwardScore = 0;
-      int outstanding = 0;
+      int outstandingScore = 0;
       
       for (int i = 0; i < todoFile.MarkdownLines.Length; i++) 
       {
@@ -102,11 +102,11 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
             case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
             case HeadingCategoryEnum.NotDone: notDoneScore += tokenScore; break;
             case HeadingCategoryEnum.CarriedForward: carriedForwardScore += tokenScore; break;
-            default: outstanding += tokenScore; break;
+            default: outstandingScore += tokenScore; break;
          }
       }
       
-      return ScoreInfo.Of(filePathInfo, doneScore, notDoneScore, carriedForwardScore, outstanding);
+      return ScoreInfo.Of(filePathInfo, doneScore, notDoneScore, carriedForwardScore, outstandingScore);
    }
 
    private static bool ContainsTokenScore(string line, out int tokenScore)

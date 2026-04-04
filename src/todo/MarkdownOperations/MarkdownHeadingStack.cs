@@ -1,14 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Todo.Contracts.Data.Markdown;
+using Todo.StringOperations;
 
 namespace Todo.MarkdownOperations;
 
 public class MarkdownHeadingStack : IEnumerable<MarkdownHeadingInfo>
 {
     private readonly List<MarkdownHeadingInfo> markdownHeadingStack = new(10);
+
+    public override string ToString() => markdownHeadingStack
+        .Select(x => x.HeadingTitle.ToString())
+        .StringJoin(", ");
     
+
     public void UpdateStack(MarkdownLineInfo markdownLineInfo)
     {
         if (markdownLineInfo.LineType != MarkdownLineTypeEnum.Heading) return;
@@ -29,6 +36,8 @@ public class MarkdownHeadingStack : IEnumerable<MarkdownHeadingInfo>
             }
             else break;
         }
+        
+        markdownHeadingStack.Add(markdownHeadingInfo);
     }
 
     public IEnumerator<MarkdownHeadingInfo> GetEnumerator()

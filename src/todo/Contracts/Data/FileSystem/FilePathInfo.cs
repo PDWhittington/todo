@@ -14,6 +14,8 @@ public class FilePathInfo
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FolderEnum FolderType { get; }
+    
+    public override string ToString() => Path;
 
     private FilePathInfo(string path, FileTypeEnum fileType, FolderEnum folderType)
     {
