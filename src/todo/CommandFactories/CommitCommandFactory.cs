@@ -5,19 +5,19 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CommitCommandFactory : CommandFactoryBase<CommitCommand>
+public class CommitCommandFactory(IOutputWriter outputWriter) 
+    : CommandFactoryBase<CommitCommand>(outputWriter, Words)
 {
-    private static readonly string[] Words = { "c", "commit" };
+    private static readonly string[] Words = ["c", "commit"];
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } = {
+    public override string [] HelpText { get; } =
+    [
         "Gathers the current modifications into a commit. Commit message is optional.",
         "",
         "Usage: todo c [commit message]"
-    };
-
-    public CommitCommandFactory(IOutputWriter outputWriter) : base(outputWriter, Words) { }
+    ];
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override CommitCommand? TryGetCommand(string commandLine)

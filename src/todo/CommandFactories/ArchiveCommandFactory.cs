@@ -7,7 +7,8 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
+public class ArchiveCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+    : CommandFactoryBase<ArchiveCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["a", "archive"];
 
@@ -23,20 +24,12 @@ public class ArchiveCommandFactory : CommandFactoryBase<ArchiveCommand>
         "Usage: todo a [date]"
     ];
 
-    private readonly IDateParser _dateParser;
-
-    public ArchiveCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
-        : base(outputWriter, Words)
-    {
-        _dateParser = dateParser;
-    }
-
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ArchiveCommand? TryGetCommand(string commandLine)
     {
         if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
-        if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
+        if (!dateParser.TryGetDate(restOfCommand, out var dateOnly))
             throw new ArgumentException("Date in archive command is not recognised");
 
         return ArchiveCommand.Of(dateOnly);
