@@ -15,6 +15,7 @@ using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
+using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.UI;
@@ -24,6 +25,7 @@ using Todo.Execution;
 using Todo.FileSystem;
 using Todo.FileSystem.Paths;
 using Todo.Git;
+using Todo.MarkdownOperations;
 using Todo.StateAndConfig;
 using Todo.Templates;
 using Todo.UI;
@@ -45,6 +47,7 @@ internal static class Initialise
                 .AddDateNaming()
                 .AddFileSystemFunctionality()
                 .AddGitFunctionality()
+                .AddMarkdownFunctionality()
                 .AddUiFunctionality()
 
                 /* Command interpretation and execution */
@@ -117,6 +120,11 @@ internal static class Initialise
             => serviceCollection
                 .AddSingleton<IGitInterface, GitInterface>()
                 .AddSingleton<IGitInterfaceTools, GitInterfaceTools>();
+
+        private static IServiceCollection AddMarkdownFunctionality(this IServiceCollection serviceCollection)
+            => serviceCollection
+                .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
+                .AddSingleton<IMarkdownLineInterpreter, MarkdownLineInterpreter>();
 
         private static IServiceCollection AddUiFunctionality(this IServiceCollection serviceCollection)
             => serviceCollection

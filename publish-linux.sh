@@ -5,4 +5,4 @@ dotnet publish src/todo/ -c Release -r linux-x64 -p:PublishReadyToRun=true --sel
 
 sudo rm -R /usr/local/bin/todo
 
-sudo cp -R src/todo/bin/Release/net9.0/linux-x64/publish /usr/local/bin/todo/
+sudo cp -R src/todo/bin/Release/net10.0/linux-x64/publish /usr/local/bin/todo/

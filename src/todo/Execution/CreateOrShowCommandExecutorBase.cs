@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem;

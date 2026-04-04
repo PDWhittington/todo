@@ -37,5 +37,6 @@
   "UseNamesForDays": true,
   //If this settings is removed, the day threshold is midnight.
   "NewDayThreshold": "04:00:00",
-  "ConsoleWidth": 80
+  "ConsoleWidth": 80,
+  "FileIterationMethod": "Parallel"
 }

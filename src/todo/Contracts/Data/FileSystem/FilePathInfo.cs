@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Todo.Contracts.Data.FileSystem;
 
-public readonly struct FilePathInfo
+public class FilePathInfo
 {
     public string Path { get; }
 
@@ -14,6 +14,8 @@ public readonly struct FilePathInfo
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FolderEnum FolderType { get; }
+    
+    public override string ToString() => Path;
 
     private FilePathInfo(string path, FileTypeEnum fileType, FolderEnum folderType)
     {

@@ -6,5 +6,7 @@ public interface IManifestStreamProvider
 
     string GetStringFromManifest(string manifestName);
 
+    string [] GetLinesFromManifest(string manifestName);
+
     void WriteStringFromManifestToFile(string manifestName, string path);
 }
