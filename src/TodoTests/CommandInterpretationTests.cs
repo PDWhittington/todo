@@ -21,45 +21,12 @@ public static class Constants
 [TestFixture]
 public class CommandInterpretationTests
 {
-    private IServiceCollection _serviceCollection;
-    private static readonly DateTime _currentDayForTest = new(2026, 04, 07, 12,  0, 0);
-    
-    [SetUp]
-    public void Setup()
-    {
-        _serviceCollection = Initialise.GetServiceCollection();
-        
-        // // 2. Create the mock / substitute for the command-line extractor
-        // var mockCommandLine = Substitute.For<ICommandLineProvider>();
-        //
-        // // Configure it however you want for this test
-        // mockCommandLine.GetCommandLineMinusAssemblyLocation()
-        //     
-        // serviceCollection.
-        //     
-        //     GetArguments().Returns(new[] { "--mode", "test", "--value", "42" });
-        // // or whatever your actual methods/properties are
-        //
-        // // 3. Replace the real implementation with the mock
-        // // (Re-registering the same interface after the normal setup = the mock wins)
-        // services.AddSingleton<ICommandLineExtractor>(mockCommandLine);
-        //
-        // // 4. Build the provider
-        // var serviceProvider = services.BuildServiceProvider();
-
-    }
-
     private IServiceProvider GetServiceProvider(ICommandLineProvider mockCommandLineProvider)
     {
-        var serviceCollection = new ServiceCollection();
-
-        foreach (var serviceDescriptor in _serviceCollection)
-        {
-            serviceCollection.Add(serviceDescriptor);
-        }
+        var serviceCollection = Initialise.GetServiceCollection();
         
         var mockDateAccessor = Substitute.For<IDateAccessor>();
-        mockDateAccessor.GetNow().Returns(_currentDayForTest);
+        mockDateAccessor.GetNow().Returns(Constants.CurrentTimeForTest);
         
         var mockConfigProvider = Substitute.For<IConfigurationProvider>();
         mockConfigProvider.ConfigInfo.Returns(GetConfiguration());
@@ -86,11 +53,9 @@ public class CommandInterpretationTests
     }
     
     [Test]
-    // [TestCase("", new CreateOrShowDayListCommand(Constants.CurrentDayForTest.))]
     [TestCaseSource(nameof(GetCommandLineTests))]
     public void TestCommandLine(CommandLineTestInfo commandLineTestInfo)
     {
-        // Arrange - different mock per test
         var mockCommandLine = Substitute.For<ICommandLineProvider>();
         mockCommandLine.GetCommandLineMinusAssemblyLocation().Returns(commandLineTestInfo.CommandLine);
 
@@ -122,6 +87,7 @@ public class CommandInterpretationTests
             var expectedPropertyValue = property.GetValue(expectedCommand);
             var actualPropertyValue = property.GetValue(actualCommand);
             
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (expectedPropertyValue is null && actualPropertyValue is null) continue;
             
             if (expectedPropertyValue is null)
@@ -159,7 +125,7 @@ public class CommandInterpretationTests
         public override string ToString() => $"Command line of '{CommandLine}' should create command {ExpectedCommand}";
     }
 
-    static IEnumerable<CommandLineTestInfo> GetCommandLineTests()
+    private static IEnumerable<CommandLineTestInfo> GetCommandLineTests()
     {
         yield return new CommandLineTestInfo
         {
