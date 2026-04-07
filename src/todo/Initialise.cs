@@ -43,7 +43,7 @@ internal static class Initialise
             .AddAppLaunchingOperations()
             .AddAssemblyOperations()
             .AddStateAndConfig()
-            .AddDateParsing()
+            .AddDateOperations()
             .AddTemplateFunctionality()
             .AddDateNaming()
             .AddFileSystemFunctionality()
@@ -88,8 +88,9 @@ internal static class Initialise
                     .AddSingleton<IAssemblyInformationProvider, AssemblyInformationProvider>()
                     .AddSingleton<IBoilerPlateProvider, BoilerPlateProvider>();
 
-            private IServiceCollection AddDateParsing()
+            private IServiceCollection AddDateOperations()
                 => serviceCollection
+                    .AddSingleton<IDateAccessor, DateAccessor>()
                     .AddSingleton<IDateParser, DateParser>()
                     .AddSingleton<IDateHelper, DateHelper>();
 
