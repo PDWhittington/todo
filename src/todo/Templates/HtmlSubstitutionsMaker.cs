@@ -8,5 +8,6 @@ public class HtmlSubstitutionsMaker : IHtmlSubstitutionsMaker
     public string MakeSubstitutions(HtmlSubstitutions substitutions, string template)
         => template
             .Replace("{title}", substitutions.Title)
-            .Replace("{body}", substitutions.Body);
+            .Replace("{body}", substitutions.Body)
+            .Replace("{theme}", substitutions.Theme);
 }

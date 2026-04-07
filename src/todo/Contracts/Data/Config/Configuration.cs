@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using Todo.Contracts.Data.Html;
 
 namespace Todo.Contracts.Data.Config;
 
@@ -27,9 +28,11 @@ public class Configuration
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string HtmlTemplatePath { get; }
-
+    
     #endregion
 
+    public HtmlThemeEnum HtmlTheme { get; }
+    
     #region Paths to folders the app writes to
 
     public string OutputFolder { get; }
@@ -54,7 +57,7 @@ public class Configuration
     public Configuration(
         PerOsFilePaths browserPath, PerOsFilePaths textEditorPath,
         string dayListMarkdownTemplatePath, string topicListMarkdownTemplatePath,
-        string htmlTemplatePath,
+        string htmlTemplatePath, HtmlThemeEnum htmlTheme,
         string outputFolder, string archiveFolderName, string todoListFilenameFormat,
         bool useNamesForDays, bool useGit, TimeSpan? newDayThreshold, int consoleWidth,
         IterationMethodEnum fileIterationMethod)
@@ -65,6 +68,7 @@ public class Configuration
         DayListMarkdownTemplatePath = dayListMarkdownTemplatePath;
         TopicListMarkdownTemplatePath = topicListMarkdownTemplatePath;
         HtmlTemplatePath = htmlTemplatePath;
+        HtmlTheme = htmlTheme;
 
         OutputFolder = outputFolder;
         ArchiveFolderName = archiveFolderName;

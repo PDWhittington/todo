@@ -8,12 +8,13 @@
         /* From https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css */
 
         /*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
+         *  Copyright (c) Microsoft Corporation. All rights reserved.
+         *  Licensed under the MIT License. See License.txt in the project root for license information.
+         *--------------------------------------------------------------------------------------------*/
 
         html,
         body {
+            /*background-color: #0a0a0a;*/
             font-family: var(--markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", system-ui, "Ubuntu", "Droid Sans", sans-serif);
             font-size: var(--markdown-font-size, 14px);
             padding: 0 26px;
@@ -229,6 +230,16 @@
 
         /** Theming */
 
+        .vscode-light {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .vscode-dark {
+            background-color: #0a0a0a;
+            color: #ffffff
+        }
+        
         .vscode-light pre {
             background-color: rgba(220, 220, 220, 0.4);
         }
@@ -358,8 +369,8 @@ https://raw.githubusercontent.com/isagalaev/highlight.js/master/src/styles/vs201
         }
 
         /*.hljs-code {
-	font-family:'Monospace';
-}*/
+            font-family:'Monospace';
+        }*/
 
         .hljs-bullet,
         .hljs-selector-tag,
@@ -483,7 +494,7 @@ Visual Studio-like style based on original C# coloring by Jason Diamond <jason@d
 
 </head>
 
-<body class="vscode-body vscode-light">
+<body class="vscode-body {theme}">
     {body}
 </body>
 
