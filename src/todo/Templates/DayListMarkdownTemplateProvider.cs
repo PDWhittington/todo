@@ -7,23 +7,19 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class DayListMarkdownTemplateProvider : TemplateProviderBase,
-    IDayListMarkdownTemplateProvider
+public class DayListMarkdownTemplateProvider(
+    IPathHelper pathHelper,
+    IManifestStreamProvider manifestStreamProvider,
+    IConstantsProvider constantsProvider,
+    IMarkdownLineInterpreter markdownLineInterpreter)
+    : TemplateProviderBase(pathHelper, manifestStreamProvider, markdownLineInterpreter),
+        IDayListMarkdownTemplateProvider
 {
-    private readonly IConstantsProvider _constantsProvider;
-
-    public DayListMarkdownTemplateProvider(IPathHelper pathHelper, IManifestStreamProvider manifestStreamProvider, 
-        IConstantsProvider constantsProvider, IMarkdownLineInterpreter markdownLineInterpreter)
-        : base(pathHelper, manifestStreamProvider, markdownLineInterpreter)
-    {
-        _constantsProvider = constantsProvider;
-    }
-
     protected override string GetTemplateFileName()
-        => _constantsProvider.DayListMarkdownTemplate.FileName;
+        => constantsProvider.DayListMarkdownTemplate.FileName;
 
     protected override string GetManifestStreamName()
-        => _constantsProvider.DayListMarkdownTemplate.FullName;
+        => constantsProvider.DayListMarkdownTemplate.FullName;
 
     protected override FileTypeEnum GetFileType()
         => FileTypeEnum.MarkdownTemplate;

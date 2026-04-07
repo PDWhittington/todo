@@ -11,17 +11,11 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, IListFilesCommandExecutor
+public class ListFilesCommandExecutor(
+    IFileListCreator fileListCreator,
+    IOutputWriter outputWriter)
+    : CommandExecutorBase<ListFilesCommand>(outputWriter), IListFilesCommandExecutor
 {
-    private readonly IFileListCreator _fileListCreator;
-
-    public ListFilesCommandExecutor(IFileListCreator fileListCreator,
-        IOutputWriter outputWriter)
-        : base(outputWriter)
-    {
-        _fileListCreator = fileListCreator;
-    }
-
     public override void Execute(ListFilesCommand command)
     {
         var filesListText = GenerateText(command);
@@ -35,7 +29,7 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
             .AppendLine(GetHeader(command))
             .AppendLine();
 
-        var pathGroups = _fileListCreator
+        var pathGroups = fileListCreator
             .GetFiles(command.OutputFolder, command.ListFileType)
             .GroupBy(filePathInfo => new { filePathInfo.FolderType, filePathInfo.FileType })
             .ToArray();
