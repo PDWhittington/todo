@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.AppLaunching;
@@ -9,8 +10,8 @@ using Todo.Contracts.Services;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.CommandFactories;
+using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.Dates.Naming;
-using Todo.Contracts.Services.Dates.Parsing;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
@@ -19,8 +20,8 @@ using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.UI;
+using Todo.Dates;
 using Todo.Dates.Naming;
-using Todo.Dates.Parsing;
 using Todo.Execution;
 using Todo.FileSystem;
 using Todo.FileSystem.Paths;
@@ -34,32 +35,35 @@ namespace Todo;
 
 internal static class Initialise
 {
-    public static ServiceProvider GetServiceProvider()
-            =>  new ServiceCollection()
-                .AddLogging()
+    public static IServiceCollection GetServiceCollection()
+        => new ServiceCollection()
+            .AddLogging()
 
-                /* Base functionality */
-                .AddAppLaunchingOperations()
-                .AddAssemblyOperations()
-                .AddStateAndConfig()
-                .AddDateParsing()
-                .AddTemplateFunctionality()
-                .AddDateNaming()
-                .AddFileSystemFunctionality()
-                .AddGitFunctionality()
-                .AddMarkdownFunctionality()
-                .AddUiFunctionality()
+            /* Base functionality */
+            .AddAppLaunchingOperations()
+            .AddAssemblyOperations()
+            .AddStateAndConfig()
+            .AddDateParsing()
+            .AddTemplateFunctionality()
+            .AddDateNaming()
+            .AddFileSystemFunctionality()
+            .AddGitFunctionality()
+            .AddMarkdownFunctionality()
+            .AddUiFunctionality()
 
-                /* Command interpretation and execution */
-                .AutoRegisterTypes<ICommandFactory<CommandBase>>()
-                .AutoRegisterTypes<ICommandExecutor>()
-                .AddTypeSets()
+            /* Command interpretation and execution */
+            .AutoRegisterTypes<ICommandFactory<CommandBase>>()
+            .AutoRegisterTypes<ICommandExecutor>()
+            .AddTypeSets()
 
-                /* Main service */
-                .AddTodoService()
+            /* Main service */
+            .AddTodoService();
+    
+    public static IServiceProvider GetServiceProvider()
+        =>  GetServiceCollection()
 
-                /* Build the service provider */
-                .BuildServiceProvider();
+            /* Build the service provider */
+            .BuildServiceProvider();
 
         #region Base functionality
 
