@@ -29,7 +29,11 @@
   },
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",
+  
+  //Html settings
   "HtmlTemplatePath": "template.html",
+  "HtmlTheme": "Dark",
+  
   "OutputFolder": "./todo",
   "ArchiveFolderName": "./todo/_archive",
   "TodoListFilenameFormat": "todo-{yyyy-MM-dd}",
