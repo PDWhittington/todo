@@ -39,6 +39,9 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
     private void MoveFile(T command, Action<FilePathInfo, FilePathInfo> moveOperation)
     {
         var sourcePathInfo = GetSourcePath(command);
+        
+        if (!sourcePathInfo.Exists()) throw new Exception($"Source path not found: {sourcePathInfo.Path}");
+        
         var destinationPathInfo = GetDestinationPath(command);
 
         moveOperation(sourcePathInfo, destinationPathInfo);
