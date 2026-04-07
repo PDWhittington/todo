@@ -5,31 +5,23 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
 
-public class CommandProvider : ICommandProvider
+public class CommandProvider(
+    ICommandLineProvider commandLineProvider,
+    ICommandFactorySet commandFactorySet)
+    : ICommandProvider
 {
-    private readonly ICommandLineProvider _commandLineProvider;
-    private readonly ICommandFactorySet _commandFactorySet;
-
-
-    public CommandProvider(ICommandLineProvider commandLineProvider,
-        ICommandFactorySet commandFactorySet)
-    {
-        _commandLineProvider = commandLineProvider;
-        _commandFactorySet = commandFactorySet;
-    }
-
     public CommandBase GetCommand()
     {
-        var commandLine = _commandLineProvider.GetCommandLineMinusAssemblyLocation();
+        var commandLine = commandLineProvider.GetCommandLineMinusAssemblyLocation();
 
-        foreach (var commandFactory in _commandFactorySet.NonDefaultCommandFactories)
+        foreach (var commandFactory in commandFactorySet.NonDefaultCommandFactories)
         {
             var command = commandFactory.TryGetCommand(commandLine);
 
             if (command != null) return command;
         }
 
-        var commandForDefault = _commandFactorySet.DefaultCommandFactory.TryGetCommand(commandLine);
+        var commandForDefault = commandFactorySet.DefaultCommandFactory.TryGetCommand(commandLine);
 
         return commandForDefault ?? throw new Exception("Command not recognised");
     }

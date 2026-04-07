@@ -6,7 +6,8 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowConflictsCommandFactory : CommandFactoryBase<ShowConflictsCommand>
+public class ShowConflictsCommandFactory(IOutputWriter outputWriter)
+    : CommandFactoryBase<ShowConflictsCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["sc", "showconflicts"];
 
@@ -18,10 +19,6 @@ public class ShowConflictsCommandFactory : CommandFactoryBase<ShowConflictsComma
         "",
         "Usage: todo sc"
     ];
-
-    public ShowConflictsCommandFactory(IOutputWriter outputWriter)
-        : base(outputWriter, Words)
-    { }
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowConflictsCommand? TryGetCommand(string commandLine)

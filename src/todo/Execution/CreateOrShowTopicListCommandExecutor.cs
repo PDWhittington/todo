@@ -15,34 +15,27 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CreateOrShowTopicListCommandExecutor
-    : CreateOrShowCommandExecutorBase<CreateOrShowTopicListCommand, TopicListMarkdownSubstitutions>,
+public class CreateOrShowTopicListCommandExecutor(
+    ITopicListMarkdownTemplateProvider topicListMarkdownTemplateProvider,
+    ITopicListPathResolver topicListPathResolver,
+    ITopicListMarkdownSubstitutionsMaker topicListMarkdownSubstitutionsMaker,
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    ITextFileLauncher fileOpener,
+    IOutputWriter outputWriter,
+    IFolderCreator folderCreator)
+    : CreateOrShowCommandExecutorBase<CreateOrShowTopicListCommand, TopicListMarkdownSubstitutions>(
+            configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator),
         ICreateOrShowTopicListCommandExecutor
 {
-    private readonly ITopicListMarkdownTemplateProvider _topicListMarkdownTemplateProvider;
-    private readonly ITopicListPathResolver _topicListPathResolver;
-    private readonly ITopicListMarkdownSubstitutionsMaker _topicListMarkdownSubstitutionsMaker;
-
-    public CreateOrShowTopicListCommandExecutor(ITopicListMarkdownTemplateProvider topicListMarkdownTemplateProvider,
-        ITopicListPathResolver topicListPathResolver,
-        ITopicListMarkdownSubstitutionsMaker topicListMarkdownSubstitutionsMaker,
-        IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        ITextFileLauncher fileOpener, IOutputWriter outputWriter, IFolderCreator folderCreator)
-        : base(configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator)
-    {
-        _topicListMarkdownTemplateProvider = topicListMarkdownTemplateProvider;
-        _topicListPathResolver = topicListPathResolver;
-        _topicListMarkdownSubstitutionsMaker = topicListMarkdownSubstitutionsMaker;
-    }
-
     protected override FilePathInfo GetFilePathInfo(CreateOrShowTopicListCommand createOrShowTopicListCommand)
-        => _topicListPathResolver.ResolvePathFor(createOrShowTopicListCommand.Topic, FileTypeEnum.MarkdownTopicList, true);
+        => topicListPathResolver.ResolvePathFor(createOrShowTopicListCommand.Topic, FileTypeEnum.MarkdownTopicList, true);
 
-    protected override TodoFile GetTemplate() => _topicListMarkdownTemplateProvider.GetTemplate();
+    protected override TodoFile GetTemplate() => topicListMarkdownTemplateProvider.GetTemplate();
 
     protected override TopicListMarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowTopicListCommand createOrShowTopicListCommand)
         => TopicListMarkdownSubstitutions.Of(createOrShowTopicListCommand.Topic);
 
     protected override string MakeSubstitutions(TopicListMarkdownSubstitutions markdownSubstitutions, string fileContents)
-        => _topicListMarkdownSubstitutionsMaker.MakeSubstitutions(markdownSubstitutions, fileContents);
+        => topicListMarkdownSubstitutionsMaker.MakeSubstitutions(markdownSubstitutions, fileContents);
 }

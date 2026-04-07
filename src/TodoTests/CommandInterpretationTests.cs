@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using NUnit.Framework;
 using Todo;
@@ -21,7 +20,7 @@ public static class Constants
 [TestFixture]
 public class CommandInterpretationTests
 {
-    private IServiceProvider GetServiceProvider(ICommandLineProvider mockCommandLineProvider)
+    private static ServiceProvider GetServiceProvider(ICommandLineProvider mockCommandLineProvider)
     {
         var serviceCollection = Initialise.GetServiceCollection();
         
@@ -38,7 +37,7 @@ public class CommandInterpretationTests
         return serviceCollection.BuildServiceProvider();
     }
 
-    private ConfigurationInfo GetConfiguration()
+    private static ConfigurationInfo GetConfiguration()
     {
         var blankProcessLaunchInfo = new ProcessLaunchInfo("", "");
         
@@ -108,13 +107,12 @@ public class CommandInterpretationTests
             }
         }
 
-        if (errorList.Count != 0)
-        {
-            var message = "The following properties were not as expected:" + Environment.NewLine + 
-                string.Join(Environment.NewLine, errorList);
+        if (errorList.Count == 0) return;
+        
+        var message = "The following properties were not as expected:" + Environment.NewLine + 
+                      string.Join(Environment.NewLine, errorList);
             
-            throw new Exception(message);
-        }
+        throw new Exception(message);
     }
     
     public class CommandLineTestInfo
