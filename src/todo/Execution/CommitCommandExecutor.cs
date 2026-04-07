@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using LibGit2Sharp;
+using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
@@ -15,14 +16,17 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommitCommandExecutor
 {
+    private readonly IDateAccessor _dateAccessor;
     private readonly IConfigurationProvider _configurationProvider;
     private readonly IGitInterface _gitInterface;
     private readonly IOutputFolderPathProvider _outputFolderPathProvider;
 
-    public CommitCommandExecutor(IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IOutputFolderPathProvider outputFolderPathProvider, IOutputWriter outputWriter)
+    public CommitCommandExecutor(IDateAccessor dateAccessor, IConfigurationProvider configurationProvider, 
+        IGitInterface gitInterface, IOutputFolderPathProvider outputFolderPathProvider, 
+        IOutputWriter outputWriter)
         : base(outputWriter)
     {
+        _dateAccessor = dateAccessor;
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;
         _outputFolderPathProvider = outputFolderPathProvider;
@@ -33,7 +37,7 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
         if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
-        var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+        var commitMessage = commitCommand.CommitMessage ?? $"Synced as at {_dateAccessor.GetNow():yyyy-MM-dd HH:mm:ss}";
 
         OutputWriter.WriteLine("Committing todo files.");
 

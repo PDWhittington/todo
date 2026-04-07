@@ -11,7 +11,11 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-
+  <!-- Make classes marked as internal available to the test project -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="TodoTests" />
+  </ItemGroup>
+ 
   <!-- nuget references -->
 
   <ItemGroup>
@@ -43,10 +47,18 @@
     <EmbeddedResource Include="buildtime.txt" />
   </ItemGroup>
 
-  <!-- Pre-build event to populate the above files -->
+ <!-- Pre-build event to populate the above files -->
 
   <PropertyGroup>
     <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 

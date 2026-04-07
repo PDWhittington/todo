@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Todo.Contracts.Services.Dates.Parsing;
+using Todo.Contracts.Services.Dates;
 using IConfigurationProvider = Todo.Contracts.Services.StateAndConfig.IConfigurationProvider;
 
-namespace Todo.Dates.Parsing;
+namespace Todo.Dates;
 
 public class DateParser : IDateParser
 {
+    private readonly IDateAccessor _dateAccessor;
     private readonly IDateHelper _dateHelper;
     private readonly IConfigurationProvider _configurationProvider;
 
-    public DateParser(IDateHelper dateHelper, IConfigurationProvider configurationProvider)
+    public DateParser(IDateAccessor dateAccessor, IDateHelper dateHelper, 
+        IConfigurationProvider configurationProvider)
     {
+        _dateAccessor = dateAccessor;
         _dateHelper = dateHelper;
         _configurationProvider = configurationProvider;
     }
@@ -48,7 +51,9 @@ public class DateParser : IDateParser
     {
         var newDayThreshold = _configurationProvider.ConfigInfo.Configuration.NewDayThreshold ?? new TimeSpan(0, 0, 0);
 
-        return DateTime.Now.TimeOfDay < newDayThreshold
+        var now = _dateAccessor.GetNow();
+        
+        return now.TimeOfDay < newDayThreshold
             ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))
             : _dateHelper.ConvertToDateOnly(DateTime.Today);
     }
