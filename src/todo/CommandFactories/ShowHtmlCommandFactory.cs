@@ -7,7 +7,8 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
+public class ShowHtmlCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+    : CommandFactoryBase<ShowHtmlCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["h", "html", "showhtml"];
 
@@ -20,20 +21,12 @@ public class ShowHtmlCommandFactory : CommandFactoryBase<ShowHtmlCommand>
         "Usage: todo h [date]"
     ];
 
-    private readonly IDateParser _dateParser;
-
-    public ShowHtmlCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
-        : base(outputWriter, Words)
-    {
-        _dateParser = dateParser;
-    }
-
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowHtmlCommand? TryGetCommand(string commandLine)
     {
         if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
-        if (!_dateParser.TryGetDate(restOfCommand, out var dateOnly))
+        if (!dateParser.TryGetDate(restOfCommand, out var dateOnly))
             throw new ArgumentException("Date in archive command is not recognised");
 
         return ShowHtmlCommand.Of(dateOnly);
