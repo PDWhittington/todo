@@ -34,12 +34,12 @@ public class FileListCreator : IFileListCreator
         var pathsInRelevantFolders = new []
         {
             outputFolder.HasFlag(OutputFolderEnum.MainFolder)
-                ? Directory.GetFiles(_pathRootingProvider.GetRootedOutputFolder())
+                ? Directory.GetFiles(_pathRootingProvider.GetRootedOutputFolder(), "*.md")
                     .Select(path => new PathAndFolder { Path = path, Folder = FolderEnum.TodoRoot })
                 : [],
 
             outputFolder.HasFlag(OutputFolderEnum.ArchiveFolder)
-                ? Directory.GetFiles(_pathRootingProvider.GetRootedArchiveFolder())
+                ? Directory.GetFiles(_pathRootingProvider.GetRootedArchiveFolder(), "*.md")
                     .Select(path => new PathAndFolder { Path = path, Folder = FolderEnum.Archive })
                 : []
 

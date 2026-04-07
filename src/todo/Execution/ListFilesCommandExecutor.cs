@@ -54,7 +54,9 @@ public class ListFilesCommandExecutor : CommandExecutorBase<ListFilesCommand>, I
             sb.AppendLine($"{MapToFolderName(pathGroup.Key.FolderType)}, {MapToFileTypeName(pathGroup.Key.FileType)}");
             sb.AppendLine();
 
-            foreach (var pathInfo in pathGroup)
+            var pathGroupSorted = pathGroup.OrderBy(x => x.Path);
+            
+            foreach (var pathInfo in pathGroupSorted)
             {
                 sb.AppendLine($"\t{pathInfo.Path}");
             }
