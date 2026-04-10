@@ -4,9 +4,8 @@ using Todo.Contracts.Data.Html;
 
 namespace Todo.Contracts.Data.Config;
 
-public class Configuration
+public record Configuration
 {
-
     #region Paths to third-party tools
 
     public PerOsFilePaths BrowserPath { get; }
