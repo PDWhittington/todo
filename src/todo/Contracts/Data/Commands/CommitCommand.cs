@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Commands;
 
-public class CommitCommand : CommandBase
+public record CommitCommand : CommandBase
 {
     public string? CommitMessage { get; }
 

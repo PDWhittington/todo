@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands;
 
-public class CreateOrShowDayListCommand : CreateOrShowCommandBase
+public record CreateOrShowDayListCommand : CreateOrShowCommandBase
 {
     public DateOnly Date { get; }
 
