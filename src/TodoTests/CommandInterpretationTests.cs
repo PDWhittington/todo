@@ -29,27 +29,13 @@ public class CommandInterpretationTests
         mockDateAccessor.GetNow().Returns(Constants.CurrentTimeForTest);
         
         var mockConfigProvider = Substitute.For<IConfigurationProvider>();
-        mockConfigProvider.ConfigInfo.Returns(GetConfiguration());
+        mockConfigProvider.ConfigInfo.Returns(Config.GetMockConfig());
         
         serviceCollection.AddSingleton(mockDateAccessor);
         serviceCollection.AddSingleton(mockConfigProvider);
         serviceCollection.AddSingleton(mockCommandLineProvider);
         
         return serviceCollection.BuildServiceProvider();
-    }
-
-    private static ConfigurationInfo GetConfiguration()
-    {
-        var blankProcessLaunchInfo = new ProcessLaunchInfo("", "");
-        
-        var blankPaths = new PerOsFilePaths(blankProcessLaunchInfo, blankProcessLaunchInfo, blankProcessLaunchInfo);
-        
-        var configuration = new Configuration(blankPaths, blankPaths, "",
-            "", "", HtmlThemeEnum.Dark, "", "", "",
-            true, true, new TimeSpan(4, 0, 0), 
-            80, IterationMethodEnum.Parallel);
-
-        return ConfigurationInfo.Of("", configuration);
     }
     
     [Test]
