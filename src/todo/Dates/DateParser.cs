@@ -54,8 +54,8 @@ public class DateParser : IDateParser
         var now = _dateAccessor.GetNow();
         
         return now.TimeOfDay < newDayThreshold
-            ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))
-            : _dateHelper.ConvertToDateOnly(DateTime.Today);
+            ? _dateHelper.ConvertToDateOnly(now.AddDays(-1))
+            : _dateHelper.ConvertToDateOnly(now);
     }
 
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
