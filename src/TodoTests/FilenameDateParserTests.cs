@@ -14,7 +14,7 @@ public class FilenameDateParserTests
 {
     [Test]
     [TestCaseSource(nameof(GetFileNameParsingTests))]
-    public void TestCommandLine(FilenameDateParsingTestInfo filenameDateParsingTestInfo)
+    public void TestFilenameParsing(FilenameDateParsingTestInfo filenameDateParsingTestInfo)
     {
         var configInfo = Config.GetMockConfigInfo(c => c with
         {
@@ -52,12 +52,21 @@ public class FilenameDateParserTests
 
     private static IEnumerable<FilenameDateParsingTestInfo> GetFileNameParsingTests()
     {
-        yield return new FilenameDateParsingTestInfo()
+        yield return new FilenameDateParsingTestInfo
         {
             TemplateString = "todo-{yyyy-MM-dd}.md",
             TestFileName = "todo-2026-04-01.md",
             ExpectedDate =  new DateOnly(2026, 4, 01),
             IsMatch = true
         };
+        
+        yield return new FilenameDateParsingTestInfo
+        {
+            TemplateString = "todo-{yy-MM-dd}.md",
+            TestFileName = "todo-26-04-01.md",
+            ExpectedDate =  new DateOnly(2026, 4, 01),
+            IsMatch = true
+        };
+        
     }
 }
