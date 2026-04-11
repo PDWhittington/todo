@@ -4,9 +4,9 @@ using Todo.Contracts.Data.Html;
 
 namespace TodoTests;
 
-public class Config
+public static class Config
 {
-    public static ConfigurationInfo GetMockConfig()
+    public static Configuration GetMockConfiguration()
     {
         var blankProcessLaunchInfo = new ProcessLaunchInfo("", "");
         
@@ -17,6 +17,13 @@ public class Config
             "", "", HtmlThemeEnum.Dark, "", "", "",
             true, true, new TimeSpan(4, 0, 0), 
             80, IterationMethodEnum.Parallel);
+        
+        return configuration;
+    }
+    
+    public static ConfigurationInfo GetMockConfigInfo()
+    {
+        var configuration = GetMockConfiguration();
 
         return ConfigurationInfo.Of("", configuration);
     }

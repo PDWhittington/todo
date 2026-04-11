@@ -29,7 +29,7 @@ public class CommandInterpretationTests
         mockDateAccessor.GetNow().Returns(Constants.CurrentTimeForTest);
         
         var mockConfigProvider = Substitute.For<IConfigurationProvider>();
-        mockConfigProvider.ConfigInfo.Returns(Config.GetMockConfig());
+        mockConfigProvider.ConfigInfo.Returns(Config.GetMockConfigInfo());
         
         serviceCollection.AddSingleton(mockDateAccessor);
         serviceCollection.AddSingleton(mockConfigProvider);

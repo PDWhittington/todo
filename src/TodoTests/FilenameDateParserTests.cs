@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyModel;
 using NSubstitute;
 using NUnit.Framework;
 using Todo.Contracts.Data.Config;
+using Todo.Contracts.Services.StateAndConfig;
+using Todo.StringOperations;
 
 namespace TodoTests;
 
@@ -13,24 +16,26 @@ public class FilenameDateParserTests
     [TestCaseSource(nameof(GetFileNameParsingTests))]
     public void TestCommandLine(FilenameDateParsingTestInfo filenameDateParsingTestInfo)
     {
-        var configuration = Substitute.For<Configuration>();
-        configuration.TodoListFilenameFormat.Returns(filenameDateParsingTestInfo.TemplateString);
+        var configuration = Config.GetMockConfiguration() with
+        {
+            TodoListFilenameFormat = filenameDateParsingTestInfo.TemplateString
+        };
         
-        // var configInfo = Substitute.
-        //
-        // var configurationProvider = Substitute.For<IConfigurationProvider>();
-        //
-        // configurationProvider.ConfigInfo.Returns(configuration);
-        //
-        // var filenameDateParser = new FilenameDateParser(configurationProvider);
-        //
-        // var actualMatch = filenameDateParser.TryParse(filenameDateParsingTestInfo.TestFileName, out var actualDate);
-        //
-        // Assert.AreEqual(filenameDateParsingTestInfo.IsMatch, actualMatch);
-        //
-        // if (!filenameDateParsingTestInfo.IsMatch) return;
-        //
-        // Assert.AreEqual(filenameDateParsingTestInfo.ExpectedDate, actualDate);
+        var configInfo = ConfigurationInfo.Of("", configuration);
+        var configProvider = Substitute.For<IConfigurationProvider>();
+        
+        configProvider.ConfigInfo.Returns(configInfo);
+
+        var filenameDateParser = new FilenameDateParser(configProvider);
+
+        var match = filenameDateParser.TryParse(
+            filenameDateParsingTestInfo.TestFileName, out var actualDate);
+        
+        Assert.AreEqual(filenameDateParsingTestInfo.IsMatch, match);
+
+        if (!filenameDateParsingTestInfo.IsMatch) return;
+        
+        Assert.AreEqual(filenameDateParsingTestInfo.ExpectedDate, actualDate);
     }
 
     public class FilenameDateParsingTestInfo
