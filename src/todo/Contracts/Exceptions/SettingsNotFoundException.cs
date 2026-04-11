@@ -2,20 +2,13 @@
 
 namespace Todo.Contracts.Exceptions;
 
-public class SettingsNotFoundException : TodoExceptionBase
+public class SettingsNotFoundException(string[] pathsWhereSettingsNotFound)
+    : TodoExceptionBase("Settings file not found")
 {
-    private readonly string[] _pathsWhereSettingsNotFound;
-
-    public SettingsNotFoundException(string[] pathsWhereSettingsNotFound)
-        : base("Settings file not found")
-    {
-        _pathsWhereSettingsNotFound = pathsWhereSettingsNotFound;
-    }
-
     public override string Advice()
     {
         return $"Todo has searched for todo-settings.json in the following locations:- {Environment.NewLine}{Environment.NewLine}\t" +
-               string.Join(Environment.NewLine + "\t", _pathsWhereSettingsNotFound) +
+               string.Join(Environment.NewLine + "\t", pathsWhereSettingsNotFound) +
                $"{Environment.NewLine}{Environment.NewLine}Consider running todo init to create a default settings file.";
     }
 }

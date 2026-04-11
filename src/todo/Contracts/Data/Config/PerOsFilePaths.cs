@@ -3,27 +3,12 @@ using System.Text.Json.Serialization;
 
 namespace Todo.Contracts.Data.Config;
 
-public class PerOsFilePaths
+[method: JsonConstructor]
+public record PerOsFilePaths(
+    ProcessLaunchInfo Windows,
+    ProcessLaunchInfo Linux,
+    ProcessLaunchInfo OSX)
 {
-    // ReSharper disable once MemberCanBePrivate.Global
-    public ProcessLaunchInfo Windows { get; }
-
-    // ReSharper disable once MemberCanBePrivate.Global
-    public ProcessLaunchInfo Linux { get; }
-
-    // ReSharper disable once InconsistentNaming
-    // ReSharper disable once MemberCanBePrivate.Global
-    public ProcessLaunchInfo OSX { get; }
-
-    [JsonConstructor]
-    public PerOsFilePaths(ProcessLaunchInfo windows,
-        ProcessLaunchInfo linux, ProcessLaunchInfo osx)
-    {
-        Windows = windows;
-        Linux = linux;
-        OSX = osx;
-    }
-
     public ProcessLaunchInfo GetPathForThisOs()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

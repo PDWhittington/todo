@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.FileSystem;
 
-public struct ManifestInfo
+public record struct ManifestInfo
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public string AssemblyName { get; }

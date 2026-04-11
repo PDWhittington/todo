@@ -4,7 +4,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitAddCommand : GitCommandBase<VoidResult>
+public record GitAddCommand : GitCommandBase<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public string Path { get; }

@@ -3,7 +3,7 @@ using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Markdown;
 
-public class MarkdownLineInfo
+public record MarkdownLineInfo
 {
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FilePathInfo FilePath { get; }

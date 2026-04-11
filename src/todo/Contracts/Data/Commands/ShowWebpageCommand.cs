@@ -1,6 +1,6 @@
 namespace Todo.Contracts.Data.Commands;
 
-public class ShowWebpageCommand : CommandBase
+public record ShowWebpageCommand : CommandBase
 {
     public static ShowWebpageCommand Singleton { get; } = new();
 

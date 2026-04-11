@@ -3,7 +3,7 @@ using Todo.Contracts.Services.Git;
 
 namespace Todo.Git.Commands;
 
-public class GitGetConflictsCommand : GitCommandBase<ConflictCollection>
+public record GitGetConflictsCommand : GitCommandBase<ConflictCollection>
 {
     internal override ConflictCollection ExecuteCommand(IGitInterface gitInterface)
     {

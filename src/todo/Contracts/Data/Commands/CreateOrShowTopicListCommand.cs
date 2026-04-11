@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Commands;
 
-public class CreateOrShowTopicListCommand : CreateOrShowCommandBase
+public record CreateOrShowTopicListCommand : CreateOrShowCommandBase
 {
     public string Topic { get; }
 

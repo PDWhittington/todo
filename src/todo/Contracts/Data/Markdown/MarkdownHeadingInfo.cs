@@ -1,6 +1,6 @@
 namespace Todo.Contracts.Data.Markdown;
 
-public class MarkdownHeadingInfo
+public record MarkdownHeadingInfo
 {
     public int HeadingLevel { get; }
     public string HeadingTitle  { get; }

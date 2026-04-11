@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands;
 
-public class ListFilesCommand : CommandBase
+public record ListFilesCommand : CommandBase
 {
     public OutputFolderEnum OutputFolder { get; }
 

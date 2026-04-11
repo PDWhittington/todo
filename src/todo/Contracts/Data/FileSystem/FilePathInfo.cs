@@ -3,16 +3,12 @@ using System.IO;
 
 namespace Todo.Contracts.Data.FileSystem;
 
-public class FilePathInfo
+public record FilePathInfo
 {
     public string Path { get; }
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FileTypeEnum FileType { get; }
 
-    // ReSharper disable once MemberCanBePrivate.Global
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FolderEnum FolderType { get; }
     
     public override string ToString() => Path;

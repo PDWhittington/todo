@@ -5,7 +5,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitResetCommand : GitCommandBase<VoidResult>
+public record GitResetCommand : GitCommandBase<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Hard { get; }

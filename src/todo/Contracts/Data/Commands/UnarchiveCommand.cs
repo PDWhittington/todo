@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands;
 
-public class UnarchiveCommand : FileMoveCommandBase
+public record UnarchiveCommand : FileMoveCommandBase
 {
     private UnarchiveCommand(DateOnly dateOfFileToUnarchive)
         : base(dateOfFileToUnarchive) { }

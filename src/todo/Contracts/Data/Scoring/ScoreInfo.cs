@@ -2,7 +2,7 @@ using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Scoring;
 
-public class ScoreInfo
+public record ScoreInfo
 {
     public FilePathInfo FilePath { get; }
     public int ScoreNotDone { get; }

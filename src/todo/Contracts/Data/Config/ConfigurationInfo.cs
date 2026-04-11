@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Config;
 
-public class ConfigurationInfo
+public record ConfigurationInfo
 {
     public string Path { get; }
 
