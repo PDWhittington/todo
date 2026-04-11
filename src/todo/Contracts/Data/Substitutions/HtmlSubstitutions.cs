@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Substitutions;
 
-public class HtmlSubstitutions : SubstitutionsBase
+public record HtmlSubstitutions : SubstitutionsBase
 {
     public string Title { get; }
     public string Body { get; }

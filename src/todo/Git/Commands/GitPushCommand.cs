@@ -5,7 +5,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitPushCommand : GitCommandBase<VoidResult>
+public record GitPushCommand : GitCommandBase<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public BranchLocatorBase BranchLocator { get; }

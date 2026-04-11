@@ -2,11 +2,7 @@
 
 namespace Todo.Contracts.Exceptions;
 
-public abstract class TodoExceptionBase : Exception
+public abstract class TodoExceptionBase(string message) : Exception(message)
 {
-    protected TodoExceptionBase(string message)
-        : base(message)
-    { }
-
     public abstract string Advice();
 }

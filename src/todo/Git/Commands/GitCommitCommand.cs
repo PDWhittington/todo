@@ -5,7 +5,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitCommitCommand(string message) : GitCommandBase<CommitResult>
+public record GitCommitCommand(string message) : GitCommandBase<CommitResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public string Message { get; } = message;

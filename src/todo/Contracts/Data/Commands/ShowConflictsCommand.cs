@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Commands;
 
-public class ShowConflictsCommand : CommandBase
+public record ShowConflictsCommand : CommandBase
 {
     public static ShowConflictsCommand Singleton { get; } = new();
 

@@ -7,7 +7,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public class GitRemoveCommand : GitCommandBase<VoidResult>
+public record GitRemoveCommand : GitCommandBase<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public string [] Paths { get; }

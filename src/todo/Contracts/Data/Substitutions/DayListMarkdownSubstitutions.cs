@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Substitutions;
 
-public class DayListMarkdownSubstitutions : MarkdownSubstitutionsBase
+public record DayListMarkdownSubstitutions : MarkdownSubstitutionsBase
 {
     public string DateText { get; }
 

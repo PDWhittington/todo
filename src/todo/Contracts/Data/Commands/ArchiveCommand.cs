@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands;
 
-public class ArchiveCommand : FileMoveCommandBase
+public record ArchiveCommand : FileMoveCommandBase
 {
     private ArchiveCommand(DateOnly dateOfFileToArchive)
         : base(dateOfFileToArchive) { }

@@ -2,7 +2,7 @@
 
 namespace Todo.Git.Commands;
 
-public abstract class GitCommandBase<T>
+public abstract record GitCommandBase<T>
 {
     internal abstract T ExecuteCommand(IGitInterface gitInterface);
 }

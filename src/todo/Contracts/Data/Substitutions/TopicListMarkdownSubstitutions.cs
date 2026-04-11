@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Substitutions;
 
-public class TopicListMarkdownSubstitutions : MarkdownSubstitutionsBase
+public record TopicListMarkdownSubstitutions : MarkdownSubstitutionsBase
 {
     public string TopicName { get; }
 

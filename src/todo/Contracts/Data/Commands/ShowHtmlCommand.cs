@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands;
 
-public class ShowHtmlCommand : CommandBase
+public record ShowHtmlCommand : CommandBase
 {
     public DateOnly Date { get; }
 

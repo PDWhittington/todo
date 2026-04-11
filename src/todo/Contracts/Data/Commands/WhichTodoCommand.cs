@@ -1,6 +1,6 @@
 ﻿namespace Todo.Contracts.Data.Commands;
 
-public class WhichTodoCommand : CommandBase
+public record WhichTodoCommand : CommandBase
 {
     public static WhichTodoCommand Singleton { get; } = new();
 

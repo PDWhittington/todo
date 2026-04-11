@@ -1,3 +1,3 @@
 namespace Todo.Contracts.Data.Commands;
 
-public class ScoreCommand : CommandBase;
+public record ScoreCommand : CommandBase;

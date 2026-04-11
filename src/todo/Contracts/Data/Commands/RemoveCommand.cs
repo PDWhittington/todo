@@ -2,7 +2,7 @@
 
 namespace Todo.Contracts.Data.Commands;
 
-public class RemoveCommand : CommandBase
+public record RemoveCommand : CommandBase
 {
     public DateOnly Date { get; }
 
