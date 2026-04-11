@@ -27,4 +27,12 @@ public static class Config
 
         return ConfigurationInfo.Of("", configuration);
     }
+
+    public static ConfigurationInfo GetMockConfigInfo(Func<Configuration, Configuration> @override)
+    {
+        var baseConfiguration = GetMockConfiguration();
+
+        var overiddenConfiguration = @override(baseConfiguration);
+        return ConfigurationInfo.Of("", overiddenConfiguration);
+    }
 }

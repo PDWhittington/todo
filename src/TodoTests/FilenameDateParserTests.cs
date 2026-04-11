@@ -16,12 +16,11 @@ public class FilenameDateParserTests
     [TestCaseSource(nameof(GetFileNameParsingTests))]
     public void TestCommandLine(FilenameDateParsingTestInfo filenameDateParsingTestInfo)
     {
-        var configuration = Config.GetMockConfiguration() with
+        var configInfo = Config.GetMockConfigInfo(c => c with
         {
             TodoListFilenameFormat = filenameDateParsingTestInfo.TemplateString
-        };
+        });
         
-        var configInfo = ConfigurationInfo.Of("", configuration);
         var configProvider = Substitute.For<IConfigurationProvider>();
         
         configProvider.ConfigInfo.Returns(configInfo);
@@ -38,7 +37,7 @@ public class FilenameDateParserTests
         Assert.AreEqual(filenameDateParsingTestInfo.ExpectedDate, actualDate);
     }
 
-    public class FilenameDateParsingTestInfo
+    public record FilenameDateParsingTestInfo
     {
         public required string TemplateString { get; init; }
 
