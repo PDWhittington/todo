@@ -15,7 +15,7 @@ public class DateListPathResolver(
             ConfigurationProvider.ConfigInfo.Configuration.TodoListFilenameFormat,
             '{', '}', _ => ".*");
 
-        return string.Join("", fileNameFragments) + $".{MarkdownExtension}";
+        return string.Join("", fileNameFragments);
     }
 
     protected override string FileNameWithoutExtension(DateOnly dateOnly)
