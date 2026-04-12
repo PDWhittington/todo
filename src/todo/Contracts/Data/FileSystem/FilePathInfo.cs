@@ -11,19 +11,25 @@ public record FilePathInfo
 
     public FolderEnum FolderType { get; }
     
+    public DateOnly? Date { get; }
+    
     public override string ToString() => Path;
 
-    private FilePathInfo(string path, FileTypeEnum fileType, FolderEnum folderType)
+    private FilePathInfo(string path, FileTypeEnum fileType, 
+        FolderEnum folderType, DateOnly? date)
     {
         Path = System.IO.Path.IsPathRooted(path) ? path
             : throw new Exception("Only rooted paths are valid");
 
         FileType = fileType;
         FolderType = folderType;
+        Date = date;
     }
 
-    public static FilePathInfo Of(string path, FileTypeEnum fileType, FolderEnum folderType)
-        => new(path, fileType, folderType);
-
-    public bool Exists() => File.Exists(Path);
+    // public static FilePathInfo Of(string path, FileTypeEnum fileType, FolderEnum folderType)
+    //     => Of(path, fileType, folderType, null);
+    
+    public static FilePathInfo Of(string path, FileTypeEnum fileType, 
+        FolderEnum folderType, DateOnly? date)
+        => new(path, fileType, folderType, date);
 }

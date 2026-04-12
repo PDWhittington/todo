@@ -3,8 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Dates;
 
 namespace Todo.FileSystem;
 
@@ -12,18 +14,20 @@ public class FileListCreator : IFileListCreator
 {
     private readonly IDateListPathResolver _dateListPathResolver;
     private readonly IOutputFolderPathProvider _pathRootingProvider;
+    private readonly IFilenameDateParser _filenameDateParser;
 
     public FileListCreator(IDateListPathResolver dateListPathResolver,
-        IOutputFolderPathProvider pathRootingProvider)
+        IOutputFolderPathProvider pathRootingProvider, IFilenameDateParser filenameDateParser)
     {
         _dateListPathResolver = dateListPathResolver;
         _pathRootingProvider = pathRootingProvider;
+        _filenameDateParser = filenameDateParser;
     }
 
-    private struct PathAndFolder
+    private record struct PathAndFolder
     {
-        public string Path;
-        public FolderEnum Folder;
+        public string Path { get; init; }
+        public FolderEnum Folder { get; init; }
     }
 
     public FilePathInfo[] GetFiles(OutputFolderEnum outputFolder,
@@ -47,7 +51,7 @@ public class FileListCreator : IFileListCreator
         .Select(CategoriseAndMatch)
         .Where(filterInfo => filterInfo.Match)
         .Select(pathAndFolder => FilePathInfo.Of(pathAndFolder.PathAndFolder.Path,
-            MapToFileTypeEnum(pathAndFolder.FileType), pathAndFolder.PathAndFolder.Folder))
+            MapToFileTypeEnum(pathAndFolder.FileType), pathAndFolder.PathAndFolder.Folder, pathAndFolder.Date))
         .ToArray();
 
         return pathsInRelevantFolders;
@@ -60,20 +64,21 @@ public class FileListCreator : IFileListCreator
                 _ => throw new Exception()
             };
 
-        (bool Match, ListFileTypeEnum FileType, PathAndFolder PathAndFolder) CategoriseAndMatch(PathAndFolder pathAndFolder)
+        (bool Match, ListFileTypeEnum FileType, DateOnly? Date, PathAndFolder PathAndFolder) CategoriseAndMatch(
+            PathAndFolder pathAndFolder)
         {
             var fileName = Path.GetFileName(pathAndFolder.Path);
 
-            var regExMatch = Regex.Match(fileName, pattern, RegexOptions.None);
-
-            var isDayList = regExMatch.Success;
+            var isDayList = _filenameDateParser.TryParse(fileName, out var date);
 
             var match = isDayList && listFileType.HasFlag(ListFileTypeEnum.DayList) ||
                         !isDayList && listFileType.HasFlag(ListFileTypeEnum.TopicList);
 
             var fileType = isDayList ? ListFileTypeEnum.DayList : ListFileTypeEnum.TopicList;
 
-            return (match, fileType, pathAndFolder);
+            return (match, fileType, date, pathAndFolder);
         }
     }
+    
+    
 }

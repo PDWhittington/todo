@@ -1,4 +1,5 @@
 ﻿using System;
+using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -6,8 +7,10 @@ namespace Todo.FileSystem.Paths;
 
 public class DateListPathResolver(
     IConfigurationProvider configurationProvider,
-    IOutputFolderPathProvider outputFolderPathProvider)
-    : PathResolverBase<DateOnly>(configurationProvider, outputFolderPathProvider), IDateListPathResolver
+    IOutputFolderPathProvider outputFolderPathProvider,
+    IFilenameDateParser filenameDateParser)
+    : PathResolverBase<DateOnly>(configurationProvider, outputFolderPathProvider, filenameDateParser), 
+        IDateListPathResolver
 {
     public override string GetRegExForThisFileType()
     {

@@ -2,18 +2,16 @@ using System;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace Todo.StringOperations;
+namespace Todo.Dates;
 
-public class FilenameDateParser
+public class FilenameDateParser : IFilenameDateParser
 {
     private readonly Regex _regex;
     private readonly string _dateFormat;   // e.g. "yyyy-MM-dd"
     
-    /// <summary>
-    /// Pass the template from your config, e.g. "todo-{yyyy-MM-dd}.md"
-    /// </summary>
     public FilenameDateParser(IConfigurationProvider configurationProvider)
     {
         var template = configurationProvider
@@ -44,25 +42,27 @@ public class FilenameDateParser
         _regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
     }
     
-    /// <summary>
-    /// TryParse-style method you asked for.
-    /// Returns true + the parsed date if the filename matches the template *and* the date is valid.
-    /// </summary>
-    public bool TryParse(string fileName, out DateOnly date)
+    public bool TryParse(string fileName, out DateOnly? date)
     {
-        date = default;
+        var match = _regex.Match(fileName);
 
-        Match match = _regex.Match(fileName);
         if (!match.Success)
+        {
+            date = null;
             return false;
+        }
 
-        string dateStr = match.Groups[1].Value;   // the part that was inside the {}
+        var dateStr = match.Groups[1].Value;   // the part that was inside the {}
         
-        return DateOnly.TryParseExact(
+        var parseSuccess = DateOnly.TryParseExact(
             dateStr,
             _dateFormat,
             CultureInfo.InvariantCulture,
             DateTimeStyles.None,
-            out date);
+            out var dateParsed);
+
+        date = parseSuccess ? dateParsed : null;
+        
+        return parseSuccess;
     }
 }

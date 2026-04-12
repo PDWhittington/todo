@@ -45,7 +45,7 @@ internal static class Initialise
             .AddStateAndConfig()
             .AddDateOperations()
             .AddTemplateFunctionality()
-            .AddDateNaming()
+            .AddDateFunctionality()
             .AddFileSystemFunctionality()
             .AddGitFunctionality()
             .AddMarkdownFunctionality()
@@ -103,13 +103,14 @@ internal static class Initialise
                     .AddSingleton<ITopicListMarkdownTemplateProvider, TopicListMarkdownTemplateProvider>()
                     .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
 
-            private IServiceCollection AddDateNaming()
+            private IServiceCollection AddDateFunctionality()
                 => serviceCollection
                     .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
                     .AddSingleton<IEasterDateNamer, EasterDateNamer>()
                     .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
                     .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
-                    .AddSingleton<IDateFormatter, DateFormatter>();
+                    .AddSingleton<IDateFormatter, DateFormatter>()
+                    .AddSingleton<IFilenameDateParser, FilenameDateParser>();
 
             private IServiceCollection AddFileSystemFunctionality()
                 => serviceCollection

@@ -37,7 +37,7 @@ public abstract class TemplateProviderBase : FileReaderBase
         if (File.Exists(templatePathRootedToWorkingFolder))
         {
             var filePathInfo = FilePathInfo.Of(templatePathRootedToWorkingFolder,
-                FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
+                FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings, null);
 
             var lines = GetFileText(filePathInfo.Path);
 
@@ -54,7 +54,7 @@ public abstract class TemplateProviderBase : FileReaderBase
         if (File.Exists(templatePathRootedToAssemblyFolder))
         {
             var filePathInfo = FilePathInfo.Of(templatePathRootedToAssemblyFolder,
-                GetFileType(), FolderEnum.AssemblyFolder);
+                GetFileType(), FolderEnum.AssemblyFolder, null);
 
             var lines = GetFileText(filePathInfo.Path);
 
@@ -72,7 +72,7 @@ public abstract class TemplateProviderBase : FileReaderBase
             var lines = _manifestStreamProvider.GetLinesFromManifest(manifestName);
 
             var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
-                GetFileType(), FolderEnum.Manifest);
+                GetFileType(), FolderEnum.Manifest, null);
 
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
                 _markdownLineInterpreter.CreateMarkdownLine(manifestFileInfo, lines));

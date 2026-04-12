@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -11,7 +12,8 @@ namespace Todo.FileSystem.Paths;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public abstract class PathResolverBase<TParameterType>(
     IConfigurationProvider configurationProvider,
-    IOutputFolderPathProvider outputFolderPathProvider)
+    IOutputFolderPathProvider outputFolderPathProvider,
+    IFilenameDateParser? filenameDateParser)
     : IPathResolver<TParameterType>
 {
     protected readonly IConfigurationProvider ConfigurationProvider = configurationProvider;
@@ -43,7 +45,9 @@ public abstract class PathResolverBase<TParameterType>(
         var path = Path.Combine(rootedOutputFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
 
-        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.TodoRoot);
+        var date = GetDate(fileName);
+
+        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.TodoRoot, date);
     }
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
@@ -54,7 +58,16 @@ public abstract class PathResolverBase<TParameterType>(
         var path = Path.Combine(rootedArchiveFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
 
-        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.Archive);
+        var date = GetDate(fileName);
+        
+        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.Archive, date);
+    }
+
+    private DateOnly? GetDate(string fileName)
+    {
+        if (filenameDateParser is null) return null;
+        
+        return filenameDateParser.TryParse(fileName, out var date) ? date : null;
     }
 
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
