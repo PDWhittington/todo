@@ -5,16 +5,11 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.Execution;
 
-public abstract class CommandExecutorBase<T> : ICommandExecutor<T>
+public abstract class CommandExecutorBase<T>(IOutputWriter outputWriter) : ICommandExecutor<T>
     where T : CommandBase
 {
-    protected readonly IOutputWriter OutputWriter;
-
-    protected CommandExecutorBase(IOutputWriter outputWriter)
-    {
-        OutputWriter = outputWriter;
-    }
-
+    protected IOutputWriter OutputWriter { get; } = outputWriter;
+    
     public Type CommandType => typeof(T);
 
     public abstract void Execute(T command);

@@ -119,6 +119,7 @@ internal static class Initialise
                     .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()
                     .AddSingleton<IDateListPathResolver, DateListPathResolver>()
                     .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
+                    .AddSingleton<IScoreHtmlPathResolver, ScoreHtmlPathResolver>()
                     .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
                     .AddSingleton<IFileDeleter, FileDeleter>()
                     .AddSingleton<IFolderCreator, FolderCreator>()

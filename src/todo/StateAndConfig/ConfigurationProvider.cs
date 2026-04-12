@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using Todo.Contracts.Data.Caching;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 using Utf8Json;
+using Utf8Json.Resolvers;
 
 namespace Todo.StateAndConfig;
 
@@ -28,13 +30,23 @@ public class ConfigurationProvider : IConfigurationProvider
 
     private ConfigurationInfo GetConfiguration()
     {
+        var resolver = CompositeResolver.Create(
+            [
+                new ColorFormatter()
+            ],
+            [
+                StandardResolver.Default
+            ]);
+        
+        // JsonSerializer.SetDefaultResolver(resolver);
+        
         var path =  _settingsPathProvider.GetSettingsPathInHierarchy().Path ??
                     throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
                         _constantsProvider.SettingsFileName);
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-
-        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream)
+        
+        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream, resolver)
                             ?? throw new Exception($"Configuration could not be loaded from {path}");
 
         return ConfigurationInfo.Of(path, configuration);
