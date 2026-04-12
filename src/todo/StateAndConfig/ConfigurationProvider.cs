@@ -38,7 +38,12 @@ public class ConfigurationProvider : IConfigurationProvider
                 StandardResolver.Default
             ]);
         
-        // JsonSerializer.SetDefaultResolver(resolver);
+        CompositeResolver.RegisterAndSetAsDefault(
+            new IJsonFormatter[] { new ColorFormatter() },
+            new IJsonFormatterResolver[] { StandardResolver.Default }
+            );
+
+        var test = CompositeResolver.Instance.GetFormatter<Color>();
         
         var path =  _settingsPathProvider.GetSettingsPathInHierarchy().Path ??
                     throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
@@ -46,9 +51,24 @@ public class ConfigurationProvider : IConfigurationProvider
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
         
-        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream, resolver)
+        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream, CustomResolver.Instance)
                             ?? throw new Exception($"Configuration could not be loaded from {path}");
 
         return ConfigurationInfo.Of(path, configuration);
+    }
+}
+
+public class CustomResolver : IJsonFormatterResolver
+{
+    public static readonly CustomResolver Instance = new();
+
+    private readonly IJsonFormatterResolver _inner = StandardResolver.Default;
+
+    public IJsonFormatter<T> GetFormatter<T>()
+    {
+        if (typeof(T) == typeof(Color))
+            return (IJsonFormatter<T>)new ColorFormatter();
+
+        return _inner.GetFormatter<T>();
     }
 }

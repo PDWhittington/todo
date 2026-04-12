@@ -92,16 +92,16 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          }
 
          if (!ContainsTokenScore(currentLine.Line, out var tokenScore)) continue;
-         
-         if (!TryGetCategoryFromStack(markdownHeadingStack, scoreCategories, out var scoreCategory)) continue;
 
-         if (scoreDictionary.ContainsKey(scoreCategory!))
+         var scoreCategory = GetCategoryFromStack(markdownHeadingStack, scoreCategories);
+
+         if (scoreDictionary.ContainsKey(scoreCategory))
          {
-            scoreDictionary[scoreCategory!] += tokenScore;
+            scoreDictionary[scoreCategory] += tokenScore;
          }
          else
          {
-            scoreDictionary[scoreCategory!] = tokenScore;
+            scoreDictionary[scoreCategory] = tokenScore;
          }
       }
       
@@ -168,10 +168,10 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       }
    }
    
-   private static bool TryGetCategoryFromStack(MarkdownHeadingStack stack, 
-      ScoreCategory [] scoreCategories, out ScoreCategory? scoreCategory)
+   private static ScoreCategory GetCategoryFromStack(MarkdownHeadingStack stack, 
+      ScoreCategory [] scoreCategories)
    {
-      foreach (var category in scoreCategories)
+      foreach (var category in scoreCategories.Where(x => !x.IsDefaultCategory))
       {
          var isWithinSection = stack
             .Select(x => x.HeadingTitle)
@@ -180,12 +180,10 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          // ReSharper disable once InvertIf
          if (isWithinSection)
          {
-            scoreCategory = category;
-            return true;
+            return category;
          }
       }
    
-      scoreCategory = null;
-      return false;
+      return scoreCategories.First(x => x.IsDefaultCategory);
    }
 }

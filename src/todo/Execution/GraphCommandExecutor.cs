@@ -7,19 +7,21 @@ using System.Xml.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Scoring;
+using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.GamifyOperations;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
+using Todo.Extensions;
 
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator scoresGenerator,
     IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster, 
-    IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor)
+    IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor, IHtmlFileLauncher htmlFileLauncher)
     : CommandExecutorBase<GraphCommand>(outputWriter), IGraphCommandExecutor
 {
     // === Chart dimensions & margins ===
@@ -43,6 +45,8 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         var filePathInfo = scoreHtmlPathResolver.GetFilePathFor("", FileTypeEnum.Html);
         
         File.WriteAllText(filePathInfo.Path, html);
+        
+        htmlFileLauncher.LaunchFiles(filePathInfo.Path);
     }
 
     public string GenerateStackedBarChartHtml(ScoreInfo[] data, string chartTitle = "Daily Activity Breakdown")
@@ -95,13 +99,13 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
 
                 var segmentHeight = segment.Value * yScale;
                 var segmentY = stackY - segmentHeight;
-
+                
                 var rect = new XElement("rect",
                     new XAttribute("x", barX),
                     new XAttribute("y", segmentY),
                     new XAttribute("width", barWidth),
                     new XAttribute("height", segmentHeight),
-                    new XAttribute("fill", segment.Key.GraphColor),
+                    new XAttribute("fill", segment.Key.GraphColor.ToHex()),
                     new XAttribute("stroke", "#ffffff"),
                     new XAttribute("stroke-width", "2"));
 
@@ -162,7 +166,6 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         for (var i = 0; i < scoreCategories.Length; i++)
         {
             var cat = scoreCategories[i];
-            var color = cat.GraphColor;
 
             // color box
             elements.Add(new XElement("rect",
@@ -170,7 +173,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                 new XAttribute("y", legendY + i * 28),
                 new XAttribute("width", "18"),
                 new XAttribute("height", "18"),
-                new XAttribute("fill", color)));
+                new XAttribute("fill", cat.GraphColor.ToHex())));
 
             // label
             elements.Add(new XElement("text",
