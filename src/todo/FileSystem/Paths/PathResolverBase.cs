@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -12,15 +11,10 @@ namespace Todo.FileSystem.Paths;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public abstract class PathResolverBase<TParameterType>(
     IConfigurationProvider configurationProvider,
-    IOutputFolderPathProvider outputFolderPathProvider,
-    IFilenameDateParser? filenameDateParser)
+    IOutputFolderPathProvider outputFolderPathProvider)
     : IPathResolver<TParameterType>
 {
     protected readonly IConfigurationProvider ConfigurationProvider = configurationProvider;
-
-    protected const string MarkdownExtension = "md";
-    protected const string HtmlExtension = "html";
-    protected const string SettingsExtension = "json";
 
     public abstract string GetRegExForThisFileType();
 
@@ -45,9 +39,13 @@ public abstract class PathResolverBase<TParameterType>(
         var path = Path.Combine(rootedOutputFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
 
-        var date = GetDate(fileName);
+        return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.TodoRoot);
+    }
 
-        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.TodoRoot, date);
+    protected virtual FilePathInfo GetFilePathInfo(string fileName, string formattedPath, 
+        FileTypeEnum fileType, FolderEnum folderType)
+    {
+        return FilePathInfo.Of(formattedPath, fileType, folderType);
     }
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
@@ -58,29 +56,20 @@ public abstract class PathResolverBase<TParameterType>(
         var path = Path.Combine(rootedArchiveFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
 
-        var date = GetDate(fileName);
-        
-        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.Archive, date);
+        return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.Archive);
     }
-
-    private DateOnly? GetDate(string fileName)
-    {
-        if (filenameDateParser is null) return null;
-        
-        return filenameDateParser.TryParse(fileName, out var date) ? date : null;
-    }
-
+    
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
         {
-            FileTypeEnum.Html => HtmlExtension,
-            FileTypeEnum.MarkdownDayList => MarkdownExtension,
-            FileTypeEnum.MarkdownTopicList => MarkdownExtension,
+            FileTypeEnum.Html => FileTypes.HtmlExtension,
+            FileTypeEnum.MarkdownDayList => FileTypes.MarkdownExtension,
+            FileTypeEnum.MarkdownTopicList => FileTypes.MarkdownExtension,
 
-            FileTypeEnum.HtmlTemplate => HtmlExtension,
-            FileTypeEnum.MarkdownTemplate => MarkdownExtension,
+            FileTypeEnum.HtmlTemplate => FileTypes.HtmlExtension,
+            FileTypeEnum.MarkdownTemplate => FileTypes.MarkdownExtension,
 
-            FileTypeEnum.Settings => SettingsExtension,
+            FileTypeEnum.Settings => FileTypes.SettingsExtension,
 
             _ => throw new ArgumentOutOfRangeException(nameof(fileTypeEnum), fileTypeEnum, null)
         };

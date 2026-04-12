@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.FileSystem;
 
 namespace Todo.Dates;
 
@@ -15,7 +16,7 @@ public class FilenameDateParser : IFilenameDateParser
     public FilenameDateParser(IConfigurationProvider configurationProvider)
     {
         var template = configurationProvider
-            .ConfigInfo.Configuration.TodoListFilenameFormat;
+            .ConfigInfo.Configuration.TodoListFilenameFormatWithoutExension + $".{FileTypes.MarkdownExtension}";
         
         if (string.IsNullOrWhiteSpace(template))
             throw new ArgumentException("Template cannot be empty.");
@@ -42,13 +43,13 @@ public class FilenameDateParser : IFilenameDateParser
         _regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
     }
     
-    public bool TryParse(string fileName, out DateOnly? date)
+    public bool TryParse(string fileName, out DateOnly date)
     {
         var match = _regex.Match(fileName);
 
         if (!match.Success)
         {
-            date = null;
+            date = default;
             return false;
         }
 
@@ -61,7 +62,7 @@ public class FilenameDateParser : IFilenameDateParser
             DateTimeStyles.None,
             out var dateParsed);
 
-        date = parseSuccess ? dateParsed : null;
+        date = parseSuccess ? dateParsed : default;
         
         return parseSuccess;
     }

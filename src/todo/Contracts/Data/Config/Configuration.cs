@@ -8,6 +8,6 @@ namespace Todo.Contracts.Data.Config;
         PerOsFilePaths BrowserPath, PerOsFilePaths TextEditorPath,
         string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
         string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
-        string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormat,
+        string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormatWithoutExension,
         bool UseNamesForDays, bool UseGit, TimeSpan? NewDayThreshold, int ConsoleWidth,
         IterationMethodEnum FileIterationMethod);

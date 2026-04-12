@@ -50,8 +50,7 @@ public class FileListCreator : IFileListCreator
         }.SelectMany(x => x)
         .Select(CategoriseAndMatch)
         .Where(filterInfo => filterInfo.Match)
-        .Select(pathAndFolder => FilePathInfo.Of(pathAndFolder.PathAndFolder.Path,
-            MapToFileTypeEnum(pathAndFolder.FileType), pathAndFolder.PathAndFolder.Folder, pathAndFolder.Date))
+        .Select(GetFilePathInfo)
         .ToArray();
 
         return pathsInRelevantFolders;
@@ -64,7 +63,7 @@ public class FileListCreator : IFileListCreator
                 _ => throw new Exception()
             };
 
-        (bool Match, ListFileTypeEnum FileType, DateOnly? Date, PathAndFolder PathAndFolder) CategoriseAndMatch(
+        CategoryAndMatchInfo CategoriseAndMatch(
             PathAndFolder pathAndFolder)
         {
             var fileName = Path.GetFileName(pathAndFolder.Path);
@@ -76,9 +75,34 @@ public class FileListCreator : IFileListCreator
 
             var fileType = isDayList ? ListFileTypeEnum.DayList : ListFileTypeEnum.TopicList;
 
-            return (match, fileType, date, pathAndFolder);
+            return new CategoryAndMatchInfo(match, fileType, date, pathAndFolder);
+        }
+
+        FilePathInfo GetFilePathInfo(CategoryAndMatchInfo categoryAndMatchInfo)
+        {
+            if (categoryAndMatchInfo.FileType != ListFileTypeEnum.DayList)
+            {
+                return FilePathInfo.Of(
+                    categoryAndMatchInfo.PathAndFolder.Path, MapToFileTypeEnum(categoryAndMatchInfo.FileType),
+                    categoryAndMatchInfo.PathAndFolder.Folder);
+            }
+            
+            if (categoryAndMatchInfo.Date is null)
+            {
+                throw new Exception($"Expecting file of type  {nameof(ListFileTypeEnum.DayList)} " +
+                                    $"but no date is parsed");
+            }
+                
+            return DayListFilePathInfo.Of(
+                categoryAndMatchInfo.PathAndFolder.Path, MapToFileTypeEnum(categoryAndMatchInfo.FileType),
+                categoryAndMatchInfo.PathAndFolder.Folder, categoryAndMatchInfo.Date.Value);
         }
     }
-    
-    
+
+    private record CategoryAndMatchInfo(
+        bool Match,
+        ListFileTypeEnum FileType,
+        DateOnly? Date,
+        PathAndFolder PathAndFolder);
+
 }

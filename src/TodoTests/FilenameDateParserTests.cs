@@ -19,7 +19,7 @@ public class FilenameDateParserTests
     {
         var configInfo = Config.GetMockConfigInfo(c => c with
         {
-            TodoListFilenameFormat = filenameDateParsingTestInfo.TemplateString
+            TodoListFilenameFormatWithoutExension = filenameDateParsingTestInfo.TemplateString
         });
         
         var configProvider = Substitute.For<IConfigurationProvider>();
@@ -55,7 +55,7 @@ public class FilenameDateParserTests
     {
         yield return new FilenameDateParsingTestInfo
         {
-            TemplateString = "todo-{yyyy-MM-dd}.md",
+            TemplateString = "todo-{yyyy-MM-dd}",
             TestFileName = "todo-2026-04-01.md",
             ExpectedDate =  new DateOnly(2026, 4, 01),
             IsMatch = true
@@ -63,7 +63,7 @@ public class FilenameDateParserTests
         
         yield return new FilenameDateParsingTestInfo
         {
-            TemplateString = "todo-{yy-MM-dd}.md",
+            TemplateString = "todo-{yy-MM-dd}",
             TestFileName = "todo-26-04-01.md",
             ExpectedDate =  new DateOnly(2026, 4, 01),
             IsMatch = true

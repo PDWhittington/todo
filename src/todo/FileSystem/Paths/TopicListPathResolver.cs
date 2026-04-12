@@ -7,7 +7,7 @@ public class TopicListPathResolver : PathResolverBase<string>, ITopicListPathRes
 {
     public TopicListPathResolver(IConfigurationProvider configurationProvider,
         IOutputFolderPathProvider outputFolderPathProvider)
-        : base(configurationProvider, outputFolderPathProvider, null)
+        : base(configurationProvider, outputFolderPathProvider)
     { }
 
     public override string GetRegExForThisFileType() => ".*";
