@@ -4,10 +4,11 @@ using Todo.Contracts.Data.Html;
 
 namespace Todo.Contracts.Data.Config;
 
-    public record Configuration(
-        PerOsFilePaths BrowserPath, PerOsFilePaths TextEditorPath,
-        string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
-        string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
-        string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormatWithoutExension,
-        bool UseNamesForDays, bool UseGit, TimeSpan? NewDayThreshold, int ConsoleWidth,
-        IterationMethodEnum FileIterationMethod, int DefaultDayIntervalForGamify);
+[method: JsonConstructor]
+public record Configuration(
+    PerOsFilePaths BrowserPath, PerOsFilePaths TextEditorPath,
+    string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
+    string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
+    string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormatWithoutExension,
+    bool UseNamesForDays, bool UseGit, TimeSpan? NewDayThreshold, int ConsoleWidth,
+    IterationMethodEnum FileIterationMethod, int DefaultDayIntervalForGamify, ScoreCategory[] ScoreCategories);

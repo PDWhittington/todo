@@ -55,31 +55,31 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
    
    private IEnumerable<ScoreInfo> YieldScoresFor(IEnumerable<DayListFilePathInfo> filePathInfos)
    {
+      var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
+      
       return configurationProvider.ConfigInfo.Configuration.FileIterationMethod switch
       {
          IterationMethodEnum.Series => filePathInfos
-            .Select(GetScoreInfo)
+            .Select(x => GetScoreInfo(x, scoreCategories))
             .OrderBy(x => x.FilePath.Path),
          
          IterationMethodEnum.Parallel => filePathInfos
             .AsParallel()
-            .Select(GetScoreInfo)
+            .Select(x => GetScoreInfo(x, scoreCategories))
             .OrderBy(x => x.FilePath.Path),
 
          _ => throw new ArgumentOutOfRangeException(
-            $"{configurationProvider.ConfigInfo.Configuration.FileIterationMethod} should be either series or parallel.")
+            $"{configurationProvider.ConfigInfo.Configuration.FileIterationMethod} " +
+            $"should be either series or parallel.")
       };
    }
 
-   private ScoreInfo GetScoreInfo(DayListFilePathInfo filePathInfo)
+   private ScoreInfo GetScoreInfo(DayListFilePathInfo filePathInfo, ScoreCategory[] scoreCategories)
    {
       var todoFile = markdownFileReader.ReadMarkdownFile(filePathInfo);
       var markdownHeadingStack = new MarkdownHeadingStack();
-
-      var doneScore = 0;
-      var notDoneScore = 0;
-      var carriedForwardScore = 0;
-      var outstandingScore = 0;
+      
+      var scoreDictionary = new Dictionary<ScoreCategory, int>();
       
       for (var i = 0; i < todoFile.MarkdownLines.Length; i++) 
       {
@@ -92,21 +92,20 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          }
 
          if (!ContainsTokenScore(currentLine.Line, out var tokenScore)) continue;
-         
-         var currentHeading = GetHeadingCategoryFromStack(markdownHeadingStack, filePathInfo, i);
-         
-         switch (currentHeading)
+
+         var scoreCategory = GetCategoryFromStack(markdownHeadingStack, scoreCategories);
+
+         if (scoreDictionary.ContainsKey(scoreCategory))
          {
-            case HeadingCategoryEnum.NotDone: notDoneScore += tokenScore; break;
-            case HeadingCategoryEnum.Done: doneScore += tokenScore; break;
-            case HeadingCategoryEnum.CarriedForward: carriedForwardScore += tokenScore; break;
-            case HeadingCategoryEnum.None:
-            default: 
-               outstandingScore += tokenScore; break;
+            scoreDictionary[scoreCategory] += tokenScore;
+         }
+         else
+         {
+            scoreDictionary[scoreCategory] = tokenScore;
          }
       }
       
-      return ScoreInfo.Of(filePathInfo, notDoneScore, doneScore, carriedForwardScore, outstandingScore);
+      return ScoreInfo.Of(filePathInfo, scoreDictionary);
    }
 
    private static bool ContainsTokenScore(string line, out int tokenScore)
@@ -169,43 +168,22 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       }
    }
    
-   [SuppressMessage("ReSharper", "ConvertSwitchStatementToSwitchExpression")]
-   private static HeadingCategoryEnum GetHeadingCategoryFromStack(MarkdownHeadingStack stack, 
-      FilePathInfo filePathInfo, int lineNumber)
+   private static ScoreCategory GetCategoryFromStack(MarkdownHeadingStack stack, 
+      ScoreCategory [] scoreCategories)
    {
-      var isWithinDoneSection = stack
-         .Select(x => x.HeadingTitle)
-         .Contains("DONE", StringComparer.CurrentCultureIgnoreCase) 
-            ? HeadingCategoryEnum.Done 
-            : HeadingCategoryEnum.None; 
-      
-      var isWithinNotDoneSection = stack
-         .Select(x => x.HeadingTitle)
-         .Contains("NOT DONE", StringComparer.CurrentCultureIgnoreCase)
-            ? HeadingCategoryEnum.NotDone
-            : HeadingCategoryEnum.None;
-
-      var isWithinCarriedForwardSection = stack
-         .Select(x => x.HeadingTitle)
-         .Contains("CARRIED FORWARD", StringComparer.CurrentCultureIgnoreCase)
-            ? HeadingCategoryEnum.CarriedForward
-            : HeadingCategoryEnum.None;
-
-      var combinedSectionInfo = isWithinDoneSection 
-                                | isWithinNotDoneSection | isWithinCarriedForwardSection;
-
-      switch (combinedSectionInfo)
+      foreach (var category in scoreCategories.Where(x => !x.IsDefaultCategory))
       {
-         case HeadingCategoryEnum.None:
-         case HeadingCategoryEnum.Done:
-         case HeadingCategoryEnum.NotDone:
-         case HeadingCategoryEnum.CarriedForward:
+         var isWithinSection = stack
+            .Select(x => x.HeadingTitle)
+            .Contains(category.Name, StringComparer.CurrentCultureIgnoreCase); 
             
-            return combinedSectionInfo;
-            
-         default:
-            throw new Exception($"In {filePathInfo.Path} line number {lineNumber + 1} is ambiguous in which category " +
-                                $"it belongs to ({combinedSectionInfo})");
+         // ReSharper disable once InvertIf
+         if (isWithinSection)
+         {
+            return category;
+         }
       }
+   
+      return scoreCategories.First(x => x.IsDefaultCategory);
    }
 }

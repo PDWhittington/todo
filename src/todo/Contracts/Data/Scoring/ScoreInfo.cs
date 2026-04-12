@@ -1,28 +1,35 @@
+using System.Collections.Generic;
+using System.Linq;
+using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Scoring;
 
 public record ScoreInfo
 {
-    public FilePathInfo FilePath { get; }
-    public int ScoreNotDone { get; }
-    public int ScoreDone { get; }
-    public int CarriedForward { get; }
-    public int Outstanding { get; }
-
-    public int Total() => ScoreNotDone + ScoreDone + CarriedForward + Outstanding;
+    public DayListFilePathInfo FilePath { get; }
     
-    private ScoreInfo(FilePathInfo filePathInfo, int scoreNotDone, 
-        int scoreDone, int carriedForward, int outstanding)
+    private readonly Dictionary<ScoreCategory, int> _scores = new();
+
+    public int Total() => _scores.Sum(x => x.Value);
+    
+    public int GetScore(ScoreCategory category) => _scores[category];
+
+    public IEnumerable<KeyValuePair<ScoreCategory, int>> GetScores()
     {
-        FilePath = filePathInfo;
-        ScoreNotDone = scoreNotDone;
-        ScoreDone = scoreDone;
-        CarriedForward = carriedForward;
-        Outstanding = outstanding;
+        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+        foreach (var pair in _scores) yield return pair;
     }
     
-    public static ScoreInfo Of(FilePathInfo filePathInfo, int scoreNotDone, 
-        int scoreDone, int carriedForward, int outstanding) =>
-        new(filePathInfo, scoreNotDone, scoreDone, carriedForward, outstanding);
+    private ScoreInfo(DayListFilePathInfo filePathInfo, IEnumerable<KeyValuePair<ScoreCategory, int>> scores)
+    {
+        FilePath = filePathInfo;
+        _scores = scores.ToDictionary(
+            x => x.Key, 
+            x => x.Value);
+    }
+    
+    public static ScoreInfo Of(DayListFilePathInfo filePathInfo, 
+        IEnumerable<KeyValuePair<ScoreCategory, int>> scores) =>
+        new(filePathInfo, scores);
 }

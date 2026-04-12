@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Todo.Contracts.Data.Markdown;
+using Todo.Extensions;
 using Todo.StringOperations;
 
 namespace Todo.MarkdownOperations;

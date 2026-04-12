@@ -1,7 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.GamifyOperations;
@@ -23,13 +21,17 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter,
       
       var scoreInfos = scoresGenerator.GetNonZeroScoresForDateInterval(start, now);
 
+      var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
+      
       foreach (var scoreInfo in scoreInfos)
       {
          OutputWriter.WriteLine(scoreInfo.FilePath.Path);
-         OutputWriter.WriteLine($"Done: {scoreInfo.ScoreDone}");
-         OutputWriter.WriteLine($"NotDone: {scoreInfo.ScoreNotDone}");
-         OutputWriter.WriteLine($"Carried Forward: {scoreInfo.CarriedForward}");
-         OutputWriter.WriteLine($"Outstanding: {scoreInfo.Outstanding}");
+         
+         foreach (var scoreCategory in scoreCategories)
+         {
+            OutputWriter.WriteLine($"{scoreCategory.Name}: {scoreInfo.GetScore(scoreCategory)}");
+         }
+         
          OutputWriter.WriteLine($"Total: {scoreInfo.Total()}");
          OutputWriter.WriteLine();
       }

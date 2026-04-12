@@ -45,5 +45,28 @@
   "FileIterationMethod": "Parallel",
   
   //Gamify settings
-  "DefaultDayIntervalForGamify": 21
+  "DefaultDayIntervalForGamify": 21,
+  "ScoreCategories": [
+    //(string Name, string MarkdownHeading, Color GraphColor);
+    {
+      "Name": "Outstanding",
+      "MarkdownHeading": null,
+      "Color": "Orange"
+    },
+    {
+      "Name": "Not Done",
+      "MarkdownHeading": "Not Done",
+      "Color": "Red"
+    },
+    {
+      "Name": "Carried Forward",
+      "MarkdownHeading": "Carried Forward",
+      "Color": "Gray"
+    },
+    {
+      "Name": "Done",
+      "MarkdownHeading": "Done",
+      "Color": "Green"
+    }
+  ]
 }
