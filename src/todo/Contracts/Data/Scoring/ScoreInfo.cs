@@ -14,6 +14,8 @@ public record ScoreInfo
     public int Total() => _scores.Sum(x => x.Value);
     
     public int GetScore(ScoreCategory category) => _scores[category];
+    
+    public bool TryGetScore(ScoreCategory category, out int score) => _scores.TryGetValue(category, out score);
 
     public IEnumerable<KeyValuePair<ScoreCategory, int>> GetScores()
     {

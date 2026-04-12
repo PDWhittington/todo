@@ -47,26 +47,29 @@
   //Gamify settings
   "DefaultDayIntervalForGamify": 21,
   "ScoreCategories": [
-    //(string Name, string MarkdownHeading, Color GraphColor);
     {
       "Name": "Outstanding",
-      "MarkdownHeading": null,
-      "Color": "Orange"
+      "MarkdownHeading": "",
+      "GraphColor": "Orange",
+      "IsDefaultCategory": true
     },
     {
       "Name": "Not Done",
       "MarkdownHeading": "Not Done",
-      "Color": "Red"
+      "GraphColor": "Red",
+      "IsDefaultCategory": false
     },
     {
       "Name": "Carried Forward",
       "MarkdownHeading": "Carried Forward",
-      "Color": "Gray"
+      "GraphColor": "Gray",
+      "IsDefaultCategory": false
     },
     {
       "Name": "Done",
       "MarkdownHeading": "Done",
-      "Color": "Green"
+      "GraphColor": "Green",
+      "IsDefaultCategory": false
     }
   ]
 }

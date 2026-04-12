@@ -49,13 +49,15 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         htmlFileLauncher.LaunchFiles(filePathInfo.Path);
     }
 
-    public string GenerateStackedBarChartHtml(ScoreInfo[] data, string chartTitle = "Daily Activity Breakdown")
+    private string GenerateStackedBarChartHtml(ScoreInfo[] data, string chartTitle = "Daily Activity Breakdown")
     {
-        if (!data.Any()) 
+        if (data.Length == 0) 
             return "<html><body><h1>No data to display</h1></body></html>";
 
-        var plotWidth = Width - MarginLeft - MarginRight;
-        var plotHeight = Height - MarginTop - MarginBottom;
+        var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
+        
+        const int plotWidth = Width - MarginLeft - MarginRight;
+        const int plotHeight = Height - MarginTop - MarginBottom;
 
         // === Calculate scaling ===
         var maxTotal = data.Max(d => d.Total()) * 1.1; // 10% padding
@@ -85,6 +87,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                 new XAttribute("stroke", "#333"), new XAttribute("stroke-width", "3"))
         };
 
+        
         // === Draw bars (stacked) ===
         for (var i = 0; i < numBars; i++)
         {
@@ -93,11 +96,13 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
 
             double stackY = MarginTop + plotHeight;   // start from bottom
             
-            foreach (var segment in day.GetScores())
+            foreach (var scoreCategory in scoreCategories)
             {
-                if (segment.Value <= 0) continue;
+                if (!day.TryGetScore(scoreCategory, out var score)) continue;
+                
+                if (score <= 0) continue;
 
-                var segmentHeight = segment.Value * yScale;
+                var segmentHeight = score * yScale;
                 var segmentY = stackY - segmentHeight;
                 
                 var rect = new XElement("rect",
@@ -105,16 +110,15 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                     new XAttribute("y", segmentY),
                     new XAttribute("width", barWidth),
                     new XAttribute("height", segmentHeight),
-                    new XAttribute("fill", segment.Key.GraphColor.ToHex()),
+                    new XAttribute("fill", scoreCategory.GraphColor.ToHex()),
                     new XAttribute("stroke", "#ffffff"),
                     new XAttribute("stroke-width", "2"));
 
                 // Hover tooltip
                 rect.Add(new XElement("title", 
-                    $"{day.FilePath.Date:MMM dd yyyy}\n{segment.Key.Name}: {segment.Value}"));
+                    $"{day.FilePath.Date:MMM dd yyyy}\n{scoreCategory.Name}: {score}"));
 
                 elements.Add(rect);
-
                 stackY -= segmentHeight;
             }
 
@@ -129,7 +133,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         }
 
         // === Y-axis ticks & labels ===
-        var tickCount = 6;
+        const int tickCount = 6;
         for (var i = 0; i <= tickCount; i++)
         {
             var value = i * (maxTotal / tickCount);
@@ -160,8 +164,6 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             new XAttribute("font-family", "Arial, sans-serif"),
             new XAttribute("font-size", "15"), new XAttribute("font-weight", "bold"),
             "Sub-categories"));
-
-        var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
         
         for (var i = 0; i < scoreCategories.Length; i++)
         {
@@ -189,7 +191,6 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             new XAttribute("width", Width),
             new XAttribute("height", Height),
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),
-            // new XAttribute("xmlns", "http://www.w3.org/2000/svg"),
             elements.ToArray());
 
         // === Full HTML (self-contained) ===
