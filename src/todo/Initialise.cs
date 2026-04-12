@@ -15,6 +15,7 @@ using Todo.Contracts.Services.Dates.Naming;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Contracts.Services.GamifyOperations;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
@@ -25,6 +26,7 @@ using Todo.Dates.Naming;
 using Todo.Execution;
 using Todo.FileSystem;
 using Todo.FileSystem.Paths;
+using Todo.GamifyOperations;
 using Todo.Git;
 using Todo.MarkdownOperations;
 using Todo.StateAndConfig;
@@ -45,9 +47,9 @@ internal static class Initialise
             .AddStateAndConfig()
             .AddDateOperations()
             .AddTemplateFunctionality()
-            .AddDateFunctionality()
             .AddFileSystemFunctionality()
             .AddGitFunctionality()
+            .AddGamifyOperations()
             .AddMarkdownFunctionality()
             .AddUiFunctionality()
 
@@ -92,7 +94,14 @@ internal static class Initialise
                 => serviceCollection
                     .AddSingleton<IDateAccessor, DateAccessor>()
                     .AddSingleton<IDateParser, DateParser>()
-                    .AddSingleton<IDateHelper, DateHelper>();
+                    .AddSingleton<IDateHelper, DateHelper>()
+                    .AddSingleton<IDateAdjuster, DateAdjuster>()
+                    .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
+                    .AddSingleton<IEasterDateNamer, EasterDateNamer>()
+                    .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
+                    .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
+                    .AddSingleton<IDateFormatter, DateFormatter>()
+                    .AddSingleton<IFilenameDateParser, FilenameDateParser>();
 
             private IServiceCollection AddTemplateFunctionality()
                 => serviceCollection
@@ -102,15 +111,6 @@ internal static class Initialise
                     .AddSingleton<IDayListMarkdownTemplateProvider, DayListMarkdownTemplateProvider>()
                     .AddSingleton<ITopicListMarkdownTemplateProvider, TopicListMarkdownTemplateProvider>()
                     .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
-
-            private IServiceCollection AddDateFunctionality()
-                => serviceCollection
-                    .AddSingleton<IChristmasNewYearDateNamer, ChristmasNewYearDateNamer>()
-                    .AddSingleton<IEasterDateNamer, EasterDateNamer>()
-                    .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
-                    .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
-                    .AddSingleton<IDateFormatter, DateFormatter>()
-                    .AddSingleton<IFilenameDateParser, FilenameDateParser>();
 
             private IServiceCollection AddFileSystemFunctionality()
                 => serviceCollection
@@ -124,6 +124,9 @@ internal static class Initialise
                     .AddSingleton<IFolderCreator, FolderCreator>()
                     .AddSingleton<IFileListCreator, FileListCreator>();
 
+            private IServiceCollection AddGamifyOperations()
+                => serviceCollection.AddSingleton<IScoresGenerator, ScoresGenerator>();
+            
             private IServiceCollection AddGitFunctionality()
                 => serviceCollection
                     .AddSingleton<IGitInterface, GitInterface>()

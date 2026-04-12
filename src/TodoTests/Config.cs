@@ -16,7 +16,7 @@ public static class Config
         var configuration = new Configuration(blankPaths, blankPaths, "",
             "", "", HtmlThemeEnum.Dark, "", "", "",
             true, true, new TimeSpan(4, 0, 0), 
-            80, IterationMethodEnum.Parallel);
+            80, IterationMethodEnum.Parallel, 21);
         
         return configuration;
     }

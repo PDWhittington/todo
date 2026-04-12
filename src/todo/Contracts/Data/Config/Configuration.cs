@@ -10,4 +10,4 @@ namespace Todo.Contracts.Data.Config;
         string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
         string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormatWithoutExension,
         bool UseNamesForDays, bool UseGit, TimeSpan? NewDayThreshold, int ConsoleWidth,
-        IterationMethodEnum FileIterationMethod);
+        IterationMethodEnum FileIterationMethod, int DefaultDayIntervalForGamify);
