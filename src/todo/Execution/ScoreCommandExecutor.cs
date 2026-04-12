@@ -33,7 +33,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
 
    public override void Execute(ScoreCommand command)
    {
-      var files = fileListCreator.GetFiles(
+      var files = fileListCreator.GetFiles<DayListFilePathInfo>(
          OutputFolderEnum.MainFolder | OutputFolderEnum.ArchiveFolder,
          ListFileTypeEnum.DayList);
 
@@ -55,7 +55,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       }
    }
 
-   private ScoreInfo[] GetScoresForAllFiles(FilePathInfo[] filePathInfos)
+   private ScoreInfo[] GetScoresForAllFiles(IEnumerable<DayListFilePathInfo> filePathInfos)
    {
       return configurationProvider.ConfigInfo.Configuration.FileIterationMethod switch
       {
@@ -75,7 +75,7 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter, IFileListCreator f
       };
    }
 
-   private ScoreInfo GetScoreInfo(FilePathInfo filePathInfo)
+   private ScoreInfo GetScoreInfo(DayListFilePathInfo filePathInfo)
    {
       var todoFile = markdownFileReader.ReadMarkdownFile(filePathInfo);
       var markdownHeadingStack = new MarkdownHeadingStack();
