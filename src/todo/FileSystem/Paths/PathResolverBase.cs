@@ -16,10 +16,6 @@ public abstract class PathResolverBase<TParameterType>(
 {
     protected readonly IConfigurationProvider ConfigurationProvider = configurationProvider;
 
-    protected const string MarkdownExtension = "md";
-    protected const string HtmlExtension = "html";
-    protected const string SettingsExtension = "json";
-
     public abstract string GetRegExForThisFileType();
 
     protected abstract string FileNameWithoutExtension(TParameterType parameter);
@@ -43,7 +39,13 @@ public abstract class PathResolverBase<TParameterType>(
         var path = Path.Combine(rootedOutputFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
 
-        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.TodoRoot);
+        return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.TodoRoot);
+    }
+
+    protected virtual FilePathInfo GetFilePathInfo(string fileName, string formattedPath, 
+        FileTypeEnum fileType, FolderEnum folderType)
+    {
+        return FilePathInfo.Of(formattedPath, fileType, folderType);
     }
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
@@ -54,20 +56,20 @@ public abstract class PathResolverBase<TParameterType>(
         var path = Path.Combine(rootedArchiveFolder, fileName);
         var formattedPath = Path.GetFullPath(path);
 
-        return FilePathInfo.Of(formattedPath, fileType, FolderEnum.Archive);
+        return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.Archive);
     }
-
+    
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
         {
-            FileTypeEnum.Html => HtmlExtension,
-            FileTypeEnum.MarkdownDayList => MarkdownExtension,
-            FileTypeEnum.MarkdownTopicList => MarkdownExtension,
+            FileTypeEnum.Html => FileTypes.HtmlExtension,
+            FileTypeEnum.MarkdownDayList => FileTypes.MarkdownExtension,
+            FileTypeEnum.MarkdownTopicList => FileTypes.MarkdownExtension,
 
-            FileTypeEnum.HtmlTemplate => HtmlExtension,
-            FileTypeEnum.MarkdownTemplate => MarkdownExtension,
+            FileTypeEnum.HtmlTemplate => FileTypes.HtmlExtension,
+            FileTypeEnum.MarkdownTemplate => FileTypes.MarkdownExtension,
 
-            FileTypeEnum.Settings => SettingsExtension,
+            FileTypeEnum.Settings => FileTypes.SettingsExtension,
 
             _ => throw new ArgumentOutOfRangeException(nameof(fileTypeEnum), fileTypeEnum, null)
         };

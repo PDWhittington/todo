@@ -30,7 +30,7 @@ public class ListFilesCommandExecutor(
             .AppendLine();
 
         var pathGroups = fileListCreator
-            .GetFiles(command.OutputFolder, command.ListFileType)
+            .GetFiles<FilePathInfo>(command.OutputFolder, command.ListFileType)
             .GroupBy(filePathInfo => new { filePathInfo.FolderType, filePathInfo.FileType })
             .ToArray();
 

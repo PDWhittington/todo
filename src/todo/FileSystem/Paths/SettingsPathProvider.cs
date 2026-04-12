@@ -59,7 +59,8 @@ public class SettingsPathProvider : ISettingsPathProvider
         var path = Path.Combine(folder, _constantsProvider.SettingsFileName);
         var formattedPath = Path.GetFullPath(path);
 
-        return FilePathInfo.Of(formattedPath, FileTypeEnum.Settings, FolderEnum.AssemblyFolder);
+        return FilePathInfo.Of(formattedPath, FileTypeEnum.Settings, 
+            FolderEnum.AssemblyFolder);
     }
 
     public FilePathInfo GetSettingsPathInWorkingFolder()

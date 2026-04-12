@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace Todo.Contracts.Data.FileSystem;
 
@@ -13,7 +12,8 @@ public record FilePathInfo
     
     public override string ToString() => Path;
 
-    private FilePathInfo(string path, FileTypeEnum fileType, FolderEnum folderType)
+    protected FilePathInfo(string path, FileTypeEnum fileType, 
+        FolderEnum folderType)
     {
         Path = System.IO.Path.IsPathRooted(path) ? path
             : throw new Exception("Only rooted paths are valid");
@@ -21,9 +21,8 @@ public record FilePathInfo
         FileType = fileType;
         FolderType = folderType;
     }
-
-    public static FilePathInfo Of(string path, FileTypeEnum fileType, FolderEnum folderType)
+    
+    public static FilePathInfo Of(string path, FileTypeEnum fileType, 
+        FolderEnum folderType)
         => new(path, fileType, folderType);
-
-    public bool Exists() => File.Exists(Path);
 }

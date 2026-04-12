@@ -1,8 +1,10 @@
-﻿using Todo.Contracts.Data.FileSystem;
+﻿using System.Collections.Generic;
+using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Services.FileSystem;
 
 public interface IFileListCreator
 {
-    FilePathInfo[] GetFiles(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType);
+    IEnumerable<T> GetFiles<T>(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType)
+        where T : FilePathInfo;
 }

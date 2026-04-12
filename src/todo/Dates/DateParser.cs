@@ -12,13 +12,15 @@ public class DateParser : IDateParser
     private readonly IDateAccessor _dateAccessor;
     private readonly IDateHelper _dateHelper;
     private readonly IConfigurationProvider _configurationProvider;
+    private readonly IDateAdjuster _dateAdjuster;
 
     public DateParser(IDateAccessor dateAccessor, IDateHelper dateHelper, 
-        IConfigurationProvider configurationProvider)
+        IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster)
     {
         _dateAccessor = dateAccessor;
         _dateHelper = dateHelper;
         _configurationProvider = configurationProvider;
+        _dateAdjuster = dateAdjuster;
     }
 
     public bool TryGetDate(string? str, out DateOnly dateOnly)
@@ -31,10 +33,10 @@ public class DateParser : IDateParser
 
         //NOTE: order of these tests is important.
 
-        if (IsYesterday(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(-1);
-        else if (IsToday(str)) dateOnly = GetTodayWithMidnightAdjusted();
-        else if (IsTomorrow(str)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(1);
-        else if (IsRelativeOffset(str, out var offset)) dateOnly = GetTodayWithMidnightAdjusted().AddDays(offset);
+        if (IsYesterday(str)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(-1);
+        else if (IsToday(str)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted();
+        else if (IsTomorrow(str)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(1);
+        else if (IsRelativeOffset(str, out var offset)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(offset);
         else if (IsDayOfWeek(str, out var dayOfWeek)) dateOnly = GetDateFromDayOfWeek((DayOfWeek)dayOfWeek!);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsLastThisOrNext(str, out var dateFromColloquial)
@@ -47,16 +49,7 @@ public class DateParser : IDateParser
         return dateOnly != default;
     }
 
-    private DateOnly GetTodayWithMidnightAdjusted()
-    {
-        var newDayThreshold = _configurationProvider.ConfigInfo.Configuration.NewDayThreshold ?? new TimeSpan(0, 0, 0);
 
-        var now = _dateAccessor.GetNow();
-        
-        return now.TimeOfDay < newDayThreshold
-            ? _dateHelper.ConvertToDateOnly(DateTime.Today.AddDays(-1))
-            : _dateHelper.ConvertToDateOnly(DateTime.Today);
-    }
 
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
     {
@@ -160,7 +153,7 @@ public class DateParser : IDateParser
             IsDayOfWeek(elements[1], out var dayOfWeek) &&
             dayOfWeek is not null /* for compiler */)
         {
-            var currentDate = GetTodayWithMidnightAdjusted();
+            var currentDate = _dateAdjuster.GetTodayWithMidnightAdjusted();
 
             var dateDiffs = GetDateDiffsFor(currentDate, dayOfWeek.Value);
 
@@ -183,7 +176,7 @@ public class DateParser : IDateParser
 
     private DateOnly GetDateFromDayOfWeek(DayOfWeek dayOfWeek)
     {
-        var today = GetTodayWithMidnightAdjusted();
+        var today = _dateAdjuster.GetTodayWithMidnightAdjusted();
 
         var possibles = GetPossiblesForDayOfWeek(today, dayOfWeek);
 
@@ -195,7 +188,7 @@ public class DateParser : IDateParser
 
     private DateOnly GetDateFromDayOnly(int dayOnly)
     {
-        var today = GetTodayWithMidnightAdjusted();
+        var today = _dateAdjuster.GetTodayWithMidnightAdjusted();
 
         var possibles = GetPossiblesForDayOnly(today, dayOnly).ToArray();
 
@@ -206,7 +199,7 @@ public class DateParser : IDateParser
 
     private DateOnly GetDateFromDayMonth(int month, int day)
     {
-        var today = GetTodayWithMidnightAdjusted();
+        var today = _dateAdjuster.GetTodayWithMidnightAdjusted();
 
         var possibles = GetPossiblesForDayMonth(today, month, day);
         return _dateHelper.GetNearestTo(possibles, today);
