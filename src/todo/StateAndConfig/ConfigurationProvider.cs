@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using Todo.Contracts.Data.Caching;
 using Todo.Contracts.Data.Config;
@@ -29,21 +28,11 @@ public class ConfigurationProvider : IConfigurationProvider
     public void Reset() => _configuration.Reset();
 
     private ConfigurationInfo GetConfiguration()
-    {
-        var resolver = CompositeResolver.Create(
-            [
-                new ColorFormatter()
-            ],
-            [
-                StandardResolver.Default
-            ]);
-        
+    {   
         CompositeResolver.RegisterAndSetAsDefault(
-            new IJsonFormatter[] { new ColorFormatter() },
-            new IJsonFormatterResolver[] { StandardResolver.Default }
-            );
-
-        var test = CompositeResolver.Instance.GetFormatter<Color>();
+            [new ColorFormatter()],
+            [StandardResolver.Default]
+        );
         
         var path =  _settingsPathProvider.GetSettingsPathInHierarchy().Path ??
                     throw new FileNotFoundException($"{_constantsProvider.SettingsFileName} not found.",
@@ -51,24 +40,9 @@ public class ConfigurationProvider : IConfigurationProvider
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
         
-        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream, CustomResolver.Instance)
+        var configuration = JsonSerializer.Deserialize<Configuration>(fileStream)
                             ?? throw new Exception($"Configuration could not be loaded from {path}");
 
         return ConfigurationInfo.Of(path, configuration);
-    }
-}
-
-public class CustomResolver : IJsonFormatterResolver
-{
-    public static readonly CustomResolver Instance = new();
-
-    private readonly IJsonFormatterResolver _inner = StandardResolver.Default;
-
-    public IJsonFormatter<T> GetFormatter<T>()
-    {
-        if (typeof(T) == typeof(Color))
-            return (IJsonFormatter<T>)new ColorFormatter();
-
-        return _inner.GetFormatter<T>();
     }
 }
