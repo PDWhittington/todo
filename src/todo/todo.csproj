@@ -1,68 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <!-- Standard assembly properties -->
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>Todo</RootNamespace>
-    <LangVersion>14</LangVersion>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <!-- Make classes marked as internal available to the test project -->
-  <ItemGroup>
-    <InternalsVisibleTo Include="TodoTests" />
-  </ItemGroup>
- 
-  <!-- nuget references -->
-
-  <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
-    <PackageReference Include="Markdig" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.5" />
-    <PackageReference Include="Utf8Json" Version="1.3.7" />
-  </ItemGroup>
-
-  <!-- Embedded templates-->
-
-  <ItemGroup>
-    <None Remove="day-list-template.md" />
-    <EmbeddedResource Include="day-list-template.md" />
-    <None Remove="topic-list-template.md" />
-    <EmbeddedResource Include="topic-list-template.md" />
-    <None Remove="template.html" />
-    <EmbeddedResource Include="template.html" />
-    <None Remove="todo-settings.json" />
-    <EmbeddedResource Include="todo-settings.json" />
-  </ItemGroup>
-
-  <!-- Assembly info files populated by pre-build-->
-
-  <ItemGroup>
-    <None Remove="commithash.txt" />
-    <EmbeddedResource Include="commithash.txt" />
-    <None Remove="buildtime.txt" />
-    <EmbeddedResource Include="buildtime.txt" />
-  </ItemGroup>
-
- <!-- Pre-build event to populate the above files -->
-
-  <PropertyGroup>
-    <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="git describe --long --dirty --tags --always &gt; commithash.txt&#xA;echo $(CurrentDate) &gt; buildtime.txt&#xA;" />
-  </Target>
+    <!-- Standard assembly properties -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>Todo</RootNamespace>
+        <LangVersion>14</LangVersion>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TieredPGO>false</TieredPGO>
+    </PropertyGroup>
+    <!-- Make classes marked as internal available to the test project -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="TodoTests" />
+    </ItemGroup>
+    <!-- nuget references -->
+    <ItemGroup>
+        <PackageReference Include="LibGit2Sharp"
+                          Version="0.31.0" />
+        <PackageReference Include="Markdig"
+                          Version="1.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console"
+                          Version="10.0.5" />
+        <PackageReference Include="Utf8Json"
+                          Version="1.3.7" />
+    </ItemGroup>
+    <!-- Embedded templates -->
+    <ItemGroup>
+        <None Remove="day-list-template.md" />
+        <EmbeddedResource Include="day-list-template.md" />
+        <None Remove="topic-list-template.md" />
+        <EmbeddedResource Include="topic-list-template.md" />
+        <None Remove="template.html" />
+        <EmbeddedResource Include="template.html" />
+        <None Remove="todo-settings.json" />
+        <EmbeddedResource Include="todo-settings.json" />
+    </ItemGroup>
+    <!-- Assembly info files populated by pre-build -->
+    <ItemGroup>
+        <None Remove="commithash.txt" />
+        <EmbeddedResource Include="commithash.txt" />
+        <None Remove="buildtime.txt" />
+        <EmbeddedResource Include="buildtime.txt" />
+    </ItemGroup>
+    <!-- Pre-build event to populate the above files -->
+    <PropertyGroup>
+        <CurrentDate>$([System.DateTime]::Now.ToString(yyyy-MM-dd HH:mm:ss))</CurrentDate>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <Target Name="PreBuild"
+            BeforeTargets="PreBuildEvent">
+        <Exec Command="git describe --long --dirty --tags --always > commithash.txt&#xA;echo $(CurrentDate) > buildtime.txt&#xA;" />
+    </Target>
 </Project>
