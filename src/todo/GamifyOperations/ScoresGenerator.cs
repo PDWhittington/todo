@@ -18,15 +18,6 @@ namespace Todo.GamifyOperations;
 public class ScoresGenerator(IConfigurationProvider configurationProvider, 
    IFileListCreator fileListCreator, IMarkdownFileReader markdownFileReader) : IScoresGenerator
 {
-   [Flags]
-   private enum HeadingCategoryEnum
-   {
-      None = 0, //Must be kept as zero as this is used in bitwise operations to disapper.
-      Done = 1,
-      NotDone = 2,
-      CarriedForward = 4
-   }
-
    public ScoreInfo[] GetNonZeroScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
    {
       return YieldScoresForDateInterval(fromExclusive, toInclusive)
@@ -47,8 +38,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          ListFileTypeEnum.DayList);
 
       var filesFiltered = files
-         .Where(info => fromExclusive < info.Date && info.Date <= toInclusive)
-         .OrderBy(info => info.Date);
+         .Where(info => fromExclusive < info.Date && info.Date <= toInclusive);
 
       return YieldScoresFor(filesFiltered);
    } 
@@ -56,22 +46,16 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
    private IEnumerable<ScoreInfo> YieldScoresFor(IEnumerable<DayListFilePathInfo> filePathInfos)
    {
       var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
-      
-      return configurationProvider.ConfigInfo.Configuration.FileIterationMethod switch
-      {
-         IterationMethodEnum.Series => filePathInfos
-            .Select(x => GetScoreInfo(x, scoreCategories))
-            .OrderBy(x => x.FilePath.Path),
-         
-         IterationMethodEnum.Parallel => filePathInfos
-            .AsParallel()
-            .Select(x => GetScoreInfo(x, scoreCategories))
-            .OrderBy(x => x.FilePath.Path),
 
-         _ => throw new ArgumentOutOfRangeException(
-            $"{configurationProvider.ConfigInfo.Configuration.FileIterationMethod} " +
-            $"should be either series or parallel.")
-      };
+      var fileIterationMethod = configurationProvider.ConfigInfo.Configuration.FileIterationMethod;
+      
+      var infosWithIterationMode = fileIterationMethod == IterationMethodEnum.Parallel
+         ? filePathInfos.AsParallel()
+            : filePathInfos;
+      
+      return infosWithIterationMode
+         .Select(x => GetScoreInfo(x, scoreCategories))
+         .OrderBy(x => x.FilePath.Date);
    }
 
    private ScoreInfo GetScoreInfo(DayListFilePathInfo filePathInfo, ScoreCategory[] scoreCategories)
