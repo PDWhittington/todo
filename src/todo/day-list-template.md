@@ -1,9 +1,10 @@
 # Todo list for {date}
 
-## Work
 
-* 
 
-## Personal
 
-* 
+## Carried forward
+
+## Not done
+
+## DONE
