@@ -101,7 +101,8 @@ internal static class Initialise
                     .AddSingleton<ISaintsDayDateNamer, SaintsDayDateNamer>()
                     .AddSingleton<ISpecialDateNamer, SpecialDateNamer>()
                     .AddSingleton<IDateFormatter, DateFormatter>()
-                    .AddSingleton<IFilenameDateParser, FilenameDateParser>();
+                    .AddSingleton<IFilenameDateParser, FilenameDateParser>()
+                    .AddSingleton<IOrdinalHelper, OrdinalHelper>();
 
             private IServiceCollection AddTemplateFunctionality()
                 => serviceCollection
