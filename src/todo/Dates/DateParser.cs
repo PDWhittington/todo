@@ -137,11 +137,17 @@ public class DateParser : IDateParser
     {
         var elements = commandLine.Split('/', '.', '-');
 
+        if (elements.Length != 2)
+        {
+            day = 0;
+            month = 0;
+            return false;
+        }
+
         var dayParsed = int.TryParse(elements[0], out day);
         var monthParsed = int.TryParse(elements[1], out month);
 
-        return
-            elements.Length == 2 && dayParsed && monthParsed;
+        return dayParsed && monthParsed;
     }
 
     private bool IsLastThisOrNext(string commandLine, out DateOnly? date)

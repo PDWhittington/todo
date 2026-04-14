@@ -13,6 +13,6 @@ try
 }
 catch (Exception e)
 {
-    Console.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}" + e);
-    throw;
+    Console.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
+    Console.WriteLine($"{e.GetType()}: {e.Message}");
 }
