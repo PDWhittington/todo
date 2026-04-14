@@ -9,6 +9,7 @@ using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Scoring;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.Dates.Naming;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.GamifyOperations;
@@ -21,7 +22,9 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator scoresGenerator,
     IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster, 
-    IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor, IHtmlFileLauncher htmlFileLauncher)
+    IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor, 
+    IHtmlFileLauncher htmlFileLauncher, ISpecialDateNamer specialDateNamer,
+    IOrdinalHelper ordinalHelper)
     : CommandExecutorBase<GraphCommand>(outputWriter), IGraphCommandExecutor
 {
     // === Chart dimensions & margins ===
@@ -30,7 +33,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
     private const int MarginLeft = 80;
     private const int MarginRight = 220;   // space for legend
     private const int MarginTop = 60;
-    private const int MarginBottom = 80;
+    private const int MarginBottom = 100;
     
     public override void Execute(GraphCommand command)
     {
@@ -122,14 +125,12 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                 stackY -= segmentHeight;
             }
 
-            // Day label
-            elements.Add(new XElement("text",
-                new XAttribute("x", barX + barWidth / 2),
-                new XAttribute("y", MarginTop + plotHeight + 35),
-                new XAttribute("text-anchor", "middle"),
-                new XAttribute("font-family", "Arial, sans-serif"),
-                new XAttribute("font-size", "13"),
-                day.FilePath.Date.ToString("MMM dd")));
+            var dayLabelX = barX + barWidth / 2.0;
+            var dayLabelY = MarginTop + plotHeight + 35;
+            
+            var dayLabel = GetDayLabel(dayLabelX, dayLabelY, day.FilePath.Date);
+            
+            elements.Add(dayLabel);
         }
 
         // === Y-axis ticks & labels ===
@@ -235,5 +236,39 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         Written at: {dateAccessor.GetNow():yy-MM-dd HH:mm:ss}
     </body>
     </html>";
+    }
+
+    private XElement GetDayLabel(double x, double y, DateOnly date)
+    {
+        var dayLabel = new XElement("text",
+            new XAttribute("x", x),
+            new XAttribute("y", y),
+            new XAttribute("text-anchor", "end"),
+            new XAttribute("font-family", "Arial, sans-serif"),
+            new XAttribute("font-size", "13"),
+            new XAttribute("transform", $"rotate(-45 {x} {y})"));
+
+        if (configurationProvider.ConfigInfo.Configuration.UseNamesForDays &&
+            specialDateNamer.TryGetSpecialName(date, out var dateName))
+        {
+            dayLabel.Add(new XText(dateName!));
+        }
+        else
+        {
+            dayLabel.Add(new XText(date.ToString("ddd d")));
+
+            var ordinal = ordinalHelper.GetOrdinal(date.Day);
+            
+            var tspan = new XElement("tspan",
+                new XAttribute("font-size", "9"),
+                new XAttribute("baseline-shift", "super"),
+                new XText(ordinal)
+            );
+            dayLabel.Add(tspan);
+
+            dayLabel.Add(new XText($" {date.ToString("MMMM")}"));            
+        }
+        
+        return dayLabel;
     }
 }
