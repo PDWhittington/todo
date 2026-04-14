@@ -25,7 +25,7 @@ public class DateListPathResolver(
     protected override FilePathInfo GetFilePathInfo(string fileName, string formattedPath, 
         FileTypeEnum fileType, FolderEnum folderType)
     {
-        if (fileType != FileTypeEnum.MarkdownDayList)
+        if (fileType != FileTypeEnum.MarkdownDayList && fileType != FileTypeEnum.Html)
         {
             throw new Exception($"{nameof(DateListPathResolver)} should be used only for " +
                                 $"files of type {nameof(FileTypeEnum.MarkdownDayList)}");

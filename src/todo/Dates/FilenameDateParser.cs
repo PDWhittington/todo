@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Todo.Contracts.Services.Dates;
@@ -16,7 +17,7 @@ public class FilenameDateParser : IFilenameDateParser
     public FilenameDateParser(IConfigurationProvider configurationProvider)
     {
         var template = configurationProvider
-            .ConfigInfo.Configuration.TodoListFilenameFormatWithoutExension + $".{FileTypes.MarkdownExtension}";
+            .ConfigInfo.Configuration.TodoListFilenameFormatWithoutExension;
         
         if (string.IsNullOrWhiteSpace(template))
             throw new ArgumentException("Template cannot be empty.");
@@ -45,7 +46,9 @@ public class FilenameDateParser : IFilenameDateParser
     
     public bool TryParse(string fileName, out DateOnly date)
     {
-        var match = _regex.Match(fileName);
+        var filenameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+        
+        var match = _regex.Match(filenameWithoutExtension);
 
         if (!match.Success)
         {
