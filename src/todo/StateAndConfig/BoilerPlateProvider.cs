@@ -26,8 +26,8 @@ public class BoilerPlateProvider(
             .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine()
             .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
-            .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
             .AppendLine($"OS description: {RuntimeInformation.OSDescription}")
+            .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
             .AppendLine()
             .AppendLine($"Project author: {constantsProvider.ProjectAuthor} " + 
                 $"({constantsProvider.ProjectAuthorContactDetails})")
