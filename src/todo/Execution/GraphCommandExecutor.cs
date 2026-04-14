@@ -9,6 +9,7 @@ using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Scoring;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.Dates.Naming;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.GamifyOperations;
@@ -21,7 +22,8 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator scoresGenerator,
     IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster, 
-    IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor, IHtmlFileLauncher htmlFileLauncher)
+    IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor, 
+    IHtmlFileLauncher htmlFileLauncher, IDateFormatter dateFormatter)
     : CommandExecutorBase<GraphCommand>(outputWriter), IGraphCommandExecutor
 {
     // === Chart dimensions & margins ===
@@ -122,14 +124,19 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                 stackY -= segmentHeight;
             }
 
+            var dayLabelX = barX + barWidth / 2.0;
+            var dayLabelY = MarginTop + plotHeight + 35;
+            var dayLabelText = dateFormatter.GetMarkdownHeader(day.FilePath.Date);
+            
             // Day label
             elements.Add(new XElement("text",
-                new XAttribute("x", barX + barWidth / 2),
-                new XAttribute("y", MarginTop + plotHeight + 35),
-                new XAttribute("text-anchor", "middle"),
+                new XAttribute("x", dayLabelX),
+                new XAttribute("y", dayLabelY),
+                new XAttribute("text-anchor", "end"),
                 new XAttribute("font-family", "Arial, sans-serif"),
                 new XAttribute("font-size", "13"),
-                day.FilePath.Date.ToString("MMM dd")));
+                new XAttribute("transform", $"rotate(-45 {dayLabelX} {dayLabelY})"),
+                dayLabelText));
         }
 
         // === Y-axis ticks & labels ===
