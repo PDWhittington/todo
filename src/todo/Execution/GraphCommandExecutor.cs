@@ -248,7 +248,8 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             new XAttribute("font-size", "13"),
             new XAttribute("transform", $"rotate(-45 {x} {y})"));
 
-        if (specialDateNamer.TryGetSpecialName(date, out var dateName))
+        if (configurationProvider.ConfigInfo.Configuration.UseNamesForDays &&
+            specialDateNamer.TryGetSpecialName(date, out var dateName))
         {
             dayLabel.Add(new XText(dateName!));
         }
