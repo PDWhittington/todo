@@ -29,7 +29,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
 {
     // === Chart dimensions & margins ===
     private const int Width = 960;
-    private const int Height = 620;
+    private const int Height = 450;
     private const int MarginLeft = 80;
     private const int MarginRight = 220;   // space for legend
     private const int MarginTop = 60;
