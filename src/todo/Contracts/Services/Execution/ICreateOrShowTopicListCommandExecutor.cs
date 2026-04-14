@@ -2,4 +2,5 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface ICreateOrShowTopicListCommandExecutor : ICommandExecutor<CreateOrShowTopicListCommand>;
+public interface ICreateOrShowTopicListCommandExecutor 
+    : ICommandExecutor<CreateOrShowTopicListCommand>;

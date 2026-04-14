@@ -2,4 +2,5 @@
 
 namespace Todo.Contracts.Services.Execution;
 
-public interface ICreateOrShowDayListCommandExecutor : ICommandExecutor<CreateOrShowDayListCommand>;
+public interface ICreateOrShowDayListCommandExecutor 
+    : ICommandExecutor<CreateOrShowDayListCommand>;

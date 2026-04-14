@@ -1,3 +1,6 @@
-﻿namespace Todo.Contracts.Services.Execution;
+﻿using Todo.Contracts.Data.Commands;
 
-public interface IPrintAndShowHtmlCommandExecutor;
+namespace Todo.Contracts.Services.Execution;
+
+public interface IPrintAndShowHtmlCommandExecutor 
+    : ICommandExecutor<PrintAndShowHtmlCommand>;
