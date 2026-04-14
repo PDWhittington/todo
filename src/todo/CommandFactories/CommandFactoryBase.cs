@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.UI;
@@ -45,9 +46,19 @@ public abstract class CommandFactoryBase<T>(IOutputWriter outputWriter, IEnumera
 
         restOfCommand = commandLine[firstWord.Length..].Trim();
 
+        var otherWords = CommandWords
+            .Where(word => !string.Equals(word, firstWord))
+            .Select(word => $"'{word}'")
+            .ToArray();
+        
         OutputWriter.WriteLine($"Command line interpreted as {typeof(T).Name}");
-        OutputWriter.WriteLine();
 
+        if (otherWords.Length > 0)
+        {
+            OutputWriter.WriteLine($"(Can also be invoked with {string.Join(", ", otherWords)})");
+        }
+        
+        OutputWriter.WriteLine();
         return true;
     }
 
