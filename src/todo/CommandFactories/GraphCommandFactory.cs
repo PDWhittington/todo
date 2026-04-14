@@ -14,7 +14,8 @@ public class GraphCommandFactory(IOutputWriter outputWriter)
     
     public override string [] HelpText { get; } =
     [
-        "Creates an HTML graph of your recent performance.",
+        "Creates an HTML graph of your recent performance, using the same " +
+        "logic as the score command.",
         "",
         "Usage: todo g"
     ];
