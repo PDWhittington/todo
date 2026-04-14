@@ -17,10 +17,10 @@ public class PrintHtmlCommandFactory(IDateParser dateParser, IOutputWriter outpu
     public override string [] HelpText { get; } =
     [
         "Converts a Markdown file to HTML. Can be used with anything that can be parsed as a date. " +
-        "Supplying no date performs this operation on the Markdown file for the current day.",
-        "",
-        "Usage: todo p [date]"
+        "Supplying no date performs this operation on the Markdown file for the current day."
     ];
+
+    public override string Usage => "p [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override PrintHtmlCommand? TryGetCommand(string commandLine)

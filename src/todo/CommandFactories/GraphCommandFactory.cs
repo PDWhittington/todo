@@ -15,10 +15,10 @@ public class GraphCommandFactory(IOutputWriter outputWriter)
     public override string [] HelpText { get; } =
     [
         "Creates an HTML graph of your recent performance, using the same " +
-        "logic as the score command.",
-        "",
-        "Usage: todo g"
+        "logic as the score command."
     ];
+
+    public override string Usage => "g";
 
     public override GraphCommand? TryGetCommand(string commandLine)
         => IsThisCommand(commandLine, out _)

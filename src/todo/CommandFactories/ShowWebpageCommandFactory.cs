@@ -18,10 +18,10 @@ public class ShowWebpageCommandFactory(
 
     public override string[] HelpText { get; } =
     [
-        $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser.",
-        "",
-        "Usage: todo w"
+        $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser."
     ];
+
+    public override string Usage => "w";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowWebpageCommand? TryGetCommand(string commandLine)

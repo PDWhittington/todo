@@ -21,10 +21,10 @@ public class ListFilesCommandFactory(IOutputWriter outputWriter)
         "\tm -- main todo folder.",
         "\ta -- archive folder.",
         "\td -- lists relating to days.",
-        "\tt -- lists relating to topics.",
-        "",
-        "Usage: todo l [m|a][d|t]"
+        "\tt -- lists relating to topics."
     ];
+
+    public override string Usage => "l [m|a][d|t]";
 
     public override ListFilesCommand? TryGetCommand(string commandLine)
     {

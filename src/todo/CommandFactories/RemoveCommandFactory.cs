@@ -15,10 +15,10 @@ public class RemoveCommandFactory : CommandFactoryBase<RemoveCommand>
 
     public override string[] HelpText { get; } =
     [
-        "Deletes the file. If git is enabled, the command performs a remove in git. ",
-        "",
-        "Usage: todo rm [date]"
+        "Deletes the file. If git is enabled, the command performs a remove in git."
     ];
+
+    public override string Usage => "rm [date]";
 
     private readonly IDateParser _dateParser;
 

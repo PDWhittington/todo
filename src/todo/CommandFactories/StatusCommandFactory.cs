@@ -13,7 +13,8 @@ public class StatusCommandFactory(IOutputWriter outputWriter)
     public override bool IsDefaultCommandFactory => false;
 
     public override string[] HelpText => [];
-    
+    public override string Usage => "";
+
     public override StatusCommand? TryGetCommand(string commandLine)
     {
         return !IsThisCommand(commandLine, out var restOfCommand) 
