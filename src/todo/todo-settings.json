@@ -48,8 +48,8 @@
   "DefaultDayIntervalForGamify": 21,
   "ScoreCategories": [
     {
-      "Name": "Not Done",
-      "MarkdownHeading": "Not Done",
+      "Name": "Abandoned",
+      "MarkdownHeading": "Abandoned",
       "GraphColor": "Red",
       "IsDefaultCategory": false
     },
