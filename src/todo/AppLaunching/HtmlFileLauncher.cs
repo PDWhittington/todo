@@ -35,15 +35,13 @@ public partial class HtmlFileLauncher(
     private void LaunchSingleFile(string path)
     {
         var browserLaunchInfo = configurationProvider.ConfigInfo.Configuration.BrowserPath.GetPathForThisOs();
-
         var browserPath = pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
-
         var parameters = browserLaunchInfo.InterpolateParameters(path);
 
         outputWriter.WriteLine($"Opening {path} in a browser.");
-
+        outputWriter.WriteLine($"({browserPath} {parameters})");
+        
         var process = Process.Start(browserPath, parameters);
-
         BringMainWindowToFrontIfWindows(process);
     }
 
