@@ -163,7 +163,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             new XAttribute("x", legendX), new XAttribute("y", legendY - 15),
             new XAttribute("font-family", "Arial, sans-serif"),
             new XAttribute("font-size", "15"), new XAttribute("font-weight", "bold"),
-            "Sub-categories"));
+            "Categories"));
         
         for (var i = 0; i < scoreCategories.Length; i++)
         {
