@@ -41,7 +41,7 @@ dotnet publish src --runtime osx-x64 --configuration Release --no-self-contained
 dotnet publish src --runtime linux-x64 --configuration Release --no-self-contained
 ```
 
-### Automatically publishing
+### Publishing automatically
 
 The following shell scripts are available in the root directory of the repository. The publish scripts reflect simply my own use cases. They can be run if they are exactly what you need, but they also provide an example of how you might automate publishing the app on your own machine.
 
