@@ -9,7 +9,7 @@ public class StatusCommandExecutor(IOutputWriter outputWriter)
 {
     public override void Execute(StatusCommand command)
     {
-        outputWriter.WriteLine("There is no todo command called 'status'.");
-        outputWriter.WriteLine("Did you mean 'git status'?");
+        OutputWriter.WriteLine("There is no todo command called 'status'.");
+        OutputWriter.WriteLine("Did you mean 'git status'?");
     }
 }
