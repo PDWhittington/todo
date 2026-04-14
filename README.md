@@ -90,6 +90,27 @@ The following commands can be invoked from the command line:-
     </tr>
     <tr>
         <td valign="top">
+            config<br />
+            settings<br />
+            showsettings
+        </td>
+        <td valign="top">
+            Shows the settings file in the default editor.<br /><br />
+            Usage: todo settings
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            g<br />
+            graph<br />
+        </td>
+        <td valign="top">
+            Creates an HTML graph of your recent performance, using the same logic as the score command.<br /><br />
+            Usage: todo g
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
             h<br />
             html<br />
             showhtml
@@ -210,12 +231,12 @@ The following commands can be invoked from the command line:-
     </tr>
     <tr>
         <td valign="top">
-            settings<br />
-            showsettings
+            score<br />
+            gamify
         </td>
         <td valign="top">
-            Shows the settings file in the default editor.<br /><br />
-            Usage: todo settings
+            Allows the user to 'gamify' the todo lists and display a score for how much has been achievedper day or per week.<br /><br />
+            Usage: todo score
         </td>
     </tr>
     <tr>
