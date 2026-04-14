@@ -27,6 +27,7 @@ dotnet build src
 ```
 If you are confident that you need the app to run on only one operating system, you can publish the app for just the [runtime identifier](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog#windows-rids) that you need.
 
+### Building manually
 
 ```
 dotnet publish src --runtime win-x64 --configuration Release --no-self-contained
@@ -39,6 +40,16 @@ dotnet publish src --runtime osx-x64 --configuration Release --no-self-contained
 ```
 dotnet publish src --runtime linux-x64 --configuration Release --no-self-contained
 ```
+
+### Automatically publishing
+
+The following shell scripts are available in the root directory of the repository. The publish scripts reflect simply my own use cases. They can be run if they are exactly what you need, but they also provide an example of how you might automate publishing the app on your own machine.
+
+* get-todo.sh -- pulls down the current source code (main/HEAD) from GitHub and extracts it to a subfolder called todo-main. This script should obviously not be run from _within_ with repo, but is useful where git either does not exist or is not known by the user.
+* publish-linux-x64.sh -- builds for Linux on x64 and publishes to /usr/local/bin/todo/.
+* publish-osx-arm64.sh -- builds for MacOS on Apple Silicon and publishes to /usr/local/bin/todo/.
+* publish-win-x64.sh -- builds for Windows on x64 and publishes to c:\portable\todo\ (using the /c... mount familiar to Git Bash.)
+* publish-wsl-x64.sh -- builds for Windows on x64 and publishes to c:\portable\todo\ (using /mnt/c/... mount familiar to WSL.)
 
 ## Usage
 
