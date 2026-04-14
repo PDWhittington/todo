@@ -28,7 +28,8 @@ public class DateListPathResolver(
         if (fileType != FileTypeEnum.MarkdownDayList && fileType != FileTypeEnum.Html)
         {
             throw new Exception($"{nameof(DateListPathResolver)} should be used only for " +
-                                $"files of type {nameof(FileTypeEnum.MarkdownDayList)}");
+                                $"files of type {nameof(FileTypeEnum.MarkdownDayList)} or " +
+                                $"{nameof(FileTypeEnum.Html)}");
         }
 
         if (!filenameDateParser.TryParse(fileName, out var date))
