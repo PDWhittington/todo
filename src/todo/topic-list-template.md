@@ -1,3 +1,3 @@
-# Todo list for {topic}
+# {topic}
 
 * 
