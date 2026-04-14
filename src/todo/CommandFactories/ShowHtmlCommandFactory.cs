@@ -16,10 +16,10 @@ public class ShowHtmlCommandFactory(IDateParser dateParser, IOutputWriter output
 
     public override string[] HelpText { get; } =
     [
-        "Opens the browser specified in the settings file and loads the Html file for the given date.",
-        "",
-        "Usage: todo h [date]"
+        "Opens the browser specified in the settings file and loads the Html file for the given date."
     ];
+
+    public override string Usage => "h [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowHtmlCommand? TryGetCommand(string commandLine)

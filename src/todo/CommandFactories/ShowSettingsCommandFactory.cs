@@ -15,10 +15,10 @@ public class ShowSettingsCommandFactory(IOutputWriter outputWriter)
 
     public override string[] HelpText { get; } =
     [
-        "Shows the settings file in the default editor.",
-        "",
-        "Usage: todo settings"
+        "Shows the settings file in the default editor."
     ];
+
+    public override string Usage => "settings";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowSettingsCommand? TryGetCommand(string commandLine)

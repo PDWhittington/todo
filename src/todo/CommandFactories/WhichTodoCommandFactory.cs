@@ -17,10 +17,10 @@ public class WhichTodoCommandFactory(IOutputWriter outputWriter)
     [
         "Reveals the location of the todo executable. Running this command is " +
         "equivalent to invoking 'which todo' in bash, but can be run on any platform. " +
-        "In fact, a 'boiler plate' of information is produced.",
-        "",
-        "Usage: todo which"
+        "In fact, a 'boiler plate' of information is produced."
     ];
+
+    public override string Usage => "which";
 
     public override WhichTodoCommand? TryGetCommand(string commandLine)
     {

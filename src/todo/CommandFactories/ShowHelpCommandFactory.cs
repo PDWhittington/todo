@@ -15,10 +15,10 @@ public class ShowHelpCommandFactory(IOutputWriter outputWriter)
 
     public override string[] HelpText { get; } =
     [
-        "Displays this help screen.",
-        "",
-        "Usage: todo help"
+        "Displays this help screen."
     ];
+
+    public override string Usage => "help";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowHelpCommand? TryGetCommand(string commandLine)

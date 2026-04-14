@@ -18,6 +18,18 @@ public abstract class CommandFactoryBase<T>(IOutputWriter outputWriter, IEnumera
     public abstract bool IsDefaultCommandFactory { get; }
 
     public abstract string [] HelpText { get; }
+    
+    public abstract string Usage { get; }
+
+    public IEnumerable<string> GetFullHelpMessage()
+    {
+        if (HelpText.Length == 0 || Usage is null) yield break;
+        
+        foreach (var helpText in HelpText) yield return helpText;
+        
+        yield return "";
+        yield return $"Usage: todo {Usage}";
+    }
 
     public HashSet<string> CommandWords { get; } = new(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
 
