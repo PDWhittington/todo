@@ -7,7 +7,8 @@ namespace Todo.Contracts.Data.Config;
 public record PerOsFilePaths(
     ProcessLaunchInfo Windows,
     ProcessLaunchInfo Linux,
-    ProcessLaunchInfo Osx)
+    // ReSharper disable once InconsistentNaming
+    ProcessLaunchInfo OSX)
 {
     public ProcessLaunchInfo GetPathForThisOs()
     {
@@ -17,7 +18,7 @@ public record PerOsFilePaths(
         }
 
         return RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-            ? Osx
+            ? OSX
             : Linux; // Assume that any unrecognised OS is a POSIX variant.
     }
 }
