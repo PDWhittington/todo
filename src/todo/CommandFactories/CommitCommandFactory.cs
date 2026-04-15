@@ -12,12 +12,12 @@ public class CommitCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } =
+    protected override string [] HelpText { get; } =
     [
         "Gathers the current modifications into a commit. Commit message is optional."
     ];
 
-    public override string Usage => "c [commit message]";
+    protected override string Usage => "c [commit message]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override CommitCommand? TryGetCommand(string commandLine)

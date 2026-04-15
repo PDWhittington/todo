@@ -13,12 +13,12 @@ public class RemoveCommandFactory : CommandFactoryBase<RemoveCommand>
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "Deletes the file. If git is enabled, the command performs a remove in git."
     ];
 
-    public override string Usage => "rm [date]";
+    protected override string Usage => "rm [date]";
 
     private readonly IDateParser _dateParser;
 

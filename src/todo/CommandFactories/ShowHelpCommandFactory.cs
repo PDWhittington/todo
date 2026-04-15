@@ -13,12 +13,12 @@ public class ShowHelpCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "Displays this help screen."
     ];
 
-    public override string Usage => "help";
+    protected override string Usage => "help";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowHelpCommand? TryGetCommand(string commandLine)

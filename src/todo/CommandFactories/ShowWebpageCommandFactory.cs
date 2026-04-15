@@ -16,12 +16,12 @@ public class ShowWebpageCommandFactory(
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         $"Opens the project page ({constantsProvider.ProjectWebsite}) in the default browser."
     ];
 
-    public override string Usage => "w";
+    protected override string Usage => "w";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowWebpageCommand? TryGetCommand(string commandLine)

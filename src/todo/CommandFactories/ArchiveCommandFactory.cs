@@ -14,7 +14,7 @@ public class ArchiveCommandFactory(IDateParser dateParser, IOutputWriter outputW
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } =
+    protected override string [] HelpText { get; } =
     [
         "Archives the markdown file for a given date. The file is moved into the archive subfolder " +
         "of the main todo folder. The name of the archive folder is specified in settings.json. Also in " +
@@ -22,7 +22,7 @@ public class ArchiveCommandFactory(IDateParser dateParser, IOutputWriter outputW
         "git mv."
     ];
 
-    public override string Usage => "a [date]";
+    protected override string Usage => "a [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ArchiveCommand? TryGetCommand(string commandLine)

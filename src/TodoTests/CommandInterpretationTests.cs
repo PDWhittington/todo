@@ -6,8 +6,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Todo;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Data.Config;
-using Todo.Contracts.Data.Html;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
 

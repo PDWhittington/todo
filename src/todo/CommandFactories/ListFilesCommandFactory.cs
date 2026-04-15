@@ -15,7 +15,7 @@ public class ListFilesCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } =
+    protected override string [] HelpText { get; } =
     [
         "Provides a list of all todo lists. Switches are as follows:-",
         "\tm -- main todo folder.",
@@ -24,7 +24,7 @@ public class ListFilesCommandFactory(IOutputWriter outputWriter)
         "\tt -- lists relating to topics."
     ];
 
-    public override string Usage => "l [m|a][d|t]";
+    protected override string Usage => "l [m|a][d|t]";
 
     public override ListFilesCommand? TryGetCommand(string commandLine)
     {

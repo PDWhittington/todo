@@ -4,8 +4,6 @@ namespace Todo.Contracts.Services.FileSystem.Paths;
 
 public interface IPathResolver<in TParameterType>
 {
-    string GetRegExForThisFileType();
-
     // ReSharper disable once UnusedMemberInSuper.Global
     string FileNameFor(TParameterType parameter, FileTypeEnum fileType);
 

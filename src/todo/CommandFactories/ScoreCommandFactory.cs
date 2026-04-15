@@ -16,11 +16,12 @@ public class ScoreCommandFactory(IOutputWriter outputWriter)
          : null;
 
    public override bool IsDefaultCommandFactory => false;
-   public override string [] HelpText { get; } =
+
+   protected override string [] HelpText { get; } =
    [
       "Allows the user to 'gamify' the todo lists and display a score for how much has been achieved" +
       "per day or per week."
    ];
 
-   public override string Usage => "score";
+   protected override string Usage => "score";
 }

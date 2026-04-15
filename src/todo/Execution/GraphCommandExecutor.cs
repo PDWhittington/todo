@@ -126,7 +126,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             }
 
             var dayLabelX = barX + barWidth / 2.0;
-            var dayLabelY = MarginTop + plotHeight + 35;
+            const int dayLabelY = MarginTop + plotHeight + 35;
             
             var dayLabel = GetDayLabel(dayLabelX, dayLabelY, day.FilePath.Date);
             
@@ -138,7 +138,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         for (var i = 0; i <= tickCount; i++)
         {
             var value = i * (maxTotal / tickCount);
-            var y = MarginTop + plotHeight - (value * yScale);
+            var y = MarginTop + plotHeight - value * yScale;
 
             // tick line
             elements.Add(new XElement("line",
@@ -196,46 +196,48 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             elements.ToArray());
 
         // === Full HTML (self-contained) ===
-        return $@"<!DOCTYPE html>
-    <html lang=""en"">
-    <head>
-        <meta charset=""utf-8"">
-        <title>{chartTitle}</title>
-        <style>
-            body {{ font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }}
-            h1 {{ text-align: center; color: #333; }}
-            .svg-container {{
-              width: 100%;
-              /* takes full width of parent */
-              height: 0;
-              /* important trick */
-              padding-bottom: 66.67%;
-              /* = (height / width) * 100%  → here 800/1200 = 66.67% */
-              position: relative;
-              overflow: hidden;
-              /* optional but clean */
-            }}
+        return $$"""
+                 <!DOCTYPE html>
+                     <html lang="en">
+                     <head>
+                         <meta charset="utf-8">
+                         <title>{{chartTitle}}</title>
+                         <style>
+                             body { font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }
+                             h1 { text-align: center; color: #333; }
+                             .svg-container {
+                               width: 100%;
+                               /* takes full width of parent */
+                               height: 0;
+                               /* important trick */
+                               padding-bottom: 66.67%;
+                               /* = (height / width) * 100%  → here 800/1200 = 66.67% */
+                               position: relative;
+                               overflow: hidden;
+                               /* optional but clean */
+                             }
 
-            .svg-container svg {{
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background: white;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }}
-        </style>
-    </head>
-    <body>
-        <h1>{chartTitle}</h1>
-        <div class=""svg-container"">
-        {svg}
-        </div>
-        <br/><br/>
-        Written at: {dateAccessor.GetNow():yy-MM-dd HH:mm:ss}
-    </body>
-    </html>";
+                             .svg-container svg {
+                               position: absolute;
+                               top: 0;
+                               left: 0;
+                               width: 100%;
+                               height: 100%;
+                               background: white;
+                               box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                             }
+                         </style>
+                     </head>
+                     <body>
+                         <h1>{{chartTitle}}</h1>
+                         <div class="svg-container">
+                         {{svg}}
+                         </div>
+                         <br/><br/>
+                         Written at: {{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}}
+                     </body>
+                     </html>
+                 """;
     }
 
     private XElement GetDayLabel(double x, double y, DateOnly date)

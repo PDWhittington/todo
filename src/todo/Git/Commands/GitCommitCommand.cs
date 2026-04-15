@@ -5,11 +5,8 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitCommitCommand(string message) : GitCommandBase<CommitResult>
+public record GitCommitCommand(string Message) : GitCommandBase<CommitResult>
 {
-    // ReSharper disable once MemberCanBePrivate.Global
-    public string Message { get; } = message;
-
     internal override CommitResult ExecuteCommand(IGitInterface gitInterface)
     {
         try

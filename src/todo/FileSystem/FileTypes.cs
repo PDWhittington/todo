@@ -1,6 +1,6 @@
 namespace Todo.FileSystem;
 
-public class FileTypes
+public static class FileTypes
 {
     public const string MarkdownExtension = "md";
     public const string HtmlExtension = "html";

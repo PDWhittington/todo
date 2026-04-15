@@ -13,12 +13,12 @@ public class ShowConflictsCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } =
+    protected override string [] HelpText { get; } =
     [
         "Opens in the text editor all of the files for which conflicts exist."
     ];
 
-    public override string Usage => "sc";
+    protected override string Usage => "sc";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowConflictsCommand? TryGetCommand(string commandLine)

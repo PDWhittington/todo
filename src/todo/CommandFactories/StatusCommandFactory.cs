@@ -12,12 +12,12 @@ public class StatusCommandFactory(IOutputWriter outputWriter)
     
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText => [];
-    public override string Usage => "";
+    protected override string[] HelpText => [];
+    protected override string Usage => "";
 
     public override StatusCommand? TryGetCommand(string commandLine)
     {
-        return !IsThisCommand(commandLine, out var restOfCommand) 
+        return !IsThisCommand(commandLine, out _) 
             ? null 
             : StatusCommand.Singleton;
     }

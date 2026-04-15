@@ -14,12 +14,12 @@ public class CreateOrShowTopicListCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "Creates or shows a todo list relating to a single topic."
     ];
 
-    public override string Usage => "t (topic name)";
+    protected override string Usage => "t (topic name)";
 
     public override CreateOrShowTopicListCommand? TryGetCommand(string commandLine)
     {

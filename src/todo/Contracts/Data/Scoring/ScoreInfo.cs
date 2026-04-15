@@ -17,12 +17,6 @@ public record ScoreInfo
     
     public bool TryGetScore(ScoreCategory category, out int score) => _scores.TryGetValue(category, out score);
 
-    public IEnumerable<KeyValuePair<ScoreCategory, int>> GetScores()
-    {
-        // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-        foreach (var pair in _scores) yield return pair;
-    }
-    
     private ScoreInfo(DayListFilePathInfo filePathInfo, IEnumerable<KeyValuePair<ScoreCategory, int>> scores)
     {
         FilePath = filePathInfo;

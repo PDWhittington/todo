@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.FileSystem;
@@ -49,10 +48,13 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
 
       var fileIterationMethod = configurationProvider.ConfigInfo.Configuration.FileIterationMethod;
       
-      var infosWithIterationMode = fileIterationMethod == IterationMethodEnum.Parallel
-         ? filePathInfos.AsParallel()
-            : filePathInfos;
-      
+      var infosWithIterationMode = fileIterationMethod switch
+         {
+            IterationMethodEnum.Parallel => filePathInfos.AsParallel(),
+            IterationMethodEnum.Series => filePathInfos,
+            _ => throw new Exception("Unknown file iteration method")
+         };
+
       return infosWithIterationMode
          .Select(x => GetScoreInfo(x, scoreCategories))
          .OrderBy(x => x.FilePath.Date);
@@ -65,10 +67,8 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       
       var scoreDictionary = new Dictionary<ScoreCategory, int>();
       
-      for (var i = 0; i < todoFile.MarkdownLines.Length; i++) 
+      foreach (var currentLine in todoFile.MarkdownLines)
       {
-         var currentLine = todoFile.MarkdownLines[i];
-
          if (currentLine.LineType == MarkdownLineTypeEnum.Heading)
          {
             markdownHeadingStack.UpdateStack(currentLine);
@@ -79,13 +79,9 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
 
          var scoreCategory = GetCategoryFromStack(markdownHeadingStack, scoreCategories);
 
-         if (scoreDictionary.ContainsKey(scoreCategory))
+         if (!scoreDictionary.TryAdd(scoreCategory, tokenScore))
          {
             scoreDictionary[scoreCategory] += tokenScore;
-         }
-         else
-         {
-            scoreDictionary[scoreCategory] = tokenScore;
          }
       }
       

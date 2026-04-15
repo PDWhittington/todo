@@ -6,8 +6,10 @@ namespace Todo.Contracts.Data.Markdown;
 
 public record TodoFile
 {
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FilePathInfo FilePathInfo { get; }
     
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public ReadOnlyCollection<string> Lines { get; }
     
     private readonly Lazy<MarkdownLineInfo[]> _markdownLines;

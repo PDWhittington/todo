@@ -18,13 +18,13 @@ public abstract class CommandFactoryBase<T>(IOutputWriter outputWriter, IEnumera
 
     public abstract bool IsDefaultCommandFactory { get; }
 
-    public abstract string [] HelpText { get; }
-    
-    public abstract string Usage { get; }
+    protected abstract string [] HelpText { get; }
+
+    protected abstract string Usage { get; }
 
     public IEnumerable<string> GetFullHelpMessage()
     {
-        if (HelpText.Length == 0 || Usage is null) yield break;
+        if (HelpText.Length == 0) yield break;
         
         foreach (var helpText in HelpText) yield return helpText;
         

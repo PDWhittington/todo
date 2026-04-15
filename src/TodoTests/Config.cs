@@ -6,6 +6,7 @@ namespace TodoTests;
 
 public static class Config
 {
+    // ReSharper disable once MemberCanBePrivate.Global
     public static Configuration GetMockConfiguration()
     {
         var blankProcessLaunchInfo = new ProcessLaunchInfo("", "");

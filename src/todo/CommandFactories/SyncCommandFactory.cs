@@ -12,12 +12,12 @@ public class SyncCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "Executes a commit and push operation sequentially."
     ];
 
-    public override string Usage => "s [commit message]";
+    protected override string Usage => "s [commit message]";
 
     public override SyncCommand? TryGetCommand(string commandLine)
     {

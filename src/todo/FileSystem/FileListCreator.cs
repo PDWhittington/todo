@@ -57,7 +57,7 @@ public class FileListCreator(IOutputFolderPathProvider pathRootingProvider, IFil
             _ => throw new Exception()
         };
 
-    CategoryAndMatchInfo CategoriseAndMatch(PathAndFolder pathAndFolder, ListFileTypeEnum listFileType)
+    private CategoryAndMatchInfo CategoriseAndMatch(PathAndFolder pathAndFolder, ListFileTypeEnum listFileType)
     {
         var fileName = Path.GetFileName(pathAndFolder.Path);
 
