@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.DependencyModel;
 using NSubstitute;
 using NUnit.Framework;
-using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Dates;
-using Todo.StringOperations;
 
 namespace TodoTests;
 

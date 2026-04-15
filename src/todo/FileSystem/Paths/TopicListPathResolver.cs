@@ -3,13 +3,11 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem.Paths;
 
-public class TopicListPathResolver : PathResolverBase<string>, ITopicListPathResolver
+public class TopicListPathResolver(
+    IConfigurationProvider configurationProvider,
+    IOutputFolderPathProvider outputFolderPathProvider)
+    : PathResolverBase<string>(configurationProvider, outputFolderPathProvider), ITopicListPathResolver
 {
-    public TopicListPathResolver(IConfigurationProvider configurationProvider,
-        IOutputFolderPathProvider outputFolderPathProvider)
-        : base(configurationProvider, outputFolderPathProvider)
-    { }
-
     public override string GetRegExForThisFileType() => ".*";
 
     protected override string FileNameWithoutExtension(string parameter)

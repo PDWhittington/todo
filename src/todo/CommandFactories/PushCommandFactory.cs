@@ -13,12 +13,12 @@ public class PushCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "Executes a git push."
     ];
 
-    public override string Usage => "push";
+    protected override string Usage => "push";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override PushCommand? TryGetCommand(string commandLine)

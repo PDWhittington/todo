@@ -13,12 +13,12 @@ public class KillHtmlCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
-        "Deletes all the html files in the todo folder and the archive subfolder.",
+        "Deletes all the html files in the todo folder and the archive subfolder."
     ];
 
-    public override string Usage => "k";
+    protected override string Usage => "k";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override KillHtmlCommand? TryGetCommand(string commandLine)

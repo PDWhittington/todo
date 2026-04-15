@@ -7,22 +7,18 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class HtmlTemplateProvider : TemplateProviderBase, IHtmlTemplateProvider
+public class HtmlTemplateProvider(
+    IPathHelper pathHelper,
+    IManifestStreamProvider manifestStreamProvider,
+    IConstantsProvider constantsProvider,
+    IMarkdownLineInterpreter markdownLineInterpreter)
+    : TemplateProviderBase(pathHelper, manifestStreamProvider, markdownLineInterpreter), IHtmlTemplateProvider
 {
-    private readonly IConstantsProvider _constantsProvider;
-
-    public HtmlTemplateProvider(IPathHelper pathHelper, IManifestStreamProvider manifestStreamProvider, 
-        IConstantsProvider constantsProvider, IMarkdownLineInterpreter markdownLineInterpreter)
-        : base(pathHelper, manifestStreamProvider, markdownLineInterpreter)
-    {
-        _constantsProvider = constantsProvider;
-    }
-
     protected override string GetTemplateFileName()
-        => _constantsProvider.DefaultHtmlTemplate.FileName;
+        => constantsProvider.DefaultHtmlTemplate.FileName;
 
     protected override string GetManifestStreamName()
-        => _constantsProvider.DefaultHtmlTemplate.FullName;
+        => constantsProvider.DefaultHtmlTemplate.FullName;
 
     protected override FileTypeEnum GetFileType()
         => FileTypeEnum.HtmlTemplate;

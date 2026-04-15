@@ -17,54 +17,41 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class PrintHtmlCommandExecutor : CommandExecutorBase<PrintHtmlCommand>, IPrintHtmlCommandExecutor
+public class PrintHtmlCommandExecutor(
+    IHtmlTemplateProvider htmlTemplateProvider,
+    IMarkdownFileReader markdownFileReader,
+    IHtmlSubstitutionsMaker htmlSubstitutionsMaker,
+    IDateFormatter dateFormatter,
+    IDateListPathResolver dateListPathResolver,
+    IOutputWriter outputWriter,
+    IConfigurationProvider configurationProvider)
+    : CommandExecutorBase<PrintHtmlCommand>(outputWriter), IPrintHtmlCommandExecutor
 {
-    private readonly IHtmlTemplateProvider _htmlTemplateProvider;
-    private readonly IMarkdownFileReader _markdownFileReader;
-    private readonly IHtmlSubstitutionsMaker _htmlSubstitutionsMaker;
-    private readonly IDateFormatter _dateFormatter;
-    private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IConfigurationProvider _configurationProvider;
-
-    public PrintHtmlCommandExecutor(IHtmlTemplateProvider htmlTemplateProvider,
-        IMarkdownFileReader markdownFileReader, IHtmlSubstitutionsMaker htmlSubstitutionsMaker,
-        IDateFormatter dateFormatter, IDateListPathResolver dateListPathResolver, 
-        IOutputWriter outputWriter, IConfigurationProvider configurationProvider)
-        : base(outputWriter)
-    {
-        _htmlTemplateProvider = htmlTemplateProvider;
-        _markdownFileReader = markdownFileReader;
-        _htmlSubstitutionsMaker = htmlSubstitutionsMaker;
-        _dateFormatter = dateFormatter;
-        _dateListPathResolver = dateListPathResolver;
-        _configurationProvider = configurationProvider;
-    }
-
     public override void Execute(PrintHtmlCommand command)
     {
         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
 
-        var markdownSourceFile = _markdownFileReader.ReadMarkdownFile(command.Date);
+        var markdownSourceFile = markdownFileReader.ReadMarkdownFile(command.Date);
         
-        var htmlTitle = _dateFormatter.GetHtmlTitle(command.Date);
+        var htmlTitle = dateFormatter.GetHtmlTitle(command.Date);
 
         var htmlBody = Markdown.ToHtml(markdownSourceFile.FileContents, pipeline);
 
-        var htmlTheme = _configurationProvider.ConfigInfo.Configuration.HtmlTheme switch
+        var htmlTheme = configurationProvider.ConfigInfo.Configuration.HtmlTheme switch
         {
             HtmlThemeEnum.Light => "vscode-light",
             HtmlThemeEnum.Dark => "vscode-dark",
-            _ => throw new Exception("Unknown html theme"),
+            _ => throw new Exception("Unknown html theme")
         };
             
         var htmlSubstitutions = HtmlSubstitutions.Of(htmlTitle, htmlBody, htmlTheme);
 
-        var htmlTemplateFile = _htmlTemplateProvider.GetTemplate();
+        var htmlTemplateFile = htmlTemplateProvider.GetTemplate();
 
-        var outputHtml = _htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions,
+        var outputHtml = htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions,
             htmlTemplateFile.FileContents);
 
-        var pathInfo = _dateListPathResolver.GetFilePathFor(command.Date, FileTypeEnum.Html);
+        var pathInfo = dateListPathResolver.GetFilePathFor(command.Date, FileTypeEnum.Html);
 
         OutputWriter.WriteLine($"Writing file for {command.Date} to {pathInfo.Path}");
 

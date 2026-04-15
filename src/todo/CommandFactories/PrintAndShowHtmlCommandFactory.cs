@@ -14,12 +14,12 @@ public class PrintAndShowHtmlCommandFactory(IDateParser dateParser, IOutputWrite
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "This command is equivalent to printhtml followed by showhtml (p, h)."
     ];
 
-    public override string Usage => "ph [date]";
+    protected override string Usage => "ph [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override PrintAndShowHtmlCommand? TryGetCommand(string commandLine)

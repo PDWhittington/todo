@@ -7,7 +7,7 @@ namespace Todo.Contracts.Data.Config;
 public record PerOsFilePaths(
     ProcessLaunchInfo Windows,
     ProcessLaunchInfo Linux,
-    ProcessLaunchInfo OSX)
+    ProcessLaunchInfo Osx)
 {
     public ProcessLaunchInfo GetPathForThisOs()
     {
@@ -17,7 +17,7 @@ public record PerOsFilePaths(
         }
 
         return RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-            ? OSX
+            ? Osx
             : Linux; // Assume that any unrecognised OS is a POSIX variant.
     }
 }

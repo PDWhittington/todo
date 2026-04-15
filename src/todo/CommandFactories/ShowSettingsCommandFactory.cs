@@ -13,12 +13,12 @@ public class ShowSettingsCommandFactory(IOutputWriter outputWriter)
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string[] HelpText { get; } =
+    protected override string[] HelpText { get; } =
     [
         "Shows the settings file in the default editor."
     ];
 
-    public override string Usage => "settings";
+    protected override string Usage => "settings";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override ShowSettingsCommand? TryGetCommand(string commandLine)

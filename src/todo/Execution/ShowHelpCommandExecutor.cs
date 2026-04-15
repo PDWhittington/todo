@@ -12,27 +12,17 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, IShowHelpCommandExecutor
+public class ShowHelpCommandExecutor(
+    IOutputWriter outputWriter,
+    IConfigurationProvider configurationProvider,
+    ICommandFactorySet commandFactorySet,
+    IConsoleTextFormatter consoleTextFormatter,
+    IBoilerPlateProvider boilerPlateProvider)
+    : CommandExecutorBase<ShowHelpCommand>(outputWriter), IShowHelpCommandExecutor
 {
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly ICommandFactorySet _commandFactorySet;
-    private readonly IConsoleTextFormatter _consoleTextFormatter;
-    private readonly IBoilerPlateProvider _boilerPlateProvider;
-
-    public ShowHelpCommandExecutor(IOutputWriter outputWriter,
-        IConfigurationProvider configurationProvider, ICommandFactorySet commandFactorySet,
-        IConsoleTextFormatter consoleTextFormatter, IBoilerPlateProvider boilerPlateProvider)
-        : base(outputWriter)
-    {
-        _configurationProvider = configurationProvider;
-        _commandFactorySet = commandFactorySet;
-        _consoleTextFormatter = consoleTextFormatter;
-        _boilerPlateProvider = boilerPlateProvider;
-    }
-
     public override void Execute(ShowHelpCommand command)
     {
-        var commandHelpMessages = _commandFactorySet
+        var commandHelpMessages = commandFactorySet
             .GetAllCommandFactories()
             .Select(cf => new { cf.CommandWords, HelpText = cf.GetFullHelpMessage().ToArray() })
             .Where(helpMessage => helpMessage.HelpText.Length != 0)
@@ -41,12 +31,12 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
 
         var sb = new StringBuilder();
 
-        _boilerPlateProvider.MakeBoilerPlate(sb);
+        boilerPlateProvider.MakeBoilerPlate(sb);
 
         sb
             .AppendLine("The following commands are available in this app:-")
             .AppendLine()
-            .AppendLine(_consoleTextFormatter.CreateTable(commandHelpMessages))
+            .AppendLine(consoleTextFormatter.CreateTable(commandHelpMessages))
             .AppendLine();
 
         var notesLines = GetNotes();
@@ -61,8 +51,8 @@ public class ShowHelpCommandExecutor : CommandExecutorBase<ShowHelpCommand>, ISh
         var withSpecialChars = _notes
             .Select(x => x.Replace("->", "\u2192"));
 
-        return _consoleTextFormatter.WrapText(withSpecialChars,
-            _configurationProvider.ConfigInfo.Configuration.ConsoleWidth);
+        return consoleTextFormatter.WrapText(withSpecialChars,
+            configurationProvider.ConfigInfo.Configuration.ConsoleWidth);
     }
 
     private readonly string [] _notes =

@@ -4,15 +4,9 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitAddCommand : GitCommandBase<VoidResult>
+public record GitAddCommand(string Path) : GitCommandBase<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
-    public string Path { get; }
-
-    public GitAddCommand(string path)
-    {
-        Path = path;
-    }
 
     internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
     {

@@ -3,26 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Services.Dates;
-using IConfigurationProvider = Todo.Contracts.Services.StateAndConfig.IConfigurationProvider;
 
 namespace Todo.Dates;
 
-public class DateParser : IDateParser
+public class DateParser(IDateHelper dateHelper, IDateAdjuster dateAdjuster) : IDateParser
 {
-    private readonly IDateAccessor _dateAccessor;
-    private readonly IDateHelper _dateHelper;
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly IDateAdjuster _dateAdjuster;
-
-    public DateParser(IDateAccessor dateAccessor, IDateHelper dateHelper, 
-        IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster)
-    {
-        _dateAccessor = dateAccessor;
-        _dateHelper = dateHelper;
-        _configurationProvider = configurationProvider;
-        _dateAdjuster = dateAdjuster;
-    }
-
     public bool TryGetDate(string? str, out DateOnly dateOnly)
     {
         if (str is null)
@@ -33,10 +18,10 @@ public class DateParser : IDateParser
 
         //NOTE: order of these tests is important.
 
-        if (IsYesterday(str)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(-1);
-        else if (IsToday(str)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted();
-        else if (IsTomorrow(str)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(1);
-        else if (IsRelativeOffset(str, out var offset)) dateOnly = _dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(offset);
+        if (IsYesterday(str)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(-1);
+        else if (IsToday(str)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted();
+        else if (IsTomorrow(str)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(1);
+        else if (IsRelativeOffset(str, out var offset)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(offset);
         else if (IsDayOfWeek(str, out var dayOfWeek)) dateOnly = GetDateFromDayOfWeek((DayOfWeek)dayOfWeek!);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsLastThisOrNext(str, out var dateFromColloquial)
@@ -159,7 +144,7 @@ public class DateParser : IDateParser
             IsDayOfWeek(elements[1], out var dayOfWeek) &&
             dayOfWeek is not null /* for compiler */)
         {
-            var currentDate = _dateAdjuster.GetTodayWithMidnightAdjusted();
+            var currentDate = dateAdjuster.GetTodayWithMidnightAdjusted();
 
             var dateDiffs = GetDateDiffsFor(currentDate, dayOfWeek.Value);
 
@@ -182,33 +167,33 @@ public class DateParser : IDateParser
 
     private DateOnly GetDateFromDayOfWeek(DayOfWeek dayOfWeek)
     {
-        var today = _dateAdjuster.GetTodayWithMidnightAdjusted();
+        var today = dateAdjuster.GetTodayWithMidnightAdjusted();
 
         var possibles = GetPossiblesForDayOfWeek(today, dayOfWeek);
 
         return possibles.Length != 0 
-            ? _dateHelper.GetNearestTo(possibles, today)
+            ? dateHelper.GetNearestTo(possibles, today)
             : throw new Exception($"No dates found for day = {dayOfWeek}");
 
     }
 
     private DateOnly GetDateFromDayOnly(int dayOnly)
     {
-        var today = _dateAdjuster.GetTodayWithMidnightAdjusted();
+        var today = dateAdjuster.GetTodayWithMidnightAdjusted();
 
         var possibles = GetPossiblesForDayOnly(today, dayOnly).ToArray();
 
         return possibles.Length == 0
-            ? _dateHelper.GetNearestTo(possibles, today)
+            ? dateHelper.GetNearestTo(possibles, today)
             : throw new Exception($"No dates found for day = {dayOnly}");
     }
 
     private DateOnly GetDateFromDayMonth(int month, int day)
     {
-        var today = _dateAdjuster.GetTodayWithMidnightAdjusted();
+        var today = dateAdjuster.GetTodayWithMidnightAdjusted();
 
         var possibles = GetPossiblesForDayMonth(today, month, day);
-        return _dateHelper.GetNearestTo(possibles, today);
+        return dateHelper.GetNearestTo(possibles, today);
     }
 
     // ReSharper disable once ReturnTypeCanBeEnumerable.Local
@@ -219,9 +204,9 @@ public class DateParser : IDateParser
 
         IEnumerable<DateOnly> PotentialDates()
         {
-            if (_dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return nOfMonth;
-            if (_dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
-            if (_dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
+            if (dateHelper.TryGetNthOfPreviousMonth(currentDay, n, out var nOfMonth)) yield return nOfMonth;
+            if (dateHelper.TryGetNthOfCurrentMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
+            if (dateHelper.TryGetNthOfNextMonth(currentDay, n, out nOfMonth)) yield return nOfMonth;
         }
     }
 
@@ -233,9 +218,9 @@ public class DateParser : IDateParser
 
         IEnumerable<DateOnly> PotentialDates()
         {
-            if (_dateHelper.TryGetDateInPreviousYear(currentDay, month, day, out var nOfMonth)) yield return nOfMonth;
-            if (_dateHelper.TryGetDateInCurrentYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
-            if (_dateHelper.TryGetDateInFollowingYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
+            if (dateHelper.TryGetDateInPreviousYear(currentDay, month, day, out var nOfMonth)) yield return nOfMonth;
+            if (dateHelper.TryGetDateInCurrentYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
+            if (dateHelper.TryGetDateInFollowingYear(currentDay, month, day, out nOfMonth)) yield return nOfMonth;
         }
     }
 

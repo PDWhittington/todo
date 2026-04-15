@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
-using Todo.FileSystem;
 
 namespace Todo.Dates;
 
@@ -29,9 +28,9 @@ public class FilenameDateParser : IFilenameDateParser
         if (openBrace == -1 || closeBrace == -1 || openBrace >= closeBrace)
             throw new ArgumentException("Template must contain exactly one {date-format} placeholder.");
 
-        string prefix  = template.Substring(0, openBrace);
+        var prefix  = template[..openBrace];
         _dateFormat    = template.Substring(openBrace + 1, closeBrace - openBrace - 1);
-        string suffix  = template.Substring(closeBrace + 1);
+        var suffix  = template[(closeBrace + 1)..];
 
         // Build the regex: ^literal-(.+?)\.literal$
         var pattern = new StringBuilder("^")

@@ -31,7 +31,9 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider) 
             var commandHelpMessage = commandHelpMessagesArr[i];
 
             var helpWordLines = commandHelpMessage.HelpWords;
-            var commandDescriptionLines = WrapText(commandHelpMessage.CommandDescription, columnWidths.MessageColumnWidth).ToArray();
+            var commandDescriptionLines = WrapText(commandHelpMessage.CommandDescription, 
+                    columnWidths.MessageColumnWidth)
+                    .ToArray();
 
             var maxLines = Math.Max(helpWordLines.Length, commandDescriptionLines.Length);
 

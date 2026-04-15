@@ -14,14 +14,14 @@ public class InitCommandFactory(IConstantsProvider constantsProvider, IOutputWri
 
     public override bool IsDefaultCommandFactory => false;
 
-    public override string [] HelpText { get; } =
+    protected override string [] HelpText { get; } =
     [
         $"Initialises the current folder with a default {constantsProvider.SettingsFileName} file. " +
         "If the todo and archive folders whose paths are specified in the settings file do not exist, " +
         "then these folders are created."
     ];
 
-    public override string Usage => "init";
+    protected override string Usage => "init";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
     public override InitCommand? TryGetCommand(string commandLine)

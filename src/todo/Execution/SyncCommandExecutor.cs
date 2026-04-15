@@ -8,30 +8,22 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class SyncCommandExecutor : CommandExecutorBase<SyncCommand>, ISyncCommandExecutor
+public class SyncCommandExecutor(
+    // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+    IConfigurationProvider configurationProvider,
+    ICommitCommandExecutor commitExecutor,
+    IPushCommandExecutor pushExecutor,
+    IOutputWriter outputWriter)
+    : CommandExecutorBase<SyncCommand>(outputWriter), ISyncCommandExecutor
 {
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly ICommitCommandExecutor _commitExecutor;
-    private readonly IPushCommandExecutor _pushExecutor;
-
-    public SyncCommandExecutor(IConfigurationProvider configurationProvider,
-        ICommitCommandExecutor commitExecutor, IPushCommandExecutor pushExecutor,
-        IOutputWriter outputWriter)
-        : base(outputWriter)
-    {
-        _configurationProvider = configurationProvider;
-        _commitExecutor = commitExecutor;
-        _pushExecutor = pushExecutor;
-    }
-
     public override void Execute(SyncCommand syncCommand)
     {
-        if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
+        if (!configurationProvider.ConfigInfo.Configuration.UseGit)
             throw new Exception("Syncing does not make sense when UseGit is set to false in the settings file.");
 
         OutputWriter.WriteLine("Executing a commit and a push command.");
 
-        _commitExecutor.Execute(CommitCommand.Of(syncCommand.CommitMessage));
-        _pushExecutor.Execute(PushCommand.Singleton);
+        commitExecutor.Execute(CommitCommand.Of(syncCommand.CommitMessage));
+        pushExecutor.Execute(PushCommand.Singleton);
     }
 }
