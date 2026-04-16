@@ -14,8 +14,8 @@
       "Parameters": "--path {0}"
     },
     "OSX": {
-      "Path": "chrome.exe",
-      "Parameters": "{0}"
+      "Path": "open",
+      "Parameters": "-a Firefox \"{0}\""
     }
   },
   "TextEditorPath": {
