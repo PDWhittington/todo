@@ -108,10 +108,12 @@ internal static class Initialise
                 => serviceCollection
                     .AddSingleton<IDayListMarkdownSubstitutionsMaker, DayListMarkdownSubstitutionsMaker>()
                     .AddSingleton<ITopicListMarkdownSubstitutionsMaker, TopicListMarkdownSubstitutionsMaker>()
-                    .AddSingleton<IHtmlSubstitutionsMaker, HtmlSubstitutionsMaker>()
+                    .AddSingleton<IListHtmlSubstitutionsMaker, ListHtmlSubstitutionsMaker>()
+                    .AddSingleton<IGraphHtmlSubstitutionsMaker, GraphHtmlSubstitutionsMaker>()
                     .AddSingleton<IDayListMarkdownTemplateProvider, DayListMarkdownTemplateProvider>()
                     .AddSingleton<ITopicListMarkdownTemplateProvider, TopicListMarkdownTemplateProvider>()
-                    .AddSingleton<IHtmlTemplateProvider, HtmlTemplateProvider>();
+                    .AddSingleton<IListHtmlTemplateProvider, ListHtmlTemplateProvider>()
+                    .AddSingleton<IGraphHtmlTemplateProvider, GraphHtmlTemplateProvider>();
 
             private IServiceCollection AddFileSystemFunctionality()
                 => serviceCollection

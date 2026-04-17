@@ -16,7 +16,9 @@ public class ConstantsProvider : IConstantsProvider
     
     public ManifestInfo TopicListMarkdownTemplate { get; } = ManifestInfo.Of("topic-list-template.md");
     
-    public ManifestInfo DefaultHtmlTemplate { get; } = ManifestInfo.Of("template.html");
+    public ManifestInfo ListHtmlTemplate { get; } = ManifestInfo.Of("list-template.html");
+    
+    public ManifestInfo GraphHtmlTemplate { get; } = ManifestInfo.Of("graph-template.html");
     
     public ManifestInfo CommitHash { get; } = ManifestInfo.Of("commithash.txt");
     
