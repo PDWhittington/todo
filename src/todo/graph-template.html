@@ -1,18 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{initialtheme}">
 <head>
     <meta charset="utf-8">
     <title>{title}</title>
+    <!--suppress CssUnusedSymbol -->
     <style>
+        :root {
+            /* Light theme defaults */
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --border-color: #dddddd;
+            --svg-bg: #ffffff;
+            --svg-text: #111111;
+            --svg-line: #222222;
+            --svg-fill: #222222;
+            /* Add any other colors your graph uses, e.g. */
+            /* --graph-grid: #eeeeee; */
+        }
+
+        /* Dark theme overrides */
+        html.dark {
+            --bg-color: #111111;
+            --text-color: #eeeeee;
+            --border-color: #333333;
+            --svg-bg: #111111;
+            --svg-text: #eeeeee;
+            --svg-line: #cccccc;
+            --svg-fill: #cccccc;
+        }
+        
         body {
-            background: #f9f9f9;
+            background: var(--bg-color);
+            color: var(--text-color);
+            fill: var(--text-color);
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
 
         h1 {
-            color: #333;
             text-align: center;
         }
 
@@ -30,20 +56,101 @@
         }
 
         .graph-parent .svg-container svg {
-            background: white;
+            background: var(--svg-bg);
             height: auto;
             left: 0;
             margin: 0;
-            padding: 0;
+            padding: 0; 
             position: relative;
             top: 0;
             width: 100%;
         }
 
+        .graph-parent .svg-container svg text {
+            stroke: var(--svg-text);
+        }
+
+        .graph-parent .svg-container svg line {
+            stroke: var(--svg-text);
+        }
+        /* ============================================= */
+        /* 3. APPLE-STYLE TOGGLE SWITCH                  */
+        /* ============================================= */
+        .theme-toggle-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 62px;   /* Apple-ish proportions */
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #808080;           /* off state */
+            border-radius: 34px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* smooth Apple-like motion */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* ON state (dark theme active) */
+        input:checked + .slider {
+            background-color: #808080;        /* Apple green – feels premium */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        /* Optional: tiny sun/moon icons inside the track for extra polish */
+        .slider::after {
+            content: "☀️";
+            position: absolute;
+            font-size: 18px;
+            top: 50%;
+            left: 8px;
+            transform: translateY(-50%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.8;
+        }
+        input:checked + .slider::after {
+            content: "🌙";
+            left: auto;
+            right: 8px;
+        }
+        
         @media print {
             @page {
                 margin: 0;
-                padding: 0;
                 size: A4 landscape;
             }
 
@@ -71,6 +178,10 @@
                 position: relative;
                 contain: size layout; /* Helps with fragmentation in some browsers */
             }
+
+            .theme-toggle-wrapper {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -83,6 +194,51 @@
     <div class="svg-container">
         {svg}
     </div>
+    <!-- ============================================= -->
+    <!-- THEME TOGGLE (placed top-right)               -->
+    <!-- ============================================= -->
+    <div class="theme-toggle-wrapper">
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <script>
+        // =============================================
+        // JavaScript for the toggle
+        // =============================================
+        const toggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Set the checkbox to match the initial HTML class
+        toggle.checked = html.classList.contains('en');
+
+        // Listen for toggle changes
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                html.classList.add('dark');
+                html.classList.remove('light');   // optional cleanup
+            } else {
+                html.classList.remove('dark');
+                html.classList.add('light');
+            }
+        });
+
+        // Optional: Persist choice across page reloads (uncomment if you want it)
+        /*
+        window.addEventListener('load', () => {
+          const saved = localStorage.getItem('theme');
+          if (saved) {
+            html.classList.toggle('dark', saved === 'dark');
+            toggle.checked = saved === 'dark';
+          }
+        });
+        toggle.addEventListener('change', () => {
+          localStorage.setItem('theme', toggle.checked ? 'dark' : 'light');
+        });
+        */
+    </script>
 </div>
 </body>
 </html> 

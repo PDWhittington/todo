@@ -59,7 +59,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
     private string GenerateStackedBarChartHtml(ScoreInfo[] data, string chartTitle = "Daily Activity Breakdown")
     {
         if (data.Length == 0)
-            return "<html><body><h1>No data to display</h1></body></html>";
+            return "<html class=\"light\"><body><h1>No data to display</h1></body></html>";
 
         var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
 
@@ -202,8 +202,10 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
             new XAttribute("preserveAspectRatio", "xMidYMid meet"),
             elements.ToArray());
 
-        var htmlSubstitutions = GraphHtmlSubstitutions.Of(chartTitle, svg.ToString(),
-            $"{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}");
+        var initialTheme = configurationProvider.ConfigInfo.Configuration.HtmlTheme.ToString().ToLower();
+        
+        var htmlSubstitutions = GraphHtmlSubstitutions.Of(chartTitle, initialTheme, 
+            svg.ToString(), $"{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}");
 
         var template = graphHtmlTemplateProvider.GetTemplate();
         
