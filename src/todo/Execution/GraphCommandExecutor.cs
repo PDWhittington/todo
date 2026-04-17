@@ -63,31 +63,34 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         const int plotHeight = Height - MarginTop - MarginBottom;
 
         // === Calculate scaling ===
-        var maxTotal = data.Max(d => d.Total()) * 1.1; // 10% padding
+        var maxTotal = data.Max(d => (double)d.Total());
 
         if (maxTotal <= 0) maxTotal = 10;
         var yScale = plotHeight / maxTotal;
 
         // === Bar layout ===
+        const string axisColour = "#333";
+        const double axisLineWidth = 2.0;
+        const double gapInTermsOfBarWidth = 0.4;
         var numBars = data.Length;
-        var barWidth = Math.Max(30, plotWidth / (numBars * 1.8));
-        var gap = barWidth * 0.4;
+        var barWidth = (plotWidth - axisLineWidth) / ((1.0 + gapInTermsOfBarWidth) * numBars - gapInTermsOfBarWidth);
+        var gap = barWidth * gapInTermsOfBarWidth;
         var totalBarSpace = numBars * (barWidth + gap) - gap;
-        var startX = MarginLeft + (plotWidth - totalBarSpace) / 2;
+        var startX = MarginLeft + axisLineWidth / 2.0; // + (plotWidth - totalBarSpace) / 2.0;
 
         // === SVG elements collection ===
         var elements = new List<XElement>
         {
             // Y-axis line
             new("line",
-                new XAttribute("x1", MarginLeft), new XAttribute("y1", MarginTop),
-                new XAttribute("x2", MarginLeft), new XAttribute("y2", MarginTop + plotHeight),
-                new XAttribute("stroke", "#333"), new XAttribute("stroke-width", "3")),
+                new XAttribute("x1", MarginLeft), new XAttribute("y1", MarginTop + plotHeight),
+                new XAttribute("x2", MarginLeft), new XAttribute("y2", MarginTop - axisLineWidth / 2.0),
+                new XAttribute("stroke", axisColour), new XAttribute("stroke-width", axisLineWidth)),
             // X-axis line
             new("line",
                 new XAttribute("x1", MarginLeft), new XAttribute("y1", MarginTop + plotHeight),
-                new XAttribute("x2", MarginLeft + plotWidth), new XAttribute("y2", MarginTop + plotHeight),
-                new XAttribute("stroke", "#333"), new XAttribute("stroke-width", "3"))
+                new XAttribute("x2", MarginLeft + plotWidth - axisLineWidth / 2.0), new XAttribute("y2", MarginTop + plotHeight),
+                new XAttribute("stroke", axisColour), new XAttribute("stroke-width", axisLineWidth))
         };
 
         // === Draw bars (stacked) ===
@@ -96,7 +99,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             var day = data[i];
             var barX = startX + i * (barWidth + gap);
 
-            double stackY = MarginTop + plotHeight;   // start from bottom
+            double stackY = MarginTop + plotHeight - ( axisLineWidth / 2.0);   // start from bottom
 
             foreach (var scoreCategory in scoreCategories)
             {
@@ -113,8 +116,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                     new XAttribute("width", barWidth),
                     new XAttribute("height", segmentHeight),
                     new XAttribute("fill", scoreCategory.GraphColor.ToHex()),
-                    new XAttribute("stroke", "#ffffff"),
-                    new XAttribute("stroke-width", "2"));
+                    new XAttribute("stroke-width", "0"));
 
                 // Hover tooltip
                 rect.Add(new XElement("title",
@@ -131,19 +133,20 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
 
             elements.Add(dayLabel);
         }
+        
+        var ticks = GetYTicks((int)maxTotal).ToArray();
 
         // === Y-axis ticks & labels ===
-        const int tickCount = 6;
-        for (var i = 0; i <= tickCount; i++)
+        for (var i = 0; i < ticks.Length; i++)
         {
-            var value = i * (maxTotal / tickCount);
+            var value = ticks[i];
             var y = MarginTop + plotHeight - value * yScale;
 
             // tick line
             elements.Add(new XElement("line",
                 new XAttribute("x1", MarginLeft - 8), new XAttribute("y1", y),
                 new XAttribute("x2", MarginLeft), new XAttribute("y2", y),
-                new XAttribute("stroke", "#666"), new XAttribute("stroke-width", "2")));
+                new XAttribute("stroke", axisColour), new XAttribute("stroke-width", axisLineWidth)));
 
             // label
             elements.Add(new XElement("text",
@@ -168,11 +171,12 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         for (var i = 0; i < scoreCategories.Length; i++)
         {
             var cat = scoreCategories[i];
-
+            var scoreCategoryY = legendY + (scoreCategories.Length - i - 1) * 28;
+            
             // color box
             elements.Add(new XElement("rect",
                 new XAttribute("x", legendX),
-                new XAttribute("y", legendY + i * 28),
+                new XAttribute("y", scoreCategoryY),
                 new XAttribute("width", "18"),
                 new XAttribute("height", "18"),
                 new XAttribute("fill", cat.GraphColor.ToHex())));
@@ -180,7 +184,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             // label
             elements.Add(new XElement("text",
                 new XAttribute("x", legendX + 26),
-                new XAttribute("y", legendY + i * 28 + 14),
+                new XAttribute("y", scoreCategoryY + 14),
                 new XAttribute("font-family", "Arial, sans-serif"),
                 new XAttribute("font-size", "13"),
                 cat.Name));
@@ -279,6 +283,20 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         </body>
     </html> 
 """;
+    }
+
+    private IEnumerable<int> GetYTicks(int maxTotal)
+    {
+        var orderOfMagnitude = (int)Math.Log10(maxTotal);
+        var @_1000 = (int)Math.Pow(10, orderOfMagnitude);
+        var @_5000 = (int)(maxTotal / @_1000) * @_1000;
+        
+        for (int i = 0; i <= @_5000; i += @_1000)
+        {
+            yield return i;
+        }
+
+        yield return maxTotal;
     }
 
     private XElement GetDayLabel(double x, double y, DateOnly date)
