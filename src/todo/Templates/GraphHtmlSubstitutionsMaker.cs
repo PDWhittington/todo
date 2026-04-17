@@ -8,6 +8,7 @@ public class GraphHtmlSubstitutionsMaker : IGraphHtmlSubstitutionsMaker
     public string MakeSubstitutions(GraphHtmlSubstitutions substitutions, string template)
         => template
             .Replace("{title}", substitutions.Title)
+            .Replace("{initialtheme}", substitutions.InitialTheme)
             .Replace("{svg}", substitutions.Svg)
             .Replace("{timestamp}", substitutions.Timestamp);
 }
