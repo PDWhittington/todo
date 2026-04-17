@@ -30,12 +30,17 @@
     </ItemGroup>
     <!-- Embedded templates -->
     <ItemGroup>
+        <!-- Markdown templates -->
         <None Remove="day-list-template.md" />
         <EmbeddedResource Include="day-list-template.md" />
         <None Remove="topic-list-template.md" />
         <EmbeddedResource Include="topic-list-template.md" />
-        <None Remove="template.html" />
-        <EmbeddedResource Include="template.html" />
+        <!-- HTML templates -->
+        <None Remove="list-template.html" />
+        <EmbeddedResource Include="list-template.html" />
+        <None Remove="graph-template.html" />
+        <EmbeddedResource Include="graph-template.html" />
+        <!-- Settings templates -->
         <None Remove="todo-settings.json" />
         <EmbeddedResource Include="todo-settings.json" />
     </ItemGroup>

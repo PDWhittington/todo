@@ -3,9 +3,9 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class HtmlSubstitutionsMaker : IHtmlSubstitutionsMaker
+public class ListHtmlSubstitutionsMaker : IListHtmlSubstitutionsMaker
 {
-    public string MakeSubstitutions(HtmlSubstitutions substitutions, string template)
+    public string MakeSubstitutions(ListHtmlSubstitutions substitutions, string template)
         => template
             .Replace("{title}", substitutions.Title)
             .Replace("{body}", substitutions.Body)

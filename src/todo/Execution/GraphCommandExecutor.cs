@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Scoring;
+using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.Dates.Naming;
@@ -14,13 +15,16 @@ using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.GamifyOperations;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.UI;
 using Todo.Extensions;
 
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator scoresGenerator,
+public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplateProvider,
+    IGraphHtmlSubstitutionsMaker graphHtmlSubstitutionsMaker,
+    IOutputWriter outputWriter, IScoresGenerator scoresGenerator,
     IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster,
     IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor,
     IHtmlFileLauncher htmlFileLauncher, ISpecialDateNamer specialDateNamer,
@@ -198,91 +202,15 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             new XAttribute("preserveAspectRatio", "xMidYMid meet"),
             elements.ToArray());
 
-        // === Full HTML (self-contained) ===
-        return $$"""
-<!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="utf-8">
-            <title>{{chartTitle}}</title>
-            <style>
-                body { 
-                    background: #f9f9f9; 
-                    font-family: Arial, sans-serif; 
-                    margin: 0px; 
-                    padding: 0px; 
-                }
-                h1 { 
-                    color: #333; 
-                    text-align: center; 
-                }
-                .graph-parent {
-                    margin: 0;
-                    padding: 0;
-                    page-break-inside: avoid !important;
-                }
-                .graph-parent .svg-container {
-                    height: 0;
-                    margin: 0;
-                    padding-bottom: 0;
-                    padding: 0;
-                    width: 100%;
-                }
-                .graph-parent .svg-container svg {
-                    background: white;
-                    height: auto;
-                    left: 0;
-                    margin: 0;
-                    padding: 0;
-                    position: relative;
-                    top: 0;
-                    width: 100%;
-                }
-                @media print {
-                    @page {
-                        margin: 0;
-                        padding: 0;
-                        size: A4 landscape;
-                    }
-                    html, body {
-                        background: white;
-                        margin: 0 !important;
-                        padding: 0 !important;
-                    } 
-                    body
-                    {
-                        border: 1px solid #666;
-                    }
-                    .graph-parent {
-                        break-after: avoid !important;
-                        break-before: avoid !important;
-                        break-inside: avoid !important;
-                        margin: 0;
-                        padding: 0;
-                        page-break-after: avoid !important;
-                        page-break-before: avoid !important;
-                        page-break-inside: avoid !important;
+        var htmlSubstitutions = GraphHtmlSubstitutions.Of(chartTitle, svg.ToString(),
+            $"{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}");
 
-                        /* Extra help for Firefox */
-                        position: relative;
-                        contain: size layout;            /* Helps with fragmentation in some browsers */
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <div class="graph-parent">
-                <h1 style="margin-bottom: 0px !important;">{{chartTitle}}</h1>
-                <div style="text-align:center;">
-                    As at: {{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}}
-                </div>
-                <div class="svg-container">
-                    {{svg}}
-                </div>
-            </div>
-        </body>
-    </html> 
-""";
+        var template = graphHtmlTemplateProvider.GetTemplate();
+        
+        var html = graphHtmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, 
+            template.FileContents);
+
+        return html;
     }
 
     private IEnumerable<int> GetYTicks(int maxTotal)

@@ -18,9 +18,9 @@ namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class PrintHtmlCommandExecutor(
-    IHtmlTemplateProvider htmlTemplateProvider,
+    IListHtmlTemplateProvider listHtmlTemplateProvider,
     IMarkdownFileReader markdownFileReader,
-    IHtmlSubstitutionsMaker htmlSubstitutionsMaker,
+    IListHtmlSubstitutionsMaker listHtmlSubstitutionsMaker,
     IDateFormatter dateFormatter,
     IDateListPathResolver dateListPathResolver,
     IOutputWriter outputWriter,
@@ -44,11 +44,11 @@ public class PrintHtmlCommandExecutor(
             _ => throw new Exception("Unknown html theme")
         };
             
-        var htmlSubstitutions = HtmlSubstitutions.Of(htmlTitle, htmlBody, htmlTheme);
+        var htmlSubstitutions = ListHtmlSubstitutions.Of(htmlTitle, htmlBody, htmlTheme);
 
-        var htmlTemplateFile = htmlTemplateProvider.GetTemplate();
+        var htmlTemplateFile = listHtmlTemplateProvider.GetTemplate();
 
-        var outputHtml = htmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions,
+        var outputHtml = listHtmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions,
             htmlTemplateFile.FileContents);
 
         var pathInfo = dateListPathResolver.GetFilePathFor(command.Date, FileTypeEnum.Html);

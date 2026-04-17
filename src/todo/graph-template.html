@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{title}</title>
+    <style>
+        body {
+            background: #f9f9f9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .graph-parent {
+            margin: 0;
+            padding: 0;
+            page-break-inside: avoid !important;
+        }
+
+        .graph-parent .svg-container {
+            height: 0;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .graph-parent .svg-container svg {
+            background: white;
+            height: auto;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            top: 0;
+            width: 100%;
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+                padding: 0;
+                size: A4 landscape;
+            }
+
+            html, body {
+                background: white;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            body {
+                border: 1px solid #666;
+            }
+
+            .graph-parent {
+                break-after: avoid !important;
+                break-before: avoid !important;
+                break-inside: avoid !important;
+                margin: 0;
+                padding: 0;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
+                page-break-inside: avoid !important;
+
+                /* Extra help for Firefox */
+                position: relative;
+                contain: size layout; /* Helps with fragmentation in some browsers */
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="graph-parent">
+    <h1 style="margin-bottom: 0 !important;">{title}</h1>
+    <div style="text-align:center;">
+        As at: {{timestamp}}
+    </div>
+    <div class="svg-container">
+        {{svg}}
+    </div>
+</div>
+</body>
+</html> 
