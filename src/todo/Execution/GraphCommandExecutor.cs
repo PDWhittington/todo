@@ -69,25 +69,28 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         var yScale = plotHeight / maxTotal;
 
         // === Bar layout ===
+        const string axisColour = "#333";
+        const double axisLineWidth = 3.0;
+        const double gapInTermsOfBarWidth = 0.4;
         var numBars = data.Length;
-        var barWidth = Math.Max(30, plotWidth / (numBars * 1.8));
-        var gap = barWidth * 0.4;
+        var barWidth = (plotWidth - axisLineWidth) / ((1.0 + gapInTermsOfBarWidth) * numBars - gapInTermsOfBarWidth);
+        var gap = barWidth * gapInTermsOfBarWidth;
         var totalBarSpace = numBars * (barWidth + gap) - gap;
-        var startX = MarginLeft + (plotWidth - totalBarSpace) / 2;
+        var startX = MarginLeft + axisLineWidth + (plotWidth - totalBarSpace) / 2;
 
         // === SVG elements collection ===
         var elements = new List<XElement>
         {
             // Y-axis line
             new("line",
-                new XAttribute("x1", MarginLeft), new XAttribute("y1", MarginTop),
-                new XAttribute("x2", MarginLeft), new XAttribute("y2", MarginTop + plotHeight),
-                new XAttribute("stroke", "#333"), new XAttribute("stroke-width", "3")),
+                new XAttribute("x1", MarginLeft), new XAttribute("y1", MarginTop + plotHeight),
+                new XAttribute("x2", MarginLeft), new XAttribute("y2", MarginTop - axisLineWidth / 2.0),
+                new XAttribute("stroke", axisColour), new XAttribute("stroke-width", axisLineWidth)),
             // X-axis line
             new("line",
                 new XAttribute("x1", MarginLeft), new XAttribute("y1", MarginTop + plotHeight),
-                new XAttribute("x2", MarginLeft + plotWidth), new XAttribute("y2", MarginTop + plotHeight),
-                new XAttribute("stroke", "#333"), new XAttribute("stroke-width", "3"))
+                new XAttribute("x2", MarginLeft + plotWidth + 1.0), new XAttribute("y2", MarginTop + plotHeight),
+                new XAttribute("stroke", axisColour), new XAttribute("stroke-width", axisLineWidth))
         };
 
         // === Draw bars (stacked) ===
@@ -96,7 +99,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             var day = data[i];
             var barX = startX + i * (barWidth + gap);
 
-            double stackY = MarginTop + plotHeight;   // start from bottom
+            double stackY = MarginTop + plotHeight - ( axisLineWidth / 2.0);   // start from bottom
 
             foreach (var scoreCategory in scoreCategories)
             {
@@ -113,8 +116,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
                     new XAttribute("width", barWidth),
                     new XAttribute("height", segmentHeight),
                     new XAttribute("fill", scoreCategory.GraphColor.ToHex()),
-                    new XAttribute("stroke", "#ffffff"),
-                    new XAttribute("stroke-width", "2"));
+                    new XAttribute("stroke-width", "0"));
 
                 // Hover tooltip
                 rect.Add(new XElement("title",
@@ -133,7 +135,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
         }
 
         // === Y-axis ticks & labels ===
-        const int tickCount = 6;
+        const double tickCount = 6.0;
         for (var i = 0; i <= tickCount; i++)
         {
             var value = i * (maxTotal / tickCount);
@@ -143,7 +145,7 @@ public class GraphCommandExecutor(IOutputWriter outputWriter, IScoresGenerator s
             elements.Add(new XElement("line",
                 new XAttribute("x1", MarginLeft - 8), new XAttribute("y1", y),
                 new XAttribute("x2", MarginLeft), new XAttribute("y2", y),
-                new XAttribute("stroke", "#666"), new XAttribute("stroke-width", "2")));
+                new XAttribute("stroke", axisColour), new XAttribute("stroke-width", axisLineWidth)));
 
             // label
             elements.Add(new XElement("text",
