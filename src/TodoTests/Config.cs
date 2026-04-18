@@ -13,8 +13,10 @@ public static class Config
         
         var blankPaths = new PerOsFilePaths(blankProcessLaunchInfo, 
             blankProcessLaunchInfo, blankProcessLaunchInfo);
+
+        var todoListInfo = new TodoListInformation("Test list", true, true);
         
-        var configuration = new Configuration(blankPaths, blankPaths, "",
+        var configuration = new Configuration(todoListInfo, blankPaths, blankPaths, "",
             "", "", HtmlThemeEnum.Dark, "", "", "",
             true, true, new TimeSpan(4, 0, 0), 
             80, IterationMethodEnum.Parallel, 21, []);
