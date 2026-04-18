@@ -56,12 +56,14 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         htmlFileLauncher.LaunchFiles(filePathInfo.Path);
     }
 
-    private string GenerateStackedBarChartHtml(ScoreInfo[] data, string chartTitle = "Daily Activity Breakdown")
+    private string GenerateStackedBarChartHtml(ScoreInfo[] data)
     {
         if (data.Length == 0)
             return "<html class=\"light\"><body><h1>No data to display</h1></body></html>";
 
-        var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
+        var configuration = configurationProvider.ConfigInfo.Configuration;
+        
+        var scoreCategories = configuration.ScoreCategories;
 
         const int plotWidth = Width - MarginLeft - MarginRight;
         const int plotHeight = Height - MarginTop - MarginBottom;
@@ -201,8 +203,12 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),
             new XAttribute("preserveAspectRatio", "xMidYMid meet"),
             elements.ToArray());
-
-        var initialTheme = configurationProvider.ConfigInfo.Configuration.HtmlTheme.ToString().ToLower();
+        
+        var initialTheme = configuration.HtmlTheme.ToString().ToLower();
+        
+        var chartTitle = configuration.TodoListInfo.AppearInHtmlSummaries
+            ? $"{configuration.TodoListInfo.Name} \u2014 {configuration.DefaultDayIntervalForGamify} day summary"
+            : $"{configuration.DefaultDayIntervalForGamify} day summary";
         
         var htmlSubstitutions = GraphHtmlSubstitutions.Of(chartTitle, initialTheme, 
             svg.ToString(), $"{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}");

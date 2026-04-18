@@ -36,6 +36,8 @@ public class PrintHtmlCommandExecutor(
         var htmlTitle = dateFormatter.GetHtmlTitle(command.Date);
 
         var htmlBody = Markdown.ToHtml(markdownSourceFile.FileContents, pipeline);
+        
+        htmlBody = InsertRepoNameIfNecessary(htmlBody);
 
         var htmlTheme = configurationProvider.ConfigInfo.Configuration.HtmlTheme switch
         {
@@ -56,5 +58,25 @@ public class PrintHtmlCommandExecutor(
         OutputWriter.WriteLine($"Writing file for {command.Date} to {pathInfo.Path}");
 
         File.WriteAllText(pathInfo.Path, outputHtml);
+    }
+
+    private string InsertRepoNameIfNecessary(string htmlBody)
+    {
+        ArgumentNullException.ThrowIfNull(htmlBody);
+
+        var configuration = configurationProvider.ConfigInfo.Configuration;
+        
+        if (!configuration.TodoListInfo.AppearInHtmlLists) return htmlBody;
+
+        var closingHeaderTag = "</h1>";
+
+        var endOfHeaderIndex = htmlBody.IndexOf(closingHeaderTag, StringComparison.Ordinal);
+        
+        if (endOfHeaderIndex == -1) return htmlBody; //This should not happen, but don't throw exception.
+
+        return
+            htmlBody.Substring(0, endOfHeaderIndex + closingHeaderTag.Length) +
+            $"<div class='todo-list-name-container'>(Todo list: {configuration.TodoListInfo.Name})</div></br>" + 
+            htmlBody.Substring(endOfHeaderIndex + closingHeaderTag.Length);
     }
 }

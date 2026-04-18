@@ -1,4 +1,9 @@
 ﻿{
+  "TodoListInfo": {
+    "Name" : "Life",
+    "AppearInHtmlLists": true,
+    "AppearInHtmlSummaries": true
+  },
   "BrowserPath": {
     "Windows": {
       "Path": "chrome.exe",

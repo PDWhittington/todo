@@ -5,7 +5,7 @@ using Todo.Contracts.Data.Html;
 namespace Todo.Contracts.Data.Config;
 
 [method: JsonConstructor]
-public record Configuration(
+public record Configuration(TodoListInformation TodoListInfo,
     PerOsFilePaths BrowserPath, PerOsFilePaths TextEditorPath,
     string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
     string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
