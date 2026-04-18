@@ -156,6 +156,8 @@
 
             html, body {
                 background: white;
+                color: #000;
+                fill: #000;
                 margin: 0 !important;
                 padding: 0 !important;
             }
@@ -177,6 +179,18 @@
                 /* Extra help for Firefox */
                 position: relative;
                 contain: size layout; /* Helps with fragmentation in some browsers */
+            }
+
+            .graph-parent .svg-container svg {
+                background: #fff;
+            }
+
+            .graph-parent .svg-container svg text {
+                stroke: #000;
+            }
+
+            .graph-parent .svg-container svg line {
+                stroke: #000;
             }
 
             .theme-toggle-wrapper {
