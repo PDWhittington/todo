@@ -61,7 +61,9 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         if (data.Length == 0)
             return "<html class=\"light\"><body><h1>No data to display</h1></body></html>";
 
-        var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
+        var configuration = configurationProvider.ConfigInfo.Configuration;
+        
+        var scoreCategories = configuration.ScoreCategories;
 
         const int plotWidth = Width - MarginLeft - MarginRight;
         const int plotHeight = Height - MarginTop - MarginBottom;
@@ -203,6 +205,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
             elements.ToArray());
 
         var initialTheme = configurationProvider.ConfigInfo.Configuration.HtmlTheme.ToString().ToLower();
+        var initialTheme = configuration.HtmlTheme.ToString().ToLower();
         
         var htmlSubstitutions = GraphHtmlSubstitutions.Of(chartTitle, initialTheme, 
             svg.ToString(), $"{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}");
