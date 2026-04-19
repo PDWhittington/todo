@@ -28,7 +28,7 @@ public class PrintHtmlCommandExecutor(
     IConfigurationProvider configurationProvider)
     : CommandExecutorBase<PrintHtmlCommand>(outputWriter), IPrintHtmlCommandExecutor
 {
-    public override void Execute(PrintHtmlCommand command)
+    public override unsafe void Execute(PrintHtmlCommand command)
     {
         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
 
@@ -36,7 +36,9 @@ public class PrintHtmlCommandExecutor(
         
         var htmlTitle = dateFormatter.GetHtmlTitle(command.Date);
 
-        var markdownStr = Encoding.UTF8.GetString(markdownSourceFile.FileContents);
+        var markdownStr = Encoding.UTF8.GetString(
+            (byte*)markdownSourceFile.FileContents.Start,
+            markdownSourceFile.FileContents.Length);
         
         var htmlBody = Markdown.ToHtml(markdownStr, pipeline);
         

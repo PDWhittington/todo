@@ -1,5 +1,5 @@
 ﻿using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.AssemblyOperations;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
@@ -9,10 +9,10 @@ namespace Todo.Templates;
 
 public class DayListMarkdownTemplateProvider(
     IPathHelper pathHelper,
-    IManifestStreamProvider manifestStreamProvider,
     IConstantsProvider constantsProvider,
-    IMarkdownLineInterpreter markdownLineInterpreter)
-    : TemplateProviderBase(pathHelper, manifestStreamProvider, markdownLineInterpreter),
+    IMarkdownLineInterpreter markdownLineInterpreter,
+    IUnmanagedByteArrayManager unmanagedByteArrayManager)
+    : TemplateProviderBase(pathHelper, markdownLineInterpreter, unmanagedByteArrayManager),
         IDayListMarkdownTemplateProvider
 {
     protected override string GetTemplateFileName()

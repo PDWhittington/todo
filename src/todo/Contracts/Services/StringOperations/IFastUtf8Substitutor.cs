@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
+using Todo.Contracts.Data.Memory;
 
 namespace Todo.Contracts.Services.StringOperations;
 
 public interface IFastUtf8Substitutor
 {
-    public void CopyToStream(byte[] template,
-        Dictionary<string, string> substitutions, Stream outputStream);
+    void CopyToStream(UnmanagedByteArray template, Dictionary<string, string> substitutions, Stream outputStream);
 }

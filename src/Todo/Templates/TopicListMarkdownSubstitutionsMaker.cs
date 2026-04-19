@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.StringOperations;
 using Todo.Contracts.Services.Templates;
@@ -12,7 +13,8 @@ public class TopicListMarkdownSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Su
     public string MakeSubstitutions(TopicListMarkdownSubstitutions substitutions, string template)
         => template.Replace("{topic}", substitutions.TopicName);
 
-    public void WriteSubstitutionsToStream(byte[] template, TopicListMarkdownSubstitutions substitutions, Stream stream)
+    public void WriteSubstitutionsToStream(UnmanagedByteArray template, TopicListMarkdownSubstitutions substitutions,
+        Stream stream)
     {
         var dict = new Dictionary<string, string>
         {

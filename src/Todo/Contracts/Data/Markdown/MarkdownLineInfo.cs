@@ -1,10 +1,9 @@
 using System;
-using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Memory;
 
 namespace Todo.Contracts.Data.Markdown;
 
-public unsafe record MarkdownLineInfo
+public record MarkdownLineInfo
 {
     public MarkdownLineTypeEnum LineType { get; }
     

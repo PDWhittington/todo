@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.StringOperations;
 using Todo.Contracts.Services.Templates;
@@ -12,7 +13,7 @@ public class DayListMarkdownSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Subs
     public string MakeSubstitutions(DayListMarkdownSubstitutions substitutions, string template)
         => template.Replace("{date}", substitutions.DateText);
 
-    public void WriteSubstitutionsToStream(byte [] template, DayListMarkdownSubstitutions substitutions, Stream stream)
+    public void WriteSubstitutionsToStream(UnmanagedByteArray template, DayListMarkdownSubstitutions substitutions, Stream stream)
     {
         var dict = new Dictionary<string, string>
         {

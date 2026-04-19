@@ -3,6 +3,7 @@ using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Dates.Naming;
@@ -52,6 +53,6 @@ public class CreateOrShowDayListCommandExecutor
     }
 
     protected override void MakeSubstitutions(DayListMarkdownSubstitutions markdownSubstitutions, 
-        byte[] fileContents, Stream stream)
+        UnmanagedByteArray fileContents, Stream stream)
         => _markdownSubstitutionMaker.WriteSubstitutionsToStream(fileContents, markdownSubstitutions, stream);
 }

@@ -129,7 +129,9 @@ internal static class Initialise
                     .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
                     .AddSingleton<IFileDeleter, FileDeleter>()
                     .AddSingleton<IFolderCreator, FolderCreator>()
-                    .AddSingleton<IFileListCreator, FileListCreator>();
+                    .AddSingleton<IFileListCreator, FileListCreator>()
+                    .AddSingleton<IUnmanagedByteArrayManager, UnmanagedByteArrayManager>()
+                    .AddSingleton<IPinnedFileLoader, PinnedFileLoader>();
 
             private IServiceCollection AddStringOperations()
                 => serviceCollection

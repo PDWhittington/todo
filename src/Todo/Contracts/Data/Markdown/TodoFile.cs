@@ -1,5 +1,6 @@
 ﻿using System;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Data.Memory;
 
 namespace Todo.Contracts.Data.Markdown;
 
@@ -12,12 +13,12 @@ public record TodoFile
 
     public MarkdownLineInfo[] MarkdownLines => _markdownLines.Value;
 
-    private readonly Lazy<byte[]> _fileContents;
+    private readonly Lazy<UnmanagedByteArray> _fileContents;
     
-    public byte [] FileContents => _fileContents.Value;
+    public UnmanagedByteArray FileContents => _fileContents.Value;
     
     private TodoFile(FilePathInfo filePathInfo, Lazy<MarkdownLineInfo[]> markdownLines, 
-        Lazy<byte[]> fileContents)
+        Lazy<UnmanagedByteArray> fileContents)
     {
         FilePathInfo = filePathInfo;
         _markdownLines = markdownLines;
@@ -25,6 +26,6 @@ public record TodoFile
     }
 
     public static TodoFile Of(FilePathInfo filePathInfo, Lazy<MarkdownLineInfo[]> markdownLines, 
-        Lazy<byte []> fileContents) 
+        Lazy<UnmanagedByteArray> fileContents) 
         => new(filePathInfo, markdownLines, fileContents);
 }

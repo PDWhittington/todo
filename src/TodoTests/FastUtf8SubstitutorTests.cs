@@ -1,15 +1,33 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using NUnit.Framework;
+using Todo.Contracts.Data.Memory;
 using Todo.StringOperations;
 
 namespace TodoTests;
 
 internal static class StringOperationsExtensions
 {
-    public static byte [] ToBytes (this string str) =>
-        Encoding.UTF8.GetBytes(str);
+    
+    public static UnmanagedByteArray ToUnmanagedArray (this string str)
+    {
+        var data  = GC.AllocateArray<byte>(str.Length, pinned: true);
+
+        for (var i = 0; i < str.Length; i++)
+        {
+            data[i] = Convert.ToByte(str[i]);
+        }
+
+        // 4. Permanently pin and get a stable pointer
+        var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+        var pointer = handle.AddrOfPinnedObject();
+        
+        return UnmanagedByteArray.Of(handle, pointer, (int)str.Length);
+    }
+        
 }
 
 internal static class Create
@@ -26,7 +44,7 @@ public class FastUtf8SubstitutorTests
     [Test]
     public void NoReplacements()
     {
-        var template = "The quick brown fox jumped over the lazy dog.".ToBytes();
+        var template = "The quick brown fox jumped over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>();
 
@@ -36,14 +54,16 @@ public class FastUtf8SubstitutorTests
         
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
+
+        var expected = "The quick brown fox jumped over the lazy dog.";
         
-        Assert.AreEqual(template, resultStr);
+        Assert.AreEqual(expected, resultStr);
     }
     
     [Test]
     public void OneKey()
     {
-        var template = "The quick {colour} fox jumped over the lazy dog.".ToBytes();
+        var template = "The quick {colour} fox jumped over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -64,7 +84,7 @@ public class FastUtf8SubstitutorTests
     [Test]
     public void SeveralKeys()
     {
-        var template = "The quick {colour} {animal} {verb} over the lazy dog.".ToBytes();
+        var template = "The quick {colour} {animal} {verb} over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -87,7 +107,7 @@ public class FastUtf8SubstitutorTests
     [Test]
     public void FalseOpenBracket()
     {
-        var template = "The {quick brown fox over the lazy dog.".ToBytes();
+        var template = "The {quick brown fox over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -109,7 +129,7 @@ public class FastUtf8SubstitutorTests
     public void FalseKey()
     {
         //Keys containing whitespace are not allowed
-        var template = "The {quick brown} fox over the lazy dog.".ToBytes();
+        var template = "The {quick brown} fox over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -132,7 +152,7 @@ public class FastUtf8SubstitutorTests
     public void NestedKey()
     {
         //Keys containing whitespace are not allowed
-        var template = "The {quick {colour} fox} over the lazy dog.".ToBytes();
+        var template = "The {quick {colour} fox} over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -153,7 +173,7 @@ public class FastUtf8SubstitutorTests
     [Test]
     public void KeyAtStart()
     {
-        var template = "{article} quick brown fox over the lazy dog.".ToBytes();
+        var template = "{article} quick brown fox over the lazy dog.".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -174,7 +194,7 @@ public class FastUtf8SubstitutorTests
     [Test]
     public void KeyAtEnd()
     {
-        var template = "The quick brown fox over the lazy dog{punctuation}".ToBytes();
+        var template = "The quick brown fox over the lazy dog{punctuation}".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {
@@ -195,7 +215,7 @@ public class FastUtf8SubstitutorTests
     [Test]
     public void KeyAtBothEnds()
     {
-        var template = "{article} quick brown fox over the lazy dog{punctuation}".ToBytes();
+        var template = "{article} quick brown fox over the lazy dog{punctuation}".ToUnmanagedArray();
 
         var substitutions = new Dictionary<string, string>()
         {

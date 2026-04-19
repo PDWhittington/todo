@@ -1,15 +1,24 @@
-﻿using System;
-using System.IO;
+﻿using Todo.Contracts.Data.Memory;
+using Todo.Contracts.Services.FileSystem;
 
 namespace Todo.FileSystem;
 
 public abstract class FileReaderBase
 {
-    protected static byte[] GetFileBytes(string path)
-    {
-        if (!File.Exists(path)) throw new Exception($"{path} not found");
+    private readonly IUnmanagedByteArrayManager _unmanagedByteArrayManager;
 
-        var allBytes = File.ReadAllBytes(path);
-        return allBytes;
+    protected FileReaderBase(IUnmanagedByteArrayManager unmanagedByteArrayManager)
+    {
+        _unmanagedByteArrayManager = unmanagedByteArrayManager;
+    }
+
+    protected UnmanagedByteArray LoadFile(string fileName)
+    {
+        return _unmanagedByteArrayManager.LoadFromFile(fileName);
+    }
+
+    protected UnmanagedByteArray LoadFromManifest(string manifestName)
+    {
+        return _unmanagedByteArrayManager.LoadFromManifest(manifestName);
     }
 }

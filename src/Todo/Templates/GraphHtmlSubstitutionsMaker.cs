@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.StringOperations;
 using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class GraphHtmlSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substitutor) : 
-    SubstitutionMakerBase(fastUtf8Substitutor), IGraphHtmlSubstitutionsMaker
+public class GraphHtmlSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substitutor) 
+    : SubstitutionMakerBase(fastUtf8Substitutor), IGraphHtmlSubstitutionsMaker
 {
     public string MakeSubstitutions(GraphHtmlSubstitutions substitutions, string template)
         => template
@@ -16,7 +17,7 @@ public class GraphHtmlSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substituto
             .Replace("{svg}", substitutions.Svg)
             .Replace("{timestamp}", substitutions.Timestamp);
 
-    public void WriteSubstitutionsToStream(byte[] template, GraphHtmlSubstitutions substitutions, Stream stream)
+    public void WriteSubstitutionsToStream(UnmanagedByteArray template, GraphHtmlSubstitutions substitutions, Stream stream)
     {
         var dict = new Dictionary<string, string>
         {

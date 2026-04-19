@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Services.StringOperations;
 
 namespace Todo.StringOperations;
 
-public class FastUtf8Substitutor : IFastUtf8Substitutor
+public unsafe class FastUtf8Substitutor : IFastUtf8Substitutor
 {
-    public void CopyToStream(byte[] template, Dictionary<string, string> substitutions, Stream outputStream)
+    public void CopyToStream(UnmanagedByteArray template, Dictionary<string, string> substitutions, Stream outputStream)
     {
         var insideBrackets = false;
         var copyFrom = 0;
@@ -16,7 +18,7 @@ public class FastUtf8Substitutor : IFastUtf8Substitutor
         
         for (var i = 0; i < template.Length; i++)
         {
-            var b = template[i];
+            var b = template.GetByte(i);
             
             if (b == (byte)'{')
             {
@@ -40,7 +42,8 @@ public class FastUtf8Substitutor : IFastUtf8Substitutor
             
             if (substitutions.TryGetValue(key, out var substitution))
             {
-                outputStream.Write(template, copyFrom, lastOpenBracketIndex - copyFrom);
+                var span = new ReadOnlySpan<byte>((void*)(template.Start + copyFrom), lastOpenBracketIndex - copyFrom);
+                outputStream.Write(span);
 
                 foreach (var c in substitution)
                 {
@@ -54,18 +57,13 @@ public class FastUtf8Substitutor : IFastUtf8Substitutor
 
         }
         
-        outputStream.Write(template, copyFrom, template.Length - copyFrom);
+        var finalSpan = new ReadOnlySpan<byte>((void*)(template.Start + copyFrom), template.Length - copyFrom);
+        outputStream.Write(finalSpan);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string GetString(byte[] arr, int index, int length)
+    private static string GetString(UnmanagedByteArray arr, int index, int length)
     {
-        var keyArr = arr
-            .Skip(index)
-            .Take(length)
-            .Select(b => (char)b)
-            .ToArray();
-
-        return new string(keyArr);
+        return Encoding.UTF8.GetString((byte*)arr.Start + index, length);
     }
 }

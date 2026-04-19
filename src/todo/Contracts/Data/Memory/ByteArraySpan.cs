@@ -1,21 +1,19 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Todo.StringOperations;
 
 namespace Todo.Contracts.Data.Memory;
 
-public readonly unsafe struct ByteArraySpan(byte* start, int length)
+public readonly unsafe record struct ByteArraySpan(IntPtr Start, int Length)
 {
-    public byte* Start { get; } = start;
-    public int Length { get; } = length;
-    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public byte GetByte(int i) => *(Start + i);
+    public byte GetByte(int i) => *((byte*)Start + i);
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     
     public bool EndsWith(byte value) =>
-        *(Start + Length - 1) == value;
+        *((byte*)Start + Length - 1) == value;
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     
@@ -52,11 +50,11 @@ public readonly unsafe struct ByteArraySpan(byte* start, int length)
         {
             if (!predicate(GetByte(i)))
             {
-                return new ByteArraySpan(start + i, Length - i);
+                return new ByteArraySpan(Start + i, Length - i);
             }
         }
         
-        return new ByteArraySpan((byte*)IntPtr.Zero, 0);
+        return new ByteArraySpan(IntPtr.Zero, 0);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -70,11 +68,11 @@ public readonly unsafe struct ByteArraySpan(byte* start, int length)
         {
             if (!predicate(GetByte(i)))
             {
-                return new ByteArraySpan(start, Length - i + 1);
+                return new ByteArraySpan(Start, i + 1);
             }
         }
         
-        return new ByteArraySpan((byte*)IntPtr.Zero, 0);
+        return new ByteArraySpan(IntPtr.Zero, 0);
     }
 
     public bool EqualsIgnoreCase(string other)
@@ -88,4 +86,7 @@ public readonly unsafe struct ByteArraySpan(byte* start, int length)
         
         return true;
     }
+    
+    public override string ToString() =>
+        Encoding.UTF8.GetString((byte*)Start, Length);
 }

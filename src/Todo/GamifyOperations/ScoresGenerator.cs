@@ -98,66 +98,6 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       
       return FilePathScoreInfo.Of(filePathInfo, scoreDictionary);
    }
-
-   // private static bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
-   // {
-   //    var sections = GetSections(line);
-   //    var totalScore = 0;
-   //    var hasTokenScore = false;
-   //    
-   //    foreach (var section in sections)
-   //    {
-   //       if (!section.EndsWith('t') && !section.EndsWith('T')) continue;
-   //       if (!section.TryIntParseAllButLast(out var score)) continue;
-   //       if (score == 0) continue;
-   //       
-   //       hasTokenScore = true;
-   //       totalScore += score;
-   //    }
-   //    
-   //    tokenScore = totalScore;
-   //    return hasTokenScore;
-   // }
-
-   private static IEnumerable<CustomStringSection> GetSections(string line)
-   {
-      var previousCharWasAlphaNumeric = false;
-      var currentSectionStart = 0;
-      
-      for (var i = 0; i < line.Length; i++)
-      {
-         var currentChar = line[i];
-         var currentCharIsAlphaNumeric = char.IsLetterOrDigit(currentChar);
-
-         switch (previousCharWasAlphaNumeric)
-         {
-            //Previous character was not alphanumeric and current character is alphanumeric
-            //Start new section
-            case false when currentCharIsAlphaNumeric:
-               currentSectionStart = i;
-               break;
-
-            //Previous character was alphanumeric and current character is not alphanumeric
-            //End section and yield it back
-            case true when !currentCharIsAlphaNumeric:
-               yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart);
-               break;
-
-            //TODO: this isn't quite right -- this should fire on the final char irrespective of the previous two conditions.
-            default:
-            {
-               if (i == line.Length - 1 && currentCharIsAlphaNumeric)
-               {
-                  yield return CustomStringSection.Of(line, currentSectionStart, i - currentSectionStart + 1);
-               }
-
-               break;
-            }
-         }
-         
-         previousCharWasAlphaNumeric = currentCharIsAlphaNumeric;
-      }
-   }
    
    private static unsafe bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
    {
@@ -225,7 +165,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       {
          var isWithinSection = stack
             .Select(x => x.HeadingTitle)
-            .Any(ht => ht.Equals(category.Name));
+            .Any(ht => ht.EqualsIgnoreCase(category.Name));
             
          // ReSharper disable once InvertIf
          if (isWithinSection)

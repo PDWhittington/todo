@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.StringOperations;
 using Todo.Contracts.Services.Templates;
@@ -15,7 +16,7 @@ public class ListHtmlSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substitutor
             .Replace("{body}", substitutions.Body)
             .Replace("{theme}", substitutions.Theme);
 
-    public void WriteSubstitutionsToStream(byte[] template, ListHtmlSubstitutions substitutions, Stream stream)
+    public void WriteSubstitutionsToStream(UnmanagedByteArray template, ListHtmlSubstitutions substitutions, Stream stream)
     {
         var dict = new Dictionary<string, string>
         {
