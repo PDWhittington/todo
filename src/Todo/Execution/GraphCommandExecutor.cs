@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
@@ -47,19 +48,25 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
 
         var scoreInfos = scoresGenerator.GetScoresForDateInterval(start, now);
 
-        var html = GenerateStackedBarChartHtml(scoreInfos);
-
         var filePathInfo = scoreHtmlPathResolver.GetFilePathFor("", FileTypeEnum.Html);
-
-        File.WriteAllText(filePathInfo.Path, html);
+        
+        using var stream = File.Create(filePathInfo.Path);
+        
+        WriteStackedBarChartHtmlToStream(scoreInfos, stream);
 
         htmlFileLauncher.LaunchFiles(filePathInfo.Path);
     }
 
-    private string GenerateStackedBarChartHtml(ScoreInfo[] data)
+    private void WriteStackedBarChartHtmlToStream(ScoreInfo[] data, Stream stream)
     {
         if (data.Length == 0)
-            return "<html class=\"light\"><body><h1>No data to display</h1></body></html>";
+        {
+            var emptyHtml = Encoding.UTF8.GetBytes(
+                "<html class=\"light\"><body><h1>No data to display</h1></body></html>");
+            
+            stream.Write(emptyHtml, 0, emptyHtml.Length);
+            return;
+        }
 
         var configuration = configurationProvider.ConfigInfo.Configuration;
         
@@ -215,10 +222,8 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
 
         var template = graphHtmlTemplateProvider.GetTemplate();
         
-        var html = graphHtmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, 
-            template.FileContents);
-
-        return html;
+        graphHtmlSubstitutionsMaker.WriteSubstitutionsToStream(template.FileContents, 
+            htmlSubstitutions, stream);
     }
 
     private IEnumerable<int> GetYTicks(int maxTotal)

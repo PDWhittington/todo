@@ -39,14 +39,12 @@ public abstract class TemplateProviderBase : FileReaderBase
             var filePathInfo = FilePathInfo.Of(templatePathRootedToWorkingFolder,
                 FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
 
-            var lines = GetFileText(filePathInfo.Path);
+            var fileBytes = new Lazy<byte[]>(() => GetFileBytes(filePathInfo.Path));
 
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
-                _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, lines));
+                _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, fileBytes.Value));
             
-            var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
-            
-            return TodoFile.Of(filePathInfo, GetFileText(filePathInfo.Path),  markdownLines, fileContents);
+            return TodoFile.Of(filePathInfo, markdownLines, fileBytes);
         }
 
         var templatePathRootedToAssemblyFolder = _pathHelper.GetRootedToAssemblyFolder(pathToUse);
@@ -56,30 +54,26 @@ public abstract class TemplateProviderBase : FileReaderBase
             var filePathInfo = FilePathInfo.Of(templatePathRootedToAssemblyFolder,
                 GetFileType(), FolderEnum.AssemblyFolder);
 
-            var lines = GetFileText(filePathInfo.Path);
+            var fileBytes = new Lazy<byte []>(() => GetFileBytes(filePathInfo.Path)); 
 
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
-                _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, lines));
+                _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, fileBytes.Value));
             
-            var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
-            
-            return TodoFile.Of(filePathInfo, lines, markdownLines, fileContents);
+            return TodoFile.Of(filePathInfo, markdownLines, fileBytes);
         }
 
         {
             var manifestName = GetManifestStreamName();
-
-            var lines = _manifestStreamProvider.GetLinesFromManifest(manifestName);
-
+            
             var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
                 GetFileType(), FolderEnum.Manifest);
 
+            var fileBytes = new Lazy<byte[]>(() => _manifestStreamProvider.GetBytesFromManifest(manifestName));
+            
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
-                _markdownLineInterpreter.CreateMarkdownLine(manifestFileInfo, lines));
+                _markdownLineInterpreter.CreateMarkdownLine(manifestFileInfo, fileBytes.Value));
         
-            var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
-        
-            return TodoFile.Of(manifestFileInfo, lines, markdownLines, fileContents);    
+            return TodoFile.Of(manifestFileInfo, markdownLines, fileBytes);    
         }
     }
 

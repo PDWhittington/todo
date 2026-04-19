@@ -19,6 +19,7 @@ using Todo.Contracts.Services.GamifyOperations;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.StringOperations;
 using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.UI;
 using Todo.Dates;
@@ -30,6 +31,7 @@ using Todo.GamifyOperations;
 using Todo.Git;
 using Todo.MarkdownOperations;
 using Todo.StateAndConfig;
+using Todo.StringOperations;
 using Todo.Templates;
 using Todo.UI;
 
@@ -48,6 +50,7 @@ internal static class Initialise
             .AddDateOperations()
             .AddTemplateFunctionality()
             .AddFileSystemFunctionality()
+            .AddStringOperations()
             .AddGitFunctionality()
             .AddGamifyOperations()
             .AddMarkdownFunctionality()
@@ -127,6 +130,10 @@ internal static class Initialise
                     .AddSingleton<IFileDeleter, FileDeleter>()
                     .AddSingleton<IFolderCreator, FolderCreator>()
                     .AddSingleton<IFileListCreator, FileListCreator>();
+
+            private IServiceCollection AddStringOperations()
+                => serviceCollection
+                    .AddSingleton<IFastUtf8Substitutor, FastUtf8Substitutor>();
 
             private IServiceCollection AddGamifyOperations()
                 => serviceCollection.AddSingleton<IScoresGenerator, ScoresGenerator>();

@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using Markdig.Helpers;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
@@ -9,6 +12,31 @@ namespace Todo.MarkdownOperations;
 
 public class MarkdownLineInterpreter : IMarkdownLineInterpreter
 {
+    public MarkdownLineInfo[] CreateMarkdownLine(FilePathInfo filePathInfo, byte[] bytes)
+    {
+        var lines = CreateLines(bytes).ToArray();
+        return CreateMarkdownLine(filePathInfo, lines);
+    }
+
+    private IEnumerable<string> CreateLines(byte[] bytes)
+    {
+        var previousIndex = 0;
+        
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            var b = bytes[i];
+
+            if (b == (byte)'\n')
+            {
+                yield return Encoding.UTF8.GetString(bytes, previousIndex, i - previousIndex);
+                previousIndex = i;
+            }
+        }
+        
+        yield return Encoding.UTF8.GetString(bytes, previousIndex, bytes.Length - previousIndex);
+        
+    }
+    
     public MarkdownLineInfo [] CreateMarkdownLine(FilePathInfo filePathInfo, string [] lines)
     {
         var list = new List<MarkdownLineInfo>();

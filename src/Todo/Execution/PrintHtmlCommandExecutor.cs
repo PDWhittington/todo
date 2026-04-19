@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
 using Markdig;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
@@ -35,7 +36,9 @@ public class PrintHtmlCommandExecutor(
         
         var htmlTitle = dateFormatter.GetHtmlTitle(command.Date);
 
-        var htmlBody = Markdown.ToHtml(markdownSourceFile.FileContents, pipeline);
+        var markdownStr = Encoding.UTF8.GetString(markdownSourceFile.FileContents);
+        
+        var htmlBody = Markdown.ToHtml(markdownStr, pipeline);
         
         htmlBody = InsertRepoNameIfNecessary(htmlBody);
 
@@ -50,14 +53,11 @@ public class PrintHtmlCommandExecutor(
 
         var htmlTemplateFile = listHtmlTemplateProvider.GetTemplate();
 
-        var outputHtml = listHtmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions,
-            htmlTemplateFile.FileContents);
-
         var pathInfo = dateListPathResolver.GetFilePathFor(command.Date, FileTypeEnum.Html);
-
         OutputWriter.WriteLine($"Writing file for {command.Date} to {pathInfo.Path}");
 
-        File.WriteAllText(pathInfo.Path, outputHtml);
+        using var stream = File.Create(pathInfo.Path);
+        listHtmlSubstitutionsMaker.WriteSubstitutionsToStream(htmlTemplateFile.FileContents, htmlSubstitutions, stream);
     }
 
     private string InsertRepoNameIfNecessary(string htmlBody)

@@ -33,11 +33,10 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             var markdownSubstitutions = GetMarkdownSubstitutions(createOrShowCommand);
 
-            var outputText = MakeSubstitutions(markdownSubstitutions, templateFile.FileContents);
-
             folderCreator.CreateFromPathIfDoesntExist(pathInfo.Path);
-
-            File.WriteAllText(pathInfo.Path, outputText);
+            using var stream = File.Create(pathInfo.Path);
+            
+            MakeSubstitutions(markdownSubstitutions, templateFile.FileContents, stream);
 
             if (configurationProvider.ConfigInfo.Configuration.UseGit)
             {
@@ -54,5 +53,6 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
     protected abstract TSubstitutionsType GetMarkdownSubstitutions(TCommandType createOrShowCommand);
 
-    protected abstract string MakeSubstitutions(TSubstitutionsType markdownSubstitutions, string fileContents);
+    protected abstract void MakeSubstitutions(TSubstitutionsType markdownSubstitutions, 
+        byte [] fileContents, Stream stream);
 }

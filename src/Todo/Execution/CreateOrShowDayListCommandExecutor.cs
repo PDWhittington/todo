@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
@@ -50,6 +51,7 @@ public class CreateOrShowDayListCommandExecutor
         return DayListMarkdownSubstitutions.Of(dateText);
     }
 
-    protected override string MakeSubstitutions(DayListMarkdownSubstitutions markdownSubstitutions, string fileContents)
-        => _markdownSubstitutionMaker.MakeSubstitutions(markdownSubstitutions, fileContents);
+    protected override void MakeSubstitutions(DayListMarkdownSubstitutions markdownSubstitutions, 
+        byte[] fileContents, Stream stream)
+        => _markdownSubstitutionMaker.WriteSubstitutionsToStream(fileContents, markdownSubstitutions, stream);
 }

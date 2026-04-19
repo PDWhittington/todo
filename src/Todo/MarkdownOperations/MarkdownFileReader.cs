@@ -29,12 +29,12 @@ public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
 
     public TodoFile ReadMarkdownFile(FilePathInfo filePathInfo)
     {
-        var lines = GetFileText(filePathInfo.Path); 
+        var fileBytes = new Lazy<byte[]>(() =>
+            GetFileBytes(filePathInfo.Path));
+        
         var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
-            _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, lines));
+            _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, fileBytes.Value));
         
-        var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
-        
-        return TodoFile.Of(filePathInfo, lines, markdownLines, fileContents);
+        return TodoFile.Of(filePathInfo, markdownLines, fileBytes);
     }
 }
