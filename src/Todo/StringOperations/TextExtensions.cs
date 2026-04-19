@@ -52,6 +52,7 @@ public static class TextExtensions
             _ => false
         };
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool EqualsIgnoreCase(this byte b, byte other)
     {
         if (b == other) return true;

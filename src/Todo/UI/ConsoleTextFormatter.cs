@@ -8,7 +8,8 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.UI;
 
-public class ConsoleTextFormatter(IConfigurationProvider configurationProvider) : IConsoleTextFormatter
+public class ConsoleTextFormatter(IConfigurationProvider configurationProvider) 
+    : IConsoleTextFormatter
 {
     private struct ColumnWidths
     {
