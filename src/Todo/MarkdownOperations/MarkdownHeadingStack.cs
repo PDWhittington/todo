@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Todo.Contracts.Data.Markdown;
+using Todo.Contracts.Data.Memory;
 using Todo.Extensions;
+using Todo.StringOperations;
 
 namespace Todo.MarkdownOperations;
 
@@ -25,8 +27,12 @@ public class MarkdownHeadingStack : IEnumerable<MarkdownHeadingInfo>
         if (headingLevel <= 0) throw new ArgumentException(
             $"{nameof(markdownLineInfo)}.{nameof(markdownLineInfo.HeadingLevel)} must be positive", 
             nameof(markdownLineInfo));
-        
-        var headingTitle = markdownLineInfo.Line.Trim().TrimStart('#').TrimStart();
+
+        var headingTitle = markdownLineInfo.Line
+            .TrimStart()
+            .TrimStart(b => b == (byte)'#')
+            .TrimStart()
+            .TrimEnd();
         
         var markdownHeadingInfo = MarkdownHeadingInfo.Of(headingLevel, headingTitle);
 

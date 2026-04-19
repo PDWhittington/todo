@@ -1,32 +1,32 @@
 using System;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Data.Memory;
 
 namespace Todo.Contracts.Data.Markdown;
 
-public record MarkdownLineInfo
+public unsafe record MarkdownLineInfo
 {
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    public FilePathInfo FilePath { get; }
     public MarkdownLineTypeEnum LineType { get; }
-    public string Line { get; }
+    
+    public ByteArraySpan Line { get; }
+    
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public double LineNumber { get; }
     public int HeadingLevel { get; }
 
-    private MarkdownLineInfo(FilePathInfo filePathInfo, MarkdownLineTypeEnum lineType,
-        string line, int lineNumber, int headingLevel)
+    private MarkdownLineInfo(MarkdownLineTypeEnum lineType, ByteArraySpan line, 
+        int lineNumber, int headingLevel)
     {
-        FilePath = filePathInfo;
         LineType = lineType;
         Line = line;
         LineNumber = lineNumber;
         HeadingLevel = headingLevel;
     }
 
-    public override string ToString() => Line;
+    // public override string ToString() => Line;
     
-    public static MarkdownLineInfo Of(FilePathInfo filePathInfo, MarkdownLineTypeEnum lineType, 
-        string line, int lineNumber, int headingLevel)
+    public static MarkdownLineInfo Of(MarkdownLineTypeEnum lineType, 
+        ByteArraySpan line, int lineNumber, int headingLevel)
     {
         if (lineType != MarkdownLineTypeEnum.Heading && headingLevel != -1)
         {
@@ -34,6 +34,6 @@ public record MarkdownLineInfo
                                         $"is not set to {MarkdownLineTypeEnum.Heading}",  nameof(headingLevel));
         }
         
-        return new MarkdownLineInfo(filePathInfo, lineType, line, lineNumber, headingLevel);
+        return new MarkdownLineInfo(lineType, line, lineNumber, headingLevel);
     }
 }

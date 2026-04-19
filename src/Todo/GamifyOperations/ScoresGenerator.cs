@@ -4,6 +4,7 @@ using System.Linq;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Scoring;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.GamifyOperations;
@@ -98,25 +99,25 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       return FilePathScoreInfo.Of(filePathInfo, scoreDictionary);
    }
 
-   private static bool ContainsTokenScore(string line, out int tokenScore)
-   {
-      var sections = GetSections(line);
-      var totalScore = 0;
-      var hasTokenScore = false;
-      
-      foreach (var section in sections)
-      {
-         if (!section.EndsWith('t') && !section.EndsWith('T')) continue;
-         if (!section.TryIntParseAllButLast(out var score)) continue;
-         if (score == 0) continue;
-         
-         hasTokenScore = true;
-         totalScore += score;
-      }
-      
-      tokenScore = totalScore;
-      return hasTokenScore;
-   }
+   // private static bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
+   // {
+   //    var sections = GetSections(line);
+   //    var totalScore = 0;
+   //    var hasTokenScore = false;
+   //    
+   //    foreach (var section in sections)
+   //    {
+   //       if (!section.EndsWith('t') && !section.EndsWith('T')) continue;
+   //       if (!section.TryIntParseAllButLast(out var score)) continue;
+   //       if (score == 0) continue;
+   //       
+   //       hasTokenScore = true;
+   //       totalScore += score;
+   //    }
+   //    
+   //    tokenScore = totalScore;
+   //    return hasTokenScore;
+   // }
 
    private static IEnumerable<CustomStringSection> GetSections(string line)
    {
@@ -158,6 +159,65 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       }
    }
    
+   private static unsafe bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
+   {
+      var runningScore = 0;
+      var hasTokenScore = false;
+      
+      var previousCharWasAlphaNumeric = false;
+      var currentSectionStart = 0;
+      
+      for (var i = 0; i < line.Length; i++)
+      {
+         var b = line.GetByte(i);
+         var currentCharIsAlphaNumeric = b.IsLetterOrDigit();
+
+         switch (previousCharWasAlphaNumeric)
+         {
+            //Previous character was not alphanumeric and current character is alphanumeric
+            //Start new section
+            case false when currentCharIsAlphaNumeric:
+               currentSectionStart = i;
+               break;
+
+            //Previous character was alphanumeric and current character is not alphanumeric
+            //End section and yield it back
+            case true when !currentCharIsAlphaNumeric:
+            {
+               var currentSection = new ByteArraySpan(line.Start + currentSectionStart, i - currentSectionStart);
+               if (ApplyScore(currentSection, ref runningScore)) hasTokenScore = true;
+               break;
+            }
+
+            //TODO: this isn't quite right -- this should fire on the final char irrespective of the previous two conditions.
+            default:
+            {
+               if (i == line.Length - 1 && currentCharIsAlphaNumeric)
+               {
+                  var currentSection = new  ByteArraySpan(line.Start + currentSectionStart,i - currentSectionStart + 1);
+                  if (ApplyScore(currentSection, ref runningScore)) hasTokenScore = true;
+               }
+               break;
+            }
+         }
+         
+         previousCharWasAlphaNumeric = currentCharIsAlphaNumeric;
+      }
+      
+      tokenScore = runningScore;
+      return hasTokenScore;
+   }
+
+   private static bool ApplyScore(ByteArraySpan span, ref int totalScore)
+   {
+      if (!span.EndsWith((byte)'t') && !span.EndsWith((byte)'T')) return false;
+      if (!span.TryIntParseAllButLast(out var score)) return false;
+      if (score == 0) return false;
+      
+      totalScore += score;
+      return true;
+   }
+   
    private static ScoreCategory GetCategoryFromStack(MarkdownHeadingStack stack, 
       ScoreCategory [] scoreCategories)
    {
@@ -165,7 +225,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       {
          var isWithinSection = stack
             .Select(x => x.HeadingTitle)
-            .Contains(category.Name, StringComparer.CurrentCultureIgnoreCase); 
+            .Any(ht => ht.Equals(category.Name));
             
          // ReSharper disable once InvertIf
          if (isWithinSection)

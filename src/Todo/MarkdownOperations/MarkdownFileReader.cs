@@ -7,21 +7,14 @@ using Todo.FileSystem;
 
 namespace Todo.MarkdownOperations;
 
-public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
+public class MarkdownFileReader(
+    IDateListPathResolver dateListPathResolver,
+    IMarkdownLineInterpreter markdownLineInterpreter)
+    : FileReaderBase, IMarkdownFileReader
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IMarkdownLineInterpreter _markdownLineInterpreter;
-
-    public MarkdownFileReader(IDateListPathResolver dateListPathResolver,
-        IMarkdownLineInterpreter markdownLineInterpreter)
-    {
-        _dateListPathResolver = dateListPathResolver;
-        _markdownLineInterpreter = markdownLineInterpreter;
-    }
-
     public TodoFile ReadMarkdownFile(DateOnly dateOnly)
     {
-        var filePathInfo = _dateListPathResolver.ResolvePathFor(dateOnly,
+        var filePathInfo = dateListPathResolver.ResolvePathFor(dateOnly,
             FileTypeEnum.MarkdownDayList, false);
         
         return ReadMarkdownFile(filePathInfo);
@@ -33,7 +26,7 @@ public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
             GetFileBytes(filePathInfo.Path));
         
         var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
-            _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, fileBytes.Value));
+            markdownLineInterpreter.CreateMarkdownLine(filePathInfo, fileBytes.Value));
         
         return TodoFile.Of(filePathInfo, markdownLines, fileBytes);
     }

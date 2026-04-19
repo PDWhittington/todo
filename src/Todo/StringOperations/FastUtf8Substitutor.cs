@@ -27,7 +27,7 @@ public class FastUtf8Substitutor : IFastUtf8Substitutor
 
             if (!insideBrackets) continue;
 
-            if (IsWhitespace(b))
+            if (b.IsWhitespace())
             {
                 insideBrackets = false;
                 continue;
@@ -68,19 +68,4 @@ public class FastUtf8Substitutor : IFastUtf8Substitutor
 
         return new string(keyArr);
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsWhitespace(byte b) =>
-        b switch
-        {
-            0x09 => true,              // CHARACTER TABULATION \t    
-            0x0a => true,              // LINE FEED (LF) \n
-            0x0B => true,              // LINE TABULATION (VT) \v         
-            0x0C => true,              // FORM FEED (FF) \f         
-            0x0D => true,              // CARRIAGE RETURN (CR) \r
-            0x20 => true,              // SPACE                       
-            0x85 => true,              // NEXT LINE (NEL)         
-            _ => false
-        };
-
 }

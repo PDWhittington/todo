@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Markdown;
