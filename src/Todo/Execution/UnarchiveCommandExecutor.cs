@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
@@ -10,7 +11,8 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class UnarchiveCommandExecutor : FileMoveExecutorBase<UnarchiveCommand>
+public class UnarchiveCommandExecutor 
+    : FileMoveExecutorBase<UnarchiveCommand>, IUnarchiveCommandExector
 {
     private readonly IDateListPathResolver _dateListPathResolver;
 

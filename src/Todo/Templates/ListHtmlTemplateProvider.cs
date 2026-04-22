@@ -8,11 +8,12 @@ using Todo.Contracts.Services.Templates;
 namespace Todo.Templates;
 
 public class ListHtmlTemplateProvider(
+    IAssemblyInformationProvider assemblyInformationProvider,
     IPathHelper pathHelper,
     IConstantsProvider constantsProvider,
     IMarkdownLineInterpreter markdownLineInterpreter,
     IUnmanagedByteArrayManager unmanagedByteArrayManager)
-    : TemplateProviderBase(pathHelper,  markdownLineInterpreter, unmanagedByteArrayManager), 
+    : TemplateProviderBase(assemblyInformationProvider, pathHelper, markdownLineInterpreter, unmanagedByteArrayManager), 
         IListHtmlTemplateProvider
 {
     protected override string GetTemplateFileName()

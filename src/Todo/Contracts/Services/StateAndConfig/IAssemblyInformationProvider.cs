@@ -8,7 +8,11 @@ public interface IAssemblyInformationProvider
 
     DateTime GetBuildTime();
 
+    string GetRootedToAssemblyFolder(string path);
+    
+    string GetAssemblyFolder();
+    
     string AssemblyLocation();
-
+    
     bool DebugFlag();
 }

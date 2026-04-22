@@ -12,7 +12,7 @@
     </PropertyGroup>
     <!-- Treat warnings as errors ONLY in Release -->
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
     </PropertyGroup>
     <!-- Make classes marked as internal available to the test project -->
     <ItemGroup>

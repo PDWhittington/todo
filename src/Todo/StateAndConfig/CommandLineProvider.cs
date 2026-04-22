@@ -1,5 +1,4 @@
 ﻿using System;
-using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
@@ -7,11 +6,12 @@ namespace Todo.StateAndConfig;
 /// <summary>
 /// This class
 /// </summary>
-public class CommandLineProvider(IPathHelper pathHelper) : ICommandLineProvider
+public class CommandLineProvider(IAssemblyInformationProvider assemblyInformationProvider) 
+    : ICommandLineProvider
 {
     public string GetCommandLineMinusAssemblyLocation()
     {
-        var assemblyLocation = pathHelper.GetAssemblyLocation();
+        var assemblyLocation = assemblyInformationProvider.AssemblyLocation();
 
         var wholeCommandLine = Environment.CommandLine;
 

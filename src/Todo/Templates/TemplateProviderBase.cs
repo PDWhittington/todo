@@ -6,11 +6,13 @@ using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.MarkdownOperations;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.FileSystem;
 
 namespace Todo.Templates;
 
 public abstract class TemplateProviderBase(
+    IAssemblyInformationProvider assemblyInformationProvider,
     IPathHelper pathHelper,
     IMarkdownLineInterpreter markdownLineInterpreter,
     IUnmanagedByteArrayManager unmanagedByteArrayManager)
@@ -40,7 +42,7 @@ public abstract class TemplateProviderBase(
             return TodoFile.Of(filePathInfo, markdownLines, lazyFile);
         }
 
-        var templatePathRootedToAssemblyFolder = pathHelper.GetRootedToAssemblyFolder(pathToUse);
+        var templatePathRootedToAssemblyFolder = assemblyInformationProvider.GetRootedToAssemblyFolder(pathToUse);
 
         if (File.Exists(templatePathRootedToAssemblyFolder))
         {

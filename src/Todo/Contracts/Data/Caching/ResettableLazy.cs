@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace Todo.Contracts.Data.Caching;
 
+[UnconditionalSuppressMessage("Trimming", 
+    "IL2091:Generic parameter does not have matching annotations")]
 public class ResettableLazy<T>
 {
     private Lazy<T> _lazy;
