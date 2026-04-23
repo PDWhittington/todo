@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+if ! dotnet restore ./src/; then
+  echo " ❌ RESTORE FAILED"
+  echo " Check the error messages above."
+  exit 1
+fi
+
+echo ""
+echo " ✅ Build succeeded. Proceeding to copy..."
