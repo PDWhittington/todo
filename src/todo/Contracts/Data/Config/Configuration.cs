@@ -8,6 +8,7 @@ namespace Todo.Contracts.Data.Config;
 public record Configuration(TodoListInformation TodoListInfo,
     PerOsFilePaths BrowserPath, PerOsFilePaths TextEditorPath,
     string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
+    string EnvironmentVariableToOverrideDate,
     string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
     string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormatWithoutExension,
     bool UseNamesForDays, bool UseGit, TimeSpan? NewDayThreshold, int ConsoleWidth,

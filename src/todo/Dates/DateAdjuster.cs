@@ -10,7 +10,8 @@ public class DateAdjuster(IDateAccessor dateAccessor,
 {
     public DateOnly GetTodayWithMidnightAdjusted()
     {
-        var newDayThreshold = configurationProvider.ConfigInfo.Configuration.NewDayThreshold ?? new TimeSpan(0, 0, 0);
+        var newDayThreshold = configurationProvider.ConfigInfo.Configuration.NewDayThreshold 
+                              ?? new TimeSpan(0, 0, 0);
 
         var now = dateAccessor.GetNow();
         
