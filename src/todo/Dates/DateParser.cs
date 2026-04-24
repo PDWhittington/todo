@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Dates;
 
-public class DateParser(IDateHelper dateHelper, IDateAdjuster dateAdjuster) : IDateParser
+public class DateParser(IConfigurationProvider configurationProvider, 
+    IDateHelper dateHelper, IDateAdjuster dateAdjuster) : IDateParser
 {
+    
     public bool TryGetDate(string? str, out DateOnly dateOnly)
     {
-        if (str is null)
-        {
-            dateOnly = default;
-            return false;
-        }
+        return EnvironmentVariableSetsOverride(out var overrideDate) 
+            ? TryGetDateRelativeTo(str, overrideDate, out dateOnly) 
+            : TryGetDateRelativeTo(str, dateAdjuster.GetTodayWithMidnightAdjusted(), out dateOnly);
+    }
 
+    private bool TryGetDateRelativeTo(string? str, DateOnly relativeToDate, out DateOnly dateOnly)
+    {
         //NOTE: order of these tests is important.
-
-        if (IsYesterday(str)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(-1);
-        else if (IsToday(str)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted();
-        else if (IsTomorrow(str)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(1);
-        else if (IsRelativeOffset(str, out var offset)) dateOnly = dateAdjuster.GetTodayWithMidnightAdjusted().AddDays(offset);
+        
+        if (str is null) dateOnly = default;
+        else if (IsYesterday(str)) dateOnly = relativeToDate.AddDays(-1);
+        else if (IsToday(str)) dateOnly = relativeToDate;
+        else if (IsTomorrow(str)) dateOnly = relativeToDate.AddDays(1);
+        else if (IsRelativeOffset(str, out var offset)) dateOnly = relativeToDate.AddDays(offset);
         else if (IsDayOfWeek(str, out var dayOfWeek)) dateOnly = GetDateFromDayOfWeek((DayOfWeek)dayOfWeek!);
         else if (IsDayOnly(str, out var day)) dateOnly = GetDateFromDayOnly(day);
         else if (IsLastThisOrNext(str, out var dateFromColloquial)
@@ -34,8 +39,22 @@ public class DateParser(IDateHelper dateHelper, IDateAdjuster dateAdjuster) : ID
         return dateOnly != default;
     }
 
+    private bool EnvironmentVariableSetsOverride(out DateOnly overrideDate)
+    {
+        var environmentVariableName = configurationProvider.ConfigInfo
+            .Configuration.EnvironmentVariableToOverrideDate;
 
-
+        if (string.IsNullOrWhiteSpace(environmentVariableName))
+        {
+            overrideDate = default;
+            return false;
+        }
+        
+        var overrideDateStr = Environment.GetEnvironmentVariable(environmentVariableName);
+        
+        return TryGetDateRelativeTo(overrideDateStr, dateAdjuster.GetTodayWithMidnightAdjusted(), out overrideDate);
+    }
+    
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
     {
         "y" => true,

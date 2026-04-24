@@ -17,7 +17,7 @@ public static class Config
         var todoListInfo = new TodoListInformation("Test list", true, true);
         
         var configuration = new Configuration(todoListInfo, blankPaths, blankPaths, "",
-            "", "", HtmlThemeEnum.Dark, "", "", "",
+            "", "", "", HtmlThemeEnum.Dark, "", "", "",
             true, true, new TimeSpan(4, 0, 0), 
             80, IterationMethodEnum.Parallel, 21, []);
         

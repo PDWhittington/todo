@@ -34,7 +34,8 @@
   },
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",
-  
+  "EnvironmentVariableToOverrideDate": "TODO_DATE", 
+          
   //Html settings
   "HtmlTemplatePath": "template.html",
   "HtmlTheme": "Dark",
