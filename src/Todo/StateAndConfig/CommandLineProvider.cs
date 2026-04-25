@@ -15,10 +15,15 @@ public class CommandLineProvider(IPathHelper pathHelper) : ICommandLineProvider
 
         var wholeCommandLine = Environment.CommandLine;
 
-        if (wholeCommandLine.StartsWith(assemblyLocation))
+        if (wholeCommandLine.StartsWith(assemblyLocation,  StringComparison.OrdinalIgnoreCase))
         {
             return wholeCommandLine[assemblyLocation.Length..]
                 .Trim();
+        }
+
+        if (wholeCommandLine.StartsWith("todo", StringComparison.OrdinalIgnoreCase))
+        {
+            return wholeCommandLine["todo".Length..].Trim();
         }
 
         return wholeCommandLine.Trim();
