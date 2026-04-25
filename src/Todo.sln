@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo", "todo\todo.csproj", "{14BA02EA-BC7E-4DB8-A50F-112EADCE203E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todo", "Todo\Todo.csproj", "{14BA02EA-BC7E-4DB8-A50F-112EADCE203E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoTests", "TodoTests\TodoTests.csproj", "{51CE3E1B-4CDD-476D-8F5C-CC2D0C0115CB}"
 EndProject
