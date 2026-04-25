@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Todo.Contracts.Data.Memory;
 using Todo.StringOperations;
 
-namespace TodoTests;
+namespace Todo.Tests;
 
 internal static class StringOperationsExtensions
 {

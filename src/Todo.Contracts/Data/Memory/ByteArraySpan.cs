@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Todo.StringOperations;
+using Todo.Contracts.StringOperations;
 
 namespace Todo.Contracts.Data.Memory;
 

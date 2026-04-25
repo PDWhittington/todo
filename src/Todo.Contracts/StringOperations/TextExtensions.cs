@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Todo.StringOperations;
+namespace Todo.Contracts.StringOperations;
 
 public static class TextExtensions
 {

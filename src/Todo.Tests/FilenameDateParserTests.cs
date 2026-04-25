@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Dates;
 
-namespace TodoTests;
+namespace Todo.Tests;
 
 [TestFixture]
 public class FilenameDateParserTests

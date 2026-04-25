@@ -16,7 +16,7 @@
     </PropertyGroup>
     <!-- Make classes marked as internal available to the test project -->
     <ItemGroup>
-        <InternalsVisibleTo Include="TodoTests" />
+        <InternalsVisibleTo Include="Todo.Tests" />
     </ItemGroup>
     <!-- nuget references -->
     <ItemGroup>

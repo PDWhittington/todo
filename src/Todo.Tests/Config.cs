@@ -2,7 +2,7 @@ using System;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.Html;
 
-namespace TodoTests;
+namespace Todo.Tests;
 
 public static class Config
 {

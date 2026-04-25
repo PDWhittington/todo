@@ -10,6 +10,7 @@ using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.GamifyOperations;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.StringOperations;
 using Todo.MarkdownOperations;
 using Todo.StringOperations;
 

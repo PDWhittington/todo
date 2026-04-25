@@ -15,7 +15,7 @@
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
     <ItemGroup>
-        <InternalsVisibleTo Include="TodoTests" />
+        <InternalsVisibleTo Include="Todo.Tests" />
     </ItemGroup>
  
   <ItemGroup>

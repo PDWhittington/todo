@@ -4,12 +4,11 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
-using Todo;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
 
-namespace TodoTests;
+namespace Todo.Tests;
 
 public static class Constants
 {

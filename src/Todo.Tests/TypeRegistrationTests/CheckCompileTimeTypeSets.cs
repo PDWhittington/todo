@@ -4,10 +4,9 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using Todo;
-using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.Execution;
 
-namespace TodoTests.TypeRegistrationTests;
+namespace Todo.Tests.TypeRegistrationTests;
 
 [TestFixture]
 public class CheckCompileTimeTypeSets
@@ -30,7 +29,7 @@ public class CheckCompileTimeTypeSets
         var compileTimeSetMethod = typeof(Initialise).GetMethod("GetCommandExecutorsAndInterfaces", 
             BindingFlags.Static | BindingFlags.NonPublic)!;
         
-        var compileTimeTypes = ((IEnumerable<Initialise.InterfaceAndImplementation>)compileTimeSetMethod.Invoke(null, null)!)
+        var compileTimeTypes = ((IEnumerable<Todo.Initialise.InterfaceAndImplementation>)compileTimeSetMethod.Invoke(null, null)!)
             .ToArray();
         
         var compileTimeDictionary = compileTimeTypes

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Todo.StringOperations;
+using Todo.Contracts.StringOperations;
 
-namespace TodoTests;
+namespace Todo.Tests;
 
 [TestFixture]
 public class TextExtensionsTests

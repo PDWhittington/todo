@@ -2,7 +2,7 @@ using System;
 using NUnit.Framework;
 using Todo.Dates.Naming;
 
-namespace TodoTests.NamedDayTests;
+namespace Todo.Tests.NamedDayTests;
 
 public class EasterTests
 {

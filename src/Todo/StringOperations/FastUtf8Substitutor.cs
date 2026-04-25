@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Services.StringOperations;
+using Todo.Contracts.StringOperations;
 
 namespace Todo.StringOperations;
 

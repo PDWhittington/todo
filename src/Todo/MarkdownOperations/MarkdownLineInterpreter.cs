@@ -4,6 +4,7 @@ using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Services.MarkdownOperations;
+using Todo.Contracts.StringOperations;
 using Todo.StringOperations;
 
 namespace Todo.MarkdownOperations;
