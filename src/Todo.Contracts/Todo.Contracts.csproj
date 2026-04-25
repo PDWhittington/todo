@@ -8,18 +8,20 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
     <ItemGroup>
         <InternalsVisibleTo Include="Todo.Tests" />
     </ItemGroup>
  
-  <ItemGroup>
-       <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+    </ItemGroup>
  
 </Project>

@@ -75,6 +75,8 @@ public sealed class ServiceRegistrationGenerator : IIncrementalGenerator
 
                 foreach (var impl in implementations)
                 {
+                    if (impl is null) continue;
+                    
                     var interfaceName = impl
                         .AllInterfaces.First(i =>
                             i.Name == TargetInterface || i.ToDisplayString() == TargetInterfaceFull

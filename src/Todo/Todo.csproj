@@ -17,6 +17,12 @@
     <!-- Treat warnings as errors ONLY in Release -->
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <PublishAot>true</PublishAot>
+        <OptimizationPreference>Speed</OptimizationPreference>
+        <PublishAot>true</PublishAot>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <OptimizationPreference>Speed</OptimizationPreference>
+        <TieredCompilation>false</TieredCompilation>
     </PropertyGroup>
     <!-- Make classes marked as internal available to the test project -->
     <ItemGroup>
