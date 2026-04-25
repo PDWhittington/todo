@@ -8,9 +8,9 @@ public record EmptyScoreInfo : ScoreInfo
     public override DateOnly Date { get; }
 
     public override int Total() => 0;
-    
+
     public override int GetScore(ScoreCategory category) => 0;
-    
+
     public override bool TryGetScore(ScoreCategory category, out int score)
     {
         score = 0;
@@ -21,7 +21,7 @@ public record EmptyScoreInfo : ScoreInfo
     {
         Date = date;
     }
-    
-    public static EmptyScoreInfo Of(DateOnly date)
-        => new(date);
+
+    public static EmptyScoreInfo Of(DateOnly date) => new(date);
 }
+
