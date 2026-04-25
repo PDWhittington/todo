@@ -3,9 +3,9 @@ using Todo.Contracts.Services.Git;
 
 namespace Todo.Git.Commands;
 
-public record GitGetConflictsCommand : GitCommandBase<ConflictCollection>
+public record GitGetConflictsCommand : IGitCommand<ConflictCollection>
 {
-    internal override ConflictCollection ExecuteCommand(IGitInterface gitInterface)
+    public ConflictCollection ExecuteCommand(IGitInterface gitInterface)
     {
         gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
             "Retrieving conflicts from git index");

@@ -1,9 +1,8 @@
-using System;
 using System.Drawing;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Todo.StateAndConfig;
+namespace Todo.Contracts.Data.Config;
 
 public class ColorFormatter : JsonConverter<Color>
 {

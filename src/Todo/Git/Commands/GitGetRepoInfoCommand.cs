@@ -5,9 +5,9 @@ using Todo.Contracts.Services.Git;
 namespace Todo.Git.Commands;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public record GitGetRepoInfoCommand : GitCommandBase<RepositoryInformation>
+public record GitGetRepoInfoCommand : IGitCommand<RepositoryInformation>
 {
-    internal override RepositoryInformation ExecuteCommand(IGitInterface gitInterface)
+    public RepositoryInformation ExecuteCommand(IGitInterface gitInterface)
     {
         gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
             "Retrieving repo information . . . ");

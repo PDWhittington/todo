@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Todo.Contracts.Data.FileSystem;
+﻿namespace Todo.Contracts.Data.FileSystem;
 
 public record struct ManifestInfo
 {
@@ -24,9 +22,6 @@ public record struct ManifestInfo
 
     public static ManifestInfo Of(string fileName)
     {
-        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name!;
-        var namespaceName = $"{assemblyName[..1].ToUpper()}{assemblyName[1..]}";
-
-        return Of(namespaceName, fileName);
+        return Of("Todo", fileName);
     }
 }

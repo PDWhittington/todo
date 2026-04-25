@@ -42,9 +42,7 @@ public class CheckCompileTimeTypeSets
             .Select(ct => ct.Interface)
             .ToHashSet();
 
-        var interfacesToMap = typeof(Initialise)
-            .Assembly
-            .GetTypes()
+        var interfacesToMap = GetTypes()
             .Where(x => x is { IsInterface: true, IsGenericType: false } && x != typeof(ICommandExecutor))
             .Where(x => x.IsAssignableTo(typeof(ICommandExecutor)))
             .ToArray();
@@ -55,9 +53,7 @@ public class CheckCompileTimeTypeSets
         {
             var compileTimeImplementations = compileTimeDictionary[interfaceToRegister];
 
-            var typesAssignableToInterface = typeof(Initialise)
-                .Assembly
-                .GetTypes()
+            var typesAssignableToInterface = GetTypes()
                 .Where(x => x is { IsClass: true, IsAbstract: false })
                 .Where(x => x.IsAssignableTo(interfaceToRegister))
                 .ToHashSet();
@@ -111,6 +107,15 @@ public class CheckCompileTimeTypeSets
         return type.GetInterfaces()
             .Any(i => i.IsGenericType && 
                       i.GetGenericTypeDefinition() == openGenericInterface);
+    }
+
+    private static IEnumerable<Type> GetTypes()
+    {
+        var mainAssembly = Assembly.Load("Todo");
+        var contractsAssembly = Assembly.Load("Todo.Contracts");
+
+        return new[] { mainAssembly, contractsAssembly }
+            .SelectMany(x => x.GetTypes());
     }
     
 }

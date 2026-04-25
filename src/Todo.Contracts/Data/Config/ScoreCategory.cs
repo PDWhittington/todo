@@ -1,6 +1,5 @@
 using System.Drawing;
 using System.Text.Json.Serialization;
-using Todo.StateAndConfig;
 
 namespace Todo.Contracts.Data.Config;
 

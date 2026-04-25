@@ -4,7 +4,22 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <TieredPGO>false</TieredPGO>
     </PropertyGroup>
-    <PackageReference Include="LibGit4Sharp" Version="0.31.0" />
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TodoTests" />
+    </ItemGroup>
+ 
+  <ItemGroup>
+       <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+  </ItemGroup>
  
 </Project>

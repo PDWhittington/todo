@@ -7,7 +7,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitRemoveCommand : GitCommandBase<VoidResult>
+public record GitRemoveCommand : IGitCommand<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public string [] Paths { get; }
@@ -17,7 +17,7 @@ public record GitRemoveCommand : GitCommandBase<VoidResult>
         Paths = paths;
     }
 
-    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         bool StatusEntryIsPath(StatusEntry statusEntry, string path)
         {
