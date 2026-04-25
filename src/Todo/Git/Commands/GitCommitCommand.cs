@@ -5,9 +5,9 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitCommitCommand(string Message) : GitCommandBase<CommitResult>
+public record GitCommitCommand(string Message) : IGitCommand<CommitResult>
 {
-    internal override CommitResult ExecuteCommand(IGitInterface gitInterface)
+    public CommitResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {

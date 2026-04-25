@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Execution;
@@ -36,6 +38,8 @@ public class CreateOrShowTopicListCommandExecutor(
     protected override TopicListMarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowTopicListCommand createOrShowTopicListCommand)
         => TopicListMarkdownSubstitutions.Of(createOrShowTopicListCommand.Topic);
 
-    protected override string MakeSubstitutions(TopicListMarkdownSubstitutions markdownSubstitutions, string fileContents)
-        => topicListMarkdownSubstitutionsMaker.MakeSubstitutions(markdownSubstitutions, fileContents);
+    protected override void MakeSubstitutions(TopicListMarkdownSubstitutions markdownSubstitutions, 
+        UnmanagedByteArray fileContents, Stream stream)
+        => topicListMarkdownSubstitutionsMaker.WriteSubstitutionsToStream(fileContents, 
+            markdownSubstitutions, stream); 
 }

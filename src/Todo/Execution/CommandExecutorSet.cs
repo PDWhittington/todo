@@ -6,14 +6,9 @@ using Todo.Contracts.Services.Execution;
 
 namespace Todo.Execution;
 
-public class CommandExecutorSet : ICommandExecutorSet
+public class CommandExecutorSet(IEnumerable<ICommandExecutor> executors) : ICommandExecutorSet
 {
-    private readonly Dictionary<Type, ICommandExecutor> _executors;
-
-    public CommandExecutorSet(IEnumerable<ICommandExecutor> executors)
-    {
-        _executors = Validate(executors);
-    }
+    private readonly Dictionary<Type, ICommandExecutor> _executors = Validate(executors);
 
     private static Dictionary<Type, ICommandExecutor> Validate(IEnumerable<ICommandExecutor> executors)
     {

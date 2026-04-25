@@ -2,6 +2,7 @@
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
+using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem;
@@ -33,11 +34,10 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             var markdownSubstitutions = GetMarkdownSubstitutions(createOrShowCommand);
 
-            var outputText = MakeSubstitutions(markdownSubstitutions, templateFile.FileContents);
-
             folderCreator.CreateFromPathIfDoesntExist(pathInfo.Path);
-
-            File.WriteAllText(pathInfo.Path, outputText);
+            using var stream = File.Create(pathInfo.Path);
+            
+            MakeSubstitutions(markdownSubstitutions, templateFile.FileContents, stream);
 
             if (configurationProvider.ConfigInfo.Configuration.UseGit)
             {
@@ -54,5 +54,6 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
     protected abstract TSubstitutionsType GetMarkdownSubstitutions(TCommandType createOrShowCommand);
 
-    protected abstract string MakeSubstitutions(TSubstitutionsType markdownSubstitutions, string fileContents);
+    protected abstract void MakeSubstitutions(TSubstitutionsType markdownSubstitutions, 
+        UnmanagedByteArray fileContents, Stream stream);
 }

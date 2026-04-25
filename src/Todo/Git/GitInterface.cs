@@ -2,7 +2,6 @@
 using LibGit2Sharp;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
-using Todo.Git.Commands;
 
 namespace Todo.Git;
 
@@ -29,7 +28,7 @@ public class GitInterface : IGitInterface
     }
 
     public TResultType RunGitCommand<TCommandType, TResultType>(TCommandType command)
-        where TCommandType : GitCommandBase<TResultType>
+        where TCommandType : IGitCommand<TResultType>
     {
         return command.ExecuteCommand(this);
     }

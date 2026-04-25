@@ -1,27 +1,23 @@
 ﻿using System;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
+using Todo.Contracts.Data.Memory;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.FileSystem;
 
 namespace Todo.MarkdownOperations;
 
-public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
+public class MarkdownFileReader(
+    IDateListPathResolver dateListPathResolver,
+    IMarkdownLineInterpreter markdownLineInterpreter,
+    IUnmanagedByteArrayManager unmanagedByteArrayManager)
+    : FileReaderBase(unmanagedByteArrayManager), IMarkdownFileReader
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IMarkdownLineInterpreter _markdownLineInterpreter;
-
-    public MarkdownFileReader(IDateListPathResolver dateListPathResolver,
-        IMarkdownLineInterpreter markdownLineInterpreter)
-    {
-        _dateListPathResolver = dateListPathResolver;
-        _markdownLineInterpreter = markdownLineInterpreter;
-    }
-
     public TodoFile ReadMarkdownFile(DateOnly dateOnly)
     {
-        var filePathInfo = _dateListPathResolver.ResolvePathFor(dateOnly,
+        var filePathInfo = dateListPathResolver.ResolvePathFor(dateOnly,
             FileTypeEnum.MarkdownDayList, false);
         
         return ReadMarkdownFile(filePathInfo);
@@ -29,12 +25,12 @@ public class MarkdownFileReader : FileReaderBase, IMarkdownFileReader
 
     public TodoFile ReadMarkdownFile(FilePathInfo filePathInfo)
     {
-        var lines = GetFileText(filePathInfo.Path); 
+        var lazyFile = new Lazy<UnmanagedByteArray>(() =>
+            LoadFile(filePathInfo.Path));
+        
         var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
-            _markdownLineInterpreter.CreateMarkdownLine(filePathInfo, lines));
+            markdownLineInterpreter.CreateMarkdownLines(lazyFile.Value));
         
-        var fileContents = new Lazy<string>(() => string.Join(Environment.NewLine, lines));
-        
-        return TodoFile.Of(filePathInfo, lines, markdownLines, fileContents);
+        return TodoFile.Of(filePathInfo, markdownLines, lazyFile);
     }
 }

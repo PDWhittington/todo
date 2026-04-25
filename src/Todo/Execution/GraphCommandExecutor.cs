@@ -47,19 +47,25 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
 
         var scoreInfos = scoresGenerator.GetScoresForDateInterval(start, now);
 
-        var html = GenerateStackedBarChartHtml(scoreInfos);
-
         var filePathInfo = scoreHtmlPathResolver.GetFilePathFor("", FileTypeEnum.Html);
-
-        File.WriteAllText(filePathInfo.Path, html);
+        
+        using var stream = File.Create(filePathInfo.Path);
+        
+        WriteStackedBarChartHtmlToStream(scoreInfos, stream);
 
         htmlFileLauncher.LaunchFiles(filePathInfo.Path);
     }
 
-    private string GenerateStackedBarChartHtml(ScoreInfo[] data)
+    private void WriteStackedBarChartHtmlToStream(ScoreInfo[] data, Stream stream)
     {
         if (data.Length == 0)
-            return "<html class=\"light\"><body><h1>No data to display</h1></body></html>";
+        {
+            var emptyHtml = "<html class=\"light\"><body><h1>No data to display</h1></body></html>"u8
+                .ToArray();
+            
+            stream.Write(emptyHtml, 0, emptyHtml.Length);
+            return;
+        }
 
         var configuration = configurationProvider.ConfigInfo.Configuration;
         
@@ -81,8 +87,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         var numBars = data.Length;
         var barWidth = (plotWidth - axisLineWidth) / ((1.0 + gapInTermsOfBarWidth) * numBars - gapInTermsOfBarWidth);
         var gap = barWidth * gapInTermsOfBarWidth;
-        var totalBarSpace = numBars * (barWidth + gap) - gap;
-        var startX = MarginLeft + axisLineWidth / 2.0; // + (plotWidth - totalBarSpace) / 2.0;
+        const double startX = MarginLeft + axisLineWidth / 2.0; 
 
         // === SVG elements collection ===
         var elements = new List<XElement>
@@ -105,7 +110,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
             var day = data[i];
             var barX = startX + i * (barWidth + gap);
 
-            double stackY = MarginTop + plotHeight - ( axisLineWidth / 2.0);   // start from bottom
+            var stackY = MarginTop + plotHeight - axisLineWidth / 2.0;   // start from bottom
 
             foreach (var scoreCategory in scoreCategories)
             {
@@ -143,9 +148,8 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         var ticks = GetYTicks((int)maxTotal).ToArray();
 
         // === Y-axis ticks & labels ===
-        for (var i = 0; i < ticks.Length; i++)
+        foreach (var value in ticks)
         {
-            var value = ticks[i];
             var y = MarginTop + plotHeight - value * yScale;
 
             // tick line
@@ -215,19 +219,17 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
 
         var template = graphHtmlTemplateProvider.GetTemplate();
         
-        var html = graphHtmlSubstitutionsMaker.MakeSubstitutions(htmlSubstitutions, 
-            template.FileContents);
-
-        return html;
+        graphHtmlSubstitutionsMaker.WriteSubstitutionsToStream(template.FileContents, 
+            htmlSubstitutions, stream);
     }
 
-    private IEnumerable<int> GetYTicks(int maxTotal)
+    private static IEnumerable<int> GetYTicks(int maxTotal)
     {
         var orderOfMagnitude = (int)Math.Log10(maxTotal);
-        var @_1000 = (int)Math.Pow(10, orderOfMagnitude);
-        var @_5000 = (int)(maxTotal / @_1000) * @_1000;
+        var _1000 = (int)Math.Pow(10, orderOfMagnitude);
+        var _5000 = maxTotal / _1000 * _1000;
         
-        for (int i = 0; i <= @_5000; i += @_1000)
+        for (var i = 0; i <= _5000; i += _1000)
         {
             yield return i;
         }

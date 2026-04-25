@@ -3,7 +3,8 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.UI;
 
-public class OutputWriterDisposableHandle(IOutputWriter outputWriter) : IOutputWriterDisposableHandle
+public class OutputWriterDisposableHandle(IOutputWriter outputWriter) 
+    : IOutputWriterDisposableHandle
 {
     public void Dispose()
     {

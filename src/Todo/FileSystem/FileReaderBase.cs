@@ -1,22 +1,24 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using Todo.Contracts.Data.Memory;
+using Todo.Contracts.Services.FileSystem;
 
 namespace Todo.FileSystem;
 
 public abstract class FileReaderBase
 {
-    protected static string[] GetFileText(string path)
+    private readonly IUnmanagedByteArrayManager _unmanagedByteArrayManager;
+
+    protected FileReaderBase(IUnmanagedByteArrayManager unmanagedByteArrayManager)
     {
-        if (!File.Exists(path)) throw new Exception($"{path} not found");
+        _unmanagedByteArrayManager = unmanagedByteArrayManager;
+    }
 
-        var allText = File.ReadAllText(path);
-        
-        //Split assuming \n and then trim out any \r. This should work on all systems
-        //even with files created elsewhere.
-        var lines = allText.Split('\n');
+    protected UnmanagedByteArray LoadFile(string fileName)
+    {
+        return _unmanagedByteArrayManager.LoadFromFile(fileName);
+    }
 
-        var linesTrimmedForCarriageReturn = lines.Select(x => x.Trim('\r'));
-        return linesTrimmedForCarriageReturn.ToArray();
+    protected UnmanagedByteArray LoadFromManifest(string manifestName)
+    {
+        return _unmanagedByteArrayManager.LoadFromManifest(manifestName);
     }
 }

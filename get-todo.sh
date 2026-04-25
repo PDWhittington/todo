@@ -13,5 +13,5 @@ curl -L -o "${REPO}-main.zip" "$URL" # -L follows the redirect GitHub issues
 echo "Unzipping..."
 unzip -q "${REPO}-main.zip"
 
-echo "Done! Files are in ./${REPO}-main/"
+echo " ✅ Done! Files are in ./${REPO}-main/"
 ls -l "${REPO}-main/"

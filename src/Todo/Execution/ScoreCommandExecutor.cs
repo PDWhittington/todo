@@ -29,7 +29,9 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter,
          
          foreach (var scoreCategory in scoreCategories)
          {
-            OutputWriter.WriteLine($"{scoreCategory.Name}: {scoreInfo.GetScore(scoreCategory)}");
+            scoreInfo.TryGetScore(scoreCategory, out var score); //zero if not found
+            
+            OutputWriter.WriteLine($"{scoreCategory.Name}: {score}");
          }
          
          OutputWriter.WriteLine($"Total: {scoreInfo.Total()}");
