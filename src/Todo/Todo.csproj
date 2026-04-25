@@ -9,6 +9,10 @@
         <LangVersion>14</LangVersion>
         <Nullable>enable</Nullable>
         <TieredPGO>false</TieredPGO>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+        <CompilerGeneratedFilesOutputPath>obj/Generated</CompilerGeneratedFilesOutputPath>
+        <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
     </PropertyGroup>
     <!-- Treat warnings as errors ONLY in Release -->
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -51,7 +55,10 @@
         <EmbeddedResource Include="buildtime.txt" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
+        <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
+        <ProjectReference Include="..\Todo.SourceGenerators\Todo.SourceGenerators.csproj"
+                  OutputItemType="Analyzer"
+                  ReferenceOutputAssembly="false" />
     </ItemGroup>
     <!-- Pre-build event to populate the above files -->
     <PropertyGroup>
@@ -68,3 +75,5 @@
         <Exec Command="git describe --long --dirty --tags --always > commithash.txt&#xA;echo $(CurrentDate) > buildtime.txt&#xA;" />
     </Target>
 </Project>
+
+

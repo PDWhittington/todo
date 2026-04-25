@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Contracts", "Todo.Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Tests", "Todo.Tests\Todo.Tests.csproj", "{83680216-521A-4917-98D5-5CAEE9A59222}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.SourceGenerators", "Todo.SourceGenerators\Todo.SourceGenerators.csproj", "{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{83680216-521A-4917-98D5-5CAEE9A59222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83680216-521A-4917-98D5-5CAEE9A59222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83680216-521A-4917-98D5-5CAEE9A59222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
