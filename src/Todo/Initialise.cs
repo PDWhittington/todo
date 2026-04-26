@@ -78,57 +78,7 @@ internal static class Initialise
         throw new NotImplementedException();
     }
 
-    private static IEnumerable<Type> GetCommandExecutors()
-    {
-        yield return typeof(ArchiveCommandExecutor);
-        yield return typeof(CommitCommandExecutor);
-        yield return typeof(CreateOrShowDayListCommandExecutor);
-        yield return typeof(CreateOrShowTopicListCommandExecutor);
-        yield return typeof(GraphCommandExecutor);
-        yield return typeof(InitCommandExecutor);
-        yield return typeof(KillHtmlCommandExecutor);
-        yield return typeof(ListFilesCommandExecutor);
-        yield return typeof(PrintAndShowHtmlCommandExecutor);
-        yield return typeof(PrintHtmlCommandExecutor);
-        yield return typeof(PushCommandExecutor);
-        yield return typeof(RemoveCommandExecutor);
-        yield return typeof(ScoreCommandExecutor);
-        yield return typeof(ShowConflictsCommandExecutor);
-        yield return typeof(ShowHelpCommandExecutor);
-        yield return typeof(ShowHtmlCommandExecutor);
-        yield return typeof(ShowSettingsCommandExecutor);
-        yield return typeof(ShowWebpageCommandExecutor);
-        yield return typeof(StatusCommandExecutor);
-        yield return typeof(SyncCommandExecutor);
-        yield return typeof(UnarchiveCommandExecutor);
-        yield return typeof(WhichTodoCommandExecutor);
-    }
 
-    private static IEnumerable<InterfaceAndImplementation> GetCommandExecutorsAndInterfaces()
-    {
-        yield return new InterfaceAndImplementation(typeof(IArchiveCommandExecutor), typeof(ArchiveCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(ICommitCommandExecutor), typeof(CommitCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(ICreateOrShowDayListCommandExecutor), typeof(CreateOrShowDayListCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(ICreateOrShowTopicListCommandExecutor), typeof(CreateOrShowTopicListCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IGraphCommandExecutor), typeof(GraphCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IInitCommandExecutor), typeof(InitCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IKillHtmlCommandExecutor), typeof(KillHtmlCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IListFilesCommandExecutor), typeof(ListFilesCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IPrintAndShowHtmlCommandExecutor), typeof(PrintAndShowHtmlCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IPrintHtmlCommandExecutor), typeof(PrintHtmlCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IPushCommandExecutor), typeof(PushCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IRemoveCommandExecutor), typeof(RemoveCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IScoreCommandExecutor), typeof(ScoreCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IShowConflictsCommandExecutor), typeof(ShowConflictsCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IShowHelpCommandExecutor), typeof(ShowHelpCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IShowHtmlCommandExecutor), typeof(ShowHtmlCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IShowSettingsCommandExecutor), typeof(ShowSettingsCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IShowWebpageCommandExecutor), typeof(ShowWebpageCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IStatusCommandExecutor), typeof(StatusCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(ISyncCommandExecutor), typeof(SyncCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IUnarchiveCommandExector), typeof(UnarchiveCommandExecutor));
-        yield return new InterfaceAndImplementation(typeof(IWhichTodoCommandExecutor), typeof(WhichTodoCommandExecutor));
-    }
 
     #region Base functionality
 
