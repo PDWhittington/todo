@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Tests", "Todo.Tests\To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.SourceGenerators", "Todo.SourceGenerators\Todo.SourceGenerators.csproj", "{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Debugging", "_Debugging", "{7ABF0D65-CCF1-44DF-8FC1-0D8F6BD4227E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.GeneratorDriver", "Todo.GeneratorDriver\Todo.GeneratorDriver.csproj", "{5EBFE374-C838-43DD-924C-37B8674A59B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,12 @@ Global
 		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44B99C52-BB92-4EF5-ABAD-80FA3FB059F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EBFE374-C838-43DD-924C-37B8674A59B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EBFE374-C838-43DD-924C-37B8674A59B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EBFE374-C838-43DD-924C-37B8674A59B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EBFE374-C838-43DD-924C-37B8674A59B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5EBFE374-C838-43DD-924C-37B8674A59B4} = {7ABF0D65-CCF1-44DF-8FC1-0D8F6BD4227E}
 	EndGlobalSection
 EndGlobal
