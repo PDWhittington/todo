@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 
-SOLUTION=$(find src -name "*.sln" -type f | head -n 1)
+# Get the absolute directory of the script itself (works even when called via ../script.sh, symlinks, etc.)
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "$SCRIPT_DIR"
+
+SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.sln" -type f | head -n 1)
 
 if [ -z "$SOLUTION" ]; then
   echo " ❌ No .sln file found in src/ directory"
@@ -19,7 +24,7 @@ echo "Found solution: $SOLUTION"
 # -p:PublishTrimmed=false → we don't care about size
 # -p:PublishReadyToRun=true \
 
-if ! dotnet publish src/todo/ \
+if ! dotnet publish $SOLUTION \
   -c Release \
   -r osx-arm64 \
   --self-contained true; then
