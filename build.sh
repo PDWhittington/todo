@@ -1,50 +1,40 @@
 #!/usr/bin/env sh
 
 # Get the absolute directory of the script itself (works even when called via ../script.sh, symlinks, etc.)
+ARCHITECTURE=$1
+PUBLISH_LOCATION=$2
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo "$SCRIPT_DIR"
+# Validate architecture
 
+if [[ ! "$ARCHITECTURE" =~ ^(osx-arm64|win-x64|linux-x64)$ ]]; then
+    echo "Value '$ARCHITECTURE' is not a valid architecture or not an architecture in the set tested."
+    exit 1
+fi
+
+# Assume a single solution file in the src sub-folder
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"
 SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.sln" -type f | head -n 1)
 
 if [ -z "$SOLUTION" ]; then
   echo " ❌ No .sln file found in src/ directory"
-  exit 1
+  exit 2
 fi
 
 echo "Found solution: $SOLUTION"
 
-# Step 2: Publish once with maximum runtime speed optimizations
-# -c Release
-# -r osx-arm64 (your exact target)
-# --self-contained
-# -p:PublishReadyToRun=true → AOT compilation for better startup + reduced JIT
-# -p:OptimizationPreference=Speed → tells the compiler to favor execution speed over size
-# -p:TieredCompilation=false → disables tiered JIT (forces more aggressive optimizations; good for "run fast" scenarios)
-# -p:PublishTrimmed=false → we don't care about size
-# -p:PublishReadyToRun=true \
-
 if ! dotnet publish $SOLUTION \
   -c Release \
-  -r osx-arm64 \
-  --self-contained true; then
-  echo " ❌ BUILD/PUBLISH FAILED"
-  echo " Check the error messages above."
-  exit 1
+  -r $ARCHITECTURE \
+  -p:PublishReadyToRun=true \
+  -p:OptimizationPreference=Speed \
+  -p:TieredCompilation=false \
+  --self-contained; then
+
+    echo " ❌ BUILD FAILED."
+    echo " Check the error messages above."
+    exit 3
 fi
 
-# if ! dotnet publish src/todo/ \
-#   -c Release \
-#   -r osx-arm64 \
-#   --self-contained true \
-#   -p:PublishAot=true \
-#   -p:PublishReadyToRun=true \
-#   -p:OptimizationPreference=Speed \
-#   -p:TieredCompilation=false; then
-#   echo " ❌ BUILD/PUBLISH FAILED"
-#   echo " Check the error messages above."
-#   exit 1
-# fi
-
 echo ""
-echo " ✅ Build succeeded. Proceeding to copy..."
+echo " ✅ Build succeeded."
