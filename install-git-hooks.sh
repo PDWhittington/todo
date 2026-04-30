@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # scripts/install-hooks.sh
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"
