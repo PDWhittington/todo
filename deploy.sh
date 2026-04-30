@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 ARCHITECTURE=$1
-PUBLISH_LOCATION=$2
+DEPLOY_LOCATION=$2
 
 # Validate architecture
 
@@ -22,7 +22,7 @@ fi
 
 echo "Found solution: $SOLUTION"
 
-# Step 1: Run tests in Release mode (this builds what it needs for testing)
+# Run tests in Release mode (this builds what it needs for testing)
 
 echo "🧪 Running tests in Release mode..."
 if ! dotnet test "$SOLUTION" \
@@ -35,7 +35,7 @@ fi
 
 echo " ✅ All tests passed. Proceeding to publish..."
 
-# Step 2: Publish once with maximum runtime speed optimizations
+# Publish once with maximum runtime speed optimizations
 
 if ! dotnet publish $SCRIPT_DIR/src/todo/ \
   -c Release \
@@ -54,18 +54,18 @@ echo ""
 echo " ✅ Build succeeded. Proceeding to copy..."
 
 # Clean previous deployment
-if ! sudo rm -R -f $PUBLISH_LOCATION; then
+if ! sudo rm -R -f $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO DELETE /usr/local/bin/todo."
   exit 5
 fi
 
-echo " ✅ Any old version in $PUBLISH_LOCATION has been deleted."
+echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
 
 # Copy the published output
-if ! sudo cp -R $SCRIPT_DIR/src/todo/bin/Release/net10.0/$ARCHITECTURE/publish $PUBLISH_LOCATION; then
+if ! sudo cp -R $SCRIPT_DIR/src/todo/bin/Release/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
   exit 6
 fi
 
-echo " ✅ Copied new version to $PUBLISH_LOCATION."
+echo " ✅ Copied new version to $DEPLOY_LOCATION."
 echo " ✅ Deployment completed successfully!"

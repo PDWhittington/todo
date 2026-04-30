@@ -2,4 +2,4 @@
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"
 
-$SCRIPT_DIR/publish.sh 'linux-x64' '/usr/local/bin/todo/'
+$SCRIPT_DIR/deploy.sh 'linux-x64' '/usr/local/bin/todo/'
