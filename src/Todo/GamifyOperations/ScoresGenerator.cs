@@ -17,20 +17,30 @@ namespace Todo.GamifyOperations;
 public class ScoresGenerator(IConfigurationProvider configurationProvider, 
    IFileListCreator fileListCreator, IMarkdownFileReader markdownFileReader) : IScoresGenerator
 {
-   public ScoreInfo[] GetNonZeroScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
+   public ScoreInfo [] GetScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
    {
-      return YieldScoresForDateInterval(fromExclusive, toInclusive)
+      var scoresFromFiles = YieldScoresForDateInterval(fromExclusive, toInclusive)
          .Where(x => x.Total() != 0)
-         .ToArray();  
-   }
+         .ToDictionary(x => x.FilePath.Date, x => x);
 
-   public ScoreInfo[] GetScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
-   {
-      return YieldScoresForDateInterval(fromExclusive, toInclusive)
-         .ToArray();
+      var list = new List<ScoreInfo>();
+
+      for (var date = fromExclusive.AddDays(1); date <= toInclusive; date = date.AddDays(1))
+      {
+         if (scoresFromFiles.TryGetValue(date, out var score))
+         {
+            list.Add(score);
+         }
+         else
+         {
+            list.Add(EmptyScoreInfo.Of(date));
+         }
+      }
+      
+      return list.ToArray();
    }
    
-   private IEnumerable<ScoreInfo> YieldScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
+   private IEnumerable<FilePathScoreInfo> YieldScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
    {
       var files = fileListCreator.GetFiles<DayListFilePathInfo>(
          OutputFolderEnum.MainFolder | OutputFolderEnum.ArchiveFolder,
@@ -42,7 +52,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       return YieldScoresFor(filesFiltered);
    } 
    
-   private IEnumerable<ScoreInfo> YieldScoresFor(IEnumerable<DayListFilePathInfo> filePathInfos)
+   private IEnumerable<FilePathScoreInfo> YieldScoresFor(IEnumerable<DayListFilePathInfo> filePathInfos)
    {
       var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
 
@@ -60,7 +70,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          .OrderBy(x => x.FilePath.Date);
    }
 
-   private ScoreInfo GetScoreInfo(DayListFilePathInfo filePathInfo, ScoreCategory[] scoreCategories)
+   private FilePathScoreInfo GetScoreInfo(DayListFilePathInfo filePathInfo, ScoreCategory[] scoreCategories)
    {
       var todoFile = markdownFileReader.ReadMarkdownFile(filePathInfo);
       var markdownHeadingStack = new MarkdownHeadingStack();
@@ -85,7 +95,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          }
       }
       
-      return ScoreInfo.Of(filePathInfo, scoreDictionary);
+      return FilePathScoreInfo.Of(filePathInfo, scoreDictionary);
    }
 
    private static bool ContainsTokenScore(string line, out int tokenScore)

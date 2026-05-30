@@ -45,7 +45,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         var intervalDays = configurationProvider.ConfigInfo.Configuration.DefaultDayIntervalForGamify;
         var start = now.AddDays(-intervalDays);
 
-        var scoreInfos = scoresGenerator.GetNonZeroScoresForDateInterval(start, now);
+        var scoreInfos = scoresGenerator.GetScoresForDateInterval(start, now);
 
         var html = GenerateStackedBarChartHtml(scoreInfos);
 
@@ -126,7 +126,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
 
                 // Hover tooltip
                 rect.Add(new XElement("title",
-                    $"{day.FilePath.Date:MMM dd yyyy}\n{scoreCategory.Name}: {score}"));
+                    $"{day.Date:MMM dd yyyy}\n{scoreCategory.Name}: {score}"));
 
                 elements.Add(rect);
                 stackY -= segmentHeight;
@@ -135,7 +135,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
             var dayLabelX = barX + barWidth / 2.0 + 5;
             const int dayLabelY = MarginTop + plotHeight + 10;
 
-            var dayLabel = GetDayLabel(dayLabelX, dayLabelY, day.FilePath.Date);
+            var dayLabel = GetDayLabel(dayLabelX, dayLabelY, day.Date);
 
             elements.Add(dayLabel);
         }
