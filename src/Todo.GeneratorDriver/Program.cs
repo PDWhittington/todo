@@ -2,21 +2,23 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Todo.SourceGenerators;
 
-string sourceCode = """
-                    using System;
+var sourceCode = """
+                 using System;
 
-                    namespace Todo.Commands
-                    {
-                        public interface ICommandExecutor { }
+                 namespace Todo.Commands
+                 {
+                     public interface ICommandExecutor { }
 
-                        public class ArchiveCommandExecutor : ICommandExecutor { }
-                        public class CommitCommandExecutor : ICommandExecutor { }
-                        public class GraphCommandExecutor : ICommandExecutor { }
+                     public class ArchiveCommandExecutor : ICommandExecutor { }
+                     public class CommitCommandExecutor : ICommandExecutor { }
+                     public class GraphCommandExecutor : ICommandExecutor { }
 
-                        // This base class should be skipped by your generator
-                        public abstract class CommandExecutorBase : ICommandExecutor { }
-                    }
-                    """;
+                     // This base class should be skipped by your generator
+                     public abstract class CommandExecutorBase : ICommandExecutor { }
+                 }
+                 """;
+
+
 
 // 2. Create a real compilation (exactly what the compiler sees)
 var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
