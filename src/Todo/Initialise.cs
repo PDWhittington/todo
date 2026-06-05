@@ -39,8 +39,6 @@ namespace Todo;
 
 internal static class Initialise
 {
-    public record struct InterfaceAndImplementation(Type Interface, Type Implementation);
-
     public static IServiceCollection GetServiceCollection()
         => new ServiceCollection()
             .AddLogging()
@@ -72,14 +70,7 @@ internal static class Initialise
 
             /* Build the service provider */
             .BuildServiceProvider();
-
-    private static IEnumerable<Type> GetCommandFactories()
-    {
-        throw new NotImplementedException();
-    }
-
-
-
+    
     #region Base functionality
 
     extension(IServiceCollection serviceCollection)

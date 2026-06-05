@@ -13,20 +13,6 @@ try
         .GetService<ITodoService>()!
         .PerformTask();
 }
-// catch (Exception e)
-// {
-//     var exp = e;
-//
-//     while (exp.InnerException != null)
-//     {
-//         Console.WriteLine(exp.Message);
-//         exp = exp.InnerException!;
-//     }
-//     
-//     Console.WriteLine(exp.StackTrace);
-//     
-//     
-// }
 catch (Exception e)
 {
     Console.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
