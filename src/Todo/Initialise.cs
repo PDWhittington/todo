@@ -168,29 +168,7 @@ internal static class Initialise
 
         private IServiceCollection AutoRegisterCommandExecutors()
         {
-            return serviceCollection
-                .AddSingleton<ICommandExecutor, ArchiveCommandExecutor>()
-                .AddSingleton<ICommandExecutor, CommitCommandExecutor>()
-                .AddSingleton<ICommandExecutor, CreateOrShowDayListCommandExecutor>()
-                .AddSingleton<ICommandExecutor, CreateOrShowTopicListCommandExecutor>()
-                .AddSingleton<ICommandExecutor, GraphCommandExecutor>()
-                .AddSingleton<ICommandExecutor, InitCommandExecutor>()
-                .AddSingleton<ICommandExecutor, KillHtmlCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ListFilesCommandExecutor>()
-                .AddSingleton<ICommandExecutor, PrintAndShowHtmlCommandExecutor>()
-                .AddSingleton<ICommandExecutor, PrintHtmlCommandExecutor>()
-                .AddSingleton<ICommandExecutor, PushCommandExecutor>()
-                .AddSingleton<ICommandExecutor, RemoveCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ScoreCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ShowConflictsCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ShowHelpCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ShowHtmlCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ShowSettingsCommandExecutor>()
-                .AddSingleton<ICommandExecutor, ShowWebpageCommandExecutor>()
-                .AddSingleton<ICommandExecutor, StatusCommandExecutor>()
-                .AddSingleton<ICommandExecutor, SyncCommandExecutor>()
-                .AddSingleton<ICommandExecutor, UnarchiveCommandExecutor>()
-                .AddSingleton<ICommandExecutor, WhichTodoCommandExecutor>();
+            return serviceCollection.AddCommandFactoriesExecutors();
         }
 
         private IServiceCollection AutoRegisterExecutorInterfaces()
