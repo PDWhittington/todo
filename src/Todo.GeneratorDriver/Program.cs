@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.MSBuild;
+using Todo.GeneratorDriver;
 using Todo.SourceGenerators;
 
 // Register MSBuild (important - do this early, before any Roslyn/MSBuild use)
@@ -19,9 +20,10 @@ using var workspace = MSBuildWorkspace.Create(new Dictionary<string, string>
     { "Platform", "AnyCPU" },
     { "TargetFramework", "net10.0" },
     { "DesignTimeBuild", "true" },
-    { "BuildProjectReferences", "false" },  // Often helps
-    { "AppendTargetFrameworkToOutputPath", "true" }  // Force it
+    { "BuildProjectReferences", "false" }, 
 });
+
+workspace.SkipUnrecognizedProjects = true;
 
 workspace.WorkspaceFailed += (sender, e) =>
 {
@@ -40,10 +42,11 @@ Console.WriteLine($"Loaded solution with {solution.Projects.Count()} projects");
 var projectsToAnalyze = solution.Projects
     .Where(p => 
         !p.Name.Contains("Test", StringComparison.OrdinalIgnoreCase) &&   // skip test projects
-        p.Language == LanguageNames.CSharp &&
-        // Add more filters as needed, e.g. specific project names
-        (p.Name.Contains("Commands") || p.Name.Contains("Domain")))
+        p.Language == LanguageNames.CSharp)
     .ToList();
+
+Serialise.ObjectToFile(projectsToAnalyze[0]);
+Serialise.ObjectToFile(projectsToAnalyze[4]);
 
 foreach (var project in projectsToAnalyze)
 {
@@ -75,9 +78,6 @@ foreach (var project in projectsToAnalyze)
         Console.WriteLine(tree.GetRoot().ToFullString());
     }
 }
-
-
-
 
 
 //

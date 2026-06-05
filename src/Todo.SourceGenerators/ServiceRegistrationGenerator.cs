@@ -54,8 +54,6 @@ public sealed class ServiceRegistrationGenerator : IIncrementalGenerator
             provider,
             static (spc, tuple) =>
             {
-                
-                
                 var (compilation, implementations) = tuple;
                 
                 // === Rich Diagnostics for Debugging ===
@@ -117,8 +115,7 @@ public sealed class ServiceRegistrationGenerator : IIncrementalGenerator
                     
                     var interfaceName = impl
                         .AllInterfaces.First(i =>
-                            i.Name == TargetInterface || i.ToDisplayString() == TargetInterfaceFull
-                        )
+                            i.Name == TargetInterface || i.ToDisplayString() == TargetInterfaceFull)
                         .ToDisplayString();
 
                     sb.AppendLine(
