@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Todo.AppLaunching;
 using Todo.AssemblyOperations;
 using Todo.CommandFactories;
-using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.AssemblyOperations;
@@ -24,6 +23,7 @@ using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.UI;
 using Todo.Dates;
 using Todo.Dates.Naming;
+using Todo.DependencyInjection;
 using Todo.Execution;
 using Todo.FileSystem;
 using Todo.FileSystem.Paths;
@@ -172,29 +172,7 @@ internal static class Initialise
     {
         private IServiceCollection AutoRegisterCommandFactories()
         {
-            return serviceCollection
-            .AddSingleton<ICommandFactory<CommandBase>, ArchiveCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, CommitCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, CreateOrShowDayListCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, CreateOrShowTopicListCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, GraphCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, InitCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, KillHtmlCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ListFilesCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, PrintAndShowHtmlCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, PrintHtmlCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, PushCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, RemoveCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ScoreCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ShowConflictsCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ShowHelpCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ShowHtmlCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ShowSettingsCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, ShowWebpageCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, StatusCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, SyncCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, UnarchiveCommandFactory>()
-            .AddSingleton<ICommandFactory<CommandBase>, WhichTodoCommandFactory>();
+            return serviceCollection.AddCommandFactories();
         }
 
         private IServiceCollection AutoRegisterCommandExecutors()

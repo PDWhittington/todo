@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace MyFirstGenerator;
+namespace Todo.SourceGenerators;
 
 [Generator]
 public class CommandFactoryRegistrationGenerator : IIncrementalGenerator
@@ -41,8 +41,7 @@ public class CommandFactoryRegistrationGenerator : IIncrementalGenerator
 
     private static INamedTypeSymbol? GetFactoryIfMatches(
         GeneratorSyntaxContext context,
-        CancellationToken cancellationToken
-    )
+        CancellationToken cancellationToken)
     {
         var classDecl = (ClassDeclarationSyntax)context.Node;
         var semanticModel = context.SemanticModel;
@@ -98,7 +97,7 @@ public class CommandFactoryRegistrationGenerator : IIncrementalGenerator
         sb.AppendLine("using Todo.Contracts.Data.Commands;");
 
         sb.AppendLine();
-        sb.AppendLine("namespace YourApp.DependencyInjection;"); // ← Change this to your desired namespace
+        sb.AppendLine("namespace Todo.DependencyInjection;"); // ← Change this to your desired namespace
         sb.AppendLine();
         sb.AppendLine("public static class CommandFactoryRegistrations");
         sb.AppendLine("{");
