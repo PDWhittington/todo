@@ -163,21 +163,6 @@ internal static class Initialise
 
     extension(IServiceCollection serviceCollection)
     {
-        private IServiceCollection AutoRegisterCommandFactories()
-        {
-            return serviceCollection.RegisterCommandFactories();
-        }
-
-        private IServiceCollection AutoRegisterCommandExecutors()
-        {
-            return serviceCollection.RegisterCommandExecutors();
-        }
-
-        private IServiceCollection AutoRegisterExecutorInterfaces()
-        {
-            return serviceCollection.RegisterSpecificCommandExecutors();
-        }
-
         [UnconditionalSuppressMessage("Trimming", "IL2072")]
         private IServiceCollection RegisterTypes<T>(IEnumerable<Type> types)
         {
