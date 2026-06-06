@@ -1,5 +1,4 @@
-﻿using System;
-using Todo.Contracts.Data.Commands;
+﻿using Todo.Contracts.Data.Commands;
 
 namespace Todo.Contracts.Services.Execution;
 

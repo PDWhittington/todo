@@ -1,57 +1,56 @@
+using System;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
 using System.Linq;
 
 namespace Todo.SourceGenerators;
 
-public abstract class BaseRegistrationGenerator(
-    string commandFactoryInterface,
-    string? commandBaseTypeName,
-    string outputFileName,
-    string className,
-    string methodName,
-    ImmutableArray<string> usings)
+public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 {
-    protected string CommandFactoryInterface { get; } = commandFactoryInterface;
+    protected abstract bool NodePredicate(SyntaxNode syntaxNode, CancellationToken cancellationToken);
+    
+    protected abstract RegistrationPair[]? Transform(GeneratorSyntaxContext context,
+        CancellationToken cancellationToken);
 
-    protected string? CommandBaseTypeName { get; } = commandBaseTypeName;
+    protected abstract string OutputFileName();
 
-    protected string OutputFileName { get; } = outputFileName;
+    protected abstract string OutputClassName();
 
-    protected string ClassName { get; } = className;
+    protected abstract string OutputMethodName();
 
-    protected string MethodName { get; } = methodName;
-
-    protected ImmutableArray<string> Usings { get; } = usings;
-
-    // protected abstract string GenerateRegistrationCode(ImmutableArray<INamedTypeSymbol> factories);
+    protected abstract string[] OutputUsings();
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
-    {
+    {   
+#if DEBUG
+        if (!System.Diagnostics.Debugger.IsAttached)
+        {
+            System.Diagnostics.Debugger.Launch();
+        }
+#endif
+        
+        Console.WriteLine("Starting Initialise");
+        
         // Find all classes that implement ICommandFactory<CommandBase>
-        var factories = context
+        var registrationPairs = context
             .SyntaxProvider.CreateSyntaxProvider(
-                predicate: static (node, _) => node is ClassDeclarationSyntax,
-                transform: (ctx, ct) => GetFactoryIfMatches(ctx, ct)
-            )
-            .Where(static m => m is not null)
-            .Collect(); // Collect all results into one ImmutableArray
-
+                predicate: NodePredicate,
+                transform: Transform)
+            .SelectMany(static (pairs, _) => pairs ?? [])
+            .Collect(); 
+        
         // Generate one file from all factories
         context.RegisterSourceOutput(
-            factories,
-            (spc, factoriesArray) =>
+            registrationPairs,
+            (spc, rps) =>
             {
-                var source = GenerateRegistrationCode(factoriesArray!);
-                spc.AddSource(OutputFileName,
-                    SourceText.From(source, Encoding.UTF8)
-                );
-            }
-        );
+                var source = GenerateRegistrationCode(rps);
+                spc.AddSource(OutputFileName(),
+                    SourceText.From(source, Encoding.UTF8));
+            });
     }
     
     protected static bool IsOrInheritsFrom(ITypeSymbol type, string baseName)
@@ -66,52 +65,51 @@ public abstract class BaseRegistrationGenerator(
         return false;
     }
     
-    protected INamedTypeSymbol? GetFactoryIfMatches(
-        GeneratorSyntaxContext context,
-        CancellationToken cancellationToken)
-    {
-        var classDecl = (ClassDeclarationSyntax)context.Node;
-        var semanticModel = context.SemanticModel;
-
-        if (
-            semanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
-            is not INamedTypeSymbol classSymbol
-        )
-            return null;
-
-        // Must be a concrete class (not abstract)
-        if (classSymbol.IsAbstract || classSymbol.IsGenericType)
-            return null;
-
-        foreach (var iface in classSymbol.AllInterfaces)
-        {
-            if (
-                iface.OriginalDefinition.Name == CommandFactoryInterface
-                && iface.TypeArguments.Length == 1
-            )
-            {
-                var typeArg = iface.TypeArguments[0];
-                
-                if (CommandBaseTypeName is null ||
-                    IsOrInheritsFrom(typeArg, CommandBaseTypeName))
-                {
-                    return classSymbol;
-                }
-            }
-        }
-
-        return null;
-    }
+    // protected INamedTypeSymbol? GetFactoryIfMatches(
+    //     GeneratorSyntaxContext context,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var classDecl = (ClassDeclarationSyntax)context.Node;
+    //     var semanticModel = context.SemanticModel;
+    //
+    //     if (
+    //         semanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
+    //         is not INamedTypeSymbol classSymbol
+    //     )
+    //         return null;
+    //
+    //     // Must be a concrete class (not abstract)
+    //     if (classSymbol.IsAbstract || classSymbol.IsGenericType)
+    //         return null;
+    //
+    //     foreach (var iface in classSymbol.AllInterfaces)
+    //     {
+    //         if (
+    //             iface.OriginalDefinition.Name == CommandFactoryInterface
+    //             && iface.TypeArguments.Length == 1
+    //         )
+    //         {
+    //             var typeArg = iface.TypeArguments[0];
+    //             
+    //             if (CommandBaseTypeName is null ||
+    //                 IsOrInheritsFrom(typeArg, CommandBaseTypeName))
+    //             {
+    //                 return classSymbol;
+    //             }
+    //         }
+    //     }
+    //
+    //     return null;
+    // }
     
-    protected string GenerateRegistrationCode(
-        ImmutableArray<ExecutorPair> executorPairs)
+    protected string GenerateRegistrationCode(ImmutableArray<RegistrationPair> registrationPairs)
     {
         var sb = new StringBuilder();
 
         sb.AppendLine("// <auto-generated/>");
         sb.AppendLine("using Microsoft.Extensions.DependencyInjection;");
 
-        foreach (var @using in Usings)
+        foreach (var @using in OutputUsings())
         {
             sb.AppendLine($"using {@using};");
         }
@@ -119,22 +117,22 @@ public abstract class BaseRegistrationGenerator(
         sb.AppendLine();
         sb.AppendLine("namespace Todo.DependencyInjection;"); 
         sb.AppendLine();
-        sb.AppendLine($"public static class {ClassName}");
+        sb.AppendLine($"public static class {OutputClassName()}");
         sb.AppendLine("{");
         sb.AppendLine(
-            $"    public static IServiceCollection {MethodName}(this IServiceCollection services)"
+            $"    public static IServiceCollection {OutputMethodName()}(this IServiceCollection services)"
         );
         sb.AppendLine("    {");
         sb.AppendLine("       return services");
 
-        var executorPairsOrdered = executorPairs
-            .OrderBy(x => x.Interface)
-            .ThenBy(x => x.Implementation);
+        var registrationPairsOrdered = registrationPairs
+            .OrderBy(x => x.Interface.Name)
+            .ThenBy(x => x.Implementation.Name);
         
-        foreach (var executorPair in executorPairsOrdered)
+        foreach (var executorPair in registrationPairsOrdered)
         {
-            var interfaceType = executorPair.Interface!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            var implementationType = executorPair.Implementation!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            var interfaceType = executorPair.Interface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            var implementationType = executorPair.Implementation.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             sb.AppendLine($"        .AddSingleton<{interfaceType}, {implementationType}>()");
         }
 

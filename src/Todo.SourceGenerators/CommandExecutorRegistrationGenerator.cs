@@ -1,26 +1,94 @@
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
-// ReSharper disable InconsistentNaming
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Todo.SourceGenerators;
 
 [Generator]
-public class CommandExecutorRegistrationGenerator() 
-    : BaseRegistrationGenerator(_CommandFactoryInterface, _CommandBaseTypeName, _OutputFileName,
-    _ClassName, _MethodName, _Usings), 
-        IIncrementalGenerator
+public class CommandExecutorRegistrationGenerator: BaseRegistrationGenerator
 {
-    private const string _CommandFactoryInterface = "ICommandExecutor";
-    private const string? _CommandBaseTypeName = null;
-    private const string _OutputFileName = "CommandExecutorRegistrations.g.cs";
-    private const string _ClassName = "CommandExecutorRegistrations";
-    private const string _MethodName = "AddCommandExecutors";
+    protected override bool NodePredicate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+    {
+        return syntaxNode is ClassDeclarationSyntax;
+    }
 
-    private static readonly ImmutableArray<string> _Usings = ImmutableArray.Create(
+    protected override RegistrationPair[]? Transform(GeneratorSyntaxContext context, 
+        CancellationToken cancellationToken)
+    {
+        var classDecl = (ClassDeclarationSyntax)context.Node;
+        var semanticModel = context.SemanticModel;
+        
+        if (semanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
+            is not INamedTypeSymbol classSymbol)
+            return null;
+        
+        // Must be a concrete class (not abstract)
+        if (classSymbol.IsAbstract || classSymbol.IsGenericType)
+            return null;
+        
+        foreach (var iface in classSymbol.AllInterfaces)
+        {
+            if (iface.OriginalDefinition.Name == "ICommandExecutor"
+                && iface.TypeArguments.Length == 1)
+            {
+                return
+                [
+                    new RegistrationPair(iface, classSymbol)
+                ];
+            }
+        }
+        
+        return null;
+    }
+
+    // protected INamedTypeSymbol? GetFactoryIfMatches(
+    //     GeneratorSyntaxContext context,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var classDecl = (ClassDeclarationSyntax)context.Node;
+    //     var semanticModel = context.SemanticModel;
+    //
+    //     if (
+    //         semanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
+    //         is not INamedTypeSymbol classSymbol
+    //     )
+    //         return null;
+    //
+    //     // Must be a concrete class (not abstract)
+    //     if (classSymbol.IsAbstract || classSymbol.IsGenericType)
+    //         return null;
+    //
+    //     foreach (var iface in classSymbol.AllInterfaces)
+    //     {
+    //         if (
+    //             iface.OriginalDefinition.Name == CommandFactoryInterface
+    //             && iface.TypeArguments.Length == 1
+    //         )
+    //         {
+    //             var typeArg = iface.TypeArguments[0];
+    //             
+    //             if (CommandBaseTypeName is null ||
+    //                 IsOrInheritsFrom(typeArg, CommandBaseTypeName))
+    //             {
+    //                 return classSymbol;
+    //             }
+    //         }
+    //     }
+    //
+    //     return null;
+    // }
+    
+    protected override string OutputFileName() => "CommandExecutorRegistrations.g.cs";
+
+    protected override string OutputClassName() => "CommandExecutorRegistrations";
+
+    protected override string OutputMethodName() => "AddCommandExecutors";
+
+    protected override string[] OutputUsings() => new string[]
+    {
         "Todo.Execution",
-        "Todo.Contracts.Services.Execution");
+        "Todo.Contracts.Services.Execution"
+    };
 
     // protected override string GenerateRegistrationCode(ImmutableArray<INamedTypeSymbol> factories)
     // {
@@ -54,4 +122,5 @@ public class CommandExecutorRegistrationGenerator()
     //
     //     return sb.ToString();
     // }
+    
 }

@@ -168,7 +168,8 @@ internal static class Initialise
 
         private IServiceCollection AutoRegisterCommandExecutors()
         {
-            return serviceCollection.AddCommandFactoriesExecutors();
+            throw new NotImplementedException();
+            // return serviceCollection.AddCommandFactoriesExecutors();
         }
 
         private IServiceCollection AutoRegisterExecutorInterfaces()
