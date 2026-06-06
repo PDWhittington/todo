@@ -57,9 +57,11 @@ internal static class Initialise
             .AddUiFunctionality()
 
             /* Command interpretation and execution */
-            .AutoRegisterCommandFactories()
-            .AutoRegisterCommandExecutors()
-            .AutoRegisterExecutorInterfaces()
+            /* These three methods are auto-generated in the SourceGenerators project */
+            .RegisterCommandFactories()
+            .RegisterCommandExecutors()
+            .RegisterSpecificCommandExecutors()
+            
             .AddTypeSets()
 
             /* Main service */
@@ -163,40 +165,17 @@ internal static class Initialise
     {
         private IServiceCollection AutoRegisterCommandFactories()
         {
-            return serviceCollection.AddCommandFactories();
+            return serviceCollection.RegisterCommandFactories();
         }
 
         private IServiceCollection AutoRegisterCommandExecutors()
         {
-            throw new NotImplementedException();
-            // return serviceCollection.AddCommandFactoriesExecutors();
+            return serviceCollection.RegisterCommandExecutors();
         }
 
         private IServiceCollection AutoRegisterExecutorInterfaces()
         {
-            return serviceCollection
-                .AddSingleton<IArchiveCommandExecutor, ArchiveCommandExecutor>()
-                .AddSingleton<ICommitCommandExecutor, CommitCommandExecutor>()
-                .AddSingleton<ICreateOrShowDayListCommandExecutor, CreateOrShowDayListCommandExecutor>()
-                .AddSingleton<ICreateOrShowTopicListCommandExecutor, CreateOrShowTopicListCommandExecutor>()
-                .AddSingleton<IGraphCommandExecutor, GraphCommandExecutor>()
-                .AddSingleton<IInitCommandExecutor, InitCommandExecutor>()
-                .AddSingleton<IKillHtmlCommandExecutor, KillHtmlCommandExecutor>()
-                .AddSingleton<IListFilesCommandExecutor, ListFilesCommandExecutor>()
-                .AddSingleton<IPrintAndShowHtmlCommandExecutor, PrintAndShowHtmlCommandExecutor>()
-                .AddSingleton<IPrintHtmlCommandExecutor, PrintHtmlCommandExecutor>()
-                .AddSingleton<IPushCommandExecutor, PushCommandExecutor>()
-                .AddSingleton<IRemoveCommandExecutor, RemoveCommandExecutor>()
-                .AddSingleton<IScoreCommandExecutor, ScoreCommandExecutor>()
-                .AddSingleton<IShowConflictsCommandExecutor, ShowConflictsCommandExecutor>()
-                .AddSingleton<IShowHelpCommandExecutor, ShowHelpCommandExecutor>()
-                .AddSingleton<IShowHtmlCommandExecutor, ShowHtmlCommandExecutor>()
-                .AddSingleton<IShowSettingsCommandExecutor, ShowSettingsCommandExecutor>()
-                .AddSingleton<IShowWebpageCommandExecutor, ShowWebpageCommandExecutor>()
-                .AddSingleton<IStatusCommandExecutor, StatusCommandExecutor>()
-                .AddSingleton<ISyncCommandExecutor, SyncCommandExecutor>()
-                .AddSingleton<IUnarchiveCommandExector, UnarchiveCommandExecutor>()
-                .AddSingleton<IWhichTodoCommandExecutor, WhichTodoCommandExecutor>();
+            return serviceCollection.RegisterSpecificCommandExecutors();
         }
 
         [UnconditionalSuppressMessage("Trimming", "IL2072")]

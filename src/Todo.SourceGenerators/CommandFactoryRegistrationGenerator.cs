@@ -46,7 +46,7 @@ public class CommandFactoryRegistrationGenerator : BaseRegistrationGenerator
 
     protected override string OutputClassName() => "CommandFactoryRegistrations";
 
-    protected override string OutputMethodName() => "AddCommandFactories";
+    protected override string OutputMethodName() => "RegisterCommandFactories";
 
     protected override string[] OutputUsings()
     {
