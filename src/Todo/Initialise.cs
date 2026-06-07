@@ -60,7 +60,7 @@ internal static class Initialise
             /* These three methods are auto-generated in the SourceGenerators project */
             .RegisterCommandFactories()
             .RegisterCommandExecutors()
-            .RegisterSpecificCommandExecutors()
+            //.RegisterSpecificCommandExecutors()
             
             .AddTypeSets()
 
