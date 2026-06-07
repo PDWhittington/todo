@@ -40,8 +40,6 @@ public class CommandExecutorRegistrationGenerator: BaseRegistrationGenerator
         
         return null;
     }
-    
-    protected override string OutputFileName() => "CommandExecutorRegistrations.g.cs";
 
     protected override string OutputClassName() => "CommandExecutorRegistrations";
 

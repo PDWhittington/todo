@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,7 +16,7 @@ public class CommandFactoryRegistrationGenerator : BaseRegistrationGenerator
     
     protected override RegistrationPair[]? Transform(GeneratorSyntaxContext context, 
         CancellationToken cancellationToken)
-    {
+    {   
         var classDecl = (ClassDeclarationSyntax)context.Node;
         var semanticModel = context.SemanticModel;
         
@@ -41,8 +42,6 @@ public class CommandFactoryRegistrationGenerator : BaseRegistrationGenerator
         
         return null;
     }
-
-    protected override string OutputFileName() => "CommandFactoryRegistrations.g.cs";
 
     protected override string OutputClassName() => "CommandFactoryRegistrations";
 

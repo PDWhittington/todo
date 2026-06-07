@@ -4,6 +4,7 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 
 namespace Todo.SourceGenerators;
@@ -15,7 +16,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
     protected abstract RegistrationPair[]? Transform(GeneratorSyntaxContext context,
         CancellationToken cancellationToken);
 
-    protected abstract string OutputFileName();
+    protected string OutputFileName() => $"{OutputClassName()}.g.cs";
 
     protected abstract string OutputClassName();
 
@@ -23,14 +24,14 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 
     protected abstract string[] OutputUsings();
 
-    public void Initialize(IncrementalGeneratorInitializationContext context)
+    public virtual void Initialize(IncrementalGeneratorInitializationContext context)
     {   
-#if DEBUG
-        if (!System.Diagnostics.Debugger.IsAttached)
-        {
-            System.Diagnostics.Debugger.Launch();
-        }
-#endif
+// #if DEBUG
+//         if (!System.Diagnostics.Debugger.IsAttached)
+//         {
+//             System.Diagnostics.Debugger.Launch();
+//         }
+// #endif
         
         Console.WriteLine("Starting Initialise");
         
@@ -50,57 +51,12 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
                 var source = GenerateRegistrationCode(rps);
                 spc.AddSource(OutputFileName(),
                     SourceText.From(source, Encoding.UTF8));
+
+                var path = Path.Combine("/Users/philipwhittington/Workspace", OutputFileName());
+                
+                //File.WriteAllText(path, source);
             });
     }
-    
-    protected static bool IsOrInheritsFrom(ITypeSymbol type, string baseName)
-    {
-        var current = type;
-        while (current != null)
-        {
-            if (current.Name == baseName)
-                return true;
-            current = current.BaseType;
-        }
-        return false;
-    }
-    
-    // protected INamedTypeSymbol? GetFactoryIfMatches(
-    //     GeneratorSyntaxContext context,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var classDecl = (ClassDeclarationSyntax)context.Node;
-    //     var semanticModel = context.SemanticModel;
-    //
-    //     if (
-    //         semanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
-    //         is not INamedTypeSymbol classSymbol
-    //     )
-    //         return null;
-    //
-    //     // Must be a concrete class (not abstract)
-    //     if (classSymbol.IsAbstract || classSymbol.IsGenericType)
-    //         return null;
-    //
-    //     foreach (var iface in classSymbol.AllInterfaces)
-    //     {
-    //         if (
-    //             iface.OriginalDefinition.Name == CommandFactoryInterface
-    //             && iface.TypeArguments.Length == 1
-    //         )
-    //         {
-    //             var typeArg = iface.TypeArguments[0];
-    //             
-    //             if (CommandBaseTypeName is null ||
-    //                 IsOrInheritsFrom(typeArg, CommandBaseTypeName))
-    //             {
-    //                 return classSymbol;
-    //             }
-    //         }
-    //     }
-    //
-    //     return null;
-    // }
     
     protected string GenerateRegistrationCode(ImmutableArray<RegistrationPair> registrationPairs)
     {
