@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Todo.Contracts.Services.Dates;
+﻿namespace Todo.Contracts.Services.Dates;
 
 public interface IDateParser
 {

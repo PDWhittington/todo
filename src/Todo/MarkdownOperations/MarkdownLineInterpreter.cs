@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Text;
-using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.StringOperations;
-using Todo.StringOperations;
 
 namespace Todo.MarkdownOperations;
 
@@ -39,7 +36,7 @@ public class MarkdownLineInterpreter : IMarkdownLineInterpreter
     {
         var list = new List<MarkdownLineInfo>();
 
-        int i = 0;
+        var i = 0;
         foreach (var currentLine in lines)
         {
             var markdownType = GetMarkdownType(currentLine);

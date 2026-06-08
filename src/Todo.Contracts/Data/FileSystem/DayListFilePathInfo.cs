@@ -1,5 +1,3 @@
-using System;
-
 namespace Todo.Contracts.Data.FileSystem;
 
 public record DayListFilePathInfo : FilePathInfo

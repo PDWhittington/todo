@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Todo.Contracts.Data.FileSystem;
 
 public static class FileSystemExtensions

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Todo.Contracts.Data.FileSystem;
+﻿using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Services.FileSystem;
 

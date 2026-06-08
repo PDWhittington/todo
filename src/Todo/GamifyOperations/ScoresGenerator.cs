@@ -12,7 +12,6 @@ using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.StringOperations;
 using Todo.MarkdownOperations;
-using Todo.StringOperations;
 
 namespace Todo.GamifyOperations;
 
@@ -100,7 +99,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       return FilePathScoreInfo.Of(filePathInfo, scoreDictionary);
    }
    
-   private static unsafe bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
+   private static bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
    {
       var runningScore = 0;
       var hasTokenScore = false;

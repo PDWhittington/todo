@@ -1,4 +1,3 @@
-using System;
 using Todo.Contracts.Data.Scoring;
 
 namespace Todo.Contracts.Services.GamifyOperations;

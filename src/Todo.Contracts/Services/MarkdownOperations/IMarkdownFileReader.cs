@@ -1,5 +1,4 @@
-﻿using System;
-using Todo.Contracts.Data.FileSystem;
+﻿using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
 
 namespace Todo.Contracts.Services.MarkdownOperations;

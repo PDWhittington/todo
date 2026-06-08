@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.FileSystem;
 
@@ -15,8 +12,6 @@ public record FilePathScoreInfo : ScoreInfo
     private readonly Dictionary<ScoreCategory, int> _scores = new();
 
     public override int Total() => _scores.Sum(x => x.Value);
-
-    public override int GetScore(ScoreCategory category) => _scores[category];
 
     public override bool TryGetScore(ScoreCategory category, out int score) =>
         _scores.TryGetValue(category, out score);

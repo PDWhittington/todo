@@ -10,9 +10,6 @@ namespace Todo.Templates;
 public class DayListMarkdownSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substitutor) 
     : SubstitutionMakerBase(fastUtf8Substitutor), IDayListMarkdownSubstitutionsMaker
 {
-    public string MakeSubstitutions(DayListMarkdownSubstitutions substitutions, string template)
-        => template.Replace("{date}", substitutions.DateText);
-
     public void WriteSubstitutionsToStream(UnmanagedByteArray template, DayListMarkdownSubstitutions substitutions, Stream stream)
     {
         var dict = new Dictionary<string, string>

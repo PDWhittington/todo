@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Todo.Contracts.Exceptions;
+﻿namespace Todo.Contracts.Exceptions;
 
 public class SettingsNotFoundException(string[] pathsWhereSettingsNotFound)
     : TodoExceptionBase("Settings file not found")

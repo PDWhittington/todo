@@ -16,8 +16,6 @@ public abstract class PathResolverBase<TParameterType>(
 {
     protected readonly IConfigurationProvider ConfigurationProvider = configurationProvider;
 
-    public abstract string GetRegExForThisFileType();
-
     protected abstract string FileNameWithoutExtension(TParameterType parameter);
 
     public string FileNameFor(TParameterType parameter, FileTypeEnum fileType)

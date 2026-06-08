@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Todo.Contracts.Services.Dates.Naming;
+﻿namespace Todo.Contracts.Services.Dates.Naming;
 
 public interface IDateFormatter
 {

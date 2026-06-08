@@ -13,7 +13,6 @@ public class ConfigurationProvider : IConfigurationProvider
     private readonly ISettingsPathProvider _settingsPathProvider;
     private readonly IConstantsProvider _constantsProvider;
     private readonly ResettableLazy<ConfigurationInfo> _configuration;
-    private readonly JsonSerializerOptions _jsonOptions;
 
     public ConfigurationInfo ConfigInfo => _configuration.Value;
 
@@ -25,12 +24,6 @@ public class ConfigurationProvider : IConfigurationProvider
         _settingsPathProvider = settingsPathProvider;
         _constantsProvider = constantsProvider;
         _configuration = new ResettableLazy<ConfigurationInfo>(GetConfiguration);
-        
-        _jsonOptions = new()
-        {
-            TypeInfoResolver = AppJsonContext.Default,   // required for AOT
-            Converters = { new ColorFormatter() }       // your custom converter
-        };
     }
 
     private ConfigurationInfo GetConfiguration()

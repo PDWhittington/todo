@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Todo.Contracts.Services.Dates;
+﻿namespace Todo.Contracts.Services.Dates;
 
 public interface IDateHelper
 {

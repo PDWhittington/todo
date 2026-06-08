@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Todo.Contracts.StringOperations;
@@ -62,13 +61,13 @@ public readonly unsafe record struct ByteArraySpan(IntPtr Start, int Length)
         TrimEnd(b => b.IsWhitespace());
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ByteArraySpan TrimEnd(Func<byte, bool> predicate)
+    private ByteArraySpan TrimEnd(Func<byte, bool> predicate)
     {
         for (var i = Length - 1; i >= 0; i--)
         {
             if (!predicate(GetByte(i)))
             {
-                return new ByteArraySpan(Start, i + 1);
+                return this with { Length = i + 1 };
             }
         }
         

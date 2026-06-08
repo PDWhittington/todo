@@ -9,9 +9,9 @@ public class TextExtensionsTests
 {
     public class TestCase
     {
-        public byte A { get; set; }
-        public byte B { get; set; }
-        public bool Expected { get; set; }
+        public byte A { get; init; }
+        public byte B { get; init; }
+        public bool Expected { get; init; }
     }
     
     [Test]

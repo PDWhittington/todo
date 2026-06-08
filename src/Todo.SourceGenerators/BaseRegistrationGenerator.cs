@@ -5,7 +5,6 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
-using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -13,12 +12,10 @@ namespace Todo.SourceGenerators;
 
 public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 {
-    protected virtual bool NodePredicate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
-    {
-        return syntaxNode is ClassDeclarationSyntax;
-    }
-    
-    protected virtual RegistrationInfo? Transform(GeneratorSyntaxContext context, 
+    private static bool NodePredicate(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+        => syntaxNode is ClassDeclarationSyntax;
+
+    private RegistrationInfo? Transform(GeneratorSyntaxContext context, 
         CancellationToken cancellationToken)
     {
         var classDecl = (ClassDeclarationSyntax)context.Node;
@@ -51,8 +48,8 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
             ? new RegistrationInfo(interfaces, classSymbol) 
             : null;
     }
-    
-    protected virtual string OutputFileName() => $"{OutputClassName()}.g.cs";
+
+    private string OutputFileName() => $"{OutputClassName()}.g.cs";
 
     protected abstract string OutputClassName();
 
@@ -84,12 +81,10 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
                 var source = GenerateRegistrationCode(rps!);
                 spc.AddSource(OutputFileName(),
                     SourceText.From(source, Encoding.UTF8));
-
-                var path = Path.Combine("/Users/philipwhittington/Workspace", OutputFileName());
             });
     }
-    
-    protected string GenerateRegistrationCode(ImmutableArray<RegistrationInfo> registrationPairs)
+
+    private string GenerateRegistrationCode(ImmutableArray<RegistrationInfo> registrationPairs)
     {
         var sb = new StringBuilder();
 
@@ -144,7 +139,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
     /// if a primary interface is declared as e.g. IFoo&lt;out T&gt; where T : SomeBase,
     /// then an implementation of IFoo&lt;Specific&gt; will also be registered against IFoo&lt;SomeBase&gt;.
     /// </summary>
-    protected virtual IEnumerable<INamedTypeSymbol> GetAdditionalInterfacesForRegistration(
+    private IEnumerable<INamedTypeSymbol> GetAdditionalInterfacesForRegistration(
         INamedTypeSymbol classSymbol)
     {
         var interfacesReturned = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);

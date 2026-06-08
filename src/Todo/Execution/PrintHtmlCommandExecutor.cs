@@ -70,15 +70,15 @@ public class PrintHtmlCommandExecutor(
         
         if (!configuration.TodoListInfo.AppearInHtmlLists) return htmlBody;
 
-        var closingHeaderTag = "</h1>";
+        const string closingHeaderTag = "</h1>";
 
         var endOfHeaderIndex = htmlBody.IndexOf(closingHeaderTag, StringComparison.Ordinal);
         
         if (endOfHeaderIndex == -1) return htmlBody; //This should not happen, but don't throw exception.
 
         return
-            htmlBody.Substring(0, endOfHeaderIndex + closingHeaderTag.Length) +
-            $"<div class='todo-list-name-container'>(Todo list: {configuration.TodoListInfo.Name})</div></br>" + 
-            htmlBody.Substring(endOfHeaderIndex + closingHeaderTag.Length);
+            string.Concat(htmlBody.AsSpan()[..(endOfHeaderIndex + closingHeaderTag.Length)], 
+                $"<div class='todo-list-name-container'>(Todo list: {configuration.TodoListInfo.Name})</div></br>", 
+                htmlBody.AsSpan(endOfHeaderIndex + closingHeaderTag.Length));
     }
 }

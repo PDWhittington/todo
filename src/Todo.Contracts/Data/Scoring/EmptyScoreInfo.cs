@@ -1,4 +1,3 @@
-using System;
 using Todo.Contracts.Data.Config;
 
 namespace Todo.Contracts.Data.Scoring;
@@ -8,8 +7,6 @@ public record EmptyScoreInfo : ScoreInfo
     public override DateOnly Date { get; }
 
     public override int Total() => 0;
-
-    public override int GetScore(ScoreCategory category) => 0;
 
     public override bool TryGetScore(ScoreCategory category, out int score)
     {

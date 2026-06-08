@@ -6,17 +6,17 @@ namespace Todo;
 public static class Timer
 {
     private static bool _isStarted;
-    private static Stopwatch _watch = new();
+    private static readonly Stopwatch Watch = new();
     
     public static void Start()
     {
         if (_isStarted) throw new Exception("Timer is already started");
         _isStarted = true;
 
-        _watch.Start();
+        Watch.Start();
     }
 
     public static TimeSpan Elapsed => _isStarted 
-        ? _watch.Elapsed 
+        ? Watch.Elapsed 
         : throw new Exception("Timer is not started");
 }

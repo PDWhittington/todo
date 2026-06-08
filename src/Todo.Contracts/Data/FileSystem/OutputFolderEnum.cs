@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Todo.Contracts.Data.FileSystem;
+﻿namespace Todo.Contracts.Data.FileSystem;
 
 [Flags]
 public enum OutputFolderEnum

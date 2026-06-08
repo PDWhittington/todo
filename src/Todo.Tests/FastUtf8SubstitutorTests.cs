@@ -25,7 +25,7 @@ internal static class StringOperationsExtensions
         var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         var pointer = handle.AddrOfPinnedObject();
         
-        return UnmanagedByteArray.Of(handle, pointer, (int)str.Length);
+        return UnmanagedByteArray.Of(handle, pointer, str.Length);
     }
         
 }
@@ -55,7 +55,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The quick brown fox jumped over the lazy dog.";
+        const string expected = "The quick brown fox jumped over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -65,7 +65,7 @@ public class FastUtf8SubstitutorTests
     {
         var template = "The quick {colour} fox jumped over the lazy dog.".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "colour", "brown" }
         };
@@ -76,7 +76,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The quick brown fox jumped over the lazy dog.";
+        const string expected = "The quick brown fox jumped over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -86,7 +86,7 @@ public class FastUtf8SubstitutorTests
     {
         var template = "The quick {colour} {animal} {verb} over the lazy dog.".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "colour", "brown" },
             { "animal", "fox" },
@@ -99,7 +99,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The quick brown fox jumped over the lazy dog.";
+        const string expected = "The quick brown fox jumped over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -109,7 +109,7 @@ public class FastUtf8SubstitutorTests
     {
         var template = "The {quick brown fox over the lazy dog.".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "quick", "!!!!!" }
         };
@@ -120,7 +120,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The {quick brown fox over the lazy dog.";
+        const string expected = "The {quick brown fox over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -131,7 +131,7 @@ public class FastUtf8SubstitutorTests
         //Keys containing whitespace are not allowed
         var template = "The {quick brown} fox over the lazy dog.".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "quick brown", "!!!!!" }
         };
@@ -142,7 +142,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The {quick brown} fox over the lazy dog.";
+        const string expected = "The {quick brown} fox over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -154,7 +154,7 @@ public class FastUtf8SubstitutorTests
         //Keys containing whitespace are not allowed
         var template = "The {quick {colour} fox} over the lazy dog.".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "colour", "brown" }
         };
@@ -165,7 +165,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The {quick brown fox} over the lazy dog.";
+        const string expected = "The {quick brown fox} over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -175,7 +175,7 @@ public class FastUtf8SubstitutorTests
     {
         var template = "{article} quick brown fox over the lazy dog.".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "article", "The" }
         };
@@ -186,7 +186,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The quick brown fox over the lazy dog.";
+        const string expected = "The quick brown fox over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -196,7 +196,7 @@ public class FastUtf8SubstitutorTests
     {
         var template = "The quick brown fox over the lazy dog{punctuation}".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "punctuation", "." }
         };
@@ -207,7 +207,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The quick brown fox over the lazy dog.";
+        const string expected = "The quick brown fox over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }
@@ -217,7 +217,7 @@ public class FastUtf8SubstitutorTests
     {
         var template = "{article} quick brown fox over the lazy dog{punctuation}".ToUnmanagedArray();
 
-        var substitutions = new Dictionary<string, string>()
+        var substitutions = new Dictionary<string, string>
         {
             { "article", "The" },
             { "punctuation", "." }
@@ -229,7 +229,7 @@ public class FastUtf8SubstitutorTests
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
-        var expected = "The quick brown fox over the lazy dog.";
+        const string expected = "The quick brown fox over the lazy dog.";
         
         Assert.AreEqual(expected, resultStr);
     }

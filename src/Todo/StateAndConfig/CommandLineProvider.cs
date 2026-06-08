@@ -21,6 +21,7 @@ public class CommandLineProvider(IAssemblyInformationProvider assemblyInformatio
                 .Trim();
         }
 
+        // ReSharper disable once ConvertIfStatementToReturnStatement
         if (wholeCommandLine.StartsWith("todo", StringComparison.OrdinalIgnoreCase))
         {
             return wholeCommandLine["todo".Length..].Trim();

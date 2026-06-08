@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.AppLaunching;
@@ -70,8 +69,6 @@ internal static class Initialise
 
             /* Build the service provider */
             .BuildServiceProvider();
-    
-    #region Base functionality
 
     extension(IServiceCollection serviceCollection)
     {
@@ -169,26 +166,7 @@ internal static class Initialise
             => serviceCollection
                 .AddSingleton<IConsoleTextFormatter, ConsoleTextFormatter>()
                 .AddSingleton<IOutputWriter, OutputWriter>();
-    }
-
-    #endregion
-
-    extension(IServiceCollection serviceCollection)
-    {
-        [UnconditionalSuppressMessage("Trimming", "IL2072")]
-        private IServiceCollection RegisterTypes<T>(IEnumerable<Type> types)
-        {
-            foreach (var type in types)
-            {
-                if (type == typeof(WhichTodoCommandFactory)) continue;
-
-                serviceCollection.AddSingleton(type);
-                serviceCollection.AddSingleton(typeof(T), type);
-            }
-
-            return serviceCollection;
-        }
-
+        
         private IServiceCollection AddTypeSets()
             => serviceCollection
                 .AddSingleton<ICommandFactorySet, CommandFactorySet>()

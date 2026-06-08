@@ -10,15 +10,12 @@ namespace Todo.Templates;
 public class TopicListMarkdownSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substitutor) 
     : SubstitutionMakerBase(fastUtf8Substitutor), ITopicListMarkdownSubstitutionsMaker
 {
-    public string MakeSubstitutions(TopicListMarkdownSubstitutions substitutions, string template)
-        => template.Replace("{topic}", substitutions.TopicName);
-
     public void WriteSubstitutionsToStream(UnmanagedByteArray template, TopicListMarkdownSubstitutions substitutions,
         Stream stream)
     {
         var dict = new Dictionary<string, string>
         {
-            { "topic", substitutions.TopicName },
+            { "topic", substitutions.TopicName }
         };
         
         WriteSubstitutionsToStreamBase(template, dict, stream);

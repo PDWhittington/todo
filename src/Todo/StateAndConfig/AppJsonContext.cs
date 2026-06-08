@@ -20,7 +20,4 @@ namespace Todo.StateAndConfig;
 [JsonSerializable(typeof(HtmlThemeEnum))]
 [JsonSerializable(typeof(IterationMethodEnum))]
 [JsonSerializable(typeof(Color))]                       // important for the converter
-public partial class AppJsonContext : JsonSerializerContext
-{
-  
-}
+public partial class AppJsonContext : JsonSerializerContext;

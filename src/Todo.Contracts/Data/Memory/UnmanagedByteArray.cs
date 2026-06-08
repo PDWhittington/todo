@@ -1,10 +1,9 @@
-using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Todo.Contracts.Data.Memory;
 
-public unsafe record struct UnmanagedByteArray
+public readonly unsafe record struct UnmanagedByteArray
 {
     public GCHandle Handle { get; }
     public IntPtr Start { get; }
