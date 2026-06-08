@@ -75,7 +75,8 @@ internal static class Initialise
 
     extension(IServiceCollection serviceCollection)
     {
-        public IServiceCollection RegisterSeveralInterfaces(Type[] interfaces, Type implementation)
+        public IServiceCollection RegisterSeveralInterfaces(Type[] interfaces, 
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type implementation)
         {
             // Register the concrete implementation as singleton once
             serviceCollection.AddSingleton(implementation);

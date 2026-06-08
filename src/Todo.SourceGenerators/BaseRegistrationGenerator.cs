@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -37,10 +38,14 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 
         if (!isRequired) return null;
         
-        var interfaces = classSymbol
-            .AllInterfaces
-            .Where(InterfaceIsRequired)
+        var interfaces = GetAdditionalInterfacesForRegistration(classSymbol)
             .ToArray();
+        
+        // var allInterfaces = interfaces
+        //     .Concat(additional)
+        //     .Distinct(SymbolEqualityComparer.Default)
+        //     .Cast<INamedTypeSymbol>()
+        //     .ToArray();
 
         return interfaces.Length != 0 
             ? new RegistrationInfo(interfaces, classSymbol) 
@@ -76,7 +81,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
             registrationPairs,
             (spc, rps) =>
             {
-                var source = GenerateRegistrationCode(rps);
+                var source = GenerateRegistrationCode(rps!);
                 spc.AddSource(OutputFileName(),
                     SourceText.From(source, Encoding.UTF8));
 
@@ -132,5 +137,60 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 
         return sb.ToString();
     }
-    
+
+    /// <summary>
+    /// Hook to return additional interfaces that the implementation should be registered against.
+    /// The default implementation infers registrations for covariant (out) type parameters:
+    /// if a primary interface is declared as e.g. IFoo&lt;out T&gt; where T : SomeBase,
+    /// then an implementation of IFoo&lt;Specific&gt; will also be registered against IFoo&lt;SomeBase&gt;.
+    /// </summary>
+    protected virtual IEnumerable<INamedTypeSymbol> GetAdditionalInterfacesForRegistration(
+        INamedTypeSymbol classSymbol)
+    {
+        var interfacesReturned = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        
+        var interfaces = classSymbol
+            .AllInterfaces
+            .Where(InterfaceIsRequired)
+            .ToArray();
+
+        foreach (var @interface in interfaces)
+        {
+            if (interfacesReturned.Add(@interface))
+            {
+                yield return @interface;    
+            }
+        }
+        
+        foreach (var iface in interfaces)
+        {
+            if (iface.TypeArguments.Length == 0) continue;
+
+            var originalDefinition = iface.OriginalDefinition;
+
+            for (var i = 0; i < originalDefinition.TypeParameters.Length; i++)
+            {
+                var typeParam = originalDefinition.TypeParameters[i];
+                
+                if (typeParam.Variance != VarianceKind.Out) continue;
+
+                // For 'out T', we can safely register against the interface using the constraint type(s)
+                // as the type argument (the common supertype for all possible T).
+                foreach (var constraint in typeParam.ConstraintTypes.OfType<INamedTypeSymbol>())
+                {
+                        // Build the type arguments array with this slot replaced by the constraint
+                        var newTypeArgs = iface.TypeArguments
+                            .Select((arg, idx) => idx == i ? constraint : arg)
+                            .ToArray();
+
+                        var constructed = originalDefinition.Construct(newTypeArgs);
+
+                        if (interfacesReturned.Add(constructed))
+                        {
+                            yield return constructed;    
+                        }
+                }
+            }
+        }
+    }
 }
