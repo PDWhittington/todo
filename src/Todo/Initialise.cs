@@ -23,7 +23,6 @@ using Todo.Contracts.Services.Templates;
 using Todo.Contracts.Services.UI;
 using Todo.Dates;
 using Todo.Dates.Naming;
-using Todo.DependencyInjection;
 using Todo.Execution;
 using Todo.FileSystem;
 using Todo.FileSystem.Paths;
@@ -57,10 +56,9 @@ internal static class Initialise
             .AddUiFunctionality()
 
             /* Command interpretation and execution */
-            /* These three methods are auto-generated in the SourceGenerators project */
+            /* These two methods are auto-generated in the SourceGenerators project */
             .RegisterCommandFactories()
             .RegisterCommandExecutors()
-            //.RegisterSpecificCommandExecutors()
             
             .AddTypeSets()
 
@@ -77,6 +75,19 @@ internal static class Initialise
 
     extension(IServiceCollection serviceCollection)
     {
+        public IServiceCollection RegisterSeveralInterfaces(Type[] interfaces, Type implementation)
+        {
+            // Register the concrete implementation as singleton once
+            serviceCollection.AddSingleton(implementation);
+
+            foreach (var @interface in interfaces)
+            {
+                serviceCollection.AddSingleton(@interface, provider => provider.GetService(implementation)!);
+            }
+            
+            return serviceCollection;
+        }
+        
         private IServiceCollection AddAppLaunchingOperations()
             => serviceCollection
                 .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
