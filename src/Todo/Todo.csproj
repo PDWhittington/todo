@@ -21,6 +21,10 @@
         <OptimizationPreference>Speed</OptimizationPreference>
         <PublishReadyToRun>true</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>none</DebugType>
+        <PublishSymbols>false</PublishSymbols>
+        <CopyDebugSymbolsToPublishDirectory>false</CopyDebugSymbolsToPublishDirectory>
     </PropertyGroup>
     <!-- Make classes marked as internal available to the test project -->
     <ItemGroup>
@@ -61,8 +65,8 @@
     <ItemGroup>
         <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
         <ProjectReference Include="..\Todo.SourceGenerators\Todo.SourceGenerators.csproj"
-                  OutputItemType="Analyzer"
-                  ReferenceOutputAssembly="false" />
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
     </ItemGroup>
     <!-- Pre-build event to populate the above files -->
     <PropertyGroup>
@@ -78,6 +82,11 @@
             BeforeTargets="PreBuildEvent">
         <Exec Command="git describe --long --dirty --tags --always > commithash.txt&#xA;echo $(CurrentDate) > buildtime.txt&#xA;" />
     </Target>
+    <Target Name="RemovePdbsFromPublish"
+            AfterTargets="ComputeResolvedFilesToPublishList">
+        <ItemGroup>
+            <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)"
+                                   Condition="'%(Extension)' == '.pdb'" />
+        </ItemGroup>
+    </Target>
 </Project>
-
-

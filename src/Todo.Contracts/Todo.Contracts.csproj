@@ -1,27 +1,32 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TieredPGO>false</TieredPGO>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <!-- AOT-related (used when this library is consumed by a PublishAot app) -->
+        <PublishAot>true</PublishAot>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <OptimizationPreference>Speed</OptimizationPreference>
+        <TieredCompilation>false</TieredCompilation>
+        <!-- Strongly suppress symbol file generation so no .pdb leaks into publish output -->
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>none</DebugType>
+        <PublishSymbols>false</PublishSymbols>
     </PropertyGroup>
-
     <ItemGroup>
         <InternalsVisibleTo Include="Todo.Tests" />
     </ItemGroup>
- 
     <ItemGroup>
-        <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+        <PackageReference Include="LibGit2Sharp"
+                          Version="0.31.0" />
     </ItemGroup>
- 
 </Project>
