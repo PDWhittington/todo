@@ -12,7 +12,8 @@ fi
 
 # Assume a single solution file in the src sub-folder
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"
+
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.sln" -type f | head -n 1)
 
 if [ -z "$SOLUTION" ]; then
