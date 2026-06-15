@@ -130,7 +130,7 @@ public abstract class PathResolverBase<TParameterType>(
         {
             (true, false) => pathInTodoFolder,
             (false, true) => pathInArchiveFolder,
-            (false, false) or (true, true) => null,
+            (false, false) or (true, true) => null
         };
 
         return filePathInfo is not null;

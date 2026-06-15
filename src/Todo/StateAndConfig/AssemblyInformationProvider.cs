@@ -46,7 +46,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
     /// </summary>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public string GetAssemblyFolder()
+    private string GetAssemblyFolder()
         => Path.GetDirectoryName(AssemblyLocation()) ??
            throw new Exception("Cannot get containing folder of executing process");
 

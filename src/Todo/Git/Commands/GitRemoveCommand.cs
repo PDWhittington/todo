@@ -48,27 +48,21 @@ public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
         HashSet<string> dirtyPaths,
         string workDir,
         string relPath,
-        string absPath
-    )
+        string absPath)
     {
-        if (!string.IsNullOrEmpty(workDir))
-        {
-            var fullWork =
-                Path.GetFullPath(workDir)
-                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                + Path.DirectorySeparatorChar;
+        if (string.IsNullOrEmpty(workDir)) return dirtyPaths.Contains(relPath);
+        
+        var fullWork =
+            Path.GetFullPath(workDir)
+                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
 
-            var fullPath = Path.GetFullPath(absPath);
+        var fullPath = Path.GetFullPath(absPath);
 
-            if (!fullPath.StartsWith(fullWork, StringComparison.OrdinalIgnoreCase))
-            {
-                // Path is outside the repository working directory; cannot checkpoint via this repo.
-                return false;
-            }
-        }
-
-        // Fast hash-based lookup (amortized O(1) average case) against the single RetrieveStatus result.
-        return dirtyPaths.Contains(relPath);
+        return fullPath.StartsWith(fullWork, StringComparison.OrdinalIgnoreCase) &&
+               // Path is outside the repository working directory; cannot checkpoint via this repo.
+               // Fast hash-based lookup (amortized O(1) average case) against the single RetrieveStatus result.
+               dirtyPaths.Contains(relPath);
     }
 
     public VoidResult ExecuteCommand(IGitInterface gitInterface)
@@ -98,9 +92,8 @@ public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
 
             if (pathsNeedingStaging.Length != 0)
             {
-                gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
-                    $"Staging changed files before deletion:"
-                );
+                gitInterface.GitInterfaceTools.OutputWriter
+                    .WriteLine("Staging changed files before deletion:");
 
                 foreach (var path in pathsNeedingStaging)
                 {
@@ -114,7 +107,7 @@ public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
                     new GitCommitCommand(commitMessage)
                 );
 
-                if (!commitResult.Success && commitResult.Exception is not EmptyCommitException)
+                if (commitResult is { Success: false, Exception: not EmptyCommitException })
                 {
                     return new VoidResult(false, commitResult.Exception);
                 }
