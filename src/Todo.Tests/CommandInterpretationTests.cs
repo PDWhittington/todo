@@ -114,5 +114,23 @@ public class CommandInterpretationTests
             CommandLine = "",
             ExpectedCommand = CreateOrShowDayListCommand.Of(DateOnly.FromDateTime(Constants.CurrentTimeForTest))
         };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = "explorer",
+            ExpectedCommand = OpenTodoFolderCommand.Singleton
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = "finder",
+            ExpectedCommand = OpenTodoFolderCommand.Singleton
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = "files",
+            ExpectedCommand = OpenTodoFolderCommand.Singleton
+        };
     }
 }
