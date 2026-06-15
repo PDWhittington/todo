@@ -89,7 +89,8 @@ internal static class Initialise
         private IServiceCollection AddAppLaunchingOperations()
             => serviceCollection
                 .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
-                .AddSingleton<ITextFileLauncher, TextFileLauncher>();
+                .AddSingleton<ITextFileLauncher, TextFileLauncher>()
+                .AddSingleton<IFileExplorerLauncher, FileExplorerLauncher>();
 
         private IServiceCollection AddAssemblyOperations()
             => serviceCollection
