@@ -31,19 +31,22 @@ public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemove
 
     public override void Execute(RemoveCommand command)
     {
-        var pathForFile = _dateListPathResolver.ResolvePathFor(
-            command.Date, FileTypeEnum.MarkdownDayList, false);
+        if (!_dateListPathResolver.TryResolvePathFor(command.Date, FileTypeEnum.MarkdownDayList, out var pathForFile))
+        {
+            OutputWriter.WriteLine($"Could not find file for {command.Date}");
+            return;
+        }
 
         if (_configurationProvider.ConfigInfo.Configuration.UseGit)
         {
-            var gitRemoveCommand = new GitRemoveCommand(pathForFile.Path);
+            var gitRemoveCommand = new GitRemoveCommand(pathForFile!.Path);
             var gitResult = _gitInterface.RunGitCommand<GitRemoveCommand, VoidResult>(gitRemoveCommand);
             if (!gitResult.Success) throw gitResult.Exception
                                           ?? new Exception("Some exception in git rm command");
         }
         else
         {
-            File.Delete(pathForFile.Path);
+            File.Delete(pathForFile!.Path);
         }
     }
 }

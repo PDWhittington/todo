@@ -23,6 +23,14 @@ public abstract class PathResolverBase<TParameterType>(
     public string FileNameFor(TParameterType parameter, FileTypeEnum fileType)
         => $"{FileNameWithoutExtension(parameter)}.{GetExtension(fileType)}";
 
+    public bool TryResolvePathFor(TParameterType parameter, FileTypeEnum fileType, out FilePathInfo? filePathInfo)
+    {
+        var pathInTodoFolder = GetFilePathFor(parameter, fileType);
+        var pathInArchiveFolder = GetArchiveFilePathFor(parameter, fileType);
+
+        return TryCheckExistsAndGetFilePathInfo(pathInTodoFolder, pathInArchiveFolder, out filePathInfo);
+    }
+
     public FilePathInfo ResolvePathFor(TParameterType parameter, FileTypeEnum fileType, bool allowNotPresent)
     {
         var pathInTodoFolder = GetFilePathFor(parameter, fileType);
@@ -115,6 +123,19 @@ public abstract class PathResolverBase<TParameterType>(
         yield return enclosed
             ? operatorForEnclosedFragments(str[previousIndex..])
             : str[previousIndex..];
+    }
+
+    protected static bool TryCheckExistsAndGetFilePathInfo(FilePathInfo pathInTodoFolder,
+        FilePathInfo pathInArchiveFolder, out FilePathInfo? filePathInfo)
+    {
+        filePathInfo = (pathInTodoFolder.Exists(), pathInArchiveFolder.Exists()) switch
+        {
+            (true, false) => pathInTodoFolder,
+            (false, true) => pathInArchiveFolder,
+            (false, false) or (true, true) => null,
+        };
+
+        return filePathInfo is not null;
     }
 
     protected FilePathInfo CheckExistsAndGetFilePathInfo(FilePathInfo pathInTodoFolder,
