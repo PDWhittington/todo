@@ -4,11 +4,11 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitAddCommand(string Path) : GitCommandBase<VoidResult>
+public record GitAddCommand(string Path) : IGitCommand<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
 
-    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {

@@ -6,22 +6,13 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem.Paths;
 
-public class DateListPathResolver(
+public sealed class DateListPathResolver(
     IConfigurationProvider configurationProvider,
     IOutputFolderPathProvider outputFolderPathProvider,
     IFilenameDateParser filenameDateParser)
     : PathResolverBase<DateOnly>(configurationProvider, outputFolderPathProvider), 
         IDateListPathResolver
 {
-    public override string GetRegExForThisFileType()
-    {
-        var fileNameFragments = GetFragments(
-            ConfigurationProvider.ConfigInfo.Configuration.TodoListFilenameFormatWithoutExension,
-            '{', '}', _ => ".*");
-
-        return string.Join("", fileNameFragments);
-    }
-
     protected override FilePathInfo GetFilePathInfo(string fileName, string formattedPath, 
         FileTypeEnum fileType, FolderEnum folderType)
     {

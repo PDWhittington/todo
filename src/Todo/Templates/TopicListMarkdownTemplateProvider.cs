@@ -1,5 +1,5 @@
 ﻿using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.AssemblyOperations;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.MarkdownOperations;
 using Todo.Contracts.Services.StateAndConfig;
@@ -7,24 +7,20 @@ using Todo.Contracts.Services.Templates;
 
 namespace Todo.Templates;
 
-public class TopicListMarkdownTemplateProvider : TemplateProviderBase,
-    ITopicListMarkdownTemplateProvider
+public class TopicListMarkdownTemplateProvider(
+    IAssemblyInformationProvider assemblyInformationProvider,
+    IPathHelper pathHelper,
+    IConstantsProvider constantsProvider,
+    IMarkdownLineInterpreter markdownLineInterpreter,
+    IUnmanagedByteArrayManager unmanagedByteArrayManager)
+    : TemplateProviderBase(assemblyInformationProvider, pathHelper, markdownLineInterpreter, unmanagedByteArrayManager),
+        ITopicListMarkdownTemplateProvider
 {
-    private readonly IConstantsProvider _constantsProvider;
-
-    public TopicListMarkdownTemplateProvider(IPathHelper pathHelper, 
-        IManifestStreamProvider manifestStreamProvider, IConstantsProvider constantsProvider,
-        IMarkdownLineInterpreter markdownLineInterpreter)
-        : base(pathHelper, manifestStreamProvider, markdownLineInterpreter)
-    {
-        _constantsProvider = constantsProvider;
-    }
-
     protected override string GetTemplateFileName()
-        => _constantsProvider.TopicListMarkdownTemplate.FileName;
+        => constantsProvider.TopicListMarkdownTemplate.FileName;
 
     protected override string GetManifestStreamName()
-        => _constantsProvider.TopicListMarkdownTemplate.FullName;
+        => constantsProvider.TopicListMarkdownTemplate.FullName;
 
     protected override FileTypeEnum GetFileType()
         => FileTypeEnum.MarkdownTemplate;

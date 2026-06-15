@@ -5,7 +5,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitMoveCommand : GitCommandBase<VoidResult>
+public record GitMoveCommand : IGitCommand<VoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public string SourcePath { get; }
@@ -19,7 +19,7 @@ public record GitMoveCommand : GitCommandBase<VoidResult>
         DestinationPath = destinationPath;
     }
 
-    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {

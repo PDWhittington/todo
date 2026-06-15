@@ -9,7 +9,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitRemoveCommand(params string[] Paths) : GitCommandBase<VoidResult>
+public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
 {
     private static string ToRepoRelativePath(string workingDirectory, string absolutePath)
     {
@@ -24,14 +24,17 @@ public record GitRemoveCommand(params string[] Paths) : GitCommandBase<VoidResul
         return rel;
     }
 
-    private static string Pluralise(int number, string singular, string plural)
-        => number == 1 ? $"{number} {singular}" : $"{number} {plural}"; 
+    private static string Pluralise(int number, string singular, string plural) =>
+        number == 1 ? $"{number} {singular}" : $"{number} {plural}";
 
     private static string BuildCheckpointMessage(string[] paths)
     {
-        if (paths.Length == 0) throw new ArgumentException("Should not be committing a set of zero files.");
+        if (paths.Length == 0)
+            throw new ArgumentException("Should not be committing a set of zero files.");
 
-        var sb = new StringBuilder().AppendLine($"Checkpoint before removing {Pluralise(paths.Length, "file", "files")}:-");
+        var sb = new StringBuilder().AppendLine(
+            $"Checkpoint before removing {Pluralise(paths.Length, "file", "files")}:-"
+        );
 
         foreach (var path in paths)
         {
@@ -41,13 +44,20 @@ public record GitRemoveCommand(params string[] Paths) : GitCommandBase<VoidResul
         return sb.ToString();
     }
 
-    private static bool IsChangedFromHead(HashSet<string> dirtyPaths, string workDir, string relPath, string absPath)
+    private static bool IsChangedFromHead(
+        HashSet<string> dirtyPaths,
+        string workDir,
+        string relPath,
+        string absPath
+    )
     {
         if (!string.IsNullOrEmpty(workDir))
         {
-            var fullWork = Path.GetFullPath(workDir)
-                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
-                    
+            var fullWork =
+                Path.GetFullPath(workDir)
+                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                + Path.DirectorySeparatorChar;
+
             var fullPath = Path.GetFullPath(absPath);
 
             if (!fullPath.StartsWith(fullWork, StringComparison.OrdinalIgnoreCase))
@@ -60,8 +70,8 @@ public record GitRemoveCommand(params string[] Paths) : GitCommandBase<VoidResul
         // Fast hash-based lookup (amortized O(1) average case) against the single RetrieveStatus result.
         return dirtyPaths.Contains(relPath);
     }
-    
-    internal override VoidResult ExecuteCommand(IGitInterface gitInterface)
+
+    public VoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
@@ -70,14 +80,12 @@ public record GitRemoveCommand(params string[] Paths) : GitCommandBase<VoidResul
 
             // One status call for the whole repo (cheap for a typical todo working tree).
             // We then do fast in-memory membership tests for the specific paths we care about.
-            var status = repo.RetrieveStatus(new StatusOptions
-            {
-                IncludeUnaltered = false
-            });
-            
+            var status = repo.RetrieveStatus(new StatusOptions { IncludeUnaltered = false });
+
             var dirtyRelPaths = new HashSet<string>(
                 status.Select(e => e.FilePath),
-                StringComparer.Ordinal);
+                StringComparer.Ordinal
+            );
 
             //Find which files of the set we are to remove have changed -- whether indexed or not.
             var pathsNeedingStaging = Paths
@@ -90,18 +98,21 @@ public record GitRemoveCommand(params string[] Paths) : GitCommandBase<VoidResul
 
             if (pathsNeedingStaging.Length != 0)
             {
-                gitInterface.GitInterfaceTools.OutputWriter.WriteLine($"Staging changed files before deletion:");
+                gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
+                    $"Staging changed files before deletion:"
+                );
 
                 foreach (var path in pathsNeedingStaging)
                 {
                     gitInterface.GitInterfaceTools.OutputWriter.WriteLine($"Staging {path}");
                 }
-                
+
                 LibGit2Sharp.Commands.Stage(repo, pathsNeedingStaging);
-                
+
                 var commitMessage = BuildCheckpointMessage(pathsNeedingStaging);
                 var commitResult = gitInterface.RunGitCommand<GitCommitCommand, CommitResult>(
-                    new GitCommitCommand(commitMessage));
+                    new GitCommitCommand(commitMessage)
+                );
 
                 if (!commitResult.Success && commitResult.Exception is not EmptyCommitException)
                 {
