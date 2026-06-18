@@ -2,28 +2,36 @@
 using Microsoft.Extensions.DependencyInjection;
 using Todo;
 using Todo.Contracts.Services;
+using Todo.Contracts.Services.UI;
+
+Timer.Start();
 
 var serviceProvider = Initialise.GetServiceProvider();
+var outputWriter = serviceProvider.GetService<IOutputWriter>()!;
 
 try
 {
-    Timer.Start();
-
     serviceProvider
         .GetService<ITodoService>()!
         .PerformTask();
 }
 catch (Exception e)
 {
-    Console.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
-    Console.WriteLine($"{e.GetType()}: {e.Message}");
-    Console.WriteLine();
-    Console.WriteLine("Stack trace:");
-    Console.WriteLine(e.StackTrace);
-    
+    outputWriter.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
+    outputWriter.WriteLine($"{e.GetType()}: {e.Message}");
+    outputWriter.WriteLine();
+
+    if (e.StackTrace is not null)
+    {
+        outputWriter.WriteLine("Stack trace:");
+        outputWriter.WriteLine(e.StackTrace);    
+    }
 }
 finally
 {
-    Console.WriteLine();
+    outputWriter.WriteLine();
+    outputWriter.JoinWritingThread();    
+    
     Console.WriteLine($"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.");
 }
+

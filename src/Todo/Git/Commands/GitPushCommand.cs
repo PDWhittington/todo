@@ -22,8 +22,16 @@ public record GitPushCommand : IGitCommand<VoidResult>
     {
         try
         {
+            gitInterface.GitInterfaceTools.OutputWriter.WriteLine("GitPushCommand: Retrieving current branch");
+            
             var currentBranch = BranchLocator.GetBranchForRepository(gitInterface.Repository);
 
+            gitInterface.GitInterfaceTools.OutputWriter.WriteLine("GitPushCommand: Current branch is null:" + 
+                                                                  (currentBranch is null));
+            
+            gitInterface.GitInterfaceTools.OutputWriter.WriteLine("GitPushCommand: Current branch FriendlyName:" + 
+                                                                  currentBranch!.FriendlyName);  
+            
             gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
                 $"Pushing branch {currentBranch.FriendlyName} to origin");
 

@@ -15,7 +15,7 @@ public class TodoService(
 {
     public void PerformTask()
     {
-        using var handle = outputWriter.CreateDisposableHandle();
+        // using var handle = outputWriter.CreateDisposableHandle();
         
         try
         {
