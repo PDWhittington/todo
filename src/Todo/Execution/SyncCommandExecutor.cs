@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using LibGit2Sharp;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.Git;
@@ -70,19 +69,14 @@ public class SyncCommandExecutor(
                     return;
                 }
 
-                else
-                {
-                    OutputWriter.WriteLine(
-                        "Rebase cannot be performed without conflicts. " +
-                        "Please resolve the conflict manually (for example by running 'git pull --rebase' or 'git pull' on the command line) and then retry.");
-                    return;
-                }
-            }
-            else
-            {
-                OutputWriter.WriteLine("Unable to determine remote tip; skipping rebase.");
+                OutputWriter.WriteLine(
+                    "Rebase cannot be performed without conflicts. " +
+                    "Please resolve the conflict manually (for example by running 'git pull --rebase' or 'git pull' on the command line) and then retry.");
                 return;
             }
+
+            OutputWriter.WriteLine("Unable to determine remote tip; skipping rebase.");
+            return;
         }
 
         pushExecutor.Execute(PushCommand.Singleton);
