@@ -9,7 +9,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
+public record GitRemoveCommand(params string[] Paths) : IGitCommand<GitVoidResult>
 {
     private static string ToRepoRelativePath(string workingDirectory, string absolutePath)
     {
@@ -65,7 +65,7 @@ public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
                dirtyPaths.Contains(relPath);
     }
 
-    public VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public GitVoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
@@ -103,13 +103,13 @@ public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
                 LibGit2Sharp.Commands.Stage(repo, pathsNeedingStaging);
 
                 var commitMessage = BuildCheckpointMessage(pathsNeedingStaging);
-                var commitResult = gitInterface.RunGitCommand<GitCommitCommand, CommitResult>(
+                var commitResult = gitInterface.RunGitCommand<GitCommitCommand, GitCommitResult>(
                     new GitCommitCommand(commitMessage)
                 );
 
                 if (commitResult is { Success: false, Exception: not EmptyCommitException })
                 {
-                    return new VoidResult(false, commitResult.Exception);
+                    return new GitVoidResult(false, commitResult.Exception);
                 }
             }
 
@@ -123,11 +123,11 @@ public record GitRemoveCommand(params string[] Paths) : IGitCommand<VoidResult>
                 }
             }
 
-            return new VoidResult(true, null);
+            return new GitVoidResult(true, null);
         }
         catch (Exception e)
         {
-            return new VoidResult(false, e);
+            return new GitVoidResult(false, e);
         }
     }
 }

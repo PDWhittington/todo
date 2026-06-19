@@ -41,15 +41,15 @@ public class CommitCommandExecutor : CommandExecutorBase<CommitCommand>, ICommit
 
         OutputWriter.WriteLine("Committing todo files.");
 
-        _gitInterface.RunGitCommand<GitResetCommand, VoidResult>(new GitResetCommand());
-        _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(
+        _gitInterface.RunGitCommand<GitResetCommand, GitVoidResult>(new GitResetCommand());
+        _gitInterface.RunGitCommand<GitAddCommand, GitVoidResult>(
             new GitAddCommand(_outputFolderPathProvider.GetRootedOutputFolder()));
 
         //Archive may not be nested within the OutputFolder
-        _gitInterface.RunGitCommand<GitAddCommand, VoidResult>(
+        _gitInterface.RunGitCommand<GitAddCommand, GitVoidResult>(
             new GitAddCommand(_outputFolderPathProvider.GetRootedArchiveFolder()));
 
-        var commitResult = _gitInterface.RunGitCommand<GitCommitCommand, CommitResult>(
+        var commitResult = _gitInterface.RunGitCommand<GitCommitCommand, GitCommitResult>(
             new GitCommitCommand(commitMessage));
 
         if (commitResult.Exception is EmptyCommitException)

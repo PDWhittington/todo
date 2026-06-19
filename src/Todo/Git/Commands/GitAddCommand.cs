@@ -4,22 +4,22 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitAddCommand(string Path) : IGitCommand<VoidResult>
+public record GitAddCommand(string Path) : IGitCommand<GitVoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
 
-    public VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public GitVoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
             gitInterface.GitInterfaceTools.OutputWriter.WriteLine($"Staging {Path}");
 
             LibGit2Sharp.Commands.Stage(gitInterface.Repository, Path);
-            return new VoidResult(true, null);
+            return new GitVoidResult(true, null);
         }
         catch (Exception e)
         {
-            return new VoidResult(false, e);
+            return new GitVoidResult(false, e);
         }
     }
 }

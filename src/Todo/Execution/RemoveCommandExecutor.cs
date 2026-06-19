@@ -40,7 +40,7 @@ public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemove
         if (_configurationProvider.ConfigInfo.Configuration.UseGit)
         {
             var gitRemoveCommand = new GitRemoveCommand(pathForFile!.Path);
-            var gitResult = _gitInterface.RunGitCommand<GitRemoveCommand, VoidResult>(gitRemoveCommand);
+            var gitResult = _gitInterface.RunGitCommand<GitRemoveCommand, GitVoidResult>(gitRemoveCommand);
             if (!gitResult.Success) throw gitResult.Exception
                                           ?? new Exception("Some exception in git rm command");
         }

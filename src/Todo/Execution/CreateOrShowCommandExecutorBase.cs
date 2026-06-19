@@ -41,7 +41,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             if (configurationProvider.ConfigInfo.Configuration.UseGit)
             {
-                gitInterface.RunGitCommand<GitAddCommand, VoidResult>(new GitAddCommand(pathInfo.Path));
+                gitInterface.RunGitCommand<GitAddCommand, GitVoidResult>(new GitAddCommand(pathInfo.Path));
             }
         }
 

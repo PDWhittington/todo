@@ -5,7 +5,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitResetCommand : IGitCommand<VoidResult>
+public record GitResetCommand : IGitCommand<GitVoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public bool Hard { get; }
@@ -15,16 +15,16 @@ public record GitResetCommand : IGitCommand<VoidResult>
         Hard = hard;
     }
 
-    public VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public GitVoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
             gitInterface.Repository.Reset(Hard ? ResetMode.Hard : ResetMode.Soft);
-            return new VoidResult(true, null);
+            return new GitVoidResult(true, null);
         }
         catch (Exception e)
         {
-            return new VoidResult(false, e);
+            return new GitVoidResult(false, e);
         }
 
     }

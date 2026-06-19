@@ -48,7 +48,7 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
     }
 
     private void MoveFileInGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
-        => _gitInterface.RunGitCommand<GitMoveCommand, VoidResult>(
+        => _gitInterface.RunGitCommand<GitMoveCommand, GitVoidResult>(
             new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path));
 
     private void MoveFileWithoutGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)

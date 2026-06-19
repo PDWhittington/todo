@@ -5,9 +5,9 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitCommitCommand(string Message) : IGitCommand<CommitResult>
+public record GitCommitCommand(string Message) : IGitCommand<GitCommitResult>
 {
-    public CommitResult ExecuteCommand(IGitInterface gitInterface)
+    public GitCommitResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
@@ -18,11 +18,11 @@ public record GitCommitCommand(string Message) : IGitCommand<CommitResult>
 
             var commit = gitInterface.Repository.Commit(Message, signature, signature);
 
-            return new CommitResult(true, commit, null);
+            return new GitCommitResult(commit, true, null);
         }
         catch(Exception e)
         {
-            return new CommitResult(false, null, e);
+            return new GitCommitResult(null, false, e);
         }
     }
 }

@@ -5,7 +5,7 @@ using Todo.Git.Results;
 
 namespace Todo.Git.Commands;
 
-public record GitPushCommand : IGitCommand<VoidResult>
+public record GitPushCommand : IGitCommand<GitVoidResult>
 {
     // ReSharper disable once MemberCanBePrivate.Global
     public BranchLocatorBase BranchLocator { get; }
@@ -18,7 +18,7 @@ public record GitPushCommand : IGitCommand<VoidResult>
         BranchLocator = branchLocator;
     }
 
-    public VoidResult ExecuteCommand(IGitInterface gitInterface)
+    public GitVoidResult ExecuteCommand(IGitInterface gitInterface)
     {
         try
         {
@@ -37,11 +37,11 @@ public record GitPushCommand : IGitCommand<VoidResult>
 
             gitInterface.Repository.Network.Push(currentBranch);
 
-            return new VoidResult(true, null);
+            return new GitVoidResult(true, null);
         }
         catch (Exception e)
         {
-            return new VoidResult(false, e);
+            return new GitVoidResult(false, e);
         }
     }
 }
