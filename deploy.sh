@@ -1,12 +1,20 @@
 #!/usr/bin/env sh
 
 ARCHITECTURE=$1
-DEPLOY_LOCATION=$2
+CONFIGURATION=$2
+DEPLOY_LOCATION=$3
 
 # Validate architecture
 
 if [[ ! "$ARCHITECTURE" =~ ^(osx-arm64|win-x64|linux-x64)$ ]]; then
     echo "Value '$ARCHITECTURE' is not a valid architecture or not an architecture in the set tested."
+    exit 1
+fi
+
+# Validate configuration
+
+if [[ ! "$CONFIGURATION" =~ ^(Debug|Release)$ ]]; then
+    echo "Value '$CONFIGURATION' is not a valid configuration. Must be Debug or Release."
     exit 1
 fi
 
@@ -23,11 +31,11 @@ fi
 
 echo "Found solution: $SOLUTION"
 
-# Run tests in Release mode (this builds what it needs for testing)
+# Run tests (using the specified configuration)
 
-echo "🧪 Running tests in Release mode..."
+echo "🧪 Running tests in $CONFIGURATION mode..."
 if ! dotnet test "$SOLUTION" \
-  -c Release \
+  -c $CONFIGURATION \
   --no-restore; then
   echo " ❌ TESTS FAILED"
   echo " Check the error messages above."
@@ -36,15 +44,19 @@ fi
 
 echo " ✅ All tests passed. Proceeding to publish..."
 
-# Publish once with maximum runtime speed optimizations
+# Publish (Release gets extra runtime speed optimizations; Debug does not)
+
+
+EXTRA_PUBLISH_FLAGS=""
+
+if [ "$CONFIGURATION" = "Release" ]; then
+  EXTRA_PUBLISH_FLAGS="-p:PublishReadyToRun=true -p:OptimizationPreference=Speed -p:TieredCompilation=false --self-contained"
+fi
 
 if ! dotnet publish $SCRIPT_DIR/src/todo/ \
-  -c Release \
+  -c $CONFIGURATION \
   -r $ARCHITECTURE \
-  -p:PublishReadyToRun=true \
-  -p:OptimizationPreference=Speed \
-  -p:TieredCompilation=false \
-  --self-contained; then
+  $EXTRA_PUBLISH_FLAGS; then
 
     echo " ❌ BUILD/PUBLISH FAILED."
     echo " Check the error messages above."
@@ -63,7 +75,7 @@ fi
 echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
 
 # Copy the published output
-if ! sudo cp -R $SCRIPT_DIR/src/todo/bin/Release/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
+if ! sudo cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
   exit 6
 fi
