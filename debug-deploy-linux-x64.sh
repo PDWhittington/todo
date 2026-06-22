@@ -2,4 +2,4 @@
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
-$SCRIPT_DIR/deploy-debug.sh 'osx-arm64' '/usr/local/bin/todo/'
+$SCRIPT_DIR/deploy.sh 'linux-x64' 'Debug' '/usr/local/bin/todo/'
