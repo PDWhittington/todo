@@ -31,8 +31,8 @@
       "Path": "/Applications/VSCodium.app/Contents/MacOS/Electron",
       "Parameters": "{0}"
     },
-    "EnvironmentVariableToOverridePath" : "TextEditorPath",
-    "EnvironmentVariableToOverrideParameters" : "TextEditorParameters"
+    "EnvironmentVariableToOverridePath" : "TODO_TEXT_EDITOR_PATH",
+    "EnvironmentVariableToOverrideParameters" : "TODO_TEXT_EDITOR_PARAMETERS"
   },
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",
