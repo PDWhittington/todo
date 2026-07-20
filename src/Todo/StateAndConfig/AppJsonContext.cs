@@ -13,7 +13,7 @@ namespace Todo.StateAndConfig;
   WriteIndented = true,           // or true if you want pretty-printed output
   ReadCommentHandling = JsonCommentHandling.Skip)]   // or your preferred defaults
 [JsonSerializable(typeof(Configuration))]             // the class that contains the Color property
-[JsonSerializable(typeof(PerOsFilePaths))]
+[JsonSerializable(typeof(PerOsLaunchInfos))]
 [JsonSerializable(typeof(ScoreCategory))]
 [JsonSerializable(typeof(TodoListInformation))]
 [JsonSerializable(typeof(TimeSpan))]

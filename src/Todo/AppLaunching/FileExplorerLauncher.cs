@@ -6,10 +6,11 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.AppLaunching;
 
-public class FileExplorerLauncher(IPathHelper pathHelper, IOutputWriter outputWriter)
+public class FileExplorerLauncher(IPathHelper pathHelper, IOutputWriter outputWriter, 
+    ILaunchInfoSelector launchInfoSelector)
     : IFileExplorerLauncher
 {
-    private static readonly PerOsFilePaths FileExplorerPaths = new(
+    private static readonly PerOsLaunchInfos FileExplorerPaths = new(
         new ProcessLaunchInfo("explorer.exe", "{0}"),
         new ProcessLaunchInfo("xdg-open", "{0}"),
         new ProcessLaunchInfo("open", "{0}"));
@@ -24,7 +25,7 @@ public class FileExplorerLauncher(IPathHelper pathHelper, IOutputWriter outputWr
 
     private void LaunchSingleFolder(string path)
     {
-        var launchInfo = FileExplorerPaths.GetPathForThisOs();
+        var launchInfo = launchInfoSelector.SelectLaunchInfoForThisOS(FileExplorerPaths); 
         var executablePath = pathHelper.ResolveIfNotRooted(launchInfo.Path);
         var parameters = launchInfo.InterpolateParameters(path);
 

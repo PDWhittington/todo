@@ -11,8 +11,8 @@ namespace Todo.AppLaunching;
 
 public partial class HtmlFileLauncher(
     IConfigurationProvider configurationProvider,
-    IPathHelper pathHelper,
-    IOutputWriter outputWriter)
+    IPathHelper pathHelper, IOutputWriter outputWriter,
+    ILaunchInfoSelector launchInfoSelector)
     : IHtmlFileLauncher
 {
     [LibraryImport("user32.dll")]
@@ -34,7 +34,8 @@ public partial class HtmlFileLauncher(
 
     private void LaunchSingleFile(string path)
     {
-        var browserLaunchInfo = configurationProvider.ConfigInfo.Configuration.BrowserPath.GetPathForThisOs();
+        var browserLaunchInfos = configurationProvider.ConfigInfo.Configuration.BrowserPath; 
+        var browserLaunchInfo = launchInfoSelector.SelectLaunchInfoForThisOS(browserLaunchInfos); 
         var browserPath = pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
         var parameters = browserLaunchInfo.InterpolateParameters(path);
 

@@ -80,7 +80,8 @@ internal static class Initialise
 
             foreach (var @interface in interfaces)
             {
-                serviceCollection.AddSingleton(@interface, provider => provider.GetService(implementation)!);
+                serviceCollection.AddSingleton(@interface, 
+provider => provider.GetService(implementation)!);
             }
             
             return serviceCollection;
@@ -90,8 +91,9 @@ internal static class Initialise
             => serviceCollection
                 .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
                 .AddSingleton<ITextFileLauncher, TextFileLauncher>()
-                .AddSingleton<IFileExplorerLauncher, FileExplorerLauncher>();
-
+                .AddSingleton<IFileExplorerLauncher, FileExplorerLauncher>()
+                .AddSingleton<ILaunchInfoSelector, LaunchInfoSelector>();
+        
         private IServiceCollection AddAssemblyOperations()
             => serviceCollection
                 .AddSingleton<IManifestStreamProvider, ManifestStreamProvider>();
@@ -104,8 +106,9 @@ internal static class Initialise
                 .AddSingleton<ICommandProvider, CommandProvider>()
                 .AddSingleton<ISettingsPathProvider, SettingsPathProvider>()
                 .AddSingleton<IAssemblyInformationProvider, AssemblyInformationProvider>()
-                .AddSingleton<IBoilerPlateProvider, BoilerPlateProvider>();
-
+                .AddSingleton<IBoilerPlateProvider, BoilerPlateProvider>()
+                .AddSingleton<IEnvironmentVariableProvider, EnvironmentVariableProvider>();
+        
         private IServiceCollection AddDateOperations()
             => serviceCollection
                 .AddSingleton<IDateAccessor, DateAccessor>()
