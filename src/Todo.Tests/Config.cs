@@ -11,7 +11,7 @@ public static class Config
     {
         var blankProcessLaunchInfo = new ProcessLaunchInfo("", "");
         
-        var blankPaths = new PerOsFilePaths(blankProcessLaunchInfo, 
+        var blankPaths = new PerOsLaunchInfos(blankProcessLaunchInfo, 
             blankProcessLaunchInfo, blankProcessLaunchInfo);
 
         var todoListInfo = new TodoListInformation("Test list", true, true);

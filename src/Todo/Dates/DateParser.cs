@@ -8,11 +8,11 @@ using Todo.Contracts.Services.StateAndConfig;
 namespace Todo.Dates;
 
 public class DateParser(IConfigurationProvider configurationProvider, 
-    IDateHelper dateHelper, IDateAdjuster dateAdjuster) : IDateParser
+    IDateHelper dateHelper, IDateAdjuster dateAdjuster, IEnvironmentVariableProvider environmentVariableProvider) : IDateParser
 {
     
     public bool TryGetDate(string? str, out DateOnly dateOnly)
-    {
+    { 
         return EnvironmentVariableSetsOverride(out var overrideDate) 
             ? TryGetDateRelativeTo(str, overrideDate, out dateOnly) 
             : TryGetDateRelativeTo(str, dateAdjuster.GetTodayWithMidnightAdjusted(), out dateOnly);
@@ -44,13 +44,12 @@ public class DateParser(IConfigurationProvider configurationProvider,
         var environmentVariableName = configurationProvider.ConfigInfo
             .Configuration.EnvironmentVariableToOverrideDate;
 
-        if (string.IsNullOrWhiteSpace(environmentVariableName))
+        if (string.IsNullOrWhiteSpace(environmentVariableName) 
+                || !environmentVariableProvider.TryGetEnvironmentVariable(environmentVariableName, out var overrideDateStr))
         {
             overrideDate = default;
             return false;
         }
-        
-        var overrideDateStr = Environment.GetEnvironmentVariable(environmentVariableName);
         
         return TryGetDateRelativeTo(overrideDateStr, dateAdjuster.GetTodayWithMidnightAdjusted(), out overrideDate);
     }

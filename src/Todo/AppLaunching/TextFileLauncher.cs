@@ -2,28 +2,30 @@
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.UI;
 
 namespace Todo.AppLaunching;
 
-public class TextFileLauncher(IConfigurationProvider configurationProvider, IPathHelper pathHelper)
+public class TextFileLauncher(IConfigurationProvider configurationProvider,
+    IPathHelper pathHelper, IOutputWriter outputWriter, ILaunchInfoSelector launchInfoSelector)
     : ITextFileLauncher
 {
-    private string? _textEditorPath;
-
-    private string TextEditorPath => _textEditorPath ?? GetTextEditorPath();
-
-    private string GetTextEditorPath()
+    public void LaunchFiles(params string [] filePaths)
     {
-        _textEditorPath = pathHelper.ResolveIfNotRooted(
-            configurationProvider.ConfigInfo.Configuration.TextEditorPath.GetPathForThisOs().Path);
-        return _textEditorPath;
-    }
-
-    public void LaunchFiles(params string [] paths)
-    {
-        foreach (var path in paths)
+        var launchInfos = configurationProvider.ConfigInfo.Configuration.TextEditorPath;
+        
+        var launchInfoForThisOs = launchInfoSelector.SelectLaunchInfoForThisOS(launchInfos);
+        
+        var textEditorPath = launchInfoForThisOs.Path;
+        var textEditorPathRooted = pathHelper.ResolveIfNotRooted(textEditorPath);
+        
+        foreach (var path in filePaths)
         {
-            Process.Start(TextEditorPath, path);
+            var parameters = launchInfoForThisOs.InterpolateParameters(path);
+            
+            outputWriter.WriteLine($"Launching {textEditorPathRooted} {parameters}");
+            
+            Process.Start(textEditorPathRooted, parameters);
         }
     }
 }

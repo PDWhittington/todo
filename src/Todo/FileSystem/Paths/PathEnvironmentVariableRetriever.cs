@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Todo.Contracts.Services.FileSystem.Paths;
+using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.FileSystem.Paths;
 
@@ -10,7 +11,8 @@ namespace Todo.FileSystem.Paths;
 /// into an array of paths. The correct delimiter is used for the operating system
 /// in use.
 /// </summary>
-public class PathEnvironmentVariableRetriever : IPathEnvironmentVariableRetriever
+public class PathEnvironmentVariableRetriever(IEnvironmentVariableProvider environmentVariableProvider)
+    : IPathEnvironmentVariableRetriever
 {
     private string[]? _paths;
 
@@ -18,7 +20,7 @@ public class PathEnvironmentVariableRetriever : IPathEnvironmentVariableRetrieve
     /// Sticky environment paths property, which is populated once per process.
     /// </summary>
     public IEnumerable<string> Paths => _paths ?? RetrieveAndPopulatePaths();
-
+    
     /// <summary>
     /// Retrieves and populates the paths from the environment variable.
     /// </summary>
@@ -26,7 +28,10 @@ public class PathEnvironmentVariableRetriever : IPathEnvironmentVariableRetrieve
     /// <exception cref="Exception"></exception>
     private string[] RetrieveAndPopulatePaths()
     {
-        var pathVariable = Environment.GetEnvironmentVariable("PATH");
+        if (environmentVariableProvider.TryGetEnvironmentVariable("PATH", out var pathVariable))
+        {
+            return [];
+        }
 
         if (pathVariable is null) throw new Exception("PATH environment variable not found");
 
