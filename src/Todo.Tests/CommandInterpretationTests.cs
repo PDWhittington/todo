@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.UI;
 
 namespace Todo.Tests;
 
@@ -44,6 +45,8 @@ public class CommandInterpretationTests
 
         var serviceProvider = GetServiceProvider(mockCommandLine);
 
+        using var handle = serviceProvider.GetRequiredService<IOutputWriter>().CreateDisposableHandle();
+        
         var commandProvider = serviceProvider.GetRequiredService<ICommandProvider>();
 
         var actualCommand = commandProvider.GetCommand();
