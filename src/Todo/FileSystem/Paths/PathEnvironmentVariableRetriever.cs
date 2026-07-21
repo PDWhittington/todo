@@ -28,7 +28,7 @@ public class PathEnvironmentVariableRetriever(IEnvironmentVariableProvider envir
     /// <exception cref="Exception"></exception>
     private string[] RetrieveAndPopulatePaths()
     {
-        if (environmentVariableProvider.TryGetEnvironmentVariable("PATH", out var pathVariable))
+        if (!environmentVariableProvider.TryGetEnvironmentVariable("PATH", out var pathVariable))
         {
             return [];
         }
