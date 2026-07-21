@@ -11,9 +11,10 @@ namespace Todo.AppLaunching;
 
 public partial class HtmlFileLauncher(
     IConfigurationProvider configurationProvider,
-    IPathHelper pathHelper, IOutputWriter outputWriter,
-    ILaunchInfoSelector launchInfoSelector)
-    : IHtmlFileLauncher
+    IPathHelper pathHelper,
+    IOutputWriter outputWriter,
+    ILaunchInfoSelector launchInfoSelector
+) : IHtmlFileLauncher
 {
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -24,7 +25,7 @@ public partial class HtmlFileLauncher(
     [return: MarshalAs(UnmanagedType.I4)]
     private static partial int SetForegroundWindow(IntPtr hwnd);
 
-    public void LaunchFiles(params string [] paths)
+    public void LaunchFiles(params string[] paths)
     {
         foreach (var path in paths)
         {
@@ -34,14 +35,15 @@ public partial class HtmlFileLauncher(
 
     private void LaunchSingleFile(string path)
     {
-        var browserLaunchInfos = configurationProvider.ConfigInfo.Configuration.BrowserPath; 
-        var browserLaunchInfo = launchInfoSelector.SelectLaunchInfoForThisOS(browserLaunchInfos); 
+        var browserLaunchInfos = configurationProvider.ConfigInfo.Configuration.BrowserPath;
+        var browserLaunchInfo = launchInfoSelector.SelectLaunchInfoForThisOS(browserLaunchInfos);
         var browserPath = pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
-        var parameters = browserLaunchInfo.InterpolateParameters(path);
 
-        outputWriter.WriteLine($"Opening {path} in a browser.");
-        outputWriter.WriteLine($"({browserPath} {parameters})");
-        
+        var pathWithFileProtocol = new Uri(path);
+        var parameters = browserLaunchInfo.InterpolateParameters(pathWithFileProtocol.ToString());
+
+        outputWriter.WriteLine($"Launching {browserPath} {parameters}");
+
         var process = Process.Start(browserPath, parameters);
         BringMainWindowToFrontIfWindows(process);
     }
@@ -50,16 +52,24 @@ public partial class HtmlFileLauncher(
     private enum ShowWindowEnum
     {
         Hide = 0,
-        ShowNormal = 1, ShowMinimized = 2,
-        Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
-        Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
-        Restore = 9, ShowDefault = 10, ForceMinimized = 11
+        ShowNormal = 1,
+        ShowMinimized = 2,
+        Maximize = 3,
+        ShowNormalNoActivate = 4,
+        Show = 5,
+        Minimize = 6,
+        ShowMinNoActivate = 7,
+        ShowNoActivate = 8,
+        Restore = 9,
+        ShowDefault = 10,
+        ForceMinimized = 11,
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local
     private static int BringMainWindowToFrontIfWindows(Process process)
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return 0;
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return 0;
 
         // check if the window is hidden / minimized
         if (process.MainWindowHandle == IntPtr.Zero)
