@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -7,26 +9,79 @@ namespace Todo.StateAndConfig;
 
 public class AssemblyInformationProvider : IAssemblyInformationProvider
 {
-    private readonly IConstantsProvider _constantsProvider;
-    private readonly IManifestStreamProvider _manifestStreamProvider;
+    private readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
 
-    public AssemblyInformationProvider(IConstantsProvider constantsProvider, 
-        IManifestStreamProvider manifestStreamProvider)
+    private readonly char[] _newLineChars = [ '\r', '\n' ];
+
+    public string GitDescribe()
     {
-        _constantsProvider = constantsProvider;
-        _manifestStreamProvider = manifestStreamProvider;
+        var gitDescribe = GetMetadata("GitDescribe");
+        return gitDescribe ?? throw new Exception("BuildTime not found");
     }
 
-    public string GetCommitHash() =>
-        _manifestStreamProvider.GetStringFromManifest(_constantsProvider.CommitHash.FullName).Trim();
+    public string [] GitBranches()
+    {
+        var gitBranches = GetMetadata("GitBranches");
+
+        if (gitBranches is null || string.IsNullOrWhiteSpace(gitBranches)) return [];
+
+        var branchList = gitBranches
+            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries)
+            .Select(b => b.Trim())
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .OrderBy(b =>
+                string.Equals(b, "master", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(b, "main", StringComparison.OrdinalIgnoreCase)
+                    ? 0 : 1)
+            .ThenBy(b => b);
+        
+        return branchList.ToArray();
+    }
+
+    public string [] GitTags()
+    {
+        var gitTags = GetMetadata("GitTags");
+
+        if (gitTags is null || string.IsNullOrWhiteSpace(gitTags)) return [];
+
+        var branchList = gitTags
+            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries)
+            .Select(b => b.Trim())
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .OrderBy(b => b);
+        
+        return branchList.ToArray();
+    }
+
+    public string [] GitWorktreeChanges()
+    {
+        var gitWorktreeChanges = GetMetadata("GitWorktreeChanges");
+        
+        if (gitWorktreeChanges is null || string.IsNullOrWhiteSpace(gitWorktreeChanges)) return [];
+        
+        var gitChangeList = gitWorktreeChanges
+            .Split(';', StringSplitOptions.RemoveEmptyEntries)
+            .Select(b => b.Trim())
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .OrderBy(b => b);
+
+        return gitChangeList.ToArray();
+    }
 
     public DateTime GetBuildTime()
     {
-        var dteStr = _manifestStreamProvider
-            .GetStringFromManifest(_constantsProvider.BuildTime.FullName)
-            .Trim();
+        var dteStr = GetMetadata("BuildTime");
 
-        return DateTime.Parse(dteStr);
+        return dteStr is not null
+            ? DateTime.Parse(dteStr)
+            : throw new Exception("BuildTime not found");
+    }
+    
+    public string? GetMetadata(string key)
+    {
+        return _executingAssembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => a.Key == key)
+            ?.Value;
     }
     
     /// <summary>

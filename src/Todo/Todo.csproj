@@ -55,13 +55,6 @@
         <None Remove="todo-settings.json" />
         <EmbeddedResource Include="todo-settings.json" />
     </ItemGroup>
-    <!-- Assembly info files populated by pre-build -->
-    <ItemGroup>
-        <None Remove="commithash.txt" />
-        <EmbeddedResource Include="commithash.txt" />
-        <None Remove="buildtime.txt" />
-        <EmbeddedResource Include="buildtime.txt" />
-    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
         <ProjectReference Include="..\Todo.SourceGenerators\Todo.SourceGenerators.csproj"
@@ -78,87 +71,155 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+    <Target Name="GenerateBuildInfo"
+            BeforeTargets="BeforeCompile">
+        <!-- Git describe -->
+        <Exec Command="git describe --long --dirty --tags --always"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="GitDescribe" />
+        </Exec>
 
-    <Target Name="GenerateBuildInfo" BeforeTargets="BeforeCompile">
-      <ItemGroup>
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>BuildConfiguration</_Parameter1>
-          <_Parameter2>$(Configuration)</_Parameter2>
-        </AssemblyAttribute>
+        <!-- Branches that point to current HEAD -->
+        <Exec Command="git branch --points-at HEAD --format='%(refname:short)'"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true">
+          <Output TaskParameter="ConsoleOutput" PropertyName="GitBranches" />
+        </Exec>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>DebugType</_Parameter1>
-          <_Parameter2>$(DebugType)</_Parameter2>
-        </AssemblyAttribute>
+        <!-- Tags that point to current HEAD -->
+        <Exec Command="git tag --points-at HEAD"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true">
+          <Output TaskParameter="ConsoleOutput" PropertyName="GitTags" />
+        </Exec>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>OptimizationPreference</_Parameter1>
-          <_Parameter2>$(OptimizationPreference)</_Parameter2>
-        </AssemblyAttribute>
+        <!-- Worktree changes -->
+        <Exec Command="git status --porcelain"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true">
+          <Output TaskParameter="ConsoleOutput" PropertyName="GitWorktreeChanges" />
+        </Exec>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>PublishAot</_Parameter1>
-          <_Parameter2>$(PublishAot)</_Parameter2>
-        </AssemblyAttribute>
+        <!-- Windows: Build time -->
+        <Exec Command="powershell -NoProfile -Command &quot;Get-Date -Format 'yyyy-MM-dd HH:mm:sszzz'&quot;"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true"
+              Condition="'$(OS)' == 'Windows_NT'">
+            <Output TaskParameter="ConsoleOutput"
+                    PropertyName="BuildTime" />
+        </Exec>
+        <!-- Linux/MacOS: Build time -->
+        <Exec Command="date '+%Y-%m-%d %H:%M:%S%z'"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true"
+              Condition="'$(OS)' != 'Windows_NT'">
+            <Output TaskParameter="ConsoleOutput"
+                    PropertyName="BuildTime" />
+        </Exec>
+        <ItemGroup>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitDescribe</_Parameter1>
+                <_Parameter2>$(GitDescribe)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>PublishDir</_Parameter1>
-          <_Parameter2>$(PublishDir)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitBranches</_Parameter1>
+                <_Parameter2>$(GitBranches)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>PublishReadyToRun</_Parameter1>
-          <_Parameter2>$(PublishReadyToRun)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitTags</_Parameter1>
+                <_Parameter2>$(GitTags)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>PublishReadyToRunComposite</_Parameter1>
-          <_Parameter2>$(PublishReadyToRunComposite)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitWorktreeChanges</_Parameter1>
+                <_Parameter2>$(GitWorktreeChanges)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>PublishSingleFile</_Parameter1>
-          <_Parameter2>$(PublishSingleFile)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>BuildTime</_Parameter1>
+                <_Parameter2>$(BuildTime)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>PublishTrimmed</_Parameter1>
-          <_Parameter2>$(PublishTrimmed)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>BuildConfiguration</_Parameter1>
+                <_Parameter2>$(Configuration)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>RuntimeIdentifier</_Parameter1>
-          <_Parameter2>$(RuntimeIdentifier)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>DebugType</_Parameter1>
+                <_Parameter2>$(DebugType)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>SelfContained</_Parameter1>
-          <_Parameter2>$(SelfContained)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>OptimizationPreference</_Parameter1>
+                <_Parameter2>$(OptimizationPreference)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>SourceRevisionId</_Parameter1>
-          <_Parameter2>$(SourceRevisionId)</_Parameter2>
-        </AssemblyAttribute>
- 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>TargetFramework</_Parameter1>
-          <_Parameter2>$(TargetFramework)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>PublishAot</_Parameter1>
+                <_Parameter2>$(PublishAot)</_Parameter2>
+            </AssemblyAttribute>
 
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-          <_Parameter1>TieredCompilation</_Parameter1>
-          <_Parameter2>$(TieredCompilation)</_Parameter2>
-        </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>PublishDir</_Parameter1>
+                <_Parameter2>$(PublishDir)</_Parameter2>
+            </AssemblyAttribute>
 
-     </ItemGroup>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>PublishReadyToRun</_Parameter1>
+                <_Parameter2>$(PublishReadyToRun)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>PublishReadyToRunComposite</_Parameter1>
+                <_Parameter2>$(PublishReadyToRunComposite)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>PublishSingleFile</_Parameter1>
+                <_Parameter2>$(PublishSingleFile)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>PublishTrimmed</_Parameter1>
+                <_Parameter2>$(PublishTrimmed)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>RuntimeIdentifier</_Parameter1>
+                <_Parameter2>$(RuntimeIdentifier)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>SelfContained</_Parameter1>
+                <_Parameter2>$(SelfContained)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>SourceRevisionId</_Parameter1>
+                <_Parameter2>$(SourceRevisionId)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>TargetFramework</_Parameter1>
+                <_Parameter2>$(TargetFramework)</_Parameter2>
+            </AssemblyAttribute>
+
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>TieredCompilation</_Parameter1>
+                <_Parameter2>$(TieredCompilation)</_Parameter2>
+            </AssemblyAttribute>
+        </ItemGroup>
     </Target>
-
-    <Target Name="PreBuild"
-            BeforeTargets="PreBuildEvent">
-        <Exec Command="git describe --long --dirty --tags --always > commithash.txt&#xA;echo $(CurrentDate) > buildtime.txt&#xA;" />
-    </Target>
-
     <Target Name="RemovePdbsFromPublish"
             AfterTargets="ComputeResolvedFilesToPublishList">
         <ItemGroup>
