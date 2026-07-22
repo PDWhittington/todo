@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Services.UI;
 
 namespace Todo.StateAndConfig;
 
 public class BoilerPlateProvider(
     IAssemblyInformationProvider assemblyInformationProvider,
     IDateAccessor dateAccessor,
-    IConstantsProvider constantsProvider
-) : IBoilerPlateProvider
+    IConstantsProvider constantsProvider,
+    IConsoleTextFormatter consoleTextFormatter) : IBoilerPlateProvider
 {
     public string GetBoilerPlate()
     {
@@ -21,23 +24,28 @@ public class BoilerPlateProvider(
 
     public void MakeBoilerPlate(StringBuilder sb)
     {
-        sb.AppendLine($"Assembly location: {assemblyInformationProvider.AssemblyLocation()}")
-            .AppendLine($"Todo version (commit): {assemblyInformationProvider.GetCommitHash()}")
+        sb.AppendLine(consoleTextFormatter.FormatAsUnderlined("Version Information"))
+            .AppendLine($"\tAssembly location: {assemblyInformationProvider.AssemblyLocation()}")
+            .AppendLine($"\tTodo version (commit): {assemblyInformationProvider.GetCommitHash()}")
             .AppendLine(
-                $"Build time: {assemblyInformationProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage()}"
+                $"\tBuild time: {assemblyInformationProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage()}"
             )
-            .AppendLine($"DEBUG flag: {assemblyInformationProvider.DebugFlag()}")
-            .AppendLine($"Process architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine()
-            .AppendLine($"Framework version: {RuntimeInformation.FrameworkDescription}")
-            .AppendLine($"OS description: {RuntimeInformation.OSDescription}")
-            .AppendLine($"OS architecture: {RuntimeInformation.OSArchitecture}")
+            .AppendLine(consoleTextFormatter.FormatAsUnderlined("Build Information"))
+            .AppendBuildInformation()
             .AppendLine()
+            .AppendLine(consoleTextFormatter.FormatAsUnderlined("Process, Framework and OS"))
+            .AppendLine($"\tDEBUG flag: {assemblyInformationProvider.DebugFlag()}")
+            .AppendLine($"\tProcess architecture: {RuntimeInformation.ProcessArchitecture}")
+            .AppendLine($"\tFramework version: {RuntimeInformation.FrameworkDescription}")
+            .AppendLine($"\tOS description: {RuntimeInformation.OSDescription}")
+            .AppendLine($"\tOS architecture: {RuntimeInformation.OSArchitecture}")
+            .AppendLine()
+            .AppendLine(consoleTextFormatter.FormatAsUnderlined("Contact"))
             .AppendLine(
-                $"Project author: {constantsProvider.ProjectAuthor} "
-                    + $"({constantsProvider.ProjectAuthorContactDetails})"
-            )
-            .AppendLine($"Project website: {constantsProvider.ProjectWebsite}")
+                $"\tProject author: {constantsProvider.ProjectAuthor} "
+                    + $"({constantsProvider.ProjectAuthorContactDetails})")
+            .AppendLine($"\tProject website: {constantsProvider.ProjectWebsite}")
             .AppendLine();
     }
 
@@ -92,5 +100,44 @@ public class BoilerPlateProvider(
         var floored = Math.Floor(val);
 
         return (floored == 1.0) ? $"{floored} {unit}" : $"{floored} {unit}s";
+    }
+}
+
+static class BuildInfoExtensions
+{
+    private static readonly string[] _buildArguments =
+    [
+        "BuildConfiguration",
+        "DebugType",
+        "OptimizationPreference",
+        "PublishAot",
+        "PublishDir",
+        "PublishReadyToRun",
+        "PublishReadyToRunComposite",
+        "PublishSingleFile",
+        "PublishTrimmed",
+        "RuntimeIdentifier",
+        "SelfContained",
+        "SourceRevisionId",
+        "TargetFramework",
+        "TieredCompilation"
+    ];
+    
+    public static StringBuilder AppendBuildInformation(this StringBuilder sb)
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        
+        foreach (var arg in _buildArguments)
+        {
+            sb.AppendLine($"\t{arg}: {GetMetadata(asm, arg) ?? "Unknown"}");
+        }
+        
+        return sb;
+    }
+    
+    private static string? GetMetadata(Assembly asm, string key)
+    {
+        return asm.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => a.Key == key)?.Value;
     }
 }

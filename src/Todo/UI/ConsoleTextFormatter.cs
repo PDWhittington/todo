@@ -146,4 +146,6 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
             WordColumnWidth = wordColumnWidth
         };
     }
+
+    public string FormatAsUnderlined(string text) => $"\e[4m{text}\e[0m";
 }
