@@ -71,32 +71,44 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-    <Target Name="GenerateBuildInfo" BeforeTargets="BeforeCompile">
+    <Target Name="GenerateBuildInfo"
+            BeforeTargets="BeforeCompile">
+        <!-- Git describe -->
+        <Exec Command="git describe --long --dirty --tags --always"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true">
+            <Output TaskParameter="ConsoleOutput"
+                    PropertyName="GitDescribe" />
+        </Exec>
+        <!-- Windows: Build time -->
+        <Exec Command="powershell -NoProfile -Command &quot;Get-Date -Format 'yyyy-MM-dd HH:mm:sszzz'&quot;"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true"
+              Condition="'$(OS)' == 'Windows_NT'">
+            <Output TaskParameter="ConsoleOutput"
+                    PropertyName="BuildTime" />
+        </Exec>
+        <!-- Linux/MacOS: Build time -->
+        <Exec Command="date '+%Y-%m-%d %H:%M:%S%z'"
+              ConsoleToMsBuild="true"
+              ContinueOnError="true"
+              IgnoreExitCode="true"
+              Condition="'$(OS)' != 'Windows_NT'">
+            <Output TaskParameter="ConsoleOutput"
+                    PropertyName="BuildTime" />
+        </Exec>
         <ItemGroup>
-            <!-- Capture Git commit/hash/describe -->
-            <Exec Command="git describe --long --dirty --tags --always"
-                  ConsoleToMsBuild="true"
-                  ContinueOnError="true"
-                  IgnoreExitCode="true">
-                <Output TaskParameter="ConsoleOutput"
-                        PropertyName="GitDescribe" />
-            </Exec>
-            <!-- WINDOWS: Capture current build time -->
-            <Exec Command="powershell -NoProfile -Command &quot;Get-Date -Format 'yyyy-MM-dd HH:mm:sszzz'&quot;"
-                  ConsoleToMsBuild="true"
-                  ContinueOnError="true"
-                  Condition="'$(OS)' == 'Windows_NT'">
-                <Output TaskParameter="ConsoleOutput"
-                        PropertyName="BuildTime" />
-            </Exec>
-            <!-- Linux/MacOS: Capture current build time -->
-            <Exec Command="date '+%Y-%m-%d %H:%M:%S%z'"
-                  ConsoleToMsBuild="true"
-                  ContinueOnError="true"
-                  Condition="'$(OS)' != 'Windows_NT'">
-                <Output TaskParameter="ConsoleOutput"
-                        PropertyName="BuildTime" />
-            </Exec>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>GitDescribe</_Parameter1>
+                <_Parameter2>$(GitDescribe)</_Parameter2>
+            </AssemblyAttribute>
+            <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+                <_Parameter1>BuildTime</_Parameter1>
+                <_Parameter2>$(BuildTime)</_Parameter2>
+            </AssemblyAttribute>
+            <!-- Your other properties -->
             <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
                 <_Parameter1>BuildConfiguration</_Parameter1>
                 <_Parameter2>$(Configuration)</_Parameter2>

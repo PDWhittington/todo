@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -7,26 +9,28 @@ namespace Todo.StateAndConfig;
 
 public class AssemblyInformationProvider : IAssemblyInformationProvider
 {
-    private readonly IConstantsProvider _constantsProvider;
-    private readonly IManifestStreamProvider _manifestStreamProvider;
+    private readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
 
-    public AssemblyInformationProvider(IConstantsProvider constantsProvider, 
-        IManifestStreamProvider manifestStreamProvider)
+    public string GetCommitHash()
     {
-        _constantsProvider = constantsProvider;
-        _manifestStreamProvider = manifestStreamProvider;
+        var gitDescribe = GetMetadata("GitDescribe");
+        return gitDescribe ?? throw new Exception("BuildTime not found");
     }
-
-    public string GetCommitHash() =>
-        _manifestStreamProvider.GetStringFromManifest(_constantsProvider.CommitHash.FullName).Trim();
 
     public DateTime GetBuildTime()
     {
-        var dteStr = _manifestStreamProvider
-            .GetStringFromManifest(_constantsProvider.BuildTime.FullName)
-            .Trim();
+        var dteStr = GetMetadata("BuildTime");
 
-        return DateTime.Parse(dteStr);
+        return dteStr is not null
+            ? DateTime.Parse(dteStr)
+            : throw new Exception("BuildTime not found");
+    }
+    
+    public string? GetMetadata(string key)
+    {
+        return _executingAssembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => a.Key == key)
+            ?.Value;
     }
     
     /// <summary>

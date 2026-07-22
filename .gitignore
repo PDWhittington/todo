@@ -3,11 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Files specific to this project
-
-src/Todo/commithash.txt
-src/Todo/buildtime.txt
-
 # User-specific files
 *.rsuser
 *.suo

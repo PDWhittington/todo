@@ -16,10 +16,6 @@ public interface IConstantsProvider
     
     ManifestInfo GraphHtmlTemplate { get; } 
 
-    ManifestInfo CommitHash { get; }
-
-    ManifestInfo BuildTime { get; }
-
     string ProjectAuthor { get; }
 
     string ProjectAuthorContactDetails { get; }

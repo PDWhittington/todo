@@ -6,6 +6,8 @@ public interface IAssemblyInformationProvider
 
     DateTime GetBuildTime();
 
+    string? GetMetadata(string key);
+
     string GetRootedToAssemblyFolder(string path);
 
     string AssemblyLocation();
