@@ -49,15 +49,15 @@ public class BoilerPlateProvider(
          */
 
         var buildTime = assemblyInformationProvider.GetBuildTime();
-        
+
         sb.AppendLine(consoleTextFormatter.FormatAsBold("Version Information"))
             .AppendLine($"\tAssembly location: {assemblyInformationProvider.AssemblyLocation()}")
-            .AppendLine($"\tTodo version (commit): {assemblyInformationProvider.GetCommitHash()}")
-            .AppendLine(
-                $"\tBuild time: {buildTime.ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage(buildTime)}"
-            )
-            .AppendLine();
-            
+            .AppendLine($"\tBuild time: {buildTime.ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage(buildTime)}");
+
+        AddGitInformation(sb);
+
+        sb.AppendLine();
+        
         /*
          * Build information
          */
@@ -94,6 +94,66 @@ public class BoilerPlateProvider(
                     + $"({constantsProvider.ProjectAuthorContactDetails})")
             .AppendLine($"\tProject website: {constantsProvider.ProjectWebsite}")
             .AppendLine();
+    }
+
+    private void AddGitInformation(StringBuilder sb)
+    {
+        sb.AppendLine($"\tGit description: {assemblyInformationProvider.GitDescribe()}");
+
+        var gitBranches = assemblyInformationProvider.GitBranches();
+        var gitTags = assemblyInformationProvider.GitTags();
+        
+        var gitRefs = gitBranches.Concat(gitTags.Select(x => $"{x} (Tag)")).ToArray();
+
+        PrintList(sb, "Git refs", gitRefs, true);
+
+        var gitWorktreeChanges = assemblyInformationProvider.GitWorktreeChanges();
+        
+        PrintList(sb, "Git worktree changes", gitWorktreeChanges);
+    }
+
+    private void PrintList(StringBuilder sb, string name, string[] set, bool underlineTopItem = false)
+    {
+        switch (set.Length)
+        {
+            case 0:
+            {
+                var none = "[NONE]";
+                var item = underlineTopItem 
+                    ? consoleTextFormatter.FormatAsUnderlined(none)
+                    : none;
+                
+                sb.AppendLine($"\t{name}: {item}"); 
+                break;
+            }
+            case 1:
+            {
+                var item = underlineTopItem 
+                    ? consoleTextFormatter.FormatAsUnderlined(set[0])
+                    : set[0];
+                
+                sb.AppendLine($"\t{name}: {item}"); 
+                break;
+            }
+
+            default:
+            {
+                sb.AppendLine($"\t{name}:");
+
+                var i = 0;
+                
+                foreach (var item in set)
+                {
+                    var itemToPrint = i++ == 0 && underlineTopItem
+                        ? consoleTextFormatter.FormatAsUnderlined(item)
+                        : item;
+                    
+                    sb.AppendLine($"\t\t{itemToPrint}");
+                }
+
+                break;
+            }
+        }
     }
 
     private string TimeAgoMessage(DateTime buildTime)

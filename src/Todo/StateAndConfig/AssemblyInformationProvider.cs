@@ -11,10 +11,61 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
 {
     private readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
 
-    public string GetCommitHash()
+    private readonly char[] _newLineChars = [ '\r', '\n' ];
+
+    public string GitDescribe()
     {
         var gitDescribe = GetMetadata("GitDescribe");
         return gitDescribe ?? throw new Exception("BuildTime not found");
+    }
+
+    public string [] GitBranches()
+    {
+        var gitBranches = GetMetadata("GitBranches");
+
+        if (gitBranches is null || string.IsNullOrWhiteSpace(gitBranches)) return [];
+
+        var branchList = gitBranches
+            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries)
+            .Select(b => b.Trim())
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .OrderBy(b =>
+                string.Equals(b, "master", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(b, "main", StringComparison.OrdinalIgnoreCase)
+                    ? 0 : 1)
+            .ThenBy(b => b);
+        
+        return branchList.ToArray();
+    }
+
+    public string [] GitTags()
+    {
+        var gitTags = GetMetadata("GitTags");
+
+        if (gitTags is null || string.IsNullOrWhiteSpace(gitTags)) return [];
+
+        var branchList = gitTags
+            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries)
+            .Select(b => b.Trim())
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .OrderBy(b => b);
+        
+        return branchList.ToArray();
+    }
+
+    public string [] GitWorktreeChanges()
+    {
+        var gitWorktreeChanges = GetMetadata("GitWorktreeChanges");
+        
+        if (gitWorktreeChanges is null || string.IsNullOrWhiteSpace(gitWorktreeChanges)) return [];
+        
+        var gitChangeList = gitWorktreeChanges
+            .Split(';', StringSplitOptions.RemoveEmptyEntries)
+            .Select(b => b.Trim())
+            .Where(b => !string.IsNullOrWhiteSpace(b))
+            .OrderBy(b => b);
+
+        return gitChangeList.ToArray();
     }
 
     public DateTime GetBuildTime()

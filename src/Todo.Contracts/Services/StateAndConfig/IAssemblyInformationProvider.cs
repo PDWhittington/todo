@@ -2,7 +2,13 @@
 
 public interface IAssemblyInformationProvider
 {
-    string GetCommitHash();
+    string GitDescribe();
+
+    string [] GitBranches();
+    
+    string [] GitTags();
+
+    string [] GitWorktreeChanges();
 
     DateTime GetBuildTime();
 
