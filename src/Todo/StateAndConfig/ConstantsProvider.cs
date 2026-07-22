@@ -19,10 +19,6 @@ public class ConstantsProvider : IConstantsProvider
     public ManifestInfo ListHtmlTemplate { get; } = ManifestInfo.Of("list-template.html");
     
     public ManifestInfo GraphHtmlTemplate { get; } = ManifestInfo.Of("graph-template.html");
-    
-    public ManifestInfo CommitHash { get; } = ManifestInfo.Of("commithash.txt");
-    
-    public ManifestInfo BuildTime { get; } = ManifestInfo.Of("buildtime.txt");
 
     public string ProjectAuthor => "Phil Whittington";
 

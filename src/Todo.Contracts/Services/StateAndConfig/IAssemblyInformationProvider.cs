@@ -2,9 +2,17 @@
 
 public interface IAssemblyInformationProvider
 {
-    string GetCommitHash();
+    string GitDescribe();
+
+    string [] GitBranches();
+    
+    string [] GitTags();
+
+    string [] GitWorktreeChanges();
 
     DateTime GetBuildTime();
+
+    string? GetMetadata(string key);
 
     string GetRootedToAssemblyFolder(string path);
 
