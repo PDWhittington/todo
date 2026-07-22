@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
@@ -10,8 +9,6 @@ namespace Todo.StateAndConfig;
 public class AssemblyInformationProvider : IAssemblyInformationProvider
 {
     private readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
-
-    private readonly char[] _newLineChars = [ '\r', '\n' ];
 
     public string GitDescribe()
     {
@@ -26,7 +23,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
         if (gitBranches is null || string.IsNullOrWhiteSpace(gitBranches)) return [];
 
         var branchList = gitBranches
-            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries)
+            .Split(';', StringSplitOptions.RemoveEmptyEntries)
             .Select(b => b.Trim())
             .Where(b => !string.IsNullOrWhiteSpace(b))
             .OrderBy(b =>
@@ -45,7 +42,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
         if (gitTags is null || string.IsNullOrWhiteSpace(gitTags)) return [];
 
         var branchList = gitTags
-            .Split(_newLineChars, StringSplitOptions.RemoveEmptyEntries)
+            .Split(';', StringSplitOptions.RemoveEmptyEntries)
             .Select(b => b.Trim())
             .Where(b => !string.IsNullOrWhiteSpace(b))
             .OrderBy(b => b);
