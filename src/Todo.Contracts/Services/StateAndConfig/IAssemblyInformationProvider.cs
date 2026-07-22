@@ -1,7 +1,11 @@
-﻿namespace Todo.Contracts.Services.StateAndConfig;
+﻿using Todo.Contracts.Data.Config;
+
+namespace Todo.Contracts.Services.StateAndConfig;
 
 public interface IAssemblyInformationProvider
 {
+    PackageReferenceInfo[] GetPackageReferences();
+    
     string GitDescribe();
 
     string [] GitBranches();

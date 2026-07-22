@@ -55,7 +55,8 @@ public class BoilerPlateProvider(
             .AppendLine($"\tBuild time: {buildTime.ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage(buildTime)}");
 
         AddGitInformation(sb);
-
+        AddPackageReferenceInformation(sb);
+        
         sb.AppendLine();
         
         /*
@@ -112,6 +113,17 @@ public class BoilerPlateProvider(
         PrintList(sb, "Git worktree changes", gitWorktreeChanges);
     }
 
+    private void AddPackageReferenceInformation(StringBuilder sb)
+    {
+        var packageReferences = assemblyInformationProvider.GetPackageReferences();
+        
+        var packageReferencesAsStrings = packageReferences
+            .Select(x => $"{x.Identity} | {x.Version}")
+            .ToArray();
+        
+        PrintList(sb, "Package references", packageReferencesAsStrings);
+    }
+    
     private void PrintList(StringBuilder sb, string name, string[] set, bool underlineTopItem = false)
     {
         switch (set.Length)
