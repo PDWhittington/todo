@@ -8,7 +8,7 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.UI;
 
-public class ConsoleTextFormatter(IConfigurationProvider configurationProvider) 
+public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
     : IConsoleTextFormatter
 {
     private struct ColumnWidths
@@ -32,9 +32,11 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
             var commandHelpMessage = commandHelpMessagesArr[i];
 
             var helpWordLines = commandHelpMessage.HelpWords;
-            var commandDescriptionLines = WrapText(commandHelpMessage.CommandDescription, 
-                    columnWidths.MessageColumnWidth)
-                    .ToArray();
+            var commandDescriptionLines = WrapText(
+                    commandHelpMessage.CommandDescription,
+                    columnWidths.MessageColumnWidth
+                )
+                .ToArray();
 
             var maxLines = Math.Max(helpWordLines.Length, commandDescriptionLines.Length);
 
@@ -54,11 +56,14 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
         return sb.ToString();
     }
 
-    private static string CreateRow(string[] helpWordLines, 
-        string[] commandDescriptionLines, int index, ColumnWidths columnWidths)
+    private static string CreateRow(
+        string[] helpWordLines,
+        string[] commandDescriptionLines,
+        int index,
+        ColumnWidths columnWidths
+    )
     {
-        var sb = new StringBuilder()
-            .Append('\u2502');
+        var sb = new StringBuilder().Append('\u2502');
 
         var helpWord = index >= 0 && index < helpWordLines.Length ? helpWordLines[index] : "";
 
@@ -66,7 +71,10 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
 
         sb.Append(helpWordPadded).Append('\u2502');
 
-        var description = index >= 0 && index < commandDescriptionLines.Length ? commandDescriptionLines[index] : "";
+        var description =
+            index >= 0 && index < commandDescriptionLines.Length
+                ? commandDescriptionLines[index]
+                : "";
 
         var descriptionPadded = description.PadRight(columnWidths.MessageColumnWidth);
 
@@ -79,30 +87,40 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
     {
         Top,
         Middle,
-        Bottom
+        Bottom,
     }
 
-    private static string HorizontalLine(RowType rowType, ColumnWidths columnWidths)
-        => rowType switch
+    private static string HorizontalLine(RowType rowType, ColumnWidths columnWidths) =>
+        rowType switch
         {
-            RowType.Top => "\u250C" + new string('\u2500', columnWidths.WordColumnWidth) + "\u252C" + new string('\u2500', columnWidths.MessageColumnWidth) + "\u2510",
-            RowType.Middle => "\u251C" + new string('\u2500', columnWidths.WordColumnWidth) + "\u253C" + new string('\u2500', columnWidths.MessageColumnWidth) + "\u2524",
-            RowType.Bottom => "\u2514"+ new string('\u2500', columnWidths.WordColumnWidth) + "\u2534" + new string('\u2500', columnWidths.MessageColumnWidth) + "\u2518",
-            _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null)
+            RowType.Top => "\u250C"
+                + new string('\u2500', columnWidths.WordColumnWidth)
+                + "\u252C"
+                + new string('\u2500', columnWidths.MessageColumnWidth)
+                + "\u2510",
+            RowType.Middle => "\u251C"
+                + new string('\u2500', columnWidths.WordColumnWidth)
+                + "\u253C"
+                + new string('\u2500', columnWidths.MessageColumnWidth)
+                + "\u2524",
+            RowType.Bottom => "\u2514"
+                + new string('\u2500', columnWidths.WordColumnWidth)
+                + "\u2534"
+                + new string('\u2500', columnWidths.MessageColumnWidth)
+                + "\u2518",
+            _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null),
         };
 
     public IEnumerable<string> WrapText(IEnumerable<string> lines, int columnWidth)
     {
         foreach (var line in lines)
         {
-            var wordsInLine = line
-                .Split(' ')
-                .Select(x => x.Replace("\t", "   "));
+            var wordsInLine = line.Split(' ').Select(x => x.Replace("\t", "   "));
 
-            var outputLines = GetLines(wordsInLine)
-                .Select(ol => string.Join(' ', ol));
+            var outputLines = GetLines(wordsInLine).Select(ol => string.Join(' ', ol));
 
-            foreach (var outputLine in outputLines) yield return outputLine;
+            foreach (var outputLine in outputLines)
+                yield return outputLine;
         }
 
         yield break;
@@ -122,7 +140,8 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
                     currentLineLength = 0;
                 }
 
-                if (currentLineLength != 0) currentLineLength++; // Space
+                if (currentLineLength != 0)
+                    currentLineLength++; // Space
 
                 list.Add(word);
                 currentLineLength += word.Length;
@@ -134,18 +153,19 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
 
     private ColumnWidths GetColumnWidths(IEnumerable<CommandHelpMessage> rows)
     {
-        var wordColumnWidth = rows
-            .SelectMany(x => x.HelpWords)
-            .Max(word => word.Length);
+        var wordColumnWidth = rows.SelectMany(x => x.HelpWords).Max(word => word.Length);
 
-        var messageColumnWidth = configurationProvider.ConfigInfo.Configuration.ConsoleWidth - wordColumnWidth - 3;
+        var messageColumnWidth =
+            configurationProvider.ConfigInfo.Configuration.ConsoleWidth - wordColumnWidth - 3;
 
         return new ColumnWidths
         {
             MessageColumnWidth = messageColumnWidth,
-            WordColumnWidth = wordColumnWidth
+            WordColumnWidth = wordColumnWidth,
         };
     }
 
-    public string FormatAsUnderlined(string text) => $"\e[4m{text}\e[0m";
+    public string FormatAsUnderlined(string text) => $"\e[4m{text}\e[24m";
+
+    public string FormatAsBold(string text) => $"\e[1m{text}\e[22m";
 }

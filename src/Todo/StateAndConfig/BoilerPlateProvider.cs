@@ -13,7 +13,8 @@ public class BoilerPlateProvider(
     IAssemblyInformationProvider assemblyInformationProvider,
     IDateAccessor dateAccessor,
     IConstantsProvider constantsProvider,
-    IConsoleTextFormatter consoleTextFormatter) : IBoilerPlateProvider
+    IConsoleTextFormatter consoleTextFormatter
+) : IBoilerPlateProvider
 {
     public string GetBoilerPlate()
     {
@@ -24,27 +25,28 @@ public class BoilerPlateProvider(
 
     public void MakeBoilerPlate(StringBuilder sb)
     {
-        sb.AppendLine(consoleTextFormatter.FormatAsUnderlined("Version Information"))
+        sb.AppendLine(consoleTextFormatter.FormatAsBold("Version Information"))
             .AppendLine($"\tAssembly location: {assemblyInformationProvider.AssemblyLocation()}")
             .AppendLine($"\tTodo version (commit): {assemblyInformationProvider.GetCommitHash()}")
             .AppendLine(
                 $"\tBuild time: {assemblyInformationProvider.GetBuildTime().ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage()}"
             )
             .AppendLine()
-            .AppendLine(consoleTextFormatter.FormatAsUnderlined("Build Information"))
+            .AppendLine(consoleTextFormatter.FormatAsBold("Build Information"))
             .AppendBuildInformation()
             .AppendLine()
-            .AppendLine(consoleTextFormatter.FormatAsUnderlined("Process, Framework and OS"))
+            .AppendLine(consoleTextFormatter.FormatAsBold("Process, Framework and OS"))
             .AppendLine($"\tDEBUG flag: {assemblyInformationProvider.DebugFlag()}")
             .AppendLine($"\tProcess architecture: {RuntimeInformation.ProcessArchitecture}")
             .AppendLine($"\tFramework version: {RuntimeInformation.FrameworkDescription}")
             .AppendLine($"\tOS description: {RuntimeInformation.OSDescription}")
             .AppendLine($"\tOS architecture: {RuntimeInformation.OSArchitecture}")
             .AppendLine()
-            .AppendLine(consoleTextFormatter.FormatAsUnderlined("Contact"))
+            .AppendLine(consoleTextFormatter.FormatAsBold("Contact"))
             .AppendLine(
                 $"\tProject author: {constantsProvider.ProjectAuthor} "
-                    + $"({constantsProvider.ProjectAuthorContactDetails})")
+                    + $"({constantsProvider.ProjectAuthorContactDetails})"
+            )
             .AppendLine($"\tProject website: {constantsProvider.ProjectWebsite}")
             .AppendLine();
     }
@@ -120,24 +122,25 @@ static class BuildInfoExtensions
         "SelfContained",
         "SourceRevisionId",
         "TargetFramework",
-        "TieredCompilation"
+        "TieredCompilation",
     ];
-    
+
     public static StringBuilder AppendBuildInformation(this StringBuilder sb)
     {
         var asm = Assembly.GetExecutingAssembly();
-        
+
         foreach (var arg in _buildArguments)
         {
             sb.AppendLine($"\t{arg}: {GetMetadata(asm, arg) ?? "Unknown"}");
         }
-        
+
         return sb;
     }
-    
+
     private static string? GetMetadata(Assembly asm, string key)
     {
         return asm.GetCustomAttributes<AssemblyMetadataAttribute>()
-            .FirstOrDefault(a => a.Key == key)?.Value;
+            .FirstOrDefault(a => a.Key == key)
+            ?.Value;
     }
 }
