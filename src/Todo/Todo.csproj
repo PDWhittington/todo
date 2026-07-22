@@ -78,10 +78,87 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <Target Name="GenerateBuildInfo" BeforeTargets="BeforeCompile">
+      <ItemGroup>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>BuildConfiguration</_Parameter1>
+          <_Parameter2>$(Configuration)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>DebugType</_Parameter1>
+          <_Parameter2>$(DebugType)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>OptimizationPreference</_Parameter1>
+          <_Parameter2>$(OptimizationPreference)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>PublishAot</_Parameter1>
+          <_Parameter2>$(PublishAot)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>PublishDir</_Parameter1>
+          <_Parameter2>$(PublishDir)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>PublishReadyToRun</_Parameter1>
+          <_Parameter2>$(PublishReadyToRun)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>PublishReadyToRunComposite</_Parameter1>
+          <_Parameter2>$(PublishReadyToRunComposite)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>PublishSingleFile</_Parameter1>
+          <_Parameter2>$(PublishSingleFile)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>PublishTrimmed</_Parameter1>
+          <_Parameter2>$(PublishTrimmed)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>RuntimeIdentifier</_Parameter1>
+          <_Parameter2>$(RuntimeIdentifier)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>SelfContained</_Parameter1>
+          <_Parameter2>$(SelfContained)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>SourceRevisionId</_Parameter1>
+          <_Parameter2>$(SourceRevisionId)</_Parameter2>
+        </AssemblyAttribute>
+ 
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>TargetFramework</_Parameter1>
+          <_Parameter2>$(TargetFramework)</_Parameter2>
+        </AssemblyAttribute>
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+          <_Parameter1>TieredCompilation</_Parameter1>
+          <_Parameter2>$(TieredCompilation)</_Parameter2>
+        </AssemblyAttribute>
+
+     </ItemGroup>
+    </Target>
+
     <Target Name="PreBuild"
             BeforeTargets="PreBuildEvent">
         <Exec Command="git describe --long --dirty --tags --always > commithash.txt&#xA;echo $(CurrentDate) > buildtime.txt&#xA;" />
     </Target>
+
     <Target Name="RemovePdbsFromPublish"
             AfterTargets="ComputeResolvedFilesToPublishList">
         <ItemGroup>
