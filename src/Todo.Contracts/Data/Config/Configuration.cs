@@ -6,6 +6,7 @@ namespace Todo.Contracts.Data.Config;
 [method: JsonConstructor]
 public record Configuration(TodoListInformation TodoListInfo,
     PerOsLaunchInfos BrowserPath, PerOsLaunchInfos TextEditorPath,
+    TMuxPaneSelectionInfo TMuxBehaviour,
     string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
     string EnvironmentVariableToOverrideDate,
     string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
