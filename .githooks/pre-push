@@ -1,3 +1,28 @@
 #!/usr/bin/env sh
 
+# Zero OID works for both SHA-1 (40 zeros) and SHA-256 (64 zeros)
+is_zero_oid() {
+  case "$1" in
+  0*) [ "$(printf '%s' "$1" | tr -d '0')" = "" ] ;;
+  *) return 1 ;;
+  esac
+}
+
+# Check whether this push consists only of deletions
+only_deletes=true
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if ! is_zero_oid "$local_sha"; then
+    only_deletes=false
+    break
+  fi
+done
+
+if [ "$only_deletes" = true ]; then
+  # Pure branch/tag deletion — nothing to test
+  echo
+  echo "Not running unit tests because no code is being pushed up"
+  echo
+  exit 0
+fi
+
 ./test.sh
