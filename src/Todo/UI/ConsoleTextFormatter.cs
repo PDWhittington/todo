@@ -165,7 +165,9 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
         };
     }
 
-    public string FormatAsUnderlined(string text) => $"\e[4m{text}\e[24m";
+    public string FormatAsUnderlined(string text) =>
+        Console.IsOutputRedirected ? text : $"\e[4m{text}\e[24m";
 
-    public string FormatAsBold(string text) => $"\e[1m{text}\e[22m";
+    public string FormatAsBold(string text) =>
+        Console.IsOutputRedirected ? text : $"\e[1m{text}\e[22m";
 }
