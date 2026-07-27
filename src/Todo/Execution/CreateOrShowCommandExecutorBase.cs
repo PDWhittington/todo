@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Data.Git.Commands;
+using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Data.Substitutions;
@@ -9,8 +11,6 @@ using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
-using Todo.Git.Commands;
-using Todo.Git.Results;
 
 namespace Todo.Execution;
 

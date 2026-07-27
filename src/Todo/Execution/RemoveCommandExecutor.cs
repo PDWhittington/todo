@@ -3,13 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Data.Git.Commands;
+using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
-using Todo.Git.Commands;
-using Todo.Git.Results;
 
 namespace Todo.Execution;
 
