@@ -14,7 +14,7 @@ public class GitGetConflictsCommandExecutor(IOutputWriter outputWriter, ILogger<
 {
     public override ConflictsResult RunGitCommand(
         IGitInterface gitInterface,
-        GitGetConflictsCommand command
+        GitGetConflictsCommand gitGetConflictsCommand
     )
     {
         OutputWriter.WriteLine("Retrieving conflicts from git index");

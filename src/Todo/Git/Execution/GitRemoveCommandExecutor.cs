@@ -74,7 +74,8 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
             dirtyPaths.Contains(relPath);
     }
 
-    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitRemoveCommand command)
+    public override VoidResult RunGitCommand(IGitInterface gitInterface, 
+        GitRemoveCommand gitRemoveCommand)
     {
         try
         {
@@ -91,7 +92,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
             );
 
             //Find which files of the set we are to remove have changed -- whether indexed or not.
-            var pathsNeedingStaging = command
+            var pathsNeedingStaging = gitRemoveCommand
                 .Paths.Where(path =>
                 {
                     var relPath = ToRepoRelativePath(workDir, path);
@@ -125,7 +126,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
 
             // Remove (delete) all specified files from the filesystem.
             // This is not staged or committed; the user can commit the deletions separately if desired.
-            foreach (var path in command.Paths)
+            foreach (var path in gitRemoveCommand.Paths)
             {
                 if (File.Exists(path))
                 {

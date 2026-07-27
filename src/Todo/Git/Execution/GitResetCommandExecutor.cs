@@ -13,11 +13,12 @@ public class GitResetCommandExecutor(IOutputWriter outputWriter, ILogger<GitRese
     : GitCommandExecutorBase<GitResetCommand, VoidResult>(outputWriter, logger),
         IGitResetCommandExecutor
 {
-    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitResetCommand command)
+    public override VoidResult RunGitCommand(IGitInterface gitInterface,
+        GitResetCommand gitResetCommand)
     {
         try
         {
-            gitInterface.Repository.Reset(command.Hard ? ResetMode.Hard : ResetMode.Soft);
+            gitInterface.Repository.Reset(gitResetCommand.Hard ? ResetMode.Hard : ResetMode.Soft);
             return new VoidResult(true, null);
         }
         catch (Exception e)

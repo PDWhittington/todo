@@ -13,21 +13,22 @@ public class GitMoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitMoveC
     : GitCommandExecutorBase<GitMoveCommand, VoidResult>(outputWriter, logger),
         IGitMoveCommandExecutor
 {
-    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitMoveCommand command)
+    public override VoidResult RunGitCommand(IGitInterface gitInterface, 
+        GitMoveCommand gitMoveCommand)
     {
         try
         {
             gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
-                $"Moving {command.SourcePath} to {command.DestinationPath}"
+                $"Moving {gitMoveCommand.SourcePath} to {gitMoveCommand.DestinationPath}"
             );
 
             gitInterface.GitInterfaceTools.FolderCreator.CreateFromPathIfDoesntExist(
-                command.DestinationPath
+                gitMoveCommand.DestinationPath
             );
 
-            File.Move(command.SourcePath, command.DestinationPath);
-            LibGit2Sharp.Commands.Stage(gitInterface.Repository, command.SourcePath);
-            LibGit2Sharp.Commands.Stage(gitInterface.Repository, command.DestinationPath);
+            File.Move(gitMoveCommand.SourcePath, gitMoveCommand.DestinationPath);
+            LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitMoveCommand.SourcePath);
+            LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitMoveCommand.DestinationPath);
 
             return new VoidResult(true);
         }

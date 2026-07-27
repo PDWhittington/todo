@@ -12,16 +12,23 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
     : GitCommandExecutorBase<GitCommitCommand, CommitResult>(outputWriter, logger),
         IGitCommitCommandExecutor
 {
-    public override CommitResult RunGitCommand(IGitInterface gitInterface, GitCommitCommand command)
+    public override CommitResult RunGitCommand(IGitInterface gitInterface, GitCommitCommand gitCommitCommand)
     {
         try
         {
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Received commit with override message '{commitMessage}'.",
+                GetType(),
+                nameof(RunGitCommand),
+                gitCommitCommand.Message
+            );
+            
             var signature = gitInterface.Repository.Config.BuildSignature(DateTimeOffset.Now);
 
-            OutputWriter.WriteLine($"Creating commit with message: {command.Message}");
+            OutputWriter.WriteLine($"Creating commit with message: {gitCommitCommand.Message}");
 
             var commit = gitInterface.Repository.Commit(
-                command.Message,
+                gitCommitCommand.Message,
                 signature,
                 signature,
                 GitCommitCommand.DefaultCommitOptions

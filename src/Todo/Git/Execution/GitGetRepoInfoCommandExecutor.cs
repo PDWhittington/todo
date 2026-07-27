@@ -14,7 +14,7 @@ public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter, ILogger<G
 {
     public override RepoInfoResult RunGitCommand(
         IGitInterface gitInterface,
-        GitGetRepoInfoCommand command
+        GitGetRepoInfoCommand gitGetRepoInfoCommand
     )
     {
         OutputWriter.WriteLine("Retrieving repo information...");

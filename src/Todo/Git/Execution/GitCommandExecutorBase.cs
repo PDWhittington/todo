@@ -15,6 +15,6 @@ public abstract class GitCommandExecutorBase<TCommandType, TResultType>(
     protected IOutputWriter OutputWriter { get; } = outputWriter;
     protected ILogger<GitCommandExecutorBase<TCommandType, TResultType>> Logger { get; } = logger;
 
-    public abstract TResultType RunGitCommand(IGitInterface gitInterface, TCommandType command);
+    public abstract TResultType RunGitCommand(IGitInterface gitInterface, TCommandType gitCommand);
 }
 

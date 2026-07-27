@@ -12,13 +12,13 @@ public class GitAddCommandExecutor(IOutputWriter outputWriter, ILogger<GitAddCom
     : GitCommandExecutorBase<GitAddCommand, VoidResult>(outputWriter, logger),
         IGitAddCommandExecutor
 {
-    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitAddCommand command)
+    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitAddCommand gitAddCommand)
     {
         try
         {
-            OutputWriter.WriteLine($"Staging {command.Path}");
+            OutputWriter.WriteLine($"Staging {gitAddCommand.Path}");
 
-            LibGit2Sharp.Commands.Stage(gitInterface.Repository, command.Path);
+            LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitAddCommand.Path);
             return new VoidResult(true);
         }
         catch (Exception e)

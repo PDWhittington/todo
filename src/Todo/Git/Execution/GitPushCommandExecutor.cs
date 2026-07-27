@@ -12,13 +12,14 @@ public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushC
     : GitCommandExecutorBase<GitPushCommand, VoidResult>(outputWriter, logger),
         IGitPushCommandExecutor
 {
-    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitPushCommand command)
+    public override VoidResult RunGitCommand(IGitInterface gitInterface, 
+        GitPushCommand gitPushCommand)
     {
         try
         {
-            var currentBranch = command.BranchLocator.GetBranchForRepository(
-                gitInterface.Repository
-            );
+            var currentBranch = gitPushCommand
+                .BranchLocator
+                .GetBranchForRepository(gitInterface.Repository);
 
             gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
                 $"Pushing branch {currentBranch.FriendlyName} to origin"
