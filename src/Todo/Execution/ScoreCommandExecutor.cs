@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.Execution;
@@ -10,8 +11,9 @@ namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ScoreCommandExecutor(IOutputWriter outputWriter,
-   IScoresGenerator scoresGenerator, IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster)
-   : CommandExecutorBase<ScoreCommand>(outputWriter), IScoreCommandExecutor
+   IScoresGenerator scoresGenerator, IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster,
+   ILogger<ScoreCommandExecutor> logger)
+   : CommandExecutorBase<ScoreCommand>(outputWriter, logger), IScoreCommandExecutor
 {
    public override void Execute(ScoreCommand command)
    {

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.UI;
@@ -13,8 +14,9 @@ public class PrintAndShowHtmlCommandExecutor
     private readonly IShowHtmlCommandExecutor _showHtmlCommandExecutor;
 
     public PrintAndShowHtmlCommandExecutor(IOutputWriter outputWriter,
-        IPrintHtmlCommandExecutor printHtmlCommandExecutor, IShowHtmlCommandExecutor showHtmlCommandExecutor)
-        : base(outputWriter)
+        IPrintHtmlCommandExecutor printHtmlCommandExecutor, IShowHtmlCommandExecutor showHtmlCommandExecutor,
+        ILogger<PrintAndShowHtmlCommandExecutor> logger)
+        : base(outputWriter, logger)
     {
         _printHtmlCommandExecutor = printHtmlCommandExecutor;
         _showHtmlCommandExecutor = showHtmlCommandExecutor;

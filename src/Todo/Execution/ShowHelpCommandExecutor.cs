@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.HelpMessages;
 using Todo.Contracts.Services.CommandFactories;
@@ -17,8 +18,9 @@ public class ShowHelpCommandExecutor(
     IConfigurationProvider configurationProvider,
     ICommandFactorySet commandFactorySet,
     IConsoleTextFormatter consoleTextFormatter,
-    IBoilerPlateProvider boilerPlateProvider)
-    : CommandExecutorBase<ShowHelpCommand>(outputWriter), IShowHelpCommandExecutor
+    IBoilerPlateProvider boilerPlateProvider,
+    ILogger<ShowHelpCommandExecutor> logger)
+    : CommandExecutorBase<ShowHelpCommand>(outputWriter, logger), IShowHelpCommandExecutor
 {
     public override void Execute(ShowHelpCommand command)
     {

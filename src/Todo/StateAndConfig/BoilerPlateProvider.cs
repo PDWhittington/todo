@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using Todo.Contracts.Data.Memory;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -36,8 +34,29 @@ public class BoilerPlateProvider(
         "TieredCompilation",
     ];
 
+    private static readonly string[] _buildArgumentsForLogging =
+    [
+        "BuildConfiguration",
+        "DebugType",
+        "OptimizationPreference",
+        "PublishAot",
+        "PublishReadyToRun",
+        "PublishReadyToRunComposite",
+        "PublishSingleFile",
+        "PublishTrimmed",
+        "SelfContained",
+        "TieredCompilation",
+    ];
+    
     private static readonly Lazy<UnitAndMultiplier[]> UnitsAndMultipliers = new(() => CreateUnits().ToArray());
 
+    public string GetBoilerPlateForLogging()
+    {
+        var sb = new StringBuilder();
+        MakeBoilerPlateForLogging(sb);
+        return sb.ToString();
+    }
+    
     public string GetBoilerPlate()
     {
         var sb = new StringBuilder();
@@ -45,6 +64,47 @@ public class BoilerPlateProvider(
         return sb.ToString();
     }
 
+    private void MakeBoilerPlateForLogging(StringBuilder sb)
+    {
+        /*
+         * Version information
+         */
+
+        var buildTime = assemblyInformationProvider.GetBuildTime();
+
+        sb.AppendLine("Version Information")
+            .AppendLine(
+                $"\tBuild time: {buildTime.ToString("yyyy-MM-dd HH:mm:ss")}{TimeAgoMessage(buildTime)}"
+            );
+
+        AddGitInformation(sb, false);
+
+        sb.AppendLine();
+
+        /*
+         * Build information
+         */
+
+        sb.AppendLine("Build Information");
+
+        foreach (var buildArgument in _buildArgumentsForLogging)
+        {
+            var buildArgumentValue = assemblyInformationProvider.GetMetadata(buildArgument);
+            sb.AppendLine($"\t{buildArgument}: {buildArgumentValue ?? "Unknown"}");
+        }
+
+        sb.AppendLine();
+
+        /*
+         * Process, Framework and OS
+         */
+
+        sb.AppendLine("Process, Framework and OS")
+            .Append($"\tDEBUG flag: {assemblyInformationProvider.DebugFlag()}");
+        //Append not AppendLine because a fresh new line is added as this
+        //string is written to the log file
+    }
+    
     public void MakeBoilerPlate(StringBuilder sb)
     {
         /*
@@ -103,7 +163,7 @@ public class BoilerPlateProvider(
             .AppendLine();
     }
 
-    private void AddGitInformation(StringBuilder sb)
+    private void AddGitInformation(StringBuilder sb, bool underlineTopBranch = true)
     {
         sb.AppendLine($"\tGit description: {assemblyInformationProvider.GitDescribe()}");
 
@@ -112,7 +172,7 @@ public class BoilerPlateProvider(
 
         var gitRefs = gitBranches.Concat(gitTags.Select(x => $"{x} (Tag)")).ToArray();
 
-        PrintList(sb, "Git refs", gitRefs, true);
+        PrintList(sb, "Git refs", gitRefs, underlineTopBranch);
 
         var gitWorktreeChanges = assemblyInformationProvider.GitWorktreeChanges();
 

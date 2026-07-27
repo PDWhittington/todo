@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
@@ -25,9 +26,10 @@ public class CreateOrShowTopicListCommandExecutor(
     IGitInterface gitInterface,
     ITextFileLauncher fileOpener,
     IOutputWriter outputWriter,
-    IFolderCreator folderCreator)
+    IFolderCreator folderCreator,
+    ILogger<CreateOrShowTopicListCommandExecutor> logger)
     : CreateOrShowCommandExecutorBase<CreateOrShowTopicListCommand, TopicListMarkdownSubstitutions>(
-            configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator),
+            configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator, logger),
         ICreateOrShowTopicListCommandExecutor
 {
     protected override FilePathInfo GetFilePathInfo(CreateOrShowTopicListCommand createOrShowTopicListCommand)

@@ -18,6 +18,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PublishAot>true</PublishAot>
+    <TrimMode>partial</TrimMode>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <ILLinkTreatWarningsAsErrors>false</ILLinkTreatWarningsAsErrors>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
     <OptimizationPreference>Speed</OptimizationPreference>
     <PublishReadyToRun>true</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
@@ -26,6 +30,11 @@
     <PublishSymbols>false</PublishSymbols>
     <CopyDebugSymbolsToPublishDirectory>false</CopyDebugSymbolsToPublishDirectory>
   </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <TrimmerRootAssembly Include="Serilog"/>
+    <TrimmerRootAssembly Include="Serilog.Sinks.File"/>
+    <TrimmerRootAssembly Include="Serilog.Sinks.Async"/>
+  </ItemGroup>
   <!-- Make classes marked as internal available to the test project -->
   <ItemGroup>
     <InternalsVisibleTo Include="Todo.Tests"/>
@@ -35,6 +44,9 @@
     <PackageReference Include="LibGit2Sharp" Version="0.31.0"/>
     <PackageReference Include="Markdig" Version="1.1.2"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.5"/>
+    <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
   </ItemGroup>
   <!-- Embedded templates -->
   <ItemGroup>

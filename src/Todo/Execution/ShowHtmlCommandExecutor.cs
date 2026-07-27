@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.AppLaunching;
@@ -16,8 +17,8 @@ public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, ISh
     private readonly IHtmlFileLauncher _htmlFileLauncher;
 
     public ShowHtmlCommandExecutor(IDateListPathResolver dateListPathResolver,
-        IOutputWriter outputWriter, IHtmlFileLauncher htmlFileLauncher)
-        : base(outputWriter)
+        IOutputWriter outputWriter, IHtmlFileLauncher htmlFileLauncher, ILogger<ShowHtmlCommandExecutor> logger)
+        : base(outputWriter, logger)
     {
         _dateListPathResolver = dateListPathResolver;
         _htmlFileLauncher = htmlFileLauncher;

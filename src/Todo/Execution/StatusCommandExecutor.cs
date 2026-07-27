@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.UI;
@@ -6,8 +7,8 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class StatusCommandExecutor(IOutputWriter outputWriter) 
-    : CommandExecutorBase<StatusCommand>(outputWriter), IStatusCommandExecutor 
+public class StatusCommandExecutor(IOutputWriter outputWriter, ILogger<StatusCommandExecutor> logger) 
+    : CommandExecutorBase<StatusCommand>(outputWriter, logger), IStatusCommandExecutor 
 {
     public override void Execute(StatusCommand command)
     {

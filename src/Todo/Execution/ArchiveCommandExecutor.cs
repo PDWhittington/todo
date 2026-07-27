@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
@@ -16,8 +17,9 @@ public class ArchiveCommandExecutor(
     IConfigurationProvider configurationProvider,
     IGitInterface gitInterface,
     IOutputWriter outputWriter,
-    IFolderCreator folderCreator)
-    : FileMoveExecutorBase<ArchiveCommand>(configurationProvider, gitInterface, outputWriter, folderCreator),
+    IFolderCreator folderCreator,
+    ILogger<ArchiveCommandExecutor> logger)
+    : FileMoveExecutorBase<ArchiveCommand>(configurationProvider, gitInterface, outputWriter, folderCreator, logger),
         IArchiveCommandExecutor
 {
     protected override FilePathInfo GetSourcePath(ArchiveCommand command)
