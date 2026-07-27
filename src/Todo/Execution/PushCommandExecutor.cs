@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.Git.Commands;
+using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
-using Todo.Git.Commands;
-using Todo.Git.Results;
+using Todo.Git.Branches;
 
 namespace Todo.Execution;
 
@@ -29,7 +30,8 @@ public class PushCommandExecutor : CommandExecutorBase<PushCommand>, IPushComman
         if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
             throw new Exception("Pushing does not make sense when UseGit is set to false in the settings file.");
 
-        var result = _gitInterface.RunGitCommand<GitPushCommand, VoidResult>(new GitPushCommand());
+        var result = _gitInterface.RunGitCommand<GitPushCommand, VoidResult>(
+            new GitPushCommand(new HeadBranchLocator()));
 
         //We need a better error handling scheme all-round.
         if (!result.Success) throw result.Exception ?? new Exception("Some issue with push command");

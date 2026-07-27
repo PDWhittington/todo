@@ -1,4 +1,6 @@
 ﻿using LibGit2Sharp;
+using Todo.Contracts.Data.Git.Commands;
+using Todo.Contracts.Data.Git.Results;
 
 namespace Todo.Contracts.Services.Git;
 
@@ -9,5 +11,6 @@ public interface IGitInterface
     IGitInterfaceTools GitInterfaceTools { get; }
 
     TResultType RunGitCommand<TCommandType, TResultType>(TCommandType command)
-        where TCommandType : IGitCommand<TResultType>;
+        where TCommandType : IGitCommand<TResultType>
+        where TResultType : GitResultBase;
 }
