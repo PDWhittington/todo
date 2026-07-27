@@ -5,12 +5,11 @@ using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Git.Execution;
 using Todo.Contracts.Services.UI;
-using Todo.UI;
 
 namespace Todo.Git.Execution;
 
-public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter)
-    : GitCommandExecutorBase<GitGetRepoInfoCommand, RepoInfoResult>(outputWriter),
+public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter, ILogger<GitGetRepoInfoCommandExecutor> logger)
+    : GitCommandExecutorBase<GitGetRepoInfoCommand, RepoInfoResult>(outputWriter, logger),
         IGitGetRepoInfoCommandExecutor
 {
     public override RepoInfoResult RunGitCommand(

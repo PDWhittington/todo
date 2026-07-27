@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Git;
@@ -7,8 +8,8 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.Git.Execution;
 
-public class GitPushCommandExecutor(IOutputWriter outputWriter)
-    : GitCommandExecutorBase<GitPushCommand, VoidResult>(outputWriter),
+public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushCommandExecutor> logger)
+    : GitCommandExecutorBase<GitPushCommand, VoidResult>(outputWriter, logger),
         IGitPushCommandExecutor
 {
     public override VoidResult RunGitCommand(IGitInterface gitInterface, GitPushCommand command)

@@ -10,12 +10,11 @@ using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Git.Execution;
 using Todo.Contracts.Services.UI;
-using Todo.UI;
 
 namespace Todo.Git.Execution;
 
-public class GitRemoveCommandExecutor(IOutputWriter outputWriter)
-    : GitCommandExecutorBase<GitRemoveCommand, VoidResult>(outputWriter),
+public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRemoveCommandExecutor> logger)
+    : GitCommandExecutorBase<GitRemoveCommand, VoidResult>(outputWriter, logger),
         IGitRemoveCommandExecutor
 {
     private static string ToRepoRelativePath(string workingDirectory, string absolutePath)
