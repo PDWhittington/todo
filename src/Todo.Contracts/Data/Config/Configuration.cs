@@ -4,7 +4,7 @@ using Todo.Contracts.Data.Html;
 namespace Todo.Contracts.Data.Config;
 
 [method: JsonConstructor]
-public record Configuration(TodoListInformation TodoListInfo,
+public record Configuration(TodoListInfo TodoListInfo,
     PerOsLaunchInfos BrowserPath, PerOsLaunchInfos TextEditorPath,
     string DayListMarkdownTemplatePath, string TopicListMarkdownTemplatePath,
     string EnvironmentVariableToOverrideDate,
