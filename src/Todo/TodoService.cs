@@ -20,14 +20,14 @@ public class TodoService(
     public void PerformTask()
     {
         using var handle = outputWriter.CreateDisposableHandle();
-        
+
         logger.LogInformation("{Type}.{MethodName}: Starting Todo App. Command line: {commandLine}",
             GetType(), nameof(PerformTask), commandLineProvider.GetCommandLineMinusAssemblyLocation());
-        
+
         logger.LogInformation("{Type}.{MethodName}: BuildInformation:{NewLine}{BoilerPlate}",
             GetType(), nameof(PerformTask), Environment.NewLine, 
             boilerPlateProvider.GetBoilerPlateForLogging());
-        
+
         try
         {
             var command = commandProvider.GetCommand();

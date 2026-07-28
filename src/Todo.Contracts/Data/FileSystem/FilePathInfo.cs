@@ -7,7 +7,7 @@ public record FilePathInfo
     public FileTypeEnum FileType { get; }
 
     public FolderEnum FolderType { get; }
-    
+
     public override string ToString() => Path;
 
     protected FilePathInfo(string path, FileTypeEnum fileType, 
@@ -19,7 +19,7 @@ public record FilePathInfo
         FileType = fileType;
         FolderType = folderType;
     }
-    
+
     public static FilePathInfo Of(string path, FileTypeEnum fileType, 
         FolderEnum folderType)
         => new(path, fileType, folderType);

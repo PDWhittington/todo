@@ -38,7 +38,7 @@ public abstract class TemplateProviderBase(
 
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
                 markdownLineInterpreter.CreateMarkdownLines(lazyFile.Value));
-            
+
             return TodoFile.Of(filePathInfo, markdownLines, lazyFile);
         }
 
@@ -53,21 +53,21 @@ public abstract class TemplateProviderBase(
 
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
                 markdownLineInterpreter.CreateMarkdownLines(lazyFile.Value));
-            
+
             return TodoFile.Of(filePathInfo, markdownLines, lazyFile);
         }
 
         {
             var manifestName = GetManifestStreamName();
-            
+
             var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
                 GetFileType(), FolderEnum.Manifest);
 
             var lazyFile = new Lazy<UnmanagedByteArray>(() => LoadFromManifest(manifestName));
-            
+
             var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
                 markdownLineInterpreter.CreateMarkdownLines(lazyFile.Value));
-        
+
             return TodoFile.Of(manifestFileInfo, markdownLines, lazyFile);    
         }
     }

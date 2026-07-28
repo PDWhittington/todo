@@ -9,6 +9,6 @@ public interface IOutputWriter
     void WriteLine(string message);
 
     IOutputWriterDisposableHandle CreateDisposableHandle();
-    
+
     void JoinWritingThread();
 }

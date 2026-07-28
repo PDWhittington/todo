@@ -12,12 +12,12 @@ public class FilenameDateParser : IFilenameDateParser
 {
     private readonly Regex _regex;
     private readonly string _dateFormat;   // e.g. "yyyy-MM-dd"
-    
+
     public FilenameDateParser(IConfigurationProvider configurationProvider)
     {
         var template = configurationProvider
             .ConfigInfo.Configuration.TodoListFilenameFormatWithoutExension;
-        
+
         if (string.IsNullOrWhiteSpace(template))
             throw new ArgumentException("Template cannot be empty.");
 
@@ -42,11 +42,11 @@ public class FilenameDateParser : IFilenameDateParser
 
         _regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
     }
-    
+
     public bool TryParse(string fileName, out DateOnly date)
     {
         var filenameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-        
+
         var match = _regex.Match(filenameWithoutExtension);
 
         if (!match.Success)
@@ -56,7 +56,7 @@ public class FilenameDateParser : IFilenameDateParser
         }
 
         var dateStr = match.Groups[1].Value;   // the part that was inside the {}
-        
+
         var parseSuccess = DateOnly.TryParseExact(
             dateStr,
             _dateFormat,
@@ -65,7 +65,7 @@ public class FilenameDateParser : IFilenameDateParser
             out var dateParsed);
 
         date = parseSuccess ? dateParsed : default;
-        
+
         return parseSuccess;
     }
 }

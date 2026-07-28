@@ -5,9 +5,9 @@ namespace Todo.Contracts.Data.Markdown;
 public record MarkdownLineInfo
 {
     public MarkdownLineTypeEnum LineType { get; }
-    
+
     public ByteArraySpan Line { get; }
-    
+
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public double LineNumber { get; }
     public int HeadingLevel { get; }
@@ -22,7 +22,7 @@ public record MarkdownLineInfo
     }
 
     // public override string ToString() => Line;
-    
+
     public static MarkdownLineInfo Of(MarkdownLineTypeEnum lineType, 
         ByteArraySpan line, int lineNumber, int headingLevel)
     {
@@ -31,7 +31,7 @@ public record MarkdownLineInfo
             throw new ArgumentException($"should be set to -1 if {nameof(lineType)} " +
                                         $"is not set to {MarkdownLineTypeEnum.Heading}",  nameof(headingLevel));
         }
-        
+
         return new MarkdownLineInfo(lineType, line, lineNumber, headingLevel);
     }
 }

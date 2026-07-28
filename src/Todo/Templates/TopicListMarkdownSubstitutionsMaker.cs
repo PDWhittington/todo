@@ -17,7 +17,7 @@ public class TopicListMarkdownSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Su
         {
             { "topic", substitutions.TopicName }
         };
-        
+
         WriteSubstitutionsToStreamBase(template, dict, stream);
     }
 }

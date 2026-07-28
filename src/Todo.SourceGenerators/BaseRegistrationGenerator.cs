@@ -20,11 +20,11 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
     {
         var classDecl = (ClassDeclarationSyntax)context.Node;
         var semanticModel = context.SemanticModel;
-        
+
         if (semanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
             is not INamedTypeSymbol classSymbol)
             return null;
-        
+
         // Must be a concrete class (not abstract)
         if (classSymbol.IsAbstract || classSymbol.IsGenericType)
             return null;
@@ -34,10 +34,10 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
             .Any(InterfaceIsPrimaryInterface);
 
         if (!isRequired) return null;
-        
+
         var interfaces = GetAdditionalInterfacesForRegistration(classSymbol)
             .ToArray();
-        
+
         // var allInterfaces = interfaces
         //     .Concat(additional)
         //     .Distinct(SymbolEqualityComparer.Default)
@@ -56,7 +56,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
     protected abstract string OutputMethodName();
 
     protected abstract string[] OutputUsings();
-    
+
     protected abstract bool InterfaceIsPrimaryInterface(INamedTypeSymbol interfaceSymbol);
 
     protected abstract bool InterfaceIsRequired(INamedTypeSymbol interfaceSymbol);
@@ -64,7 +64,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
     public virtual void Initialize(IncrementalGeneratorInitializationContext context)
     {   
         Console.WriteLine("Starting Initialise");
-        
+
         // Find all classes that implement ICommandFactory<CommandBase>
         var registrationPairs = context
             .SyntaxProvider.CreateSyntaxProvider(
@@ -72,7 +72,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
                 transform: Transform)
             .Where(x => x is not null)
             .Collect(); 
-        
+
         // Generate one file from all factories
         context.RegisterSourceOutput(
             registrationPairs,
@@ -96,7 +96,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
         {
             sb.AppendLine($"using {@using};");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("namespace Todo;"); 
         sb.AppendLine();
@@ -110,7 +110,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 
         var registrationPairsOrdered = registrationPairs
             .OrderBy(x => x.Implementation.Name);
-        
+
         foreach (var executorPair in registrationPairsOrdered)
         {
             var displayStrings = executorPair.Interfaces
@@ -118,13 +118,13 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
                 .Select(x => $"typeof({x})");
 
             var interfaceArrayStr = $"new Type [] {{{string.Join(",", displayStrings)}}}";
-            
+
             var implementationType = executorPair.Implementation.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var implementationTypeWithTypeOf = $"typeof({implementationType})";
-            
+
             sb.AppendLine($"        .RegisterSeveralInterfaces({interfaceArrayStr}, {implementationTypeWithTypeOf})");
         }
-        
+
         sb.AppendLine(";");
         sb.AppendLine();
         sb.AppendLine("    }");
@@ -143,7 +143,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
         INamedTypeSymbol classSymbol)
     {
         var interfacesReturned = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
-        
+
         var interfaces = classSymbol
             .AllInterfaces
             .Where(InterfaceIsRequired)
@@ -156,7 +156,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
                 yield return @interface;    
             }
         }
-        
+
         foreach (var iface in interfaces)
         {
             if (iface.TypeArguments.Length == 0) continue;
@@ -166,7 +166,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
             for (var i = 0; i < originalDefinition.TypeParameters.Length; i++)
             {
                 var typeParam = originalDefinition.TypeParameters[i];
-                
+
                 if (typeParam.Variance != VarianceKind.Out) continue;
 
                 // For 'out T', we can safely register against the interface using the constraint type(s)

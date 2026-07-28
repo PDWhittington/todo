@@ -7,15 +7,15 @@ public record TodoFile
 {
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public FilePathInfo FilePathInfo { get; }
-    
+
     private readonly Lazy<MarkdownLineInfo[]> _markdownLines;
 
     public MarkdownLineInfo[] MarkdownLines => _markdownLines.Value;
 
     private readonly Lazy<UnmanagedByteArray> _fileContents;
-    
+
     public UnmanagedByteArray FileContents => _fileContents.Value;
-    
+
     private TodoFile(FilePathInfo filePathInfo, Lazy<MarkdownLineInfo[]> markdownLines, 
         Lazy<UnmanagedByteArray> fileContents)
     {

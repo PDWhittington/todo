@@ -13,9 +13,9 @@ public class CommandLineProvider : ICommandLineProvider
         _assemblyInformationProvider = assemblyInformationProvider;
         _commandLine = new Lazy<string>(GenerateCommandLineMinusAssemblyLocation);
     }
-        
+
     public string GetCommandLineMinusAssemblyLocation() => _commandLine.Value;
-        
+
     private string GenerateCommandLineMinusAssemblyLocation()
     {
         var assemblyLocation = _assemblyInformationProvider.AssemblyLocation();

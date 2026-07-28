@@ -25,14 +25,14 @@ public class OutputWriter : IOutputWriter
     {
         if (!_initialised) throw new InvalidOperationException("Output writer is not initialised");
     }
-    
+
     public IOutputWriterDisposableHandle CreateDisposableHandle()
     {
         _pipe = new BlockingCollection<string>();
         _writingThread = new Thread(ConsumingThread);
         _writingThread.Start();
         _initialised = true;
-        
+
         return new OutputWriterDisposableHandle(this);
     }
 

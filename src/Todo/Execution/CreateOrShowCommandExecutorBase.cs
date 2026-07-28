@@ -29,7 +29,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
     public override void Execute(TCommandType createOrShowCommand)
     {
         Logger.LogInformation("Entered {GetType}.{MethodName}", GetType(), nameof(Execute));
-        
+
         var pathInfo = GetFilePathInfo(createOrShowCommand);
 
         if (!File.Exists(pathInfo.Path))
@@ -40,7 +40,7 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
 
             folderCreator.CreateFromPathIfDoesntExist(pathInfo.Path);
             using var stream = File.Create(pathInfo.Path);
-            
+
             MakeSubstitutions(markdownSubstitutions, templateFile.FileContents, stream);
 
             if (configurationProvider.ConfigInfo.Configuration.UseGit)

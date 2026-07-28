@@ -11,7 +11,7 @@ public abstract class CommandExecutorBase<T>(IOutputWriter outputWriter, ILogger
 {
     protected IOutputWriter OutputWriter { get; } = outputWriter;
     protected ILogger<CommandExecutorBase<T>> Logger { get; } = logger;
-    
+
     public Type CommandType => typeof(T);
 
     public abstract void Execute(T command);

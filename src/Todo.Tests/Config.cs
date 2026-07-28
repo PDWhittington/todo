@@ -10,20 +10,20 @@ public static class Config
     public static Configuration GetMockConfiguration()
     {
         var blankProcessLaunchInfo = new ProcessLaunchInfo("", "");
-        
+
         var blankPaths = new PerOsLaunchInfos(blankProcessLaunchInfo, 
             blankProcessLaunchInfo, blankProcessLaunchInfo);
 
         var todoListInfo = new TodoListInfo("Test list", true, true);
-        
+
         var configuration = new Configuration(todoListInfo, blankPaths, blankPaths, "",
             "", "", "", HtmlThemeEnum.Dark, "", "", "",
             true, true, new TimeSpan(4, 0, 0), 
             80, IterationMethodEnum.Parallel, 21, []);
-        
+
         return configuration;
     }
-    
+
     public static ConfigurationInfo GetMockConfigInfo()
     {
         var configuration = GetMockConfiguration();

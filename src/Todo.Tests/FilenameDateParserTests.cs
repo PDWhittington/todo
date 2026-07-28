@@ -18,20 +18,20 @@ public class FilenameDateParserTests
         {
             TodoListFilenameFormatWithoutExension = filenameDateParsingTestInfo.TemplateString
         });
-        
+
         var configProvider = Substitute.For<IConfigurationProvider>();
-        
+
         configProvider.ConfigInfo.Returns(configInfo);
 
         var filenameDateParser = new FilenameDateParser(configProvider);
 
         var match = filenameDateParser.TryParse(
             filenameDateParsingTestInfo.TestFileName, out var actualDate);
-        
+
         Assert.AreEqual(filenameDateParsingTestInfo.IsMatch, match);
 
         if (!filenameDateParsingTestInfo.IsMatch) return;
-        
+
         Assert.AreEqual(filenameDateParsingTestInfo.ExpectedDate, actualDate);
     }
 
@@ -57,7 +57,7 @@ public class FilenameDateParserTests
             ExpectedDate =  new DateOnly(2026, 4, 01),
             IsMatch = true
         };
-        
+
         yield return new FilenameDateParsingTestInfo
         {
             TemplateString = "todo-{yy-MM-dd}",
@@ -65,6 +65,6 @@ public class FilenameDateParserTests
             ExpectedDate =  new DateOnly(2026, 4, 01),
             IsMatch = true
         };
-        
+
     }
 }

@@ -16,11 +16,11 @@ public unsafe class FastUtf8Substitutor : IFastUtf8Substitutor
         var insideBrackets = false;
         var copyFrom = 0;
         var lastOpenBracketIndex = -1;
-        
+
         for (var i = 0; i < template.Length; i++)
         {
             var b = template.GetByte(i);
-            
+
             if (b == (byte)'{')
             {
                 insideBrackets = true;
@@ -40,7 +40,7 @@ public unsafe class FastUtf8Substitutor : IFastUtf8Substitutor
 
             //Create unicode string for lookup (for now)
             var key = GetString(template, lastOpenBracketIndex + 1, i - lastOpenBracketIndex - 1);
-            
+
             if (substitutions.TryGetValue(key, out var substitution))
             {
                 var span = new ReadOnlySpan<byte>((void*)(template.Start + copyFrom), lastOpenBracketIndex - copyFrom);
@@ -50,14 +50,14 @@ public unsafe class FastUtf8Substitutor : IFastUtf8Substitutor
                 {
                     outputStream.WriteByte((byte)c);
                 }
-                
+
                 copyFrom = i + 1;
             }
-            
+
             insideBrackets = false;
 
         }
-        
+
         var finalSpan = new ReadOnlySpan<byte>((void*)(template.Start + copyFrom), template.Length - copyFrom);
         outputStream.Write(finalSpan);
     }

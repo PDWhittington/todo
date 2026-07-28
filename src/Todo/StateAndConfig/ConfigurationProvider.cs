@@ -17,7 +17,7 @@ public class ConfigurationProvider : IConfigurationProvider
     public ConfigurationInfo ConfigInfo => _configuration.Value;
 
     public void Reset() => _configuration.Reset();
-    
+
     public ConfigurationProvider(ISettingsPathProvider settingsPathProvider,
         IConstantsProvider constantsProvider)
     {
@@ -33,7 +33,7 @@ public class ConfigurationProvider : IConfigurationProvider
                         _constantsProvider.SettingsFileName);
 
         using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        
+
         var configuration = JsonSerializer.Deserialize<Configuration>(fileStream, 
                 AppJsonContext.Default.Configuration)
                 ?? throw new Exception($"Configuration could not be loaded from {path}");

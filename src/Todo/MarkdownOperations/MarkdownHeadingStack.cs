@@ -14,14 +14,14 @@ public class MarkdownHeadingStack : IEnumerable<MarkdownHeadingInfo>
     public override string ToString() => _markdownHeadingStack
         .Select(x => x.HeadingTitle.ToString())
         .StringJoin(", ");
-    
+
 
     public void UpdateStack(MarkdownLineInfo markdownLineInfo)
     {
         if (markdownLineInfo.LineType != MarkdownLineTypeEnum.Heading) return;
 
         var headingLevel = markdownLineInfo.HeadingLevel;
-        
+
         if (headingLevel <= 0) throw new ArgumentException(
             $"{nameof(markdownLineInfo)}.{nameof(markdownLineInfo.HeadingLevel)} must be positive", 
             nameof(markdownLineInfo));
@@ -31,7 +31,7 @@ public class MarkdownHeadingStack : IEnumerable<MarkdownHeadingInfo>
             .TrimStart(b => b == (byte)'#')
             .TrimStart()
             .TrimEnd();
-        
+
         var markdownHeadingInfo = MarkdownHeadingInfo.Of(headingLevel, headingTitle);
 
         for (var i = _markdownHeadingStack.Count - 1; i >= 0; i--)
@@ -42,7 +42,7 @@ public class MarkdownHeadingStack : IEnumerable<MarkdownHeadingInfo>
             }
             else break;
         }
-        
+
         _markdownHeadingStack.Add(markdownHeadingInfo);
     }
 

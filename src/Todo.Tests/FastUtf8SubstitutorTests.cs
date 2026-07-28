@@ -11,7 +11,7 @@ namespace Todo.Tests;
 
 internal static class StringOperationsExtensions
 {
-    
+
     public static UnmanagedByteArray ToUnmanagedArray (this string str)
     {
         var data  = GC.AllocateArray<byte>(str.Length, pinned: true);
@@ -24,10 +24,10 @@ internal static class StringOperationsExtensions
         // 4. Permanently pin and get a stable pointer
         var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         var pointer = handle.AddrOfPinnedObject();
-        
+
         return UnmanagedByteArray.Of(handle, pointer, str.Length);
     }
-        
+
 }
 
 internal static class Create
@@ -40,7 +40,7 @@ internal static class Create
 public class FastUtf8SubstitutorTests
 {
     private readonly FastUtf8Substitutor _substitutor =  new();
-    
+
     [Test]
     public void NoReplacements()
     {
@@ -49,17 +49,17 @@ public class FastUtf8SubstitutorTests
         var substitutions = new Dictionary<string, string>();
 
         var stream = Create.MemoryStream();
-        
+
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The quick brown fox jumped over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
+
     [Test]
     public void OneKey()
     {
@@ -72,15 +72,15 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The quick brown fox jumped over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
+
     [Test]
     public void SeveralKeys()
     {
@@ -95,15 +95,15 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The quick brown fox jumped over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
+
     [Test]
     public void FalseOpenBracket()
     {
@@ -116,15 +116,15 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The {quick brown fox over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
+
     [Test]
     public void FalseKey()
     {
@@ -138,16 +138,16 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The {quick brown} fox over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
-        
+
+
     [Test]
     public void NestedKey()
     {
@@ -161,15 +161,15 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The {quick brown fox} over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
+
     [Test]
     public void KeyAtStart()
     {
@@ -182,15 +182,15 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The quick brown fox over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-        
+
     [Test]
     public void KeyAtEnd()
     {
@@ -203,15 +203,15 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The quick brown fox over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
-    
+
     [Test]
     public void KeyAtBothEnds()
     {
@@ -225,12 +225,12 @@ public class FastUtf8SubstitutorTests
 
         var stream = Create.MemoryStream();
         _substitutor.CopyToStream(template, substitutions, stream);
-        
+
         var resultArr = stream.ToArray();
         var resultStr = Encoding.UTF8.GetString(resultArr);
 
         const string expected = "The quick brown fox over the lazy dog.";
-        
+
         Assert.AreEqual(expected, resultStr);
     }
 }

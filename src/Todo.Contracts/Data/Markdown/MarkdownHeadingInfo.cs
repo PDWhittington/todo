@@ -12,7 +12,7 @@ public record MarkdownHeadingInfo
         HeadingLevel = headingLevel;
         HeadingTitle = headingTitle;
     }
-    
+
     public static MarkdownHeadingInfo Of(int headingLevel, ByteArraySpan headingTitle)
         => new(headingLevel, headingTitle);
 }

@@ -16,14 +16,14 @@ public class EnvironmentVariableProvider : IEnvironmentVariableProvider
         foreach (var key in variables.Keys)
         {
             if (key is null) continue;
-            
+
             var val =  variables[key];
-            
+
             if (val is null) continue;
-            
+
             dict.Add(key.ToString()!, val);
         }
-        
+
         _environmentVariables = dict;
     }
 
@@ -34,7 +34,7 @@ public class EnvironmentVariableProvider : IEnvironmentVariableProvider
             value = obj.ToString();
             return value != null;
         }
-        
+
         value = null;
         return false;
     }

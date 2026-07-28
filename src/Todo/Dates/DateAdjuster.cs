@@ -14,7 +14,7 @@ public class DateAdjuster(IDateAccessor dateAccessor,
                               ?? new TimeSpan(0, 0, 0);
 
         var now = dateAccessor.GetNow();
-        
+
         return now.TimeOfDay < newDayThreshold
             ? dateHelper.ConvertToDateOnly(now.AddDays(-1))
             : dateHelper.ConvertToDateOnly(now);

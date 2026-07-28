@@ -20,22 +20,22 @@ public class ScoreCommandExecutor(IOutputWriter outputWriter,
       var now = dateAdjuster.GetTodayWithMidnightAdjusted();
       var intervalDays = configurationProvider.ConfigInfo.Configuration.DefaultDayIntervalForGamify;
       var start = now.AddDays(-intervalDays);
-      
+
       var scoreInfos = scoresGenerator.GetScoresForDateInterval(start, now);
 
       var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
-      
+
       foreach (var scoreInfo in scoreInfos)
       {
          OutputWriter.WriteLine(scoreInfo.Date);
-         
+
          foreach (var scoreCategory in scoreCategories)
          {
             scoreInfo.TryGetScore(scoreCategory, out var score); //zero if not found
-            
+
             OutputWriter.WriteLine($"{scoreCategory.Name}: {score}");
          }
-         
+
          OutputWriter.WriteLine($"Total: {scoreInfo.Total()}");
          OutputWriter.WriteLine();
       }

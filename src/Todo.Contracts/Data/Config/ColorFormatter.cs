@@ -10,9 +10,9 @@ public class ColorFormatter : JsonConverter<Color>
     {
         // Handle the most common cases from your old Utf8Json formatter
         if (reader.TokenType != JsonTokenType.String) throw new JsonException();
-        
+
         var colorText = reader.GetString();
-        
+
         if (string.IsNullOrWhiteSpace(colorText))
             return Color.Empty; // or default(Color)
 

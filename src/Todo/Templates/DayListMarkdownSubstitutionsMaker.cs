@@ -16,7 +16,7 @@ public class DayListMarkdownSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Subs
         {
             {"date", substitutions.DateText}
         };
-        
+
         WriteSubstitutionsToStreamBase(template, dict, stream);
     }
 }

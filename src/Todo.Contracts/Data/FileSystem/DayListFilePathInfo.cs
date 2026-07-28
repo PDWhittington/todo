@@ -10,7 +10,7 @@ public record DayListFilePathInfo : FilePathInfo
     {
         Date = date;
     }
-    
+
     public static DayListFilePathInfo Of(string path, FileTypeEnum fileType,
         FolderEnum folderType, DateOnly date)
         => new(path, fileType, folderType, date);

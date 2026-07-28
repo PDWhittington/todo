@@ -9,7 +9,7 @@ public class GraphCommandFactory(IOutputWriter outputWriter)
     : CommandFactoryBase<GraphCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["g", "graph"];
-    
+
     public override bool IsDefaultCommandFactory => false;
 
     protected override string [] HelpText { get; } =

@@ -30,20 +30,20 @@ public class ManifestStreamProvider : IManifestStreamProvider
         var manifestStream = Assembly
             .GetExecutingAssembly()
             .GetManifestResourceStream(manifestName);
-        
+
         if  (manifestStream is null) throw new Exception("Manifest not found in assembly");
-        
+
         var length = (int)manifestStream.Length;
 
         // 2. Allocate directly on the Pinned Object Heap (best for long-lived pins)
         var data  = GC.AllocateArray<byte>(length, pinned: true);
 
         manifestStream.ReadExactly(data);
-        
+
         // 4. Permanently pin and get a stable pointer
         var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         var pointer = handle.AddrOfPinnedObject();
-        
+
         return UnmanagedByteArray.Of(handle, pointer, length);
     }
 

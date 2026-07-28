@@ -25,7 +25,7 @@ public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter 
             gitMoveCommand.GetType().Name,
             gitMoveCommand.SourcePath,
             gitMoveCommand.DestinationPath);
-        
+
         try
         {
             OutputWriter.WriteLine(
@@ -40,15 +40,15 @@ public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter 
                 nameof(RunGitCommand),
                 gitMoveCommand.SourcePath,
                 gitMoveCommand.DestinationPath);
-            
+
             File.Move(gitMoveCommand.SourcePath, gitMoveCommand.DestinationPath);
-            
+
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Attempting to stage source path: {sourcePath}",
                 GetType(),
                 nameof(RunGitCommand),
                 gitMoveCommand.SourcePath);
-            
+
             LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitMoveCommand.SourcePath);
 
             Logger.LogInformation(
@@ -56,7 +56,7 @@ public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter 
                 GetType(),
                 nameof(RunGitCommand),
                 gitMoveCommand.DestinationPath);
-            
+
             LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitMoveCommand.DestinationPath);
 
             return new VoidResult(true);
@@ -68,7 +68,7 @@ public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter 
                 GetType(),
                 nameof(RunGitCommand),
                 e.Message);
-            
+
             return new VoidResult(false, e);
         }
     }

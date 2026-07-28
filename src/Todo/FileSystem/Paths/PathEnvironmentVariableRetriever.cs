@@ -20,7 +20,7 @@ public class PathEnvironmentVariableRetriever(IEnvironmentVariableProvider envir
     /// Sticky environment paths property, which is populated once per process.
     /// </summary>
     public IEnumerable<string> Paths => _paths ?? RetrieveAndPopulatePaths();
-    
+
     /// <summary>
     /// Retrieves and populates the paths from the environment variable.
     /// </summary>

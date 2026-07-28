@@ -13,7 +13,7 @@ public interface IConstantsProvider
     ManifestInfo TopicListMarkdownTemplate { get; }
 
     ManifestInfo ListHtmlTemplate { get; }
-    
+
     ManifestInfo GraphHtmlTemplate { get; } 
 
     string ProjectAuthor { get; }

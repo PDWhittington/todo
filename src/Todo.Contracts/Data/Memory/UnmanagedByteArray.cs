@@ -11,14 +11,14 @@ public readonly unsafe record struct UnmanagedByteArray
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte GetByte(int offset) => *((byte*)Start + offset);
-    
+
     private UnmanagedByteArray(GCHandle handle, IntPtr start, int length)
     {
         Handle = handle;
         Start = start;
         Length = length;
     }
-    
+
     public static UnmanagedByteArray Of(GCHandle handle, IntPtr start, int length)
         => new (handle, start, length);
 }

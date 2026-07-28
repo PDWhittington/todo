@@ -64,7 +64,7 @@ public abstract class PathResolverBase<TParameterType>(
 
         return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.Archive);
     }
-    
+
     protected static string GetExtension(FileTypeEnum fileTypeEnum)
         => fileTypeEnum switch
         {

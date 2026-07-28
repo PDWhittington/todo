@@ -35,15 +35,15 @@ public class PrintHtmlCommandExecutor(
         var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseBootstrap().Build();
 
         var markdownSourceFile = markdownFileReader.ReadMarkdownFile(command.Date);
-        
+
         var htmlTitle = dateFormatter.GetHtmlTitle(command.Date);
 
         var markdownStr = Encoding.UTF8.GetString(
             (byte*)markdownSourceFile.FileContents.Start,
             markdownSourceFile.FileContents.Length);
-        
+
         var htmlBody = Markdown.ToHtml(markdownStr, pipeline);
-        
+
         htmlBody = InsertRepoNameIfNecessary(htmlBody);
 
         var htmlTheme = configurationProvider.ConfigInfo.Configuration.HtmlTheme switch
@@ -52,7 +52,7 @@ public class PrintHtmlCommandExecutor(
             HtmlThemeEnum.Dark => "vscode-dark",
             _ => throw new Exception("Unknown html theme")
         };
-            
+
         var htmlSubstitutions = ListHtmlSubstitutions.Of(htmlTitle, htmlBody, htmlTheme);
 
         var htmlTemplateFile = listHtmlTemplateProvider.GetTemplate();
@@ -69,13 +69,13 @@ public class PrintHtmlCommandExecutor(
         ArgumentNullException.ThrowIfNull(htmlBody);
 
         var configuration = configurationProvider.ConfigInfo.Configuration;
-        
+
         if (!configuration.TodoListInfo.AppearInHtmlLists) return htmlBody;
 
         const string closingHeaderTag = "</h1>";
 
         var endOfHeaderIndex = htmlBody.IndexOf(closingHeaderTag, StringComparison.Ordinal);
-        
+
         if (endOfHeaderIndex == -1) return htmlBody; //This should not happen, but don't throw exception.
 
         return

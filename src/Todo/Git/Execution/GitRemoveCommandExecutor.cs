@@ -92,17 +92,17 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
                 "In {GetType}.{MethodName}: Querying LibGit2Sharp repo.RetrieveStatus...",
                 GetType(),
                 nameof(RunGitCommand));
-            
+
             // One status call for the whole repo (cheap for a typical todo working tree).
             // We then do fast in-memory membership tests for the specific paths we care about.
             var status = repo.RetrieveStatus(new StatusOptions { IncludeUnaltered = false });
-            
+
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Query of LibGit2Sharp repo.RetrieveStatus finished. IsDirty:{isDirty})",
                 GetType(),
                 nameof(RunGitCommand),
                 status.IsDirty);
-            
+
             var dirtyRelPaths = new HashSet<string>(
                 status.Select(e => e.FilePath),
                 StringComparer.Ordinal);
@@ -122,7 +122,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
                     "In {GetType}.{MethodName}: Some files need committing before being removed.",
                     GetType(),
                     nameof(RunGitCommand));
-                
+
                 OutputWriter.WriteLine("Staging changed files before deletion:");
 
                 foreach (var path in pathsNeedingStaging)
@@ -132,7 +132,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
                         GetType(),
                         nameof(RunGitCommand),
                         path);
-                    
+
                     OutputWriter.WriteLine($"Staging {path}");
                 }
 
@@ -140,16 +140,16 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
                     "In {GetType}.{MethodName}: Attempting staging of files.",
                     GetType(),
                     nameof(RunGitCommand));
-                
+
                 Commands.Stage(repo, pathsNeedingStaging);
 
                 var commitMessage = BuildCheckpointMessage(pathsNeedingStaging);
-                
+
                 Logger.LogInformation(
                     "In {GetType}.{MethodName}: Attempting commit of files.",
                     GetType(),
                     nameof(RunGitCommand));
-                
+
                 var commitResult = gitInterface.RunGitCommand<GitCommitCommand, CommitResult>(
                     new GitCommitCommand(commitMessage));
 
@@ -159,7 +159,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
                         "In {GetType}.{MethodName}: Commit threw an exception so aborting remove command.",
                         GetType(),
                         nameof(RunGitCommand));
-                   
+
                     return new VoidResult(false, commitResult.Exception);
                 }
             }
@@ -169,16 +169,16 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
             foreach (var path in gitRemoveCommand.Paths)
             {
                 if (!File.Exists(path)) continue;
-                
+
                 Logger.LogInformation(
                     "In {GetType}.{MethodName}: Physically removing file {path}.",
                     GetType(),
                     nameof(RunGitCommand),
                     path);
-                    
+
                 File.Delete(path);
             }
-            
+
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: All files removed.",
                 GetType(),

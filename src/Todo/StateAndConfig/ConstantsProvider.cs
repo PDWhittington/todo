@@ -11,13 +11,13 @@ public class ConstantsProvider : IConstantsProvider
     public string SettingsFileName => _settingsFileName;
 
     public ManifestInfo DefaultSettingsFile { get; } = ManifestInfo.Of(_settingsFileName);
-    
+
     public ManifestInfo DayListMarkdownTemplate { get; } = ManifestInfo.Of("day-list-template.md");
-    
+
     public ManifestInfo TopicListMarkdownTemplate { get; } = ManifestInfo.Of("topic-list-template.md");
-    
+
     public ManifestInfo ListHtmlTemplate { get; } = ManifestInfo.Of("list-template.html");
-    
+
     public ManifestInfo GraphHtmlTemplate { get; } = ManifestInfo.Of("graph-template.html");
 
     public string ProjectAuthor => "Phil Whittington";
