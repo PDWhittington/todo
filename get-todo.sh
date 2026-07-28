@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -euo pipefail
+
 #!/usr/bin/env bash
 # Replace these with your repo
 OWNER="PDWhittington"

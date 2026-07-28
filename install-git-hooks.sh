@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+
+set -euo pipefail
+
 # scripts/install-hooks.sh
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"
