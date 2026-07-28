@@ -36,17 +36,17 @@ public class GitInterface : IGitInterface
             "In {GetType}.{MethodName}: Querying LibGit2Sharp Repository.Discover.",
             GetType(),
             nameof(RunGitCommand));
-        
+
         var repoPath = Repository.Discover(_outputFolderPathProvider.GetRootedOutputFolder());
-        
+
         Logger.LogInformation(
             "In {GetType}.{MethodName}: Query of LibGit2Sharp Repository.Discover finished. RepositoryPath: {repositoryPath}",
             GetType(),
             nameof(RunGitCommand),
             repoPath);
-        
+
         var repo = new Repository(repoPath); //TODO: currently failing
-        
+
         Logger.LogInformation(
             "In {GetType}.{MethodName}: Repository object created: (WorkingDirectory: {workingDirectory}))",
             GetType(),

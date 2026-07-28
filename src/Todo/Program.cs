@@ -21,7 +21,7 @@ catch (Exception e)
     Console.WriteLine();
     Console.WriteLine("Stack trace:");
     Console.WriteLine(e.StackTrace);
-    
+
 }
 finally
 {

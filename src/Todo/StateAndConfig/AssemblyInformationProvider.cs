@@ -38,7 +38,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
             .Where(x => x is not null)
             .Cast<PackageReferenceInfo>()
             .ToArray();
-        
+
         return packageReferenceList;
     }
 

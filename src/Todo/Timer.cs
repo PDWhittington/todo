@@ -7,7 +7,7 @@ public static class Timer
 {
     private static bool _isStarted;
     private static readonly Stopwatch Watch = new();
-    
+
     public static void Start()
     {
         if (_isStarted) throw new Exception("Timer is already started");

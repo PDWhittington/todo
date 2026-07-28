@@ -10,7 +10,7 @@ namespace Todo.Dates;
 public class DateParser(IConfigurationProvider configurationProvider, 
     IDateHelper dateHelper, IDateAdjuster dateAdjuster, IEnvironmentVariableProvider environmentVariableProvider) : IDateParser
 {
-    
+
     public bool TryGetDate(string? str, out DateOnly dateOnly)
     { 
         return EnvironmentVariableSetsOverride(out var overrideDate) 
@@ -21,7 +21,7 @@ public class DateParser(IConfigurationProvider configurationProvider,
     private bool TryGetDateRelativeTo(string? str, DateOnly relativeToDate, out DateOnly dateOnly)
     {
         //NOTE: order of these tests is important.
-        
+
         if (str is null) dateOnly = default;
         else if (IsYesterday(str)) dateOnly = relativeToDate.AddDays(-1);
         else if (IsToday(str)) dateOnly = relativeToDate;
@@ -49,11 +49,11 @@ public class DateParser(IConfigurationProvider configurationProvider,
         {
             return TryGetDateRelativeTo(overrideDateStr, dateAdjuster.GetTodayWithMidnightAdjusted(), out overrideDate);
         }
-        
+
         overrideDate = default;
         return false;
     }
-    
+
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
     {
         "y" => true,

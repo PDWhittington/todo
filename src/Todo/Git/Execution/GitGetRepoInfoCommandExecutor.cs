@@ -21,7 +21,7 @@ public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter, ILogger<G
             GetType(),
             nameof(RunGitCommand),
             gitGetRepoInfoCommand.GetType().Name);
-        
+
         OutputWriter.WriteLine("Retrieving repo information...");
 
         try
@@ -30,7 +30,7 @@ public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter, ILogger<G
                 "In {GetType}.{MethodName}: Querying LibGit2Sharp Repository.Index.Conflicts...",
                 GetType(),
                 nameof(RunGitCommand));
-            
+
             var repositoryInformation = gitInterface.Repository.Info;
             return new RepoInfoResult(true, repositoryInformation);
         }
@@ -41,7 +41,7 @@ public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter, ILogger<G
                 GetType(),
                 nameof(RunGitCommand),
                 e.Message);
-            
+
             return new RepoInfoResult(true, null, e);
         }
     }

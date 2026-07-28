@@ -22,16 +22,16 @@ public class GitResetCommandExecutor(IOutputWriter outputWriter, ILogger<GitRese
             nameof(RunGitCommand),
             gitResetCommand.GetType().Name,
             gitResetCommand.Hard);
-        
+
         try
         {
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Attempting LibGit2Sharp reset...",
                 GetType(),
                 nameof(RunGitCommand));
-            
+
             gitInterface.Repository.Reset(gitResetCommand.Hard ? ResetMode.Hard : ResetMode.Soft);
-            
+
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Reset done.",
                 GetType(),
@@ -46,7 +46,7 @@ public class GitResetCommandExecutor(IOutputWriter outputWriter, ILogger<GitRese
                 GetType(),
                 nameof(RunGitCommand),
                 e.Message);
-            
+
             return new VoidResult(false, e);
         }
     }

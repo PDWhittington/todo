@@ -32,7 +32,7 @@ public sealed class PinnedFileLoader : IPinnedFileLoader
         // 4. Permanently pin and get a stable pointer
         var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         var pointer = handle.AddrOfPinnedObject();
-        
+
         return UnmanagedByteArray.Of(handle, pointer, (int)fileLength);
     }
 }

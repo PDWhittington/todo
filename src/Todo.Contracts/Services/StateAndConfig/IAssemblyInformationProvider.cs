@@ -5,11 +5,11 @@ namespace Todo.Contracts.Services.StateAndConfig;
 public interface IAssemblyInformationProvider
 {
     PackageReferenceInfo[] GetPackageReferences();
-    
+
     string GitDescribe();
 
     string [] GitBranches();
-    
+
     string [] GitTags();
 
     string [] GitWorktreeChanges();
@@ -21,6 +21,6 @@ public interface IAssemblyInformationProvider
     string GetRootedToAssemblyFolder(string path);
 
     string AssemblyLocation();
-    
+
     bool DebugFlag();
 }

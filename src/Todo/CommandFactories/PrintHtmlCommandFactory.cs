@@ -26,7 +26,7 @@ public class PrintHtmlCommandFactory(IDateParser dateParser, IOutputWriter outpu
     public override PrintHtmlCommand? TryGetCommand(string commandLine)
     {
         if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
-        
+
         if (!dateParser.TryGetDate(restOfCommand, out var dateOnly))
         {
             throw new ArgumentException("Date in archive command is not recognised");

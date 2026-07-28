@@ -37,10 +37,10 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
             list.Add(EmptyScoreInfo.Of(date));
          }
       }
-      
+
       return [.. list];
    }
-   
+
    private IEnumerable<FilePathScoreInfo> YieldScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)
    {
       var files = fileListCreator.GetFiles<DayListFilePathInfo>(
@@ -52,13 +52,13 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
 
       return YieldScoresFor(filesFiltered);
    } 
-   
+
    private IEnumerable<FilePathScoreInfo> YieldScoresFor(IEnumerable<DayListFilePathInfo> filePathInfos)
    {
       var scoreCategories = configurationProvider.ConfigInfo.Configuration.ScoreCategories;
 
       var fileIterationMethod = configurationProvider.ConfigInfo.Configuration.FileIterationMethod;
-      
+
       var infosWithIterationMode = fileIterationMethod switch
          {
             IterationMethodEnum.Parallel => filePathInfos.AsParallel(),
@@ -75,9 +75,9 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
    {
       var todoFile = markdownFileReader.ReadMarkdownFile(filePathInfo);
       var markdownHeadingStack = new MarkdownHeadingStack();
-      
+
       var scoreDictionary = new Dictionary<ScoreCategory, int>();
-      
+
       foreach (var currentLine in todoFile.MarkdownLines)
       {
          if (currentLine.LineType == MarkdownLineTypeEnum.Heading)
@@ -95,18 +95,18 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
             scoreDictionary[scoreCategory] += tokenScore;
          }
       }
-      
+
       return FilePathScoreInfo.Of(filePathInfo, scoreDictionary);
    }
-   
+
    private static bool ContainsTokenScore(ByteArraySpan line, out int tokenScore)
    {
       var runningScore = 0;
       var hasTokenScore = false;
-      
+
       var previousCharWasAlphaNumeric = false;
       var currentSectionStart = 0;
-      
+
       for (var i = 0; i < line.Length; i++)
       {
          var b = line.GetByte(i);
@@ -140,10 +140,10 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
                break;
             }
          }
-         
+
          previousCharWasAlphaNumeric = currentCharIsAlphaNumeric;
       }
-      
+
       tokenScore = runningScore;
       return hasTokenScore;
    }
@@ -153,11 +153,11 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
       if (!span.EndsWith((byte)'t') && !span.EndsWith((byte)'T')) return false;
       if (!span.TryIntParseAllButLast(out var score)) return false;
       if (score == 0) return false;
-      
+
       totalScore += score;
       return true;
    }
-   
+
    private static ScoreCategory GetCategoryFromStack(MarkdownHeadingStack stack, 
       ScoreCategory [] scoreCategories)
    {
@@ -166,14 +166,14 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          var isWithinSection = stack
             .Select(x => x.HeadingTitle)
             .Any(ht => ht.EqualsIgnoreCase(category.Name));
-            
+
          // ReSharper disable once InvertIf
          if (isWithinSection)
          {
             return category;
          }
       }
-   
+
       return scoreCategories.First(x => x.IsDefaultCategory);
    }
 }

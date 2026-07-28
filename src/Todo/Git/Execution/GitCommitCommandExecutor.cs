@@ -23,7 +23,7 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
                 nameof(RunGitCommand),
                 gitCommitCommand.GetType().Name,
                 gitCommitCommand.Message);
-            
+
             var signature = gitInterface.Repository.Config.BuildSignature(DateTimeOffset.Now);
 
             Logger.LogInformation(
@@ -33,7 +33,7 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
                 signature.Name,
                 signature.Email,
                 signature.When);
-            
+
             OutputWriter.WriteLine($"Creating commit with message: {gitCommitCommand.Message}");
 
             Logger.LogInformation(
@@ -52,7 +52,7 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
                 GetType(),
                 nameof(RunGitCommand),
                 commit.Sha);
-            
+
             return new CommitResult(true, commit);
         }
         catch (Exception e)
@@ -62,7 +62,7 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
                 GetType(),
                 nameof(RunGitCommand),
                 e.Message);
-            
+
             return new CommitResult(false, null, e);
         }
     }

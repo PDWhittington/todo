@@ -47,7 +47,7 @@ public class BoilerPlateProvider(
         "SelfContained",
         "TieredCompilation"
     ];
-    
+
     private static readonly Lazy<UnitAndMultiplier[]> UnitsAndMultipliers = new(() => [.. CreateUnits()]);
 
     public string GetBoilerPlateForLogging()
@@ -56,7 +56,7 @@ public class BoilerPlateProvider(
         MakeBoilerPlateForLogging(sb);
         return sb.ToString();
     }
-    
+
     public string GetBoilerPlate()
     {
         var sb = new StringBuilder();
@@ -105,7 +105,7 @@ public class BoilerPlateProvider(
         //Append not AppendLine because a fresh new line is added as this
         //string is written to the log file
     }
-    
+
     public void MakeBoilerPlate(StringBuilder sb)
     {
         /*
@@ -256,7 +256,7 @@ public class BoilerPlateProvider(
         const double day = 24.0 * hour;
         const double week = 7.0 * day;
         const double year = 365.0 * day;
-        
+
         yield return new UnitAndMultiplier("millisecond", millisecond, second);
         yield return new UnitAndMultiplier("second", second, minute);
         yield return new UnitAndMultiplier("minute", minute, hour);
@@ -276,11 +276,11 @@ public class BoilerPlateProvider(
         foreach (var unitAndMultiplier in unitsAndMultipliers)
         {
             if (time >= unitAndMultiplier.LimitInMilliseconds) continue;
-            
+
             var scaled = time / unitAndMultiplier.Divisor;
             return $"{FloorAndPluralise(scaled, unitAndMultiplier.Unit)} ago";
         }
-        
+
         //Should not occur because last condition should always succeed (double.MaxValue)
         //For compiler
         throw new Exception();

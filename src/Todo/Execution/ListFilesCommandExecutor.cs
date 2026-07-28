@@ -50,7 +50,7 @@ public class ListFilesCommandExecutor(
             sb.AppendLine();
 
             var pathGroupSorted = pathGroup.OrderBy(x => x.Path);
-            
+
             foreach (var pathInfo in pathGroupSorted)
             {
                 sb.AppendLine($"\t{pathInfo.Path}");

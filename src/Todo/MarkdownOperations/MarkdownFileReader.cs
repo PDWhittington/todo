@@ -19,7 +19,7 @@ public class MarkdownFileReader(
     {
         var filePathInfo = dateListPathResolver.ResolvePathFor(dateOnly,
             FileTypeEnum.MarkdownDayList, false);
-        
+
         return ReadMarkdownFile(filePathInfo);
     }
 
@@ -27,10 +27,10 @@ public class MarkdownFileReader(
     {
         var lazyFile = new Lazy<UnmanagedByteArray>(() =>
             LoadFile(filePathInfo.Path));
-        
+
         var markdownLines = new Lazy<MarkdownLineInfo[]>(() => 
             markdownLineInterpreter.CreateMarkdownLines(lazyFile.Value));
-        
+
         return TodoFile.Of(filePathInfo, markdownLines, lazyFile);
     }
 }

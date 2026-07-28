@@ -14,7 +14,7 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariable
         {
             return overrideLaunchInfo!;
         }
-        
+
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             return perOsLaunchInfos.Windows;
@@ -24,7 +24,7 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariable
             ? perOsLaunchInfos.OSX
             : perOsLaunchInfos.Linux; // Assume that any unrecognised OS is a POSIX variant.
     }
-    
+
     private bool TryGetOverride(PerOsLaunchInfos perOsLaunchInfos, out ProcessLaunchInfo? value)
     {
         var pathVariableNameIsEmpty = string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverridePath);
@@ -34,7 +34,7 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariable
         {
             var overridePathExists = environmentVariableProvider.TryGetEnvironmentVariable(
                 perOsLaunchInfos.EnvironmentVariableToOverridePath, out var overridePath);
-                
+
             var overrideParametersExists = environmentVariableProvider.TryGetEnvironmentVariable(
                 perOsLaunchInfos.EnvironmentVariableToOverrideParameters, out var overrideParameters);
 
@@ -44,7 +44,7 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariable
                 return true;                
             }
         }
-        
+
         value = null;
         return false;
     }

@@ -13,18 +13,18 @@ public class TextFileLauncher(IConfigurationProvider configurationProvider,
     public void LaunchFiles(params string [] filePaths)
     {
         var launchInfos = configurationProvider.ConfigInfo.Configuration.TextEditorPath;
-        
+
         var launchInfoForThisOs = launchInfoSelector.SelectLaunchInfoForThisOs(launchInfos);
-        
+
         var textEditorPath = launchInfoForThisOs.Path;
         var textEditorPathRooted = pathHelper.ResolveIfNotRooted(textEditorPath);
-        
+
         foreach (var path in filePaths)
         {
             var parameters = launchInfoForThisOs.InterpolateParameters(path);
-            
+
             outputWriter.WriteLine($"Launching {textEditorPathRooted} {parameters}");
-            
+
             Process.Start(textEditorPathRooted, parameters);
         }
     }

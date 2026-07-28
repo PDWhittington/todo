@@ -25,9 +25,9 @@ public abstract class CommandFactoryBase<T>(IOutputWriter outputWriter, IEnumera
     public IEnumerable<string> GetFullHelpMessage()
     {
         if (HelpText.Length == 0) yield break;
-        
+
         foreach (var helpText in HelpText) yield return helpText;
-        
+
         yield return "";
         yield return $"Usage: todo {Usage}";
     }
@@ -50,14 +50,14 @@ public abstract class CommandFactoryBase<T>(IOutputWriter outputWriter, IEnumera
             .Where(word => !string.Equals(word, firstWord))
             .Select(word => $"'{word}'")
             .ToArray();
-        
+
         OutputWriter.WriteLine($"Command line interpreted as {typeof(T).Name}");
 
         if (otherWords.Length > 0)
         {
             OutputWriter.WriteLine($"(Can also be invoked with {string.Join(", ", otherWords)})");
         }
-        
+
         OutputWriter.WriteLine();
         return true;
     }

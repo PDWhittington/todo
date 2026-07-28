@@ -21,7 +21,7 @@ public class GitGetConflictsCommandExecutor(IOutputWriter outputWriter, ILogger<
             GetType(),
             nameof(RunGitCommand),
             gitGetConflictsCommand.GetType().Name);
-        
+
         OutputWriter.WriteLine("Retrieving conflicts from git index");
 
         try
@@ -30,14 +30,14 @@ public class GitGetConflictsCommandExecutor(IOutputWriter outputWriter, ILogger<
                 "In {GetType}.{MethodName}: Querying LibGit2Sharp Repository.Index.Conflicts...",
                 GetType(),
                 nameof(RunGitCommand));
-            
+
             var conflicts = gitInterface.Repository.Index.Conflicts;
-            
+
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Query of LibGit2Sharp Repository.Index.Conflicts finished.",
                 GetType(),
                 nameof(RunGitCommand));
-            
+
             return new ConflictsResult(true, conflicts);
         }
         catch (Exception e)
@@ -47,7 +47,7 @@ public class GitGetConflictsCommandExecutor(IOutputWriter outputWriter, ILogger<
                 GetType(),
                 nameof(RunGitCommand),
                 e.Message);
-            
+
             return new ConflictsResult(false, null, e);
         }
     }

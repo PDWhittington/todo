@@ -21,14 +21,14 @@ public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushC
             nameof(RunGitCommand),
             gitPushCommand.GetType().Name,
             gitPushCommand.BranchLocator);
-        
+
         try
         {
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Locating branch...",
                 GetType(),
                 nameof(RunGitCommand));
-            
+
             var currentBranch = gitPushCommand
                 .BranchLocator
                 .GetBranchForRepository(gitInterface.Repository);
@@ -38,7 +38,7 @@ public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushC
                 GetType(),
                 nameof(RunGitCommand),
                 currentBranch.FriendlyName);
-            
+
             OutputWriter.WriteLine(
                 $"Pushing branch {currentBranch.FriendlyName} to origin");
 
@@ -47,7 +47,7 @@ public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushC
                 GetType(),
                 nameof(RunGitCommand),
                 currentBranch.FriendlyName);
-            
+
             gitInterface.Repository.Network.Push(currentBranch);
 
             return new VoidResult(true);
@@ -59,7 +59,7 @@ public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushC
                 GetType(),
                 nameof(RunGitCommand),
                 e.Message);
-            
+
             return new VoidResult(false, e);
         }
     }

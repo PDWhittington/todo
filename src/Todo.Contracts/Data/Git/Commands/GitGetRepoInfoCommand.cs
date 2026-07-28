@@ -8,6 +8,6 @@ public record GitGetRepoInfoCommand : IGitCommand<RepoInfoResult>
 {
     // ReSharper disable once UnusedMember.Global
     public static readonly GitGetRepoInfoCommand Instance = new();
-    
+
     private GitGetRepoInfoCommand() { }
 }

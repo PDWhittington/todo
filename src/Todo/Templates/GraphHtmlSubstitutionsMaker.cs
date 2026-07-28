@@ -19,7 +19,7 @@ public class GraphHtmlSubstitutionsMaker(IFastUtf8Substitutor fastUtf8Substituto
             { "svg", substitutions.Svg },
             { "timestamp", substitutions.Timestamp }
         };
-        
+
         WriteSubstitutionsToStreamBase(template, dict, stream);
     }
 }

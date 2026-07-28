@@ -13,7 +13,7 @@ public class TextExtensionsTests
         public byte B { get; init; }
         public bool Expected { get; init; }
     }
-    
+
     [Test]
     [TestCaseSource(nameof(GetEqualsIgnoreCaseTests))]
     public void EqualsIgnoreCase(TestCase testCase)
@@ -29,14 +29,14 @@ public class TextExtensionsTests
             B = (byte)'A',
             Expected = true
         };
-        
+
         yield return new TestCase
         {
             A = (byte)'A',
             B = (byte)'a',
             Expected = true
         };
-        
+
         yield return new TestCase
         {
             A = (byte)'z',

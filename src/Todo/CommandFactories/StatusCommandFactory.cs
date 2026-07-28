@@ -9,7 +9,7 @@ public class StatusCommandFactory(IOutputWriter outputWriter)
     : CommandFactoryBase<StatusCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["status"];
-    
+
     public override bool IsDefaultCommandFactory => false;
 
     protected override string[] HelpText => [];

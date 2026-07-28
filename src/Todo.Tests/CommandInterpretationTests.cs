@@ -22,20 +22,20 @@ public class CommandInterpretationTests
     private static ServiceProvider GetServiceProvider(ICommandLineProvider mockCommandLineProvider)
     {
         var serviceCollection = Initialise.GetServiceCollection();
-        
+
         var mockDateAccessor = Substitute.For<IDateAccessor>();
         mockDateAccessor.GetNow().Returns(Constants.CurrentTimeForTest);
-        
+
         var mockConfigProvider = Substitute.For<IConfigurationProvider>();
         mockConfigProvider.ConfigInfo.Returns(Config.GetMockConfigInfo());
-        
+
         serviceCollection.AddSingleton(mockDateAccessor);
         serviceCollection.AddSingleton(mockConfigProvider);
         serviceCollection.AddSingleton(mockCommandLineProvider);
-        
+
         return serviceCollection.BuildServiceProvider();
     }
-    
+
     [Test]
     [TestCaseSource(nameof(GetCommandLineTests))]
     public void TestCommandLine(CommandLineTestInfo commandLineTestInfo)
@@ -46,11 +46,11 @@ public class CommandInterpretationTests
         var serviceProvider = GetServiceProvider(mockCommandLine);
 
         using var handle = serviceProvider.GetRequiredService<IOutputWriter>().CreateDisposableHandle();
-        
+
         var commandProvider = serviceProvider.GetRequiredService<ICommandProvider>();
 
         var actualCommand = commandProvider.GetCommand();
-        
+
         TestActualCommandAgainstExpected(commandLineTestInfo.ExpectedCommand, actualCommand);
     }
 
@@ -60,22 +60,22 @@ public class CommandInterpretationTests
         {
             throw new Exception($"Expected {expectedCommand.GetType().Name}, but got {actualCommand.GetType().Name}");
         }
-        
+
         // Test all of the public properties
-        
+
         var type = expectedCommand.GetType();
         var publicProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         var errorList = new List<string>();
-        
+
         foreach (var property in publicProperties)
         {
             var expectedPropertyValue = property.GetValue(expectedCommand);
             var actualPropertyValue = property.GetValue(actualCommand);
-            
+
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (expectedPropertyValue is null && actualPropertyValue is null) continue;
-            
+
             if (expectedPropertyValue is null)
             {
                 errorList.Add($"{property.Name}: Expected null but got {actualPropertyValue?.GetType().Name}");
@@ -87,7 +87,7 @@ public class CommandInterpretationTests
                 errorList.Add($"{property.Name}: Expected {expectedPropertyValue} but got <NULL>");
                 continue;
             }
-            
+
             if (!expectedPropertyValue.Equals(actualPropertyValue))
             {
                 errorList.Add($"{property.Name}: Expected {expectedPropertyValue} but got {actualPropertyValue}");
@@ -95,13 +95,13 @@ public class CommandInterpretationTests
         }
 
         if (errorList.Count == 0) return;
-        
+
         var message = "The following properties were not as expected:" + Environment.NewLine + 
                       string.Join(Environment.NewLine, errorList);
-            
+
         throw new Exception(message);
     }
-    
+
     public class CommandLineTestInfo
     {
         public required string CommandLine { get; init; }

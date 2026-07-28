@@ -49,9 +49,9 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         var scoreInfos = scoresGenerator.GetScoresForDateInterval(start, now);
 
         var filePathInfo = scoreHtmlPathResolver.GetFilePathFor("", FileTypeEnum.Html);
-        
+
         using var stream = File.Create(filePathInfo.Path);
-        
+
         WriteStackedBarChartHtmlToStream(scoreInfos, stream);
 
         htmlFileLauncher.LaunchFiles(filePathInfo.Path);
@@ -63,13 +63,13 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         {
             var emptyHtml = "<html class=\"light\"><body><h1>No data to display</h1></body></html>"u8
                 .ToArray();
-            
+
             stream.Write(emptyHtml, 0, emptyHtml.Length);
             return;
         }
 
         var configuration = configurationProvider.ConfigInfo.Configuration;
-        
+
         var scoreCategories = configuration.ScoreCategories;
 
         const int plotWidth = Width - MarginLeft - MarginRight;
@@ -145,7 +145,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
 
             elements.Add(dayLabel);
         }
-        
+
         var ticks = GetYTicks((int)maxTotal).ToArray();
 
         // === Y-axis ticks & labels ===
@@ -183,7 +183,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         {
             var cat = scoreCategories[i];
             var scoreCategoryY = legendY + (scoreCategories.Length - i - 1) * 28;
-            
+
             // color box
             elements.Add(new XElement("rect",
                 new XAttribute("x", legendX),
@@ -208,18 +208,18 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
             new XAttribute("viewBox", $"0 0 {Width} {Height}"),
             new XAttribute("preserveAspectRatio", "xMidYMid meet"),
             elements.ToArray());
-        
+
         var initialTheme = configuration.HtmlTheme.ToString().ToLower();
-        
+
         var chartTitle = configuration.TodoListInfo.AppearInHtmlSummaries
             ? $"{configuration.TodoListInfo.Name} \u2014 {configuration.DefaultDayIntervalForGamify} day summary"
             : $"{configuration.DefaultDayIntervalForGamify} day summary";
-        
+
         var htmlSubstitutions = GraphHtmlSubstitutions.Of(chartTitle, initialTheme, 
             svg.ToString(), $"{dateAccessor.GetNow():yy-MM-dd HH:mm:ss}");
 
         var template = graphHtmlTemplateProvider.GetTemplate();
-        
+
         graphHtmlSubstitutionsMaker.WriteSubstitutionsToStream(template.FileContents, 
             htmlSubstitutions, stream);
     }
@@ -229,7 +229,7 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
         var orderOfMagnitude = (int)Math.Log10(maxTotal);
         var _1000 = (int)Math.Pow(10, orderOfMagnitude);
         var _5000 = maxTotal / _1000 * _1000;
-        
+
         for (var i = 0; i <= _5000; i += _1000)
         {
             yield return i;

@@ -79,18 +79,18 @@ public class FileListCreator(IOutputFolderPathProvider pathRootingProvider, IFil
                 categoryAndMatchInfo.PathAndFolder.Path, MapToFileTypeEnum(categoryAndMatchInfo.FileType),
                 categoryAndMatchInfo.PathAndFolder.Folder);
         }
-            
+
         if (categoryAndMatchInfo.Date is null)
         {
             throw new Exception($"Expecting file of type  {nameof(ListFileTypeEnum.DayList)} " +
                                 $"but no date is parsed");
         }
-                
+
         return DayListFilePathInfo.Of(
             categoryAndMatchInfo.PathAndFolder.Path, MapToFileTypeEnum(categoryAndMatchInfo.FileType),
             categoryAndMatchInfo.PathAndFolder.Folder, categoryAndMatchInfo.Date.Value);
     }
-    
+
     private record CategoryAndMatchInfo(
         bool Match,
         ListFileTypeEnum FileType,

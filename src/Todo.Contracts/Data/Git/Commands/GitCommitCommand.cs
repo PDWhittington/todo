@@ -7,7 +7,7 @@ public record GitCommitCommand(string Message, CommitOptions CommitOptions)
     : IGitCommand<CommitResult>
 {
     public CommitOptions CommitOptions { get; } = CommitOptions;
-    
+
     public GitCommitCommand(string message)
         : this(message, DefaultCommitOptions)
     { }

@@ -28,7 +28,7 @@ public sealed class DateListPathResolver(
             throw new Exception($"Expecting file of type {nameof(FileTypeEnum.MarkdownDayList)} " +
                                 $"but no date parsed from file {fileName}");
         }
-        
+
         return DayListFilePathInfo.Of(formattedPath, fileType, folderType, date);
     }
 
