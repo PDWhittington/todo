@@ -12,22 +12,32 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class UnarchiveCommandExecutor 
-    : FileMoveExecutorBase<UnarchiveCommand>, IUnarchiveCommandExector
+public class UnarchiveCommandExecutor(
+    IDateListPathResolver dateListPathResolver,
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    IOutputWriter outputWriter,
+    IFolderCreator folderCreator,
+    ILogger<UnarchiveCommandExecutor> logger
+)
+    : FileMoveExecutorBase<UnarchiveCommand>(
+        configurationProvider,
+        gitInterface,
+        outputWriter,
+        folderCreator,
+        logger
+    ),
+        IUnarchiveCommandExector
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
+    protected override FilePathInfo GetSourcePath(UnarchiveCommand command) =>
+        dateListPathResolver.GetArchiveFilePathFor(
+            command.DateOfFileToArchive,
+            FileTypeEnum.MarkdownDayList
+        );
 
-    public UnarchiveCommandExecutor(IDateListPathResolver dateListPathResolver,
-        IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IOutputWriter outputWriter, IFolderCreator folderCreator, ILogger<UnarchiveCommandExecutor> logger)
-        : base(configurationProvider, gitInterface, outputWriter, folderCreator, logger)
-    {
-        _dateListPathResolver = dateListPathResolver;
-    }
-
-    protected override FilePathInfo GetSourcePath(UnarchiveCommand command)
-        => _dateListPathResolver.GetArchiveFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
-
-    protected override FilePathInfo GetDestinationPath(UnarchiveCommand command)
-        => _dateListPathResolver.GetFilePathFor(command.DateOfFileToArchive, FileTypeEnum.MarkdownDayList);
+    protected override FilePathInfo GetDestinationPath(UnarchiveCommand command) =>
+        dateListPathResolver.GetFilePathFor(
+            command.DateOfFileToArchive,
+            FileTypeEnum.MarkdownDayList
+        );
 }

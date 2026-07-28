@@ -5,20 +5,13 @@ using Todo.Contracts.Services.FileSystem.Paths;
 
 namespace Todo.FileSystem;
 
-public class FolderCreator : IFolderCreator
+public class FolderCreator(IOutputFolderPathProvider outputFolderPathProvider) : IFolderCreator
 {
-    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
+    public void CreateOutputFolder() =>
+        CreateIfDoesntExist(outputFolderPathProvider.GetRootedOutputFolder());
 
-    public FolderCreator(IOutputFolderPathProvider outputFolderPathProvider)
-    {
-        _outputFolderPathProvider = outputFolderPathProvider;
-    }
-
-    public void CreateOutputFolder()
-        => CreateIfDoesntExist(_outputFolderPathProvider.GetRootedOutputFolder());
-
-    public void CreateArchiveFolder()
-        => CreateIfDoesntExist(_outputFolderPathProvider.GetRootedArchiveFolder());
+    public void CreateArchiveFolder() =>
+        CreateIfDoesntExist(outputFolderPathProvider.GetRootedArchiveFolder());
 
     public void CreateIfDoesntExist(string directory)
     {
@@ -30,7 +23,8 @@ public class FolderCreator : IFolderCreator
 
     public void CreateFromPathIfDoesntExist(string path)
     {
-        var dir = Path.GetDirectoryName(path)
+        var dir =
+            Path.GetDirectoryName(path)
             ?? throw new ArgumentException("Directory cannot be parsed from path");
 
         CreateIfDoesntExist(dir);

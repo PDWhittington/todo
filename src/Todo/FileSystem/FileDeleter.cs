@@ -4,21 +4,15 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.FileSystem;
 
-public class FileDeleter : IFileDeleter
+public class FileDeleter(IOutputWriter outputWriter) : IFileDeleter
 {
-    private readonly IOutputWriter _outputWriter;
-
-    public FileDeleter(IOutputWriter outputWriter)
-    {
-        _outputWriter = outputWriter;
-    }
-
     public void Delete(string folder, string fileOrWildCard)
     {
         var dir = new DirectoryInfo(folder);
 
-        foreach (var file in dir.EnumerateFiles(fileOrWildCard)) {
-            _outputWriter.WriteLine($"Deleting {file.FullName}");
+        foreach (var file in dir.EnumerateFiles(fileOrWildCard))
+        {
+            outputWriter.WriteLine($"Deleting {file.FullName}");
             file.Delete();
         }
     }
