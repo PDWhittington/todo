@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Git.Results;
+﻿namespace Todo.Contracts.Data.Git.Results;
 
 public abstract record GitResultBase
 {
@@ -19,4 +19,3 @@ public abstract record GitResultBase
     private static bool Validate(bool success, Exception? exception) =>
         success ^ exception is not null;
 }
-

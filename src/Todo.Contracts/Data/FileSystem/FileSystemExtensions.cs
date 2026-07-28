@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.FileSystem;
+﻿namespace Todo.Contracts.Data.FileSystem;
 
 public static class FileSystemExtensions
 {

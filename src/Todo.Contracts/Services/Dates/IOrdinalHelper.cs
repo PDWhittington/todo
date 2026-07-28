@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Services.Dates;
+﻿namespace Todo.Contracts.Services.Dates;
 
 public interface IOrdinalHelper
 { 

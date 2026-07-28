@@ -1,3 +1,3 @@
-namespace Todo.Contracts.Services.UI;
+﻿namespace Todo.Contracts.Services.UI;
 
 public interface IOutputWriterDisposableHandle : IDisposable;

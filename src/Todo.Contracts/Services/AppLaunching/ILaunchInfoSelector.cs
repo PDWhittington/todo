@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Config;
+﻿using Todo.Contracts.Data.Config;
 
 namespace Todo.Contracts.Services.AppLaunching;
 

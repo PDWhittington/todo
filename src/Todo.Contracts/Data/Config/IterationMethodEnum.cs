@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Config;
+﻿namespace Todo.Contracts.Data.Config;
 
 public enum IterationMethodEnum
 {

@@ -1,3 +1,3 @@
-namespace Todo.Contracts.Services.Templates;
+﻿namespace Todo.Contracts.Services.Templates;
 
 public interface IGraphHtmlTemplateProvider : ITemplateProvider;

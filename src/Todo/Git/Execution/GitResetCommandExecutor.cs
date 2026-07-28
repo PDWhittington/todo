@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
@@ -51,4 +51,3 @@ public class GitResetCommandExecutor(IOutputWriter outputWriter, ILogger<GitRese
         }
     }
 }
-

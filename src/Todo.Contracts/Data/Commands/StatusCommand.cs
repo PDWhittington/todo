@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Commands;
+﻿namespace Todo.Contracts.Data.Commands;
 
 public record StatusCommand : CommandBase
 {
@@ -6,4 +6,3 @@ public record StatusCommand : CommandBase
 
     private StatusCommand() { }
 }
-

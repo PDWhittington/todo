@@ -2,4 +2,3 @@
 
 public record VoidResult(bool Success, Exception? Exception = null)
     : GitResultBase(Success, Exception);
-

@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.UI;
 
@@ -25,4 +25,3 @@ public class GraphCommandFactory(IOutputWriter outputWriter)
             ? new GraphCommand()
             : null;
 }
-

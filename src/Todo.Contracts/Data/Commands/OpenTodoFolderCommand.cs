@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Commands;
+﻿namespace Todo.Contracts.Data.Commands;
 
 public record OpenTodoFolderCommand : CommandBase
 {

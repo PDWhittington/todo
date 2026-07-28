@@ -1,4 +1,4 @@
-using LibGit2Sharp;
+﻿using LibGit2Sharp;
 
 namespace Todo.Contracts.Data.Git.Results;
 
@@ -7,4 +7,3 @@ public record RepoInfoResult(
     RepositoryInformation? RepositoryInformation,
     Exception? Exception = null
 ) : GitResultBase(Success, Exception);
-

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
@@ -51,4 +51,3 @@ public class GitAddCommandExecutor(IOutputWriter outputWriter, ILogger<GitAddCom
         }
     }
 }
-

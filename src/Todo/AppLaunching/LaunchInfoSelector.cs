@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.StateAndConfig;

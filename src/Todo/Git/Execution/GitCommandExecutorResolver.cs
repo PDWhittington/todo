@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Git.Execution;

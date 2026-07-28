@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Git.Commands;
+﻿using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
 
 namespace Todo.Contracts.Services.Git.Execution;
@@ -9,4 +9,3 @@ public interface IGitCommandExecutor<in TCommandType, out TResultType>
 {
     TResultType RunGitCommand(IGitInterface gitInterface, TCommandType command);
 }
-

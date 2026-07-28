@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem.Paths;
