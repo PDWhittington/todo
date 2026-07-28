@@ -8,8 +8,6 @@ public interface IGitInterface
 {
     Repository Repository { get; }
 
-    IGitInterfaceTools GitInterfaceTools { get; }
-
     TResultType RunGitCommand<TCommandType, TResultType>(TCommandType command)
         where TCommandType : IGitCommand<TResultType>
         where TResultType : GitResultBase;

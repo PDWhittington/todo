@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.AppLaunching;
@@ -14,8 +15,8 @@ public class ShowSettingsCommandExecutor: CommandExecutorBase<ShowSettingsComman
     private readonly ITextFileLauncher _fileOpener;
 
     public ShowSettingsCommandExecutor(ISettingsPathProvider settingsPathProvider,
-        ITextFileLauncher fileOpener, IOutputWriter outputWriter)
-        : base(outputWriter)
+        ITextFileLauncher fileOpener, IOutputWriter outputWriter, ILogger<ShowSettingsCommandExecutor> logger)
+        : base(outputWriter, logger)
     {
         _settingsPathProvider = settingsPathProvider;
         _fileOpener = fileOpener;

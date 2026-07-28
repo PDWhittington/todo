@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Scoring;
@@ -28,8 +29,8 @@ public class GraphCommandExecutor(IGraphHtmlTemplateProvider graphHtmlTemplatePr
     IConfigurationProvider configurationProvider, IDateAdjuster dateAdjuster,
     IScoreHtmlPathResolver scoreHtmlPathResolver, IDateAccessor dateAccessor,
     IHtmlFileLauncher htmlFileLauncher, ISpecialDateNamer specialDateNamer,
-    IOrdinalHelper ordinalHelper)
-    : CommandExecutorBase<GraphCommand>(outputWriter), IGraphCommandExecutor
+    IOrdinalHelper ordinalHelper, ILogger<GraphCommandExecutor> logger)
+    : CommandExecutorBase<GraphCommand>(outputWriter, logger), IGraphCommandExecutor
 {
     // === Chart dimensions & margins ===
     private const int Width = 960;

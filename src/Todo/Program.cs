@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Todo;
 using Todo.Contracts.Services;
 
@@ -26,4 +27,5 @@ finally
 {
     Console.WriteLine();
     Console.WriteLine($"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.");
+    await Log.CloseAndFlushAsync();
 }

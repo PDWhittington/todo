@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using LibGit2Sharp;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
@@ -18,8 +20,9 @@ public class ShowConflictsCommandExecutor(
     IOutputWriter outputWriter,
     IConfigurationProvider configurationProvider,
     IGitInterface gitInterface,
-    ITextFileLauncher fileOpener)
-    : CommandExecutorBase<ShowConflictsCommand>(outputWriter), IShowConflictsCommandExecutor
+    ITextFileLauncher fileOpener,
+    ILogger<ShowConflictsCommandExecutor> logger
+) : CommandExecutorBase<ShowConflictsCommand>(outputWriter, logger), IShowConflictsCommandExecutor
 {
     public override void Execute(ShowConflictsCommand command)
     {
@@ -29,14 +32,14 @@ public class ShowConflictsCommandExecutor(
             return;
         }
 
-        var gitGetConflictsCommand = new GitGetConflictsCommand();
         var conflictsResults = gitInterface
-            .RunGitCommand<GitGetConflictsCommand, ConflictsResult>(gitGetConflictsCommand);
+            .RunGitCommand<GitGetConflictsCommand, ConflictsResult>(GitGetConflictsCommand.Instance);
 
-        if (!conflictsResults.Success) throw new Exception(); //Handle this more gracefully
-        
+        if (!conflictsResults.Success)
+            throw new Exception(); //Handle this more gracefully
+
         var conflictCollection = conflictsResults.ConflictCollection!;
-        
+
         if (!conflictCollection.Any())
         {
             OutputWriter.WriteLine("There are no conflicts in the current git");
@@ -44,12 +47,7 @@ public class ShowConflictsCommandExecutor(
         }
 
         var paths = conflictCollection
-            .SelectMany(conflict =>
-                new[]
-                {
-                    conflict.Ours.Path,
-                    conflict.Theirs.Path
-                })
+            .SelectMany(conflict => new[] { conflict.Ours.Path, conflict.Theirs.Path })
             .Distinct()
             .Where(File.Exists)
             .ToArray();

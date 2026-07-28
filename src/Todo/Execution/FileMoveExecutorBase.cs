@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Git.Commands;
@@ -18,8 +19,9 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
     private readonly IFolderCreator _folderCreator;
 
     protected FileMoveExecutorBase(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IOutputWriter outputWriter, IFolderCreator folderCreator)
-        : base(outputWriter)
+        IGitInterface gitInterface, IOutputWriter outputWriter, IFolderCreator folderCreator,
+        ILogger<FileMoveExecutorBase<T>> logger)
+        : base(outputWriter, logger)
     {
         _configurationProvider = configurationProvider;
         _gitInterface = gitInterface;

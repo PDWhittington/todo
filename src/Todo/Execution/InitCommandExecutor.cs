@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.AssemblyOperations;
 using Todo.Contracts.Services.Execution;
@@ -16,8 +17,8 @@ public class InitCommandExecutor(
     ISettingsPathProvider settingsPathProvider,
     IOutputWriter outputWriter,
     IConfigurationProvider configurationProvider,
-    IFolderCreator folderCreator)
-    : CommandExecutorBase<InitCommand>(outputWriter), IInitCommandExecutor
+    IFolderCreator folderCreator, ILogger<InitCommandExecutor> logger)
+    : CommandExecutorBase<InitCommand>(outputWriter, logger), IInitCommandExecutor
 {
     public override void Execute(InitCommand _)
     {

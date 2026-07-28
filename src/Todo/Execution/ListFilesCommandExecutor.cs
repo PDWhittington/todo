@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
@@ -13,8 +14,8 @@ namespace Todo.Execution;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 public class ListFilesCommandExecutor(
     IFileListCreator fileListCreator,
-    IOutputWriter outputWriter)
-    : CommandExecutorBase<ListFilesCommand>(outputWriter), IListFilesCommandExecutor
+    IOutputWriter outputWriter, ILogger<ListFilesCommandExecutor> logger)
+    : CommandExecutorBase<ListFilesCommand>(outputWriter, logger), IListFilesCommandExecutor
 {
     public override void Execute(ListFilesCommand command)
     {

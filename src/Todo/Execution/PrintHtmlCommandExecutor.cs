@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using Markdig;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Html;
@@ -25,8 +26,9 @@ public class PrintHtmlCommandExecutor(
     IDateFormatter dateFormatter,
     IDateListPathResolver dateListPathResolver,
     IOutputWriter outputWriter,
-    IConfigurationProvider configurationProvider)
-    : CommandExecutorBase<PrintHtmlCommand>(outputWriter), IPrintHtmlCommandExecutor
+    IConfigurationProvider configurationProvider,
+    ILogger<PrintHtmlCommandExecutor> logger)
+    : CommandExecutorBase<PrintHtmlCommand>(outputWriter, logger), IPrintHtmlCommandExecutor
 {
     public override unsafe void Execute(PrintHtmlCommand command)
     {

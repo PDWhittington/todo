@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Execution;
@@ -18,8 +19,8 @@ public class UnarchiveCommandExecutor
 
     public UnarchiveCommandExecutor(IDateListPathResolver dateListPathResolver,
         IConfigurationProvider configurationProvider, IGitInterface gitInterface,
-        IOutputWriter outputWriter, IFolderCreator folderCreator)
-        : base(configurationProvider, gitInterface, outputWriter, folderCreator)
+        IOutputWriter outputWriter, IFolderCreator folderCreator, ILogger<UnarchiveCommandExecutor> logger)
+        : base(configurationProvider, gitInterface, outputWriter, folderCreator, logger)
     {
         _dateListPathResolver = dateListPathResolver;
     }

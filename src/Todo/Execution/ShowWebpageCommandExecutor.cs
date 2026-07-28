@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.Execution;
@@ -11,8 +12,9 @@ namespace Todo.Execution;
 public class ShowWebpageCommandExecutor(
     IHtmlFileLauncher htmlFileLauncher,
     IConstantsProvider constantsProvider,
-    IOutputWriter outputWriter)
-    : CommandExecutorBase<ShowWebpageCommand>(outputWriter), IShowWebpageCommandExecutor
+    IOutputWriter outputWriter,
+    ILogger<ShowWebpageCommandExecutor> logger)
+    : CommandExecutorBase<ShowWebpageCommand>(outputWriter, logger), IShowWebpageCommandExecutor
 {
     public override void Execute(ShowWebpageCommand command)
     {

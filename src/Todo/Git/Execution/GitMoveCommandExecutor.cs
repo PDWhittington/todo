@@ -3,37 +3,72 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Git.Execution;
 using Todo.Contracts.Services.UI;
-using Todo.UI;
 
 namespace Todo.Git.Execution;
 
-public class GitMoveCommandExecutor(IOutputWriter outputWriter)
-    : GitCommandExecutorBase<GitMoveCommand, VoidResult>(outputWriter),
+public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter outputWriter, 
+    ILogger<GitMoveCommandExecutor> logger)
+    : GitCommandExecutorBase<GitMoveCommand, VoidResult>(outputWriter, logger),
         IGitMoveCommandExecutor
 {
-    public override VoidResult RunGitCommand(IGitInterface gitInterface, GitMoveCommand command)
+    public override VoidResult RunGitCommand(IGitInterface gitInterface, 
+        GitMoveCommand gitMoveCommand)
     {
+        Logger.LogInformation(
+            "In {GetType}.{MethodName}: Received {TypeName} (SourcePath: {sourcePath}, DestinationPath: {destinationPath}).",
+            GetType(),
+            nameof(RunGitCommand),
+            gitMoveCommand.GetType().Name,
+            gitMoveCommand.SourcePath,
+            gitMoveCommand.DestinationPath);
+        
         try
         {
-            gitInterface.GitInterfaceTools.OutputWriter.WriteLine(
-                $"Moving {command.SourcePath} to {command.DestinationPath}"
-            );
+            OutputWriter.WriteLine(
+            $"Moving {gitMoveCommand.SourcePath} to {gitMoveCommand.DestinationPath}");
 
-            gitInterface.GitInterfaceTools.FolderCreator.CreateFromPathIfDoesntExist(
-                command.DestinationPath
-            );
+            folderCreator.CreateFromPathIfDoesntExist(
+                gitMoveCommand.DestinationPath);
 
-            File.Move(command.SourcePath, command.DestinationPath);
-            LibGit2Sharp.Commands.Stage(gitInterface.Repository, command.SourcePath);
-            LibGit2Sharp.Commands.Stage(gitInterface.Repository, command.DestinationPath);
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Physically moving file (SourcePath: {sourcePath}, DestinationPath: {destinationPath})...",
+                GetType(),
+                nameof(RunGitCommand),
+                gitMoveCommand.SourcePath,
+                gitMoveCommand.DestinationPath);
+            
+            File.Move(gitMoveCommand.SourcePath, gitMoveCommand.DestinationPath);
+            
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Attempting to stage source path: {sourcePath}",
+                GetType(),
+                nameof(RunGitCommand),
+                gitMoveCommand.SourcePath);
+            
+            LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitMoveCommand.SourcePath);
+
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Attempting to stage destination path: {destinationPath}",
+                GetType(),
+                nameof(RunGitCommand),
+                gitMoveCommand.DestinationPath);
+            
+            LibGit2Sharp.Commands.Stage(gitInterface.Repository, gitMoveCommand.DestinationPath);
 
             return new VoidResult(true);
         }
         catch (Exception e)
         {
+            Logger.LogError(
+                "In {GetType}.{MethodName}: Move failed. Exception message: {exceptionMessage}...",
+                GetType(),
+                nameof(RunGitCommand),
+                e.Message);
+            
             return new VoidResult(false, e);
         }
     }

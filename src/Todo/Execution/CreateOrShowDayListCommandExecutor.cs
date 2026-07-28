@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Markdown;
@@ -31,8 +32,8 @@ public class CreateOrShowDayListCommandExecutor
         IDateListPathResolver dateListPathResolver, IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
         IDateFormatter dateFormatter, IConfigurationProvider configurationProvider,
         IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter,
-        IFolderCreator folderCreator)
-        : base (configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator)
+        IFolderCreator folderCreator, ILogger<CreateOrShowDayListCommandExecutor> logger)
+        : base (configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator, logger)
     {
         _dayListMarkdownTemplateProvider = dayListMarkdownTemplateProvider;
         _dateListPathResolver = dateListPathResolver;

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 using Todo.AppLaunching;
 using Todo.AssemblyOperations;
 using Todo.CommandFactories;
@@ -41,7 +45,12 @@ internal static class Initialise
 {
     public static IServiceCollection GetServiceCollection() =>
         new ServiceCollection()
-            .AddLogging()
+            /* Logging */
+            .AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders(); // remove the default providers
+                loggingBuilder.AddSerilog(dispose: true); // Serilog becomes the only provider
+            })
             /* Base functionality */
             .AddAppLaunchingOperations()
             .AddAssemblyOperations()
@@ -62,10 +71,30 @@ internal static class Initialise
             /* Main service */
             .AddTodoService();
 
-    public static IServiceProvider GetServiceProvider() =>
-        GetServiceCollection()
-            /* Build the service provider */
-            .BuildServiceProvider();
+    public static IServiceProvider GetServiceProvider()
+    {
+        var sessionId = Guid.NewGuid();
+
+        var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var todoPath = Path.Combine(homeFolder, ".todo.log");
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .Enrich.WithProperty("SessionId", sessionId) // identifies the session
+            .WriteTo.Async(a =>
+                a.File(
+                    path: todoPath,
+                    shared: true,
+                    rollingInterval: RollingInterval.Infinite, // or Day if you prefer
+                    buffered: false,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [Session:{SessionId}] {Message:lj}{NewLine}{Exception}"
+                )
+            )
+            .CreateLogger();
+
+        return GetServiceCollection().BuildServiceProvider();
+    }
 
     extension(IServiceCollection serviceCollection)
     {
@@ -168,7 +197,6 @@ internal static class Initialise
         private IServiceCollection AddGitFunctionality() =>
             serviceCollection
                 .AddSingleton<IGitInterface, GitInterface>()
-                .AddSingleton<IGitInterfaceTools, GitInterfaceTools>()
                 .AddSingleton<IGitCommandExecutorResolver, GitCommandExecutorResolver>()
                 .AddSingleton<IGitAddCommandExecutor, GitAddCommandExecutor>()
                 .AddSingleton<IGitCommitCommandExecutor, GitCommitCommandExecutor>()

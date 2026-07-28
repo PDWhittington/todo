@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Execution;
 using Todo.Contracts.Services.FileSystem;
@@ -14,8 +15,8 @@ public class KillHtmlCommandExecutor : CommandExecutorBase<KillHtmlCommand>, IKi
     private readonly IFileDeleter _fileDeleter;
 
     public KillHtmlCommandExecutor(IOutputFolderPathProvider pathRootingProvider,
-        IFileDeleter fileDeleter, IOutputWriter outputWriter)
-        : base(outputWriter)
+        IFileDeleter fileDeleter, IOutputWriter outputWriter, ILogger<KillHtmlCommandExecutor> logger)
+        : base(outputWriter, logger)
     {
         _outputFolderPathProvider = pathRootingProvider;
         _fileDeleter = fileDeleter;

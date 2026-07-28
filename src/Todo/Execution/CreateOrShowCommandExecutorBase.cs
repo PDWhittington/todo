@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Data.Git.Commands;
@@ -19,13 +20,16 @@ public abstract class CreateOrShowCommandExecutorBase<TCommandType, TSubstitutio
     IGitInterface gitInterface,
     ITextFileLauncher fileOpener,
     IOutputWriter outputWriter,
-    IFolderCreator folderCreator)
-    : CommandExecutorBase<TCommandType>(outputWriter)
+    IFolderCreator folderCreator,
+    ILogger<CreateOrShowCommandExecutorBase<TCommandType, TSubstitutionsType>> logger)
+    : CommandExecutorBase<TCommandType>(outputWriter, logger)
     where TCommandType : CreateOrShowCommandBase
     where TSubstitutionsType : MarkdownSubstitutionsBase
 {
     public override void Execute(TCommandType createOrShowCommand)
     {
+        Logger.LogInformation("Entered {GetType}.{MethodName}", GetType(), nameof(Execute));
+        
         var pathInfo = GetFilePathInfo(createOrShowCommand);
 
         if (!File.Exists(pathInfo.Path))
