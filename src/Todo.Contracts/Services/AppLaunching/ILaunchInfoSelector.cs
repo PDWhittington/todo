@@ -4,5 +4,5 @@ namespace Todo.Contracts.Services.AppLaunching;
 
 public interface ILaunchInfoSelector
 {
-    ProcessLaunchInfo SelectLaunchInfoForThisOS(PerOsLaunchInfos perOsInfos);
+    ProcessLaunchInfo SelectLaunchInfoForThisOs(PerOsLaunchInfos perOsInfos);
 }

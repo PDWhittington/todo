@@ -13,6 +13,7 @@
     <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
     <CompilerGeneratedFilesOutputPath>obj/Generated</CompilerGeneratedFilesOutputPath>
     <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+    <NoWarn>$(NoWarn);CA1873</NoWarn>
   </PropertyGroup>
   <!-- Treat warnings as errors ONLY in Release -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

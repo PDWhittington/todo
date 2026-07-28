@@ -25,9 +25,8 @@ public class OpenTodoFolderCommandFactory(IOutputWriter outputWriter)
     {
         if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
 
-        if (!string.IsNullOrWhiteSpace(restOfCommand))
-            throw new ArgumentException("Command expects nothing following.");
-
-        return OpenTodoFolderCommand.Singleton;
+        return !string.IsNullOrWhiteSpace(restOfCommand) 
+            ? throw new ArgumentException("Command expects nothing following.") 
+            : OpenTodoFolderCommand.Singleton;
     }
 }

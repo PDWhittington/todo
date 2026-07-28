@@ -9,6 +9,7 @@ public interface IManifestStreamProvider
 
     UnmanagedByteArray LoadFromManifest(string manifestName);
 
+    // ReSharper disable once UnusedMember.Global
     string GetStringFromManifest(string manifestName);
 
     void WriteStringFromManifestToFile(string manifestName, string path);

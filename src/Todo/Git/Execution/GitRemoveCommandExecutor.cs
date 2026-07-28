@@ -168,16 +168,15 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
             // This is not staged or committed; the user can commit the deletions separately if desired.
             foreach (var path in gitRemoveCommand.Paths)
             {
-                if (File.Exists(path))
-                {
-                    Logger.LogInformation(
-                        "In {GetType}.{MethodName}: Physically removing file {path}.",
-                        GetType(),
-                        nameof(RunGitCommand),
-                        path);
+                if (!File.Exists(path)) continue;
+                
+                Logger.LogInformation(
+                    "In {GetType}.{MethodName}: Physically removing file {path}.",
+                    GetType(),
+                    nameof(RunGitCommand),
+                    path);
                     
-                    File.Delete(path);
-                }
+                File.Delete(path);
             }
             
             Logger.LogInformation(
@@ -185,7 +184,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
                 GetType(),
                 nameof(RunGitCommand));
 
-            return new VoidResult(true, null);
+            return new VoidResult(true);
         }
         catch (Exception e)
         {

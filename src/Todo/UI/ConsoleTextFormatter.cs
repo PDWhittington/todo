@@ -87,7 +87,7 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
     {
         Top,
         Middle,
-        Bottom,
+        Bottom
     }
 
     private static string HorizontalLine(RowType rowType, ColumnWidths columnWidths) =>
@@ -108,7 +108,7 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
                 + "\u2534"
                 + new string('\u2500', columnWidths.MessageColumnWidth)
                 + "\u2518",
-            _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null),
+            _ => throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null)
         };
 
     public IEnumerable<string> WrapText(IEnumerable<string> lines, int columnWidth)
@@ -135,7 +135,7 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
             {
                 if (currentLineLength + word.Length > columnWidth - 1)
                 {
-                    yield return list.ToArray();
+                    yield return [.. list];
                     list.Clear();
                     currentLineLength = 0;
                 }
@@ -147,7 +147,7 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
                 currentLineLength += word.Length;
             }
 
-            yield return list.ToArray();
+            yield return [.. list];
         }
     }
 
@@ -161,7 +161,7 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
         return new ColumnWidths
         {
             MessageColumnWidth = messageColumnWidth,
-            WordColumnWidth = wordColumnWidth,
+            WordColumnWidth = wordColumnWidth
         };
     }
 

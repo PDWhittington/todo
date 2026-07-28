@@ -52,7 +52,7 @@ public class MarkdownLineInterpreter : IMarkdownLineInterpreter
             i++;
         }
         
-        return list.ToArray();
+        return [.. list];
     }
 
     private static int CountHashesAtFront(ByteArraySpan line)

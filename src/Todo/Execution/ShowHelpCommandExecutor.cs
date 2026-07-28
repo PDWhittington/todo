@@ -29,7 +29,7 @@ public class ShowHelpCommandExecutor(
             .Select(cf => new { cf.CommandWords, HelpText = cf.GetFullHelpMessage().ToArray() })
             .Where(helpMessage => helpMessage.HelpText.Length != 0)
             .Select(cf =>
-                new CommandHelpMessage(cf.CommandWords.ToArray(), cf.HelpText));
+                new CommandHelpMessage([.. cf.CommandWords], cf.HelpText));
 
         var sb = new StringBuilder();
 

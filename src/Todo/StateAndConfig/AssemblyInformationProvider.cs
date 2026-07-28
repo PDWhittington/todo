@@ -67,7 +67,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
             )
             .ThenBy(b => b);
 
-        return branchList.ToArray();
+        return [.. branchList];
     }
 
     public string[] GitTags()
@@ -83,7 +83,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
             .Where(b => !string.IsNullOrWhiteSpace(b))
             .OrderBy(b => b);
 
-        return branchList.ToArray();
+        return [.. branchList];
     }
 
     public string[] GitWorktreeChanges()
@@ -99,7 +99,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
             .Where(b => !string.IsNullOrWhiteSpace(b))
             .OrderBy(b => b);
 
-        return gitChangeList.ToArray();
+        return [.. gitChangeList];
     }
 
     public DateTime GetBuildTime()

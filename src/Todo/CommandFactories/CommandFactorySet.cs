@@ -13,10 +13,12 @@ public class CommandFactorySet : ICommandFactorySet
 
     public IEnumerable<ICommandFactory<CommandBase>> GetAllCommandFactories()
     {
-        return new[] { DefaultCommandFactory }
-            .Concat(NonDefaultCommandFactories
-                .OrderBy(x => x.CommandWords.First()))
-            .ToArray();
+        return
+        [
+            DefaultCommandFactory,
+            .. NonDefaultCommandFactories
+                .OrderBy(x => x.CommandWords.First())
+        ];
     }
 
     public CommandFactorySet(IEnumerable<ICommandFactory<CommandBase>> commandFactories)
@@ -74,8 +76,10 @@ public class CommandFactorySet : ICommandFactorySet
         defaultCommandFactory = commandFactoriesArr
             .Single(x => x.IsDefaultCommandFactory);
 
-        nonDefaultCommandFactories = commandFactoriesArr
-            .Where(x => !x.IsDefaultCommandFactory)
-            .ToArray();
+        nonDefaultCommandFactories =
+        [
+            .. commandFactoriesArr
+                .Where(x => !x.IsDefaultCommandFactory)
+        ];
     }
 }

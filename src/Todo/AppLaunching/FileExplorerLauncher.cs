@@ -25,7 +25,7 @@ public class FileExplorerLauncher(IPathHelper pathHelper, IOutputWriter outputWr
 
     private void LaunchSingleFolder(string path)
     {
-        var launchInfo = launchInfoSelector.SelectLaunchInfoForThisOS(FileExplorerPaths); 
+        var launchInfo = launchInfoSelector.SelectLaunchInfoForThisOs(FileExplorerPaths); 
         var executablePath = pathHelper.ResolveIfNotRooted(launchInfo.Path);
         var parameters = launchInfo.InterpolateParameters(path);
 

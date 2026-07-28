@@ -45,7 +45,7 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
                 gitCommitCommand.Message,
                 signature,
                 signature,
-                GitCommitCommand.DefaultCommitOptions);
+                gitCommitCommand.CommitOptions);
 
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: After commit. Commit SHA: {sha}",
@@ -53,7 +53,7 @@ public class GitCommitCommandExecutor(IOutputWriter outputWriter, ILogger<GitCom
                 nameof(RunGitCommand),
                 commit.Sha);
             
-            return new CommitResult(true, commit, null);
+            return new CommitResult(true, commit);
         }
         catch (Exception e)
         {
