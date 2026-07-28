@@ -16,7 +16,7 @@ public class BoilerPlateProvider(
     IConsoleTextFormatter consoleTextFormatter
 ) : IBoilerPlateProvider
 {
-    private static readonly string[] _buildArguments =
+    private static readonly string[] BuildArguments =
     [
         "BuildConfiguration",
         "DebugType",
@@ -31,10 +31,10 @@ public class BoilerPlateProvider(
         "SelfContained",
         "SourceRevisionId",
         "TargetFramework",
-        "TieredCompilation",
+        "TieredCompilation"
     ];
 
-    private static readonly string[] _buildArgumentsForLogging =
+    private static readonly string[] BuildArgumentsForLogging =
     [
         "BuildConfiguration",
         "DebugType",
@@ -45,10 +45,10 @@ public class BoilerPlateProvider(
         "PublishSingleFile",
         "PublishTrimmed",
         "SelfContained",
-        "TieredCompilation",
+        "TieredCompilation"
     ];
     
-    private static readonly Lazy<UnitAndMultiplier[]> UnitsAndMultipliers = new(() => CreateUnits().ToArray());
+    private static readonly Lazy<UnitAndMultiplier[]> UnitsAndMultipliers = new(() => [.. CreateUnits()]);
 
     public string GetBoilerPlateForLogging()
     {
@@ -87,7 +87,7 @@ public class BoilerPlateProvider(
 
         sb.AppendLine("Build Information");
 
-        foreach (var buildArgument in _buildArgumentsForLogging)
+        foreach (var buildArgument in BuildArgumentsForLogging)
         {
             var buildArgumentValue = assemblyInformationProvider.GetMetadata(buildArgument);
             sb.AppendLine($"\t{buildArgument}: {buildArgumentValue ?? "Unknown"}");
@@ -130,7 +130,7 @@ public class BoilerPlateProvider(
 
         sb.AppendLine(consoleTextFormatter.FormatAsBold("Build Information"));
 
-        foreach (var buildArgument in _buildArguments)
+        foreach (var buildArgument in BuildArguments)
         {
             var buildArgumentValue = assemblyInformationProvider.GetMetadata(buildArgument);
             sb.AppendLine($"\t{buildArgument}: {buildArgumentValue ?? "Unknown"}");
@@ -201,7 +201,7 @@ public class BoilerPlateProvider(
         {
             case 0:
             {
-                var none = "[NONE]";
+                const string none = "[NONE]";
                 var item = underlineTopItem ? consoleTextFormatter.FormatAsUnderlined(none) : none;
 
                 sb.AppendLine($"\t{name}: {item}");
@@ -241,8 +241,7 @@ public class BoilerPlateProvider(
     private string TimeAgoMessage(DateTime buildTime)
     {
         var message = InnerTimeAgoMessage(buildTime);
-
-        return (message is null) ? "" : $" ({message})";
+        return $" ({message})";
     }
 
     private record struct UnitAndMultiplier(string Unit, double Divisor, double LimitInMilliseconds);
@@ -266,7 +265,7 @@ public class BoilerPlateProvider(
         yield return new UnitAndMultiplier("year", year, double.MaxValue);
     }
 
-    private string? InnerTimeAgoMessage(DateTime buildTime)
+    private string InnerTimeAgoMessage(DateTime buildTime)
     {
         var unitsAndMultipliers = UnitsAndMultipliers.Value;
 

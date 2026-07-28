@@ -36,7 +36,7 @@ public partial class HtmlFileLauncher(
     private void LaunchSingleFile(string path)
     {
         var browserLaunchInfos = configurationProvider.ConfigInfo.Configuration.BrowserPath;
-        var browserLaunchInfo = launchInfoSelector.SelectLaunchInfoForThisOS(browserLaunchInfos);
+        var browserLaunchInfo = launchInfoSelector.SelectLaunchInfoForThisOs(browserLaunchInfos);
         var browserPath = pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
 
         var pathWithFileProtocol = new Uri(path);
@@ -62,7 +62,7 @@ public partial class HtmlFileLauncher(
         ShowNoActivate = 8,
         Restore = 9,
         ShowDefault = 10,
-        ForceMinimized = 11,
+        ForceMinimized = 11
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Local

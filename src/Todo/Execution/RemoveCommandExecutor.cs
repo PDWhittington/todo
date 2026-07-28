@@ -15,27 +15,20 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemoveCommandExecutor
+public class RemoveCommandExecutor(
+    IOutputWriter outputWriter,
+    IConfigurationProvider configurationProvider,
+    IDateListPathResolver dateListPathResolver,
+    IGitInterface gitInterface,
+    ILogger<RemoveCommandExecutor> logger)
+    : CommandExecutorBase<RemoveCommand>(outputWriter, logger), IRemoveCommandExecutor
 {
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IGitInterface _gitInterface;
-
-    public RemoveCommandExecutor(IOutputWriter outputWriter, IConfigurationProvider configurationProvider,
-        IDateListPathResolver dateListPathResolver, IGitInterface gitInterface, ILogger<RemoveCommandExecutor> logger)
-        : base(outputWriter, logger)
-    {
-        _configurationProvider = configurationProvider;
-        _dateListPathResolver = dateListPathResolver;
-        _gitInterface = gitInterface;
-    }
-
     public override void Execute(RemoveCommand command)
     {
         Logger.LogInformation("In {GetType}.{MethodName}: Received date {CommandDate:yyyy-MM-dd}.", 
             GetType(), nameof(Execute), command.Date);
         
-        if (!_dateListPathResolver.TryResolvePathFor(command.Date, FileTypeEnum.MarkdownDayList, out var pathForFile))
+        if (!dateListPathResolver.TryResolvePathFor(command.Date, FileTypeEnum.MarkdownDayList, out var pathForFile))
         {
             Logger.LogInformation("In {GetType}.{MethodName}: Could not find file for date {CommandDate:yyyy-MM-dd}.",
                 GetType(), nameof(Execute), command.Date);
@@ -47,7 +40,7 @@ public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemove
         Logger.LogInformation("In {GetType}.{MethodName}: Found path to delete: {pathForFile}.",
             GetType(), nameof(Execute), pathForFile!);
         
-        if (_configurationProvider.ConfigInfo.Configuration.UseGit)
+        if (configurationProvider.ConfigInfo.Configuration.UseGit)
         {
             Logger.LogInformation("In {GetType}.{MethodName}: Git is enabled.",
                 GetType(), nameof(Execute));
@@ -57,7 +50,7 @@ public class RemoveCommandExecutor : CommandExecutorBase<RemoveCommand>, IRemove
             Logger.LogInformation("In {GetType}.{MethodName}: GitRemoveCommand created. Running GitRemoveCommand...",
                 GetType(), nameof(Execute));
             
-            var gitResult = _gitInterface.RunGitCommand<GitRemoveCommand, VoidResult>(gitRemoveCommand);
+            var gitResult = gitInterface.RunGitCommand<GitRemoveCommand, VoidResult>(gitRemoveCommand);
             
             Logger.LogInformation("In {GetType}.{MethodName}: GitRemoveCommand run. Result: {Result}",
                 GetType(), nameof(Execute), gitResult.Success ? "Success" : "Failure");

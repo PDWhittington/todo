@@ -38,7 +38,7 @@ public class ScoresGenerator(IConfigurationProvider configurationProvider,
          }
       }
       
-      return list.ToArray();
+      return [.. list];
    }
    
    private IEnumerable<FilePathScoreInfo> YieldScoresForDateInterval(DateOnly fromExclusive, DateOnly toInclusive)

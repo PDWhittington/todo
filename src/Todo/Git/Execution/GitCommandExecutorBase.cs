@@ -15,5 +15,6 @@ public abstract class GitCommandExecutorBase<TCommandType, TResultType>(
     protected IOutputWriter OutputWriter { get; } = outputWriter;
     protected ILogger<GitCommandExecutorBase<TCommandType, TResultType>> Logger { get; } = logger;
 
+    // ReSharper disable once UnusedMember.Global
     public abstract TResultType RunGitCommand(IGitInterface gitInterface, TCommandType gitCommand);
 }

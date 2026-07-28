@@ -4,7 +4,7 @@ namespace Todo.Git.Branches;
 
 public class HeadBranchLocator : BranchLocatorBase
 {
-    public static HeadBranchLocator Instance { get; } = new HeadBranchLocator();
+    public static HeadBranchLocator Instance { get; } = new();
 
     private HeadBranchLocator() { }
 

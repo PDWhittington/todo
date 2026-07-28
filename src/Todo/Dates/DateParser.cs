@@ -44,14 +44,14 @@ public class DateParser(IConfigurationProvider configurationProvider,
         var environmentVariableName = configurationProvider.ConfigInfo
             .Configuration.EnvironmentVariableToOverrideDate;
 
-        if (string.IsNullOrWhiteSpace(environmentVariableName) 
-                || !environmentVariableProvider.TryGetEnvironmentVariable(environmentVariableName, out var overrideDateStr))
+        if (!string.IsNullOrWhiteSpace(environmentVariableName)
+            && environmentVariableProvider.TryGetEnvironmentVariable(environmentVariableName, out var overrideDateStr))
         {
-            overrideDate = default;
-            return false;
+            return TryGetDateRelativeTo(overrideDateStr, dateAdjuster.GetTodayWithMidnightAdjusted(), out overrideDate);
         }
         
-        return TryGetDateRelativeTo(overrideDateStr, dateAdjuster.GetTodayWithMidnightAdjusted(), out overrideDate);
+        overrideDate = default;
+        return false;
     }
     
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
@@ -218,7 +218,7 @@ public class DateParser(IConfigurationProvider configurationProvider,
     [SuppressMessage("ReSharper", "DuplicatedSequentialIfBodies")]
     private DateOnly [] GetPossiblesForDayOnly(DateOnly currentDay, int n)
     {
-        return PotentialDates().ToArray();
+        return [.. PotentialDates()];
 
         IEnumerable<DateOnly> PotentialDates()
         {
@@ -232,7 +232,7 @@ public class DateParser(IConfigurationProvider configurationProvider,
     [SuppressMessage("ReSharper", "DuplicatedSequentialIfBodies")]
     private DateOnly [] GetPossiblesForDayMonth(DateOnly currentDay, int month, int day)
     {
-        return PotentialDates().ToArray();
+        return [.. PotentialDates()];
 
         IEnumerable<DateOnly> PotentialDates()
         {
@@ -246,9 +246,11 @@ public class DateParser(IConfigurationProvider configurationProvider,
     {
         var dateDiffs = GetDateDiffsFor(currentDay, dayOfWeek);
 
-        return dateDiffs
-            .Select(currentDay.AddDays)
-            .ToArray();
+        return
+        [
+            .. dateDiffs
+                .Select(currentDay.AddDays)
+        ];
     }
 
 

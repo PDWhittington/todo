@@ -37,7 +37,7 @@ public class GitResetCommandExecutor(IOutputWriter outputWriter, ILogger<GitRese
                 GetType(),
                 nameof(RunGitCommand));
 
-            return new VoidResult(true, null);
+            return new VoidResult(true);
         }
         catch (Exception e)
         {

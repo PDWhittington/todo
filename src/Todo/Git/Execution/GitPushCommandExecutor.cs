@@ -50,7 +50,7 @@ public class GitPushCommandExecutor(IOutputWriter outputWriter, ILogger<GitPushC
             
             gitInterface.Repository.Network.Push(currentBranch);
 
-            return new VoidResult(true, null);
+            return new VoidResult(true);
         }
         catch (Exception e)
         {

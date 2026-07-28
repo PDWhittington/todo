@@ -5,9 +5,10 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.AppLaunching;
 
-public class LaunchInfoSelector(IEnvironmentVariableProvider EnvironmentVariableProvider) : ILaunchInfoSelector
+public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariableProvider)
+    : ILaunchInfoSelector
 {
-    public ProcessLaunchInfo SelectLaunchInfoForThisOS(PerOsLaunchInfos perOsLaunchInfos)
+    public ProcessLaunchInfo SelectLaunchInfoForThisOs(PerOsLaunchInfos perOsLaunchInfos)
     {
         if (TryGetOverride(perOsLaunchInfos, out var overrideLaunchInfo))
         {
@@ -31,10 +32,10 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider EnvironmentVariable
 
         if (!pathVariableNameIsEmpty && !parameterVariableNameIsEmpty)
         {
-            var overridePathExists = EnvironmentVariableProvider.TryGetEnvironmentVariable(
+            var overridePathExists = environmentVariableProvider.TryGetEnvironmentVariable(
                 perOsLaunchInfos.EnvironmentVariableToOverridePath, out var overridePath);
                 
-            var overrideParametersExists = EnvironmentVariableProvider.TryGetEnvironmentVariable(
+            var overrideParametersExists = environmentVariableProvider.TryGetEnvironmentVariable(
                 perOsLaunchInfos.EnvironmentVariableToOverrideParameters, out var overrideParameters);
 
             if (overridePathExists && overrideParametersExists)

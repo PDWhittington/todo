@@ -23,8 +23,11 @@ public class PushCommandExecutor(
     public override void Execute(PushCommand command)
     {
         if (!configurationProvider.ConfigInfo.Configuration.UseGit)
-            throw new Exception(
+        {
+            OutputWriter.WriteLine(
                 "Pushing does not make sense when UseGit is set to false in the settings file.");
+            return;
+        }
 
         var result = gitInterface.RunGitCommand<GitPushCommand, VoidResult>(
             new GitPushCommand(HeadBranchLocator.Instance));

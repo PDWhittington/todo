@@ -6,7 +6,7 @@ namespace Todo.StateAndConfig;
 
 public class EnvironmentVariableProvider : IEnvironmentVariableProvider
 {
-    private readonly IDictionary<string, object> _environmentVariables;
+    private readonly Dictionary<string, object> _environmentVariables;
 
     public EnvironmentVariableProvider()
     {
@@ -26,12 +26,12 @@ public class EnvironmentVariableProvider : IEnvironmentVariableProvider
         
         _environmentVariables = dict;
     }
-    
+
     public bool TryGetEnvironmentVariable(string? key, out string? value)
     {
         if (key is not null && _environmentVariables.TryGetValue(key, out var obj))
         {
-            value = obj?.ToString();
+            value = obj.ToString();
             return value != null;
         }
         

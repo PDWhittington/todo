@@ -14,7 +14,7 @@ public class TextFileLauncher(IConfigurationProvider configurationProvider,
     {
         var launchInfos = configurationProvider.ConfigInfo.Configuration.TextEditorPath;
         
-        var launchInfoForThisOs = launchInfoSelector.SelectLaunchInfoForThisOS(launchInfos);
+        var launchInfoForThisOs = launchInfoSelector.SelectLaunchInfoForThisOs(launchInfos);
         
         var textEditorPath = launchInfoForThisOs.Path;
         var textEditorPathRooted = pathHelper.ResolveIfNotRooted(textEditorPath);
