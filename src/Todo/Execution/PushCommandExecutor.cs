@@ -13,33 +13,21 @@ using Todo.Git.Branches;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class PushCommandExecutor : CommandExecutorBase<PushCommand>, IPushCommandExecutor
+public class PushCommandExecutor(
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    IOutputWriter outputWriter,
+    ILogger<PushCommandExecutor> logger)
+    : CommandExecutorBase<PushCommand>(outputWriter, logger), IPushCommandExecutor
 {
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly IGitInterface _gitInterface;
-
-    public PushCommandExecutor(
-        IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface,
-        IOutputWriter outputWriter,
-        ILogger<PushCommandExecutor> logger
-    )
-        : base(outputWriter, logger)
-    {
-        _configurationProvider = configurationProvider;
-        _gitInterface = gitInterface;
-    }
-
     public override void Execute(PushCommand command)
     {
-        if (!_configurationProvider.ConfigInfo.Configuration.UseGit)
+        if (!configurationProvider.ConfigInfo.Configuration.UseGit)
             throw new Exception(
-                "Pushing does not make sense when UseGit is set to false in the settings file."
-            );
+                "Pushing does not make sense when UseGit is set to false in the settings file.");
 
-        var result = _gitInterface.RunGitCommand<GitPushCommand, VoidResult>(
-            new GitPushCommand(new HeadBranchLocator())
-        );
+        var result = gitInterface.RunGitCommand<GitPushCommand, VoidResult>(
+            new GitPushCommand(HeadBranchLocator.Instance));
 
         //We need a better error handling scheme all-round.
         if (!result.Success)

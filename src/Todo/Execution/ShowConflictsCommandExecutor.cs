@@ -32,11 +32,8 @@ public class ShowConflictsCommandExecutor(
             return;
         }
 
-        var gitGetConflictsCommand = new GitGetConflictsCommand();
-
-        var conflictsResults = gitInterface.RunGitCommand<GitGetConflictsCommand, ConflictsResult>(
-            gitGetConflictsCommand
-        );
+        var conflictsResults = gitInterface
+            .RunGitCommand<GitGetConflictsCommand, ConflictsResult>(GitGetConflictsCommand.Instance);
 
         if (!conflictsResults.Success)
             throw new Exception(); //Handle this more gracefully

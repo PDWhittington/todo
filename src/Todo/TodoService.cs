@@ -9,6 +9,7 @@ using Todo.Contracts.Services.UI;
 namespace Todo;
 
 public class TodoService(
+    ICommandLineProvider commandLineProvider,
     IBoilerPlateProvider boilerPlateProvider,
     ICommandProvider commandProvider,
     ICommandExecutorSet commandExecutorSet,
@@ -20,21 +21,19 @@ public class TodoService(
     {
         using var handle = outputWriter.CreateDisposableHandle();
         
-        logger.LogInformation("{Type}.{MethodName}: Starting Todo App.",
-            GetType(), nameof(PerformTask));
+        logger.LogInformation("{Type}.{MethodName}: Starting Todo App. Command line: {commandLine}",
+            GetType(), nameof(PerformTask), commandLineProvider.GetCommandLineMinusAssemblyLocation());
         
         logger.LogInformation("{Type}.{MethodName}: BuildInformation:{NewLine}{BoilerPlate}",
             GetType(), nameof(PerformTask), Environment.NewLine, 
-            boilerPlateProvider.GetBoilerPlateForLogging() );
+            boilerPlateProvider.GetBoilerPlateForLogging());
         
         try
         {
             var command = commandProvider.GetCommand();
-
             var commandExecutor = commandExecutorSet.GetExecutorForCommand(command);
 
             if (commandExecutor == null) throw new Exception("Command not identified");
-
             commandExecutor.ExecuteCommandBase(command);
         }
         catch (TodoExceptionBase e)

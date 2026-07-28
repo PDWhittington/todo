@@ -16,13 +16,37 @@ public class GitResetCommandExecutor(IOutputWriter outputWriter, ILogger<GitRese
     public override VoidResult RunGitCommand(IGitInterface gitInterface,
         GitResetCommand gitResetCommand)
     {
+        Logger.LogInformation(
+            "In {GetType}.{MethodName}: Received {TypeName} (Hard: {hard}).",
+            GetType(),
+            nameof(RunGitCommand),
+            gitResetCommand.GetType().Name,
+            gitResetCommand.Hard);
+        
         try
         {
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Attempting LibGit2Sharp reset...",
+                GetType(),
+                nameof(RunGitCommand));
+            
             gitInterface.Repository.Reset(gitResetCommand.Hard ? ResetMode.Hard : ResetMode.Soft);
+            
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Reset done.",
+                GetType(),
+                nameof(RunGitCommand));
+
             return new VoidResult(true, null);
         }
         catch (Exception e)
         {
+            Logger.LogError(
+                "In {GetType}.{MethodName}: Git reset failed. Exception message: {exceptionMessage}...",
+                GetType(),
+                nameof(RunGitCommand),
+                e.Message);
+            
             return new VoidResult(false, e);
         }
     }

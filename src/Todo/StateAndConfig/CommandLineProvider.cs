@@ -3,15 +3,22 @@ using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
 
-/// <summary>
-/// This class
-/// </summary>
-public class CommandLineProvider(IAssemblyInformationProvider assemblyInformationProvider) 
-    : ICommandLineProvider
+public class CommandLineProvider : ICommandLineProvider
 {
-    public string GetCommandLineMinusAssemblyLocation()
+    private readonly IAssemblyInformationProvider _assemblyInformationProvider;
+    private readonly Lazy<string> _commandLine;
+
+    public CommandLineProvider(IAssemblyInformationProvider assemblyInformationProvider)
     {
-        var assemblyLocation = assemblyInformationProvider.AssemblyLocation();
+        _assemblyInformationProvider = assemblyInformationProvider;
+        _commandLine = new Lazy<string>(GenerateCommandLineMinusAssemblyLocation);
+    }
+        
+    public string GetCommandLineMinusAssemblyLocation() => _commandLine.Value;
+        
+    private string GenerateCommandLineMinusAssemblyLocation()
+    {
+        var assemblyLocation = _assemblyInformationProvider.AssemblyLocation();
 
         var wholeCommandLine = Environment.CommandLine;
 

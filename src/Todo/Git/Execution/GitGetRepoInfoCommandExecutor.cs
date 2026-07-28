@@ -14,18 +14,34 @@ public class GitGetRepoInfoCommandExecutor(IOutputWriter outputWriter, ILogger<G
 {
     public override RepoInfoResult RunGitCommand(
         IGitInterface gitInterface,
-        GitGetRepoInfoCommand gitGetRepoInfoCommand
-    )
+        GitGetRepoInfoCommand gitGetRepoInfoCommand)
     {
+        Logger.LogInformation(
+            "In {GetType}.{MethodName}: Received {TypeName}.",
+            GetType(),
+            nameof(RunGitCommand),
+            gitGetRepoInfoCommand.GetType().Name);
+        
         OutputWriter.WriteLine("Retrieving repo information...");
 
         try
         {
+            Logger.LogInformation(
+                "In {GetType}.{MethodName}: Querying LibGit2Sharp Repository.Index.Conflicts...",
+                GetType(),
+                nameof(RunGitCommand));
+            
             var repositoryInformation = gitInterface.Repository.Info;
             return new RepoInfoResult(true, repositoryInformation);
         }
         catch (Exception e)
         {
+            Logger.LogError(
+                "In {GetType}.{MethodName}: Error while querying LibGit2Sharp Repository.Index.Conflicts. Exception: {Message}",
+                GetType(),
+                nameof(RunGitCommand),
+                e.Message);
+            
             return new RepoInfoResult(true, null, e);
         }
     }

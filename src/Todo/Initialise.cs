@@ -197,7 +197,6 @@ internal static class Initialise
         private IServiceCollection AddGitFunctionality() =>
             serviceCollection
                 .AddSingleton<IGitInterface, GitInterface>()
-                .AddSingleton<IGitInterfaceTools, GitInterfaceTools>()
                 .AddSingleton<IGitCommandExecutorResolver, GitCommandExecutorResolver>()
                 .AddSingleton<IGitAddCommandExecutor, GitAddCommandExecutor>()
                 .AddSingleton<IGitCommitCommandExecutor, GitCommitCommandExecutor>()
