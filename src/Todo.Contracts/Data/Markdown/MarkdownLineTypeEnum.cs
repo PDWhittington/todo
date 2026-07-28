@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Markdown;
+﻿namespace Todo.Contracts.Data.Markdown;
 
 public enum MarkdownLineTypeEnum
 {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
@@ -73,4 +73,3 @@ public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter 
         }
     }
 }
-

@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Substitutions;
+﻿using Todo.Contracts.Data.Substitutions;
 
 namespace Todo.Contracts.Services.Templates;
 

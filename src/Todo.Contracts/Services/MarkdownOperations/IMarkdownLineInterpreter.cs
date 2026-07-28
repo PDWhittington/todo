@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Markdown;
+﻿using Todo.Contracts.Data.Markdown;
 using Todo.Contracts.Data.Memory;
 
 namespace Todo.Contracts.Services.MarkdownOperations;

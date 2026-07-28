@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Memory;
+﻿using Todo.Contracts.Data.Memory;
 
 namespace Todo.Contracts.Services.StringOperations;
 

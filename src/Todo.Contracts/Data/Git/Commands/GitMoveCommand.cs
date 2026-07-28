@@ -3,4 +3,3 @@
 namespace Todo.Contracts.Data.Git.Commands;
 
 public record GitMoveCommand(string SourcePath, string DestinationPath) : IGitCommand<VoidResult>;
-

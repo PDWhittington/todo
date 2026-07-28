@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Services.AppLaunching;
+﻿namespace Todo.Contracts.Services.AppLaunching;
 
 public interface IAppLauncher
 {

@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Substitutions;
+﻿namespace Todo.Contracts.Data.Substitutions;
 
 public record GraphHtmlSubstitutions : HtmlSubstitutions
 {

@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
 using Todo.Contracts.Services.Git;
@@ -17,4 +17,3 @@ public abstract class GitCommandExecutorBase<TCommandType, TResultType>(
 
     public abstract TResultType RunGitCommand(IGitInterface gitInterface, TCommandType gitCommand);
 }
-

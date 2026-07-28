@@ -1,4 +1,4 @@
-namespace Todo.FileSystem;
+﻿namespace Todo.FileSystem;
 
 public static class FileTypes
 {

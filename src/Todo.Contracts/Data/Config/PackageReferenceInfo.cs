@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Config;
+﻿namespace Todo.Contracts.Data.Config;
 
 public record PackageReferenceInfo(string Name, string Identity, string Version)
 {

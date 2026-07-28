@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Data.Html;
+﻿namespace Todo.Contracts.Data.Html;
 
 public enum HtmlThemeEnum
 {

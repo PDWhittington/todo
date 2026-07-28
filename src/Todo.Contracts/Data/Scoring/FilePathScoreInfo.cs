@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Config;
+﻿using Todo.Contracts.Data.Config;
 using Todo.Contracts.Data.FileSystem;
 
 namespace Todo.Contracts.Data.Scoring;
@@ -30,4 +30,3 @@ public record FilePathScoreInfo : ScoreInfo
         IEnumerable<KeyValuePair<ScoreCategory, int>> scores
     ) => new(filePathInfo, scores);
 }
-

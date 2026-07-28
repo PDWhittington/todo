@@ -1,4 +1,4 @@
-namespace Todo.Contracts.Services.StateAndConfig;
+﻿namespace Todo.Contracts.Services.StateAndConfig;
 
 public interface IEnvironmentVariableProvider
 {

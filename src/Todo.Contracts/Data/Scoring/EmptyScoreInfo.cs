@@ -1,4 +1,4 @@
-using Todo.Contracts.Data.Config;
+﻿using Todo.Contracts.Data.Config;
 
 namespace Todo.Contracts.Data.Scoring;
 
@@ -21,4 +21,3 @@ public record EmptyScoreInfo : ScoreInfo
 
     public static EmptyScoreInfo Of(DateOnly date) => new(date);
 }
-
