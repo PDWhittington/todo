@@ -17,10 +17,13 @@ public class TodoService(
     ILogger<TodoService> logger)
     : ITodoService
 {
+    public IOutputWriter OutputWriter { get; } = outputWriter;
+
+    public IOutputWriterDisposableHandle InitialiseService() =>
+        OutputWriter.CreateDisposableHandle();
+
     public void PerformTask()
     {
-        using var handle = outputWriter.CreateDisposableHandle();
-
         logger.LogInformation("{Type}.{MethodName}: Starting Todo App. Command line: {commandLine}",
             GetType(), nameof(PerformTask), commandLineProvider.GetCommandLineMinusAssemblyLocation());
 
@@ -38,8 +41,8 @@ public class TodoService(
         }
         catch (TodoExceptionBase e)
         {
-            outputWriter.WriteLine($"An exception of type {e.GetType().Name} has been thrown:");
-            outputWriter.WriteLine(e.Advice());
+            OutputWriter.WriteLine($"An exception of type {e.GetType().Name} has been thrown:");
+            OutputWriter.WriteLine(e.Advice());
         }
     }
 }

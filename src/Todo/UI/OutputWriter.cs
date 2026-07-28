@@ -28,6 +28,8 @@ public class OutputWriter : IOutputWriter
 
     public IOutputWriterDisposableHandle CreateDisposableHandle()
     {
+        if (_initialised)
+            throw new Exception("Cannot be initialised more than once.");
         _pipe = new BlockingCollection<string>();
         _writingThread = new Thread(ConsumingThread);
         _writingThread.Start();

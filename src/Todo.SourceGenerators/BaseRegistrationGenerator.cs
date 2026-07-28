@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -38,12 +37,6 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
         var interfaces = GetAdditionalInterfacesForRegistration(classSymbol)
             .ToArray();
 
-        // var allInterfaces = interfaces
-        //     .Concat(additional)
-        //     .Distinct(SymbolEqualityComparer.Default)
-        //     .Cast<INamedTypeSymbol>()
-        //     .ToArray();
-
         return interfaces.Length != 0 
             ? new RegistrationInfo(interfaces, classSymbol) 
             : null;
@@ -62,9 +55,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
     protected abstract bool InterfaceIsRequired(INamedTypeSymbol interfaceSymbol);
 
     public virtual void Initialize(IncrementalGeneratorInitializationContext context)
-    {   
-        Console.WriteLine("Starting Initialise");
-
+    {
         // Find all classes that implement ICommandFactory<CommandBase>
         var registrationPairs = context
             .SyntaxProvider.CreateSyntaxProvider(
@@ -182,7 +173,7 @@ public abstract class BaseRegistrationGenerator : IIncrementalGenerator
 
                         if (interfacesReturned.Add(constructed))
                         {
-                            yield return constructed;    
+                            yield return constructed;
                         }
                 }
             }

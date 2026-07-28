@@ -4,28 +4,39 @@ using Serilog;
 using Todo;
 using Todo.Contracts.Services;
 
+Timer.Start();
+
 var serviceProvider = Initialise.GetServiceProvider();
+
+var service = serviceProvider.GetService<ITodoService>()!;
+
+using var outputWriterHandle = service.InitialiseService();
+var outputWriter = service.OutputWriter;
 
 try
 {
-    Timer.Start();
-
-    serviceProvider
-        .GetService<ITodoService>()!
-        .PerformTask();
+    service.PerformTask();
 }
 catch (Exception e)
 {
-    Console.WriteLine($"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
-    Console.WriteLine($"{e.GetType()}: {e.Message}");
-    Console.WriteLine();
-    Console.WriteLine("Stack trace:");
-    Console.WriteLine(e.StackTrace);
+    outputWriter.WriteLine(
+        $"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
+    outputWriter.WriteLine($"{e.GetType()}: {e.Message}");
+    outputWriter.WriteLine();
 
+    if (e.StackTrace is null)
+    {
+        outputWriter.WriteLine("Stack trace: <NULL>");
+    }
+    else
+    {
+        outputWriter.WriteLine("Stack trace:");
+        outputWriter.WriteLine(e.StackTrace);
+    }
 }
 finally
 {
-    Console.WriteLine();
-    Console.WriteLine($"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.");
+    outputWriter.WriteLine();
+    outputWriter.WriteLine($"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.");
     await Log.CloseAndFlushAsync();
 }
