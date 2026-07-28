@@ -78,6 +78,7 @@ public class BoilerPlateProvider(
             );
 
         AddGitInformation(sb, false);
+        AddPackageReferenceInformation(sb);
 
         sb.AppendLine();
 
