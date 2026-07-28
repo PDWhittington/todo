@@ -185,6 +185,8 @@ public class BoilerPlateProvider(
         var packageReferences = assemblyInformationProvider.GetPackageReferences();
 
         var packageReferencesAsStrings = packageReferences
+            .OrderBy(x => x.Name)
+            .ThenBy(x => x.Version)
             .Select(x => $"{x.Identity} | {x.Version}")
             .ToArray();
 
