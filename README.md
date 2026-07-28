@@ -274,7 +274,6 @@ The following commands can be invoked from the command line:-
     </tr>
     <tr>
         <td valign="top">
-            w<br />
             web<br />
             www
         </td>
@@ -285,6 +284,7 @@ The following commands can be invoked from the command line:-
     </tr>
         <tr>
         <td valign="top">
+            w<br />
             which<br />
         </td>
         <td valign="top">
