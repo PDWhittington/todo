@@ -20,7 +20,6 @@ fi
 
 # Assume a single solution file in the src sub-folder
 
-
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.sln" -type f | head -n 1)
 
@@ -46,7 +45,6 @@ echo " ✅ All tests passed. Proceeding to publish..."
 
 # Publish (Release gets extra runtime speed optimizations; Debug does not)
 
-
 EXTRA_PUBLISH_FLAGS=""
 
 if [ "$CONFIGURATION" = "Release" ]; then
@@ -67,6 +65,7 @@ echo ""
 echo " ✅ Build succeeded. Proceeding to copy..."
 
 # Clean previous deployment
+
 if ! sudo rm -R -f $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO DELETE /usr/local/bin/todo."
   exit 5
@@ -75,6 +74,7 @@ fi
 echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
 
 # Copy the published output
+
 if ! sudo cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
   exit 6
