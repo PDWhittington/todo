@@ -15,7 +15,7 @@ namespace Todo.StateAndConfig;
 [JsonSerializable(typeof(Configuration))]             // the class that contains the Color property
 [JsonSerializable(typeof(PerOsLaunchInfos))]
 [JsonSerializable(typeof(ScoreCategory))]
-[JsonSerializable(typeof(TodoListInformation))]
+[JsonSerializable(typeof(TodoListInfo))]
 [JsonSerializable(typeof(TimeSpan))]
 [JsonSerializable(typeof(HtmlThemeEnum))]
 [JsonSerializable(typeof(IterationMethodEnum))]
