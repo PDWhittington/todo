@@ -10,24 +10,20 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowHtmlCommandExecutor : CommandExecutorBase<ShowHtmlCommand>, IShowHtmlCommandExecutor
+public class ShowHtmlCommandExecutor(
+    IDateListPathResolver dateListPathResolver,
+    IOutputWriter outputWriter,
+    IHtmlFileLauncher htmlFileLauncher,
+    ILogger<ShowHtmlCommandExecutor> logger
+) : CommandExecutorBase<ShowHtmlCommand>(outputWriter, logger), IShowHtmlCommandExecutor
 {
-    private readonly IDateListPathResolver _dateListPathResolver;
-
-    private readonly IHtmlFileLauncher _htmlFileLauncher;
-
-    public ShowHtmlCommandExecutor(IDateListPathResolver dateListPathResolver,
-        IOutputWriter outputWriter, IHtmlFileLauncher htmlFileLauncher, ILogger<ShowHtmlCommandExecutor> logger)
-        : base(outputWriter, logger)
-    {
-        _dateListPathResolver = dateListPathResolver;
-        _htmlFileLauncher = htmlFileLauncher;
-    }
-
     public override void Execute(ShowHtmlCommand showHtmlCommand)
     {
-        var htmlDocumentInfo = _dateListPathResolver.ResolvePathFor(showHtmlCommand.Date, FileTypeEnum.Html, false);
-
-        _htmlFileLauncher.LaunchFiles(htmlDocumentInfo.Path);
+        var htmlDocumentInfo = dateListPathResolver.ResolvePathFor(
+            showHtmlCommand.Date,
+            FileTypeEnum.Html,
+            false
+        );
+        htmlFileLauncher.LaunchFiles(htmlDocumentInfo.Path);
     }
 }

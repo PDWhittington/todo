@@ -19,41 +19,56 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CreateOrShowDayListCommandExecutor
-    : CreateOrShowCommandExecutorBase<CreateOrShowDayListCommand, DayListMarkdownSubstitutions>,
+public class CreateOrShowDayListCommandExecutor(
+    IDayListMarkdownTemplateProvider dayListMarkdownTemplateProvider,
+    IDateListPathResolver dateListPathResolver,
+    IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
+    IDateFormatter dateFormatter,
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    ITextFileLauncher fileOpener,
+    IOutputWriter outputWriter,
+    IFolderCreator folderCreator,
+    ILogger<CreateOrShowDayListCommandExecutor> logger
+)
+    : CreateOrShowCommandExecutorBase<CreateOrShowDayListCommand, DayListMarkdownSubstitutions>(
+        configurationProvider,
+        gitInterface,
+        fileOpener,
+        outputWriter,
+        folderCreator,
+        logger
+    ),
         ICreateOrShowDayListCommandExecutor
 {
-    private readonly IDayListMarkdownTemplateProvider _dayListMarkdownTemplateProvider;
-    private readonly IDateListPathResolver _dateListPathResolver;
-    private readonly IDayListMarkdownSubstitutionsMaker _markdownSubstitutionMaker;
-    private readonly IDateFormatter _dateFormatter;
+    protected override FilePathInfo GetFilePathInfo(
+        CreateOrShowDayListCommand createOrShowCommand
+    ) =>
+        dateListPathResolver.ResolvePathFor(
+            createOrShowCommand.Date,
+            FileTypeEnum.MarkdownDayList,
+            true
+        );
 
-    public CreateOrShowDayListCommandExecutor(IDayListMarkdownTemplateProvider dayListMarkdownTemplateProvider,
-        IDateListPathResolver dateListPathResolver, IDayListMarkdownSubstitutionsMaker markdownSubstitutionMaker,
-        IDateFormatter dateFormatter, IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, ITextFileLauncher fileOpener, IOutputWriter outputWriter,
-        IFolderCreator folderCreator, ILogger<CreateOrShowDayListCommandExecutor> logger)
-        : base (configurationProvider, gitInterface, fileOpener, outputWriter, folderCreator, logger)
+    protected override TodoFile GetTemplate() => dayListMarkdownTemplateProvider.GetTemplate();
+
+    protected override DayListMarkdownSubstitutions GetMarkdownSubstitutions(
+        CreateOrShowDayListCommand createOrShowCommand
+    )
     {
-        _dayListMarkdownTemplateProvider = dayListMarkdownTemplateProvider;
-        _dateListPathResolver = dateListPathResolver;
-        _markdownSubstitutionMaker = markdownSubstitutionMaker;
-        _dateFormatter = dateFormatter;
-    }
-
-    protected override FilePathInfo GetFilePathInfo(CreateOrShowDayListCommand createOrShowCommand)
-        => _dateListPathResolver.ResolvePathFor(createOrShowCommand.Date, FileTypeEnum.MarkdownDayList, true);
-
-    protected override TodoFile GetTemplate() => _dayListMarkdownTemplateProvider.GetTemplate();
-
-    protected override DayListMarkdownSubstitutions GetMarkdownSubstitutions(CreateOrShowDayListCommand createOrShowCommand)
-    {
-        var dateText = _dateFormatter.GetMarkdownHeader(createOrShowCommand.Date);
+        var dateText = dateFormatter.GetMarkdownHeader(createOrShowCommand.Date);
 
         return DayListMarkdownSubstitutions.Of(dateText);
     }
 
-    protected override void MakeSubstitutions(DayListMarkdownSubstitutions markdownSubstitutions, 
-        UnmanagedByteArray fileContents, Stream stream)
-        => _markdownSubstitutionMaker.WriteSubstitutionsToStream(fileContents, markdownSubstitutions, stream);
+    protected override void MakeSubstitutions(
+        DayListMarkdownSubstitutions markdownSubstitutions,
+        UnmanagedByteArray fileContents,
+        Stream stream
+    ) =>
+        markdownSubstitutionMaker.WriteSubstitutionsToStream(
+            fileContents,
+            markdownSubstitutions,
+            stream
+        );
 }

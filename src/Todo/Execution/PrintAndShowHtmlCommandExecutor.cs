@@ -7,24 +7,18 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class PrintAndShowHtmlCommandExecutor
-    : CommandExecutorBase<PrintAndShowHtmlCommand>, IPrintAndShowHtmlCommandExecutor
+public class PrintAndShowHtmlCommandExecutor(
+    IOutputWriter outputWriter,
+    IPrintHtmlCommandExecutor printHtmlCommandExecutor,
+    IShowHtmlCommandExecutor showHtmlCommandExecutor,
+    ILogger<PrintAndShowHtmlCommandExecutor> logger
+)
+    : CommandExecutorBase<PrintAndShowHtmlCommand>(outputWriter, logger),
+        IPrintAndShowHtmlCommandExecutor
 {
-    private readonly IPrintHtmlCommandExecutor _printHtmlCommandExecutor;
-    private readonly IShowHtmlCommandExecutor _showHtmlCommandExecutor;
-
-    public PrintAndShowHtmlCommandExecutor(IOutputWriter outputWriter,
-        IPrintHtmlCommandExecutor printHtmlCommandExecutor, IShowHtmlCommandExecutor showHtmlCommandExecutor,
-        ILogger<PrintAndShowHtmlCommandExecutor> logger)
-        : base(outputWriter, logger)
-    {
-        _printHtmlCommandExecutor = printHtmlCommandExecutor;
-        _showHtmlCommandExecutor = showHtmlCommandExecutor;
-    }
-
     public override void Execute(PrintAndShowHtmlCommand command)
     {
-        _printHtmlCommandExecutor.Execute(PrintHtmlCommand.Of(command.Date));
-        _showHtmlCommandExecutor.Execute(ShowHtmlCommand.Of(command.Date));
+        printHtmlCommandExecutor.Execute(PrintHtmlCommand.Of(command.Date));
+        showHtmlCommandExecutor.Execute(ShowHtmlCommand.Of(command.Date));
     }
 }

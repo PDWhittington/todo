@@ -7,15 +7,9 @@ namespace Todo.FileSystem.Paths;
 /// <summary>
 /// A helper class which helps with path manipulation.
 /// </summary>
-public class PathHelper : IPathHelper
+public class PathHelper(IPathEnvironmentVariableRetriever pathEnvironmentVariableRetriever)
+    : IPathHelper
 {
-    private readonly IPathEnvironmentVariableRetriever _pathEnvironmentVariableRetriever;
-
-    public PathHelper(IPathEnvironmentVariableRetriever pathEnvironmentVariableRetriever)
-    {
-        _pathEnvironmentVariableRetriever = pathEnvironmentVariableRetriever;
-    }
-    
     /// <summary>
     /// Roots the path to the working folder,
     /// unless the path is already rooted.
@@ -32,16 +26,18 @@ public class PathHelper : IPathHelper
 
     public string ResolveIfNotRooted(string path)
     {
-        if (Path.IsPathRooted(path)) return path;
+        if (Path.IsPathRooted(path))
+            return path;
 
-        var paths = _pathEnvironmentVariableRetriever.Paths;
+        var paths = pathEnvironmentVariableRetriever.Paths;
 
         foreach (var candidateFolder in paths)
         {
             var candidatePath = Path.Combine(candidateFolder, path);
             var formattedPath = Path.GetFullPath(candidatePath);
 
-            if (File.Exists(formattedPath)) return formattedPath;
+            if (File.Exists(formattedPath))
+                return formattedPath;
         }
 
         throw new Exception($"{path} not found");

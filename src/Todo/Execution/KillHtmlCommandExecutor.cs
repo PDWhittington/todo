@@ -9,24 +9,18 @@ using Todo.Contracts.Services.UI;
 namespace Todo.Execution;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class KillHtmlCommandExecutor : CommandExecutorBase<KillHtmlCommand>, IKillHtmlCommandExecutor
+public class KillHtmlCommandExecutor(
+    IOutputFolderPathProvider outputFolderPathProvider,
+    IFileDeleter fileDeleter,
+    IOutputWriter outputWriter,
+    ILogger<KillHtmlCommandExecutor> logger
+) : CommandExecutorBase<KillHtmlCommand>(outputWriter, logger), IKillHtmlCommandExecutor
 {
-    private readonly IOutputFolderPathProvider _outputFolderPathProvider;
-    private readonly IFileDeleter _fileDeleter;
-
-    public KillHtmlCommandExecutor(IOutputFolderPathProvider pathRootingProvider,
-        IFileDeleter fileDeleter, IOutputWriter outputWriter, ILogger<KillHtmlCommandExecutor> logger)
-        : base(outputWriter, logger)
-    {
-        _outputFolderPathProvider = pathRootingProvider;
-        _fileDeleter = fileDeleter;
-    }
-
     public override void Execute(KillHtmlCommand command)
     {
         OutputWriter.WriteLine("Deleting html files in the output and archive folders.");
 
-        _fileDeleter.Delete(_outputFolderPathProvider.GetRootedOutputFolder(), "*.html");
-        _fileDeleter.Delete(_outputFolderPathProvider.GetRootedArchiveFolder(), "*.html");
+        fileDeleter.Delete(outputFolderPathProvider.GetRootedOutputFolder(), "*.html");
+        fileDeleter.Delete(outputFolderPathProvider.GetRootedArchiveFolder(), "*.html");
     }
 }

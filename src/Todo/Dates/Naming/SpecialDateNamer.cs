@@ -3,27 +3,22 @@ using Todo.Contracts.Services.Dates.Naming;
 
 namespace Todo.Dates.Naming;
 
-public class SpecialDateNamer : ISpecialDateNamer
+public class SpecialDateNamer(
+    IChristmasNewYearDateNamer christmasNewYearDateNamer,
+    IEasterDateNamer easterDateNamer,
+    ISaintsDayDateNamer saintsDayDateNamer
+) : ISpecialDateNamer
 {
-    private readonly IChristmasNewYearDateNamer _christmasNewYearDateNamer;
-    private readonly IEasterDateNamer _easterDateNamer;
-    private readonly ISaintsDayDateNamer _saintsDayDateNamer;
-
-    public SpecialDateNamer(IChristmasNewYearDateNamer christmasNewYearDateNamer,
-        IEasterDateNamer easterDateNamer, ISaintsDayDateNamer saintsDayDateNamer)
-    {
-        _christmasNewYearDateNamer = christmasNewYearDateNamer;
-        _easterDateNamer = easterDateNamer;
-        _saintsDayDateNamer = saintsDayDateNamer;
-    }
-
     public bool TryGetSpecialName(DateOnly date, out string? name)
     {
         //Order important -- Easter should trump a saint's day
 
-        if (_christmasNewYearDateNamer.TryGetSpecialName(date, out name)) return true;
-        if (_easterDateNamer.TryGetSpecialName(date, out name)) return true;
-        if (_saintsDayDateNamer.TryGetSpecialName(date, out name)) return true;
+        if (christmasNewYearDateNamer.TryGetSpecialName(date, out name))
+            return true;
+        if (easterDateNamer.TryGetSpecialName(date, out name))
+            return true;
+        if (saintsDayDateNamer.TryGetSpecialName(date, out name))
+            return true;
 
         name = null;
         return false;

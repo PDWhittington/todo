@@ -12,26 +12,21 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.Execution;
 
-public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T : FileMoveCommandBase
+public abstract class FileMoveExecutorBase<T>(
+    IConfigurationProvider configurationProvider,
+    IGitInterface gitInterface,
+    IOutputWriter outputWriter,
+    IFolderCreator folderCreator,
+    ILogger<FileMoveExecutorBase<T>> logger
+) : CommandExecutorBase<T>(outputWriter, logger)
+    where T : FileMoveCommandBase
 {
-    private readonly IConfigurationProvider _configurationProvider;
-    private readonly IGitInterface _gitInterface;
-    private readonly IFolderCreator _folderCreator;
-
-    protected FileMoveExecutorBase(IConfigurationProvider configurationProvider,
-        IGitInterface gitInterface, IOutputWriter outputWriter, IFolderCreator folderCreator,
-        ILogger<FileMoveExecutorBase<T>> logger)
-        : base(outputWriter, logger)
-    {
-        _configurationProvider = configurationProvider;
-        _gitInterface = gitInterface;
-        _folderCreator = folderCreator;
-    }
-
     public override void Execute(T command)
     {
-        if (_configurationProvider.ConfigInfo.Configuration.UseGit) MoveFile(command, MoveFileInGit);
-        else MoveFile(command, MoveFileWithoutGit);
+        if (configurationProvider.ConfigInfo.Configuration.UseGit)
+            MoveFile(command, MoveFileInGit);
+        else
+            MoveFile(command, MoveFileWithoutGit);
     }
 
     protected abstract FilePathInfo GetSourcePath(T command);
@@ -41,23 +36,25 @@ public abstract class FileMoveExecutorBase<T> : CommandExecutorBase<T> where T :
     private void MoveFile(T command, Action<FilePathInfo, FilePathInfo> moveOperation)
     {
         var sourcePathInfo = GetSourcePath(command);
-        
-        if (!sourcePathInfo.Exists()) throw new Exception($"Source path not found: {sourcePathInfo.Path}");
-        
+
+        if (!sourcePathInfo.Exists())
+            throw new Exception($"Source path not found: {sourcePathInfo.Path}");
+
         var destinationPathInfo = GetDestinationPath(command);
 
         moveOperation(sourcePathInfo, destinationPathInfo);
     }
 
-    private void MoveFileInGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
-        => _gitInterface.RunGitCommand<GitMoveCommand, VoidResult>(
-            new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path));
+    private void MoveFileInGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo) =>
+        gitInterface.RunGitCommand<GitMoveCommand, VoidResult>(
+            new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path)
+        );
 
     private void MoveFileWithoutGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
     {
         OutputWriter.WriteLine($"Moving {sourcePathInfo.Path} to {destinationPathInfo.Path}");
 
-        _folderCreator.CreateFromPathIfDoesntExist(destinationPathInfo.Path);
+        folderCreator.CreateFromPathIfDoesntExist(destinationPathInfo.Path);
         File.Move(sourcePathInfo.Path, destinationPathInfo.Path);
     }
 }
