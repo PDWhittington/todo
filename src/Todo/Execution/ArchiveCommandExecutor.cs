@@ -16,10 +16,12 @@ public class ArchiveCommandExecutor(
     IDateListPathResolver dateListPathResolver,
     IConfigurationProvider configurationProvider,
     IGitInterface gitInterface,
-    IOutputWriter outputWriter,
+    IFileMover fileMover,
     IFolderCreator folderCreator,
+    IOutputWriter outputWriter,
     ILogger<ArchiveCommandExecutor> logger)
-    : FileMoveExecutorBase<ArchiveCommand>(configurationProvider, gitInterface, outputWriter, folderCreator, logger),
+    : FileMoveExecutorBase<ArchiveCommand>(configurationProvider, 
+        gitInterface, fileMover, folderCreator, outputWriter, logger),
         IArchiveCommandExecutor
 {
     protected override FilePathInfo GetSourcePath(ArchiveCommand command)

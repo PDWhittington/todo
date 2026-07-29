@@ -15,29 +15,22 @@ namespace Todo.Execution;
 public class UnarchiveCommandExecutor(
     IDateListPathResolver dateListPathResolver,
     IConfigurationProvider configurationProvider,
+    IFileMover fileMover,
+    IFolderCreator folderCreator,
     IGitInterface gitInterface,
     IOutputWriter outputWriter,
-    IFolderCreator folderCreator,
-    ILogger<UnarchiveCommandExecutor> logger
-)
-    : FileMoveExecutorBase<UnarchiveCommand>(
-        configurationProvider,
-        gitInterface,
-        outputWriter,
-        folderCreator,
-        logger
-    ),
-        IUnarchiveCommandExector
+    ILogger<UnarchiveCommandExecutor> logger)
+    : FileMoveExecutorBase<UnarchiveCommand>(configurationProvider, gitInterface, 
+        fileMover, folderCreator, outputWriter, logger), 
+    IUnarchiveCommandExector
 {
     protected override FilePathInfo GetSourcePath(UnarchiveCommand command) =>
         dateListPathResolver.GetArchiveFilePathFor(
             command.DateOfFileToArchive,
-            FileTypeEnum.MarkdownDayList
-        );
+            FileTypeEnum.MarkdownDayList);
 
     protected override FilePathInfo GetDestinationPath(UnarchiveCommand command) =>
         dateListPathResolver.GetFilePathFor(
             command.DateOfFileToArchive,
-            FileTypeEnum.MarkdownDayList
-        );
+            FileTypeEnum.MarkdownDayList);
 }
