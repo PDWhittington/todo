@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Todo;
+using Todo.Contracts.Exceptions;
 using Todo.Contracts.Services;
 
 Timer.Start();
@@ -17,6 +18,13 @@ var error = false;
 try
 {
     service.PerformTask();
+}
+catch (CommandNotFoundException e)
+{
+    outputWriter.WriteLine(e.Message);
+    outputWriter.WriteLine("Run 'todo help' for more information.");
+
+    error = true;
 }
 catch (Exception e)
 {

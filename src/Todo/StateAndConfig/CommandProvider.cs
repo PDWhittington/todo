@@ -1,7 +1,7 @@
-﻿using System;
-using Todo.Contracts.Data.Commands;
+﻿using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.CommandFactories;
 using Todo.Contracts.Services.StateAndConfig;
+using Todo.Contracts.Exceptions;
 
 namespace Todo.StateAndConfig;
 
@@ -22,7 +22,6 @@ public class CommandProvider(
         }
 
         var commandForDefault = commandFactorySet.DefaultCommandFactory.TryGetCommand(commandLine);
-
-        return commandForDefault ?? throw new Exception("Command not recognised");
+        return commandForDefault ?? throw new CommandNotFoundException(commandLine);
     }
 }
