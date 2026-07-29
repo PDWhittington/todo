@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -euo pipefail
+
 echo "Deleting all bin folders . . ."
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"

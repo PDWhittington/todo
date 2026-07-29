@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+
+set -euo pipefail
+
 # This is provided more as an example than anything else
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"

@@ -1,5 +1,23 @@
 #!/usr/bin/env sh
 
+set -euo pipefail
+
+# Returns: linux | darwin | windows | wsl | unknown
+detect_os() {
+  case "$(uname -s 2>/dev/null)" in
+    Linux*)
+      if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
+        echo "wsl"
+      else
+        echo "linux"
+      fi
+      ;;
+    Darwin*) echo "darwin" ;;
+    CYGWIN*|MINGW*|MSYS*) echo "windows" ;;   # Git Bash / MSYS2 / Cygwin
+    *) echo "unknown" ;;
+  esac
+}
+
 ARCHITECTURE=$1
 CONFIGURATION=$2
 DEPLOY_LOCATION=$3
@@ -9,6 +27,31 @@ DEPLOY_LOCATION=$3
 if [[ ! "$ARCHITECTURE" =~ ^(osx-arm64|win-x64|linux-x64)$ ]]; then
     echo "Value '$ARCHITECTURE' is not a valid architecture or not an architecture in the set tested."
     exit 1
+fi
+
+# Check we are on the right architecture
+
+OS=$(detect_os)
+
+echo "ARCHITECTURE=$ARCHITECTURE"
+echo "OS=$OS"
+
+if [[ "$ARCHITECTURE" == "win-x64" && "$OS" != "windows" ]]; then
+
+  echo "You are trying to deploy for Windows, but this operating system is not Windows."
+  exit 1
+fi
+
+if [[ "$ARCHITECTURE" == "osx-x64" && "$OS" != "darwin" ]]; then
+
+  echo "You are trying to publish for MacOS, but this operating system is not MacOS"
+  exit 1
+fi
+
+if [[ "$ARCHITECTURE" == "linux-x64" && "$OS" != "linux" ]]; then
+
+  echo "You are trying to publish for Linux, but this operating system is not Linux (WSL is considered a different category)."
+  exit 1
 fi
 
 # Validate configuration

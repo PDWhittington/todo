@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -euo pipefail
+
 # Get the absolute directory of the script itself (works even when called via ../script.sh, symlinks, etc.)
 ARCHITECTURE=$1
 PUBLISH_LOCATION=$2
