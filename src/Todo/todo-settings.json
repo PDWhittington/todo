@@ -7,32 +7,32 @@
   "BrowserPath": {
     "Windows": {
       "Path": "chrome.exe",
-      "Parameters": "{0}"
+      "Arguments": "{0}"
     },
     "Linux": {
       "Path": "/usr/bin/x-www-browser",
-      "Parameters": "--path {0}"
+      "Arguments": "--path {0}"
     },
     "OSX": {
       "Path": "open",
-      "Parameters": "-a Firefox \"{0}\""
+      "Arguments": "-a Firefox \"{0}\""
     }
   },
   "TextEditorPath": {
     "Windows": {
       "Path": "Code.exe",
-      "Parameters": "{0}"
+      "Arguments": "{0}"
     },
     "Linux": {
       "Path": "code",
-      "Parameters": "{0}"
+      "Arguments": "{0}"
     },
     "OSX": {
       "Path": "/Applications/VSCodium.app/Contents/MacOS/Electron",
-      "Parameters": "{0}"
+      "Arguments": "{0}"
     },
     "EnvironmentVariableToOverridePath" : "TODO_TEXT_EDITOR_PATH",
-    "EnvironmentVariableToOverrideParameters" : "TODO_TEXT_EDITOR_PARAMETERS"
+    "EnvironmentVariableToOverrideArguments" : "TODO_TEXT_EDITOR_PARAMETERS"
   },
   "DayListMarkdownTemplatePath": "day-list-template.md",
   "TopicListMarkdownTemplatePath": "topic-list-template.md",

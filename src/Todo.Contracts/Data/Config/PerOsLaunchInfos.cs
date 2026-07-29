@@ -9,4 +9,4 @@ public record PerOsLaunchInfos(
     // ReSharper disable once InconsistentNaming
     ProcessLaunchInfo OSX,
     string? EnvironmentVariableToOverridePath = null,
-    string? EnvironmentVariableToOverrideParameters = null);
+    string? EnvironmentVariableToOverrideArguments = null);
