@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="Todo.Contracts/Todo.Contracts.csproj" />
-  <Project Path="Todo.SourceGenerators/Todo.SourceGenerators.csproj" />
-  <Project Path="Todo.Tests/Todo.Tests.csproj" />
-  <Project Path="Todo/Todo.csproj" />
-</Solution>

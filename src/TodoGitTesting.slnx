@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Solution>
+  <Project Path="Todo.Contracts/Todo.Contracts.csproj"/>
+  <Project Path="Todo.SourceGenerators/Todo.SourceGenerators.csproj"/>
+  <Project Path="Todo.Tests/Todo.Tests.csproj"/>
+  <Project Path="Todo/TodoReferencing.csproj"/>
+  <Project Path="../../libgit2sharp/LibGit2Sharp/LibGit2Sharp.csproj"/>
+</Solution>

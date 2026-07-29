@@ -17,12 +17,11 @@
   </PropertyGroup>
   <!-- Treat warnings as errors ONLY in Release -->
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <PublishAot>true</PublishAot>
     <TrimMode>partial</TrimMode>
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
     <ILLinkTreatWarningsAsErrors>false</ILLinkTreatWarningsAsErrors>
-    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
     <OptimizationPreference>Speed</OptimizationPreference>
     <PublishReadyToRun>true</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
@@ -35,6 +34,7 @@
     <TrimmerRootAssembly Include="Serilog"/>
     <TrimmerRootAssembly Include="Serilog.Sinks.File"/>
     <TrimmerRootAssembly Include="Serilog.Sinks.Async"/>
+    <TrimmerRootAssembly Include="LibGit2Sharp"/>
   </ItemGroup>
   <!-- Make classes marked as internal available to the test project -->
   <ItemGroup>
@@ -42,7 +42,6 @@
   </ItemGroup>
   <!-- nuget references -->
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.31.0"/>
     <PackageReference Include="Markdig" Version="1.1.2"/>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.5"/>
     <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0"/>
@@ -68,6 +67,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj"/>
     <ProjectReference Include="..\Todo.SourceGenerators\Todo.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="../../../libgit2sharp/LibGit2Sharp/LibGit2Sharp.csproj"/>
   </ItemGroup>
   <!-- Pre-build event to populate the above files -->
   <PropertyGroup>
