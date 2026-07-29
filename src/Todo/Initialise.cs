@@ -182,9 +182,10 @@ internal static class Initialise
                 .AddSingleton<ITopicListPathResolver, TopicListPathResolver>()
                 .AddSingleton<IScoreHtmlPathResolver, ScoreHtmlPathResolver>()
                 .AddSingleton<IMarkdownFileReader, MarkdownFileReader>()
+                .AddSingleton<IFileMover, FileMover>() 
                 .AddSingleton<IFileDeleter, FileDeleter>()
-                .AddSingleton<IFolderCreator, FolderCreator>()
                 .AddSingleton<IFileListCreator, FileListCreator>()
+                .AddSingleton<IFolderCreator, FolderCreator>()
                 .AddSingleton<IUnmanagedByteArrayManager, UnmanagedByteArrayManager>()
                 .AddSingleton<IPinnedFileLoader, PinnedFileLoader>();
 

@@ -15,10 +15,11 @@ namespace Todo.Execution;
 public abstract class FileMoveExecutorBase<T>(
     IConfigurationProvider configurationProvider,
     IGitInterface gitInterface,
-    IOutputWriter outputWriter,
+    IFileMover fileMover,
     IFolderCreator folderCreator,
-    ILogger<FileMoveExecutorBase<T>> logger
-) : CommandExecutorBase<T>(outputWriter, logger)
+    IOutputWriter outputWriter,
+    ILogger<FileMoveExecutorBase<T>> logger)
+    : CommandExecutorBase<T>(outputWriter, logger)
     where T : FileMoveCommandBase
 {
     public override void Execute(T command)
@@ -45,16 +46,23 @@ public abstract class FileMoveExecutorBase<T>(
         moveOperation(sourcePathInfo, destinationPathInfo);
     }
 
-    private void MoveFileInGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo) =>
-        gitInterface.RunGitCommand<GitMoveCommand, VoidResult>(
-            new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path)
-        );
+    private void MoveFileInGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
+    {
+        var result = gitInterface.RunGitCommand<GitMoveCommand, VoidResult>(
+            new GitMoveCommand(sourcePathInfo.Path, destinationPathInfo.Path));
+
+        if(!result.Success)
+        {
+            throw result.Exception ?? new Exception($"An exception was thrown while running {this.GetType().Name}");
+        }
+    }
 
     private void MoveFileWithoutGit(FilePathInfo sourcePathInfo, FilePathInfo destinationPathInfo)
     {
         OutputWriter.WriteLine($"Moving {sourcePathInfo.Path} to {destinationPathInfo.Path}");
 
         folderCreator.CreateFromPathIfDoesntExist(destinationPathInfo.Path);
-        File.Move(sourcePathInfo.Path, destinationPathInfo.Path);
+
+        fileMover.Move(sourcePathInfo.Path, destinationPathInfo.Path);
     }
 }

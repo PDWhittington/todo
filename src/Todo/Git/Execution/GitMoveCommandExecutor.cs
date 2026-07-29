@@ -10,8 +10,8 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.Git.Execution;
 
-public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter outputWriter, 
-    ILogger<GitMoveCommandExecutor> logger)
+public class GitMoveCommandExecutor(IFolderCreator folderCreator, IFileMover fileMover,
+    IOutputWriter outputWriter, ILogger<GitMoveCommandExecutor> logger)
     : GitCommandExecutorBase<GitMoveCommand, VoidResult>(outputWriter, logger),
         IGitMoveCommandExecutor
 {
@@ -41,7 +41,7 @@ public class GitMoveCommandExecutor(IFolderCreator folderCreator, IOutputWriter 
                 gitMoveCommand.SourcePath,
                 gitMoveCommand.DestinationPath);
 
-            File.Move(gitMoveCommand.SourcePath, gitMoveCommand.DestinationPath);
+            fileMover.Move(gitMoveCommand.SourcePath, gitMoveCommand.DestinationPath);
 
             Logger.LogInformation(
                 "In {GetType}.{MethodName}: Attempting to stage source path: {sourcePath}",
