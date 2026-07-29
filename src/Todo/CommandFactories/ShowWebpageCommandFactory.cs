@@ -7,10 +7,9 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowWebpageCommandFactory(
-    IOutputWriter outputWriter,
-    IConstantsProvider constantsProvider
-) : CommandFactoryBase<ShowWebpageCommand>(outputWriter, Words)
+public class ShowWebpageCommandFactory(IConfigurationProvider configurationProvider,
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter, IConstantsProvider constantsProvider)
+    : CommandFactoryBase<ShowWebpageCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["web", "www"];
 

@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ScoreCommandFactory(IOutputWriter outputWriter) 
-   : CommandFactoryBase<ScoreCommand>(outputWriter, Words)
+public class ScoreCommandFactory(IConfigurationProvider configurationProvider, 
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter) 
+   : CommandFactoryBase<ScoreCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
    private static readonly string[] Words = ["score", "gamify"];
 

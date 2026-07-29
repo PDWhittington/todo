@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CommitCommandFactory(IOutputWriter outputWriter) 
-    : CommandFactoryBase<CommitCommand>(outputWriter, Words)
+public class CommitCommandFactory(IConfigurationProvider configurationProvider, IConsoleTextFormatter consoleTextFormatter,
+    IOutputWriter outputWriter) 
+    : CommandFactoryBase<CommitCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["c", "commit"];
 

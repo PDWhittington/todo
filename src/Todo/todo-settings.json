@@ -51,7 +51,8 @@
   "NewDayThreshold": "04:00:00",
   "ConsoleWidth": 80,
   "FileIterationMethod": "Parallel",
-  
+  //Disabled commands
+  "DisbaledCommands": [],
   //Gamify settings
   "DefaultDayIntervalForGamify": 21,
   "ScoreCategories": [

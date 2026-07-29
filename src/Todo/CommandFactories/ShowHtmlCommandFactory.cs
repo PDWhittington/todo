@@ -2,13 +2,15 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ShowHtmlCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
-    : CommandFactoryBase<ShowHtmlCommand>(outputWriter, Words)
+public class ShowHtmlCommandFactory(IDateParser dateParser, IConfigurationProvider configurationProvider, 
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
+    : CommandFactoryBase<ShowHtmlCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["h", "html", "showhtml"];
 

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class KillHtmlCommandFactory(IOutputWriter outputWriter)
-    : CommandFactoryBase<KillHtmlCommand>(outputWriter, Words)
+public class KillHtmlCommandFactory(IConfigurationProvider configurationProvider,
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
+    : CommandFactoryBase<KillHtmlCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["k", "killhtml"];
 

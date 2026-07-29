@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class WhichTodoCommandFactory(IOutputWriter outputWriter)
-    : CommandFactoryBase<WhichTodoCommand>(outputWriter, Words)
+public class WhichTodoCommandFactory(IConfigurationProvider configurationProvider, 
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
+    : CommandFactoryBase<WhichTodoCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["w", "which"];
 
