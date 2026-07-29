@@ -24,14 +24,14 @@ public class CreateOrShowDayListCommandFactory(IDateParser dateParser, IOutputWr
     protected override string Usage => "[date]"; 
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override CreateOrShowDayListCommand TryGetCommand(string commandLine)
+    public override CreateOrShowDayListCommand? TryGetCommand(string commandLine)
     {
         var commandLineToUse = IsThisCommand(commandLine, out var restOfCommand)
             ? restOfCommand : commandLine;
 
         if (!dateParser.TryGetDate(commandLineToUse, out var dateOnly))
         {
-            throw new Exception("Date not recognised in command");
+            return null;
         }
 
         return CreateOrShowDayListCommand.Of(dateOnly);
