@@ -11,4 +11,8 @@ public interface IConsoleTextFormatter
     string FormatAsUnderlined(string text);
 
     string FormatAsBold(string text);
+
+    string FormatWithForegroundColour(string text, ConsoleColor foregroundColour);
+
+    string FormatWithBackgroundColour(string text, ConsoleColor backgroundColour);
 }
