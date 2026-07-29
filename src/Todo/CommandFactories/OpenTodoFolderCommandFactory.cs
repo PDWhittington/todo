@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class OpenTodoFolderCommandFactory(IOutputWriter outputWriter)
-    : CommandFactoryBase<OpenTodoFolderCommand>(outputWriter, Words)
+public class OpenTodoFolderCommandFactory(IConfigurationProvider configurationProvider, 
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
+    : CommandFactoryBase<OpenTodoFolderCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["explorer", "finder", "files"];
 

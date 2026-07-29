@@ -7,8 +7,9 @@ using Todo.Contracts.Services.UI;
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class InitCommandFactory(IConstantsProvider constantsProvider, IOutputWriter outputWriter)
-    : CommandFactoryBase<InitCommand>(outputWriter, Words)
+public class InitCommandFactory(IConstantsProvider constantsProvider, IConfigurationProvider configurationProvider,
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
+    : CommandFactoryBase<InitCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["i", "init"];
 

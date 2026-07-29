@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class GraphCommandFactory(IOutputWriter outputWriter) 
-    : CommandFactoryBase<GraphCommand>(outputWriter, Words)
+public class GraphCommandFactory(IConfigurationProvider configurationProvider, 
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter) 
+    : CommandFactoryBase<GraphCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["g", "graph"];
 

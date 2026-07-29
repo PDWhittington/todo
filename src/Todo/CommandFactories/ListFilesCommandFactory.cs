@@ -3,13 +3,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ListFilesCommandFactory(IOutputWriter outputWriter)
-    : CommandFactoryBase<ListFilesCommand>(outputWriter, Words)
+public class ListFilesCommandFactory(IConfigurationProvider configurationProvider, 
+    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
+    : CommandFactoryBase<ListFilesCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
 {
     private static readonly string[] Words = ["l", "list"];
 

@@ -11,4 +11,5 @@ public record Configuration(TodoListInfo TodoListInfo,
     string HtmlTemplatePath, HtmlThemeEnum HtmlTheme,
     string OutputFolder, string ArchiveFolderName, string TodoListFilenameFormatWithoutExension,
     bool UseNamesForDays, bool UseGit, TimeSpan? NewDayThreshold, int ConsoleWidth,
-    IterationMethodEnum FileIterationMethod, int DefaultDayIntervalForGamify, ScoreCategory[] ScoreCategories);
+    IterationMethodEnum FileIterationMethod, string [] DisabledCommands,
+    int DefaultDayIntervalForGamify, ScoreCategory[] ScoreCategories);
