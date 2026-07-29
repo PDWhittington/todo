@@ -7,11 +7,12 @@ using Todo.Contracts.Services;
 Timer.Start();
 
 var serviceProvider = Initialise.GetServiceProvider();
-
 var service = serviceProvider.GetService<ITodoService>()!;
 
 using var outputWriterHandle = service.InitialiseService();
 var outputWriter = service.OutputWriter;
+var consoleTextFormatter = service.ConsoleTextFormatter;
+var error = false;
 
 try
 {
@@ -33,10 +34,23 @@ catch (Exception e)
         outputWriter.WriteLine("Stack trace:");
         outputWriter.WriteLine(e.StackTrace);
     }
+
+    error = true;
 }
 finally
 {
     outputWriter.WriteLine();
-    outputWriter.WriteLine($"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.");
+
+    if (error)
+    {
+        outputWriter.WriteLine(consoleTextFormatter.FormatWithForegroundColour(
+              $"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.", ConsoleColor.Red));
+    }
+    else
+    {
+        outputWriter.WriteLine(consoleTextFormatter.FormatWithForegroundColour(
+              $"App ran for {Timer.Elapsed.TotalMilliseconds} milliseconds.", ConsoleColor.Green));
+    }
+
     await Log.CloseAndFlushAsync();
 }

@@ -170,4 +170,37 @@ public class ConsoleTextFormatter(IConfigurationProvider configurationProvider)
 
     public string FormatAsBold(string text) =>
         Console.IsOutputRedirected ? text : $"\e[1m{text}\e[22m";
+
+    public string FormatAsColour(string text, ConsoleColor foregroundColour, ConsoleColor backgroundColour) =>
+        Console.IsOutputRedirected ? text : $"\e[{Foreground(foregroundColour)};{Background(backgroundColour)}m{text}\e[39;49m";
+
+    public string FormatWithForegroundColour(string text, ConsoleColor foregroundColour) =>
+        Console.IsOutputRedirected ? text : $"\e[{Foreground(foregroundColour)}m{text}\e[39m";
+
+    public string FormatWithBackgroundColour(string text, ConsoleColor backgroundColour) =>
+        Console.IsOutputRedirected ? text : $"\e[{Background(backgroundColour)}m{text}\e[49m";
+
+    public static int Foreground(ConsoleColor color) => color switch
+    {
+        ConsoleColor.Black       => 30,
+        ConsoleColor.DarkRed     => 31,
+        ConsoleColor.DarkGreen   => 32,
+        ConsoleColor.DarkYellow  => 33,
+        ConsoleColor.DarkBlue    => 34,
+        ConsoleColor.DarkMagenta => 35,
+        ConsoleColor.DarkCyan    => 36,
+        ConsoleColor.Gray        => 37,
+        ConsoleColor.DarkGray    => 90,
+        ConsoleColor.Red         => 91,
+        ConsoleColor.Green       => 92,
+        ConsoleColor.Yellow      => 93,
+        ConsoleColor.Blue        => 94,
+        ConsoleColor.Magenta     => 95,
+        ConsoleColor.Cyan        => 96,
+        ConsoleColor.White       => 97,
+        _ => 39 // default
+    };
+
+    public static int Background(ConsoleColor color) => 
+        Foreground(color) + 10;
 }

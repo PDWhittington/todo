@@ -14,10 +14,13 @@ public class TodoService(
     ICommandProvider commandProvider,
     ICommandExecutorSet commandExecutorSet,
     IOutputWriter outputWriter,
+    IConsoleTextFormatter consoleTextFormatter,
     ILogger<TodoService> logger)
     : ITodoService
 {
     public IOutputWriter OutputWriter { get; } = outputWriter;
+
+    public IConsoleTextFormatter ConsoleTextFormatter { get; } = consoleTextFormatter;
 
     public IOutputWriterDisposableHandle InitialiseService() =>
         OutputWriter.CreateDisposableHandle();
