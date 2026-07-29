@@ -28,20 +28,20 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariable
     private bool TryGetOverride(PerOsLaunchInfos perOsLaunchInfos, out ProcessLaunchInfo? value)
     {
         var pathVariableNameIsEmpty = string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverridePath);
-        var parameterVariableNameIsEmpty = string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverrideParameters);
+        var parameterVariableNameIsEmpty = string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverrideArguments);
 
         if (!pathVariableNameIsEmpty && !parameterVariableNameIsEmpty)
         {
             var overridePathExists = environmentVariableProvider.TryGetEnvironmentVariable(
                 perOsLaunchInfos.EnvironmentVariableToOverridePath, out var overridePath);
 
-            var overrideParametersExists = environmentVariableProvider.TryGetEnvironmentVariable(
-                perOsLaunchInfos.EnvironmentVariableToOverrideParameters, out var overrideParameters);
+            var overrideAregumentsExist = environmentVariableProvider.TryGetEnvironmentVariable(
+                perOsLaunchInfos.EnvironmentVariableToOverrideArguments, out var overrideParameters);
 
-            if (overridePathExists && overrideParametersExists)
+            if (overridePathExists && overrideAregumentsExist)
             {
                 value = new ProcessLaunchInfo(overridePath!, overrideParameters!);
-                return true;                
+                return true;
             }
         }
 
