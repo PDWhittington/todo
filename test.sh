@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-SOLUTION=$(find src -name "*.sln" -type f | head -n 1)
+SOLUTION=$(find src -name "*.slnx" -type f | head -n 1)
 
 if [ -z "$SOLUTION" ]; then
-	echo " ❌ No .sln file found in src/ directory"
+	echo " ❌ No .slnx file found in src/ directory"
 	exit 1
 fi
 

@@ -64,10 +64,10 @@ fi
 # Assume a single solution file in the src sub-folder
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.sln" -type f | head -n 1)
+SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.slnx" -type f | head -n 1)
 
 if [ -z "$SOLUTION" ]; then
-  echo " ❌ No .sln file found in src/ directory."
+  echo " ❌ No .slnx file found in src/ directory."
   exit 2
 fi
 
