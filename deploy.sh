@@ -2,6 +2,27 @@
 
 set -euo pipefail
 
+ARCHITECTURE=$1
+CONFIGURATION=$2
+DEPLOY_LOCATION=$3
+
+if [ -z "${USE_SUDO:-}" ]; then
+  dest_dir=$(dirname "$DEPLOY_LOCATION")
+  if [ "$OS" = "windows" ] || [ -w "$DEPLOY_LOCATION" ] || [ -w "$dest_dir" ]; then
+    USE_SUDO=0
+  else
+    USE_SUDO=1
+  fi
+fi
+
+run_priv() {
+  if [ "$USE_SUDO" -eq 1 ]; then
+    sudo "$@"
+  else
+    "$@"
+  fi
+}
+
 # Returns: linux | darwin | windows | wsl | unknown
 detect_os() {
   case "$(uname -s 2>/dev/null)" in
@@ -18,9 +39,6 @@ detect_os() {
   esac
 }
 
-ARCHITECTURE=$1
-CONFIGURATION=$2
-DEPLOY_LOCATION=$3
 
 # Validate architecture
 
@@ -94,6 +112,15 @@ if [ "$CONFIGURATION" = "Release" ]; then
   EXTRA_PUBLISH_FLAGS="-p:PublishReadyToRun=true -p:OptimizationPreference=Speed -p:TieredCompilation=false --self-contained"
 fi
 
+PUBLISH_PROPS=""
+
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    export OS=Windows_NT
+    PUBLISH_PROPS="-p:OS=Windows_NT"
+    ;;
+esac
+
 if ! dotnet publish $SCRIPT_DIR/src/todo/ \
   -c $CONFIGURATION \
   -r $ARCHITECTURE \
@@ -109,7 +136,7 @@ echo " ✅ Build succeeded. Proceeding to copy..."
 
 # Clean previous deployment
 
-if ! sudo rm -R -f $DEPLOY_LOCATION; then
+if ! run_priv rm -R -f $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO DELETE /usr/local/bin/todo."
   exit 5
 fi
@@ -118,7 +145,7 @@ echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
 
 # Copy the published output
 
-if ! sudo cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
+if ! run_priv cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
   echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
   exit 6
 fi
