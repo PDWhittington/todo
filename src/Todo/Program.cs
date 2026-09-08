@@ -21,26 +21,26 @@ try
 }
 catch (CommandNotFoundException e)
 {
-    outputWriter.WriteLine(e.Message);
-    outputWriter.WriteLine("Run 'todo help' for more information.");
+    outputWriter.WriteLineAlways(e.Message);
+    outputWriter.WriteLineAlways("Run 'todo help' for more information.");
 
     error = true;
 }
 catch (Exception e)
 {
-    outputWriter.WriteLine(
+    outputWriter.WriteLineAlways(
         $"The app threw the following exception:{Environment.NewLine}{Environment.NewLine}");
-    outputWriter.WriteLine($"{e.GetType()}: {e.Message}");
-    outputWriter.WriteLine();
+    outputWriter.WriteLineAlways($"{e.GetType()}: {e.Message}");
+    outputWriter.WriteLineAlways("");
 
     if (e.StackTrace is null)
     {
-        outputWriter.WriteLine("Stack trace: <NULL>");
+        outputWriter.WriteLineAlways("Stack trace: <NULL>");
     }
     else
     {
-        outputWriter.WriteLine("Stack trace:");
-        outputWriter.WriteLine(e.StackTrace);
+        outputWriter.WriteLineAlways("Stack trace:");
+        outputWriter.WriteLineAlways(e.StackTrace);
     }
 
     error = true;

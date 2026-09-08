@@ -44,8 +44,8 @@ public class TodoService(
         }
         catch (TodoExceptionBase e)
         {
-            OutputWriter.WriteLine($"An exception of type {e.GetType().Name} has been thrown:");
-            OutputWriter.WriteLine(e.Advice());
+            OutputWriter.WriteLineAlways($"An exception of type {e.GetType().Name} has been thrown:");
+            OutputWriter.WriteLineAlways(e.Advice());
         }
     }
 }

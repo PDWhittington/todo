@@ -215,6 +215,7 @@ internal static class Initialise
 
         private IServiceCollection AddUiFunctionality() =>
             serviceCollection
+                .AddSingleton<IBareModeProvider, BareModeProvider>()
                 .AddSingleton<IConsoleTextFormatter, ConsoleTextFormatter>()
                 .AddSingleton<IOutputWriter, OutputWriter>();
 

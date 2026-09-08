@@ -2,16 +2,14 @@
 using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
-using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CreateOrShowTopicListCommandFactory(IConfigurationProvider configurationProvider, 
-    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
-    : CommandFactoryBase<CreateOrShowTopicListCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
+public class CreateOrShowTopicListCommandFactory(IOutputWriter outputWriter)
+    : CommandFactoryBase<CreateOrShowTopicListCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["t", "topic"];
 
