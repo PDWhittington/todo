@@ -3,15 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
-using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ArchiveCommandFactory(IDateParser dateParser, IConfigurationProvider configurationProvider, 
-    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
-    : CommandFactoryBase<ArchiveCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
+public class ArchiveCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+    : CommandFactoryBase<ArchiveCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["a", "archive"];
 

@@ -3,15 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
-using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class PrintAndShowHtmlCommandFactory(IDateParser dateParser, IConfigurationProvider configurationProvider, 
-    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
-    : CommandFactoryBase<PrintAndShowHtmlCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
+public class PrintAndShowHtmlCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+    : CommandFactoryBase<PrintAndShowHtmlCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["ph", "printandshowhtml"];
 

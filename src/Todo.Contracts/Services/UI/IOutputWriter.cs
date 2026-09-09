@@ -8,6 +8,8 @@ public interface IOutputWriter
 
     void WriteLine(string message);
 
+    void WriteLineAlways(string message);
+
     IOutputWriterDisposableHandle CreateDisposableHandle();
 
     void JoinWritingThread();

@@ -8,12 +8,16 @@ public record ListFilesCommand : CommandBase
 
     public ListFileTypeEnum ListFileType { get; }
 
-    private ListFilesCommand(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType)
+    public bool Bare { get; }
+
+    private ListFilesCommand(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType, bool bare)
     {
         OutputFolder = outputFolder;
         ListFileType = listFileType;
+        Bare = bare;
     }
 
-    public static ListFilesCommand Of(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType)
-        => new(outputFolder, listFileType);
+    public static ListFilesCommand Of(OutputFolderEnum outputFolder, ListFileTypeEnum listFileType,
+        bool bare = false)
+        => new(outputFolder, listFileType, bare);
 }

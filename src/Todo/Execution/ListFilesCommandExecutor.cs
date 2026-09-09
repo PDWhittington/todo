@@ -19,9 +19,28 @@ public class ListFilesCommandExecutor(
 {
     public override void Execute(ListFilesCommand command)
     {
+        if (command.Bare)
+        {
+            WriteBarePaths(command);
+            return;
+        }
+
         var filesListText = GenerateText(command);
 
         OutputWriter.WriteLine(filesListText);
+    }
+
+    private void WriteBarePaths(ListFilesCommand command)
+    {
+        var paths = fileListCreator
+            .GetFiles<FilePathInfo>(command.OutputFolder, command.ListFileType)
+            .OrderBy(filePathInfo => filePathInfo.Path)
+            .Select(filePathInfo => filePathInfo.Path);
+
+        foreach (var path in paths)
+        {
+            OutputWriter.WriteLineAlways(path);
+        }
     }
 
     private string GenerateText(ListFilesCommand command)

@@ -5,7 +5,7 @@ using Todo.Contracts.Services.UI;
 
 namespace Todo.UI;
 
-public class OutputWriter : IOutputWriter
+public class OutputWriter(IBareModeProvider bareModeProvider) : IOutputWriter
 {
     private bool _initialised;
     private Thread? _writingThread;
@@ -16,6 +16,13 @@ public class OutputWriter : IOutputWriter
     public void WriteLine(object obj) => WriteLine(obj.ToString() ?? "");
 
     public void WriteLine(string message)
+    {
+        if (bareModeProvider.IsBare) return;
+
+        WriteLineAlways(message);
+    }
+
+    public void WriteLineAlways(string message)
     {
         CheckInitialised();
         _pipe!.Add(message);

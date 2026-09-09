@@ -6,6 +6,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -30,9 +31,12 @@ public class CommandInterpretationTests
         var mockConfigProvider = Substitute.For<IConfigurationProvider>();
         mockConfigProvider.ConfigInfo.Returns(Config.GetMockConfigInfo());
 
+        var outputWriter = Substitute.For<IOutputWriter>();
+        
         serviceCollection.AddSingleton(mockDateAccessor);
         serviceCollection.AddSingleton(mockConfigProvider);
         serviceCollection.AddSingleton(mockCommandLineProvider);
+        serviceCollection.AddSingleton(outputWriter);
 
         return serviceCollection.BuildServiceProvider();
     }
@@ -45,7 +49,7 @@ public class CommandInterpretationTests
         mockCommandLine.GetCommandLine().Returns(commandLineTestInfo.CommandLine);
 
         var serviceProvider = GetServiceProvider(mockCommandLine);
-
+        
         using var handle = serviceProvider.GetRequiredService<IOutputWriter>().CreateDisposableHandle();
 
         var commandProvider = serviceProvider.GetRequiredService<ICommandProvider>();
@@ -135,6 +139,63 @@ public class CommandInterpretationTests
         {
             CommandLine = CommandLineInfo.Of("files", string.Empty),
             ExpectedCommand = OpenTodoFolderCommand.Singleton
+        };
+
+        var bothFolders = OutputFolderEnum.MainFolder | OutputFolderEnum.ArchiveFolder;
+        var bothFileTypes = ListFileTypeEnum.DayList | ListFileTypeEnum.TopicList;
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", string.Empty),
+            ExpectedCommand = ListFilesCommand.Of(bothFolders, bothFileTypes)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", "m d"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.MainFolder, ListFileTypeEnum.DayList)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", "md"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.MainFolder, ListFileTypeEnum.DayList)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("l", "at"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.ArchiveFolder, ListFileTypeEnum.TopicList)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", "m d b"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.MainFolder, ListFileTypeEnum.DayList, true)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", "mdb"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.MainFolder, ListFileTypeEnum.DayList, true)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", "b"),
+            ExpectedCommand = ListFilesCommand.Of(bothFolders, bothFileTypes, true)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("l", "MD"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.MainFolder, ListFileTypeEnum.DayList)
+        };
+
+        yield return new CommandLineTestInfo
+        {
+            CommandLine = CommandLineInfo.Of("list", "m  db"),
+            ExpectedCommand = ListFilesCommand.Of(OutputFolderEnum.MainFolder, ListFileTypeEnum.DayList, true)
         };
     }
 }

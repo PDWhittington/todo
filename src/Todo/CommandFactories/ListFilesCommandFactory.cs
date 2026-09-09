@@ -4,15 +4,13 @@ using System.Linq;
 using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
-using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class ListFilesCommandFactory(IConfigurationProvider configurationProvider, 
-    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
-    : CommandFactoryBase<ListFilesCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
+public class ListFilesCommandFactory(IOutputWriter outputWriter, IBareModeProvider bareModeProvider)
+    : CommandFactoryBase<ListFilesCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["l", "list"];
 
@@ -20,35 +18,41 @@ public class ListFilesCommandFactory(IConfigurationProvider configurationProvide
 
     protected override string [] HelpText { get; } =
     [
-        "Provides a list of all todo lists. Switches are as follows:-",
+        "Provides a list of all todo lists. Switches may be separated by spaces or concatenated. " +
+        "Switches are as follows:-",
         "\tm -- main todo folder.",
         "\ta -- archive folder.",
         "\td -- lists relating to days.",
-        "\tt -- lists relating to topics."
+        "\tt -- lists relating to topics.",
+        "\tb -- bare output; print only file paths, with no headings or other boilerplate."
     ];
 
-    protected override string Usage => "l [m|a][d|t]";
+    protected override string Usage => "l [m|a][d|t][b]";
 
     public override ListFilesCommand? TryGetCommand(CommandLineInfo commandLine)
     {
         if (!IsThisCommand(commandLine)) return null;
 
-        GetListParameters(commandLine.Switches, out var fileLocation, out var fileType);
+        GetListParameters(commandLine.Switches, out var fileLocation, out var fileType, out var bare);
 
-        return ListFilesCommand.Of(fileLocation, fileType);
+        if (bare) bareModeProvider.IsBare = true;
+
+        return ListFilesCommand.Of(fileLocation, fileType, bare);
     }
 
     private static void GetListParameters(string restOfCommand, out OutputFolderEnum outputFolder,
-        out ListFileTypeEnum listFileType)
+        out ListFileTypeEnum listFileType, out bool bare)
     {
-        var elements = restOfCommand
-            .Split(' ', StringSplitOptions.TrimEntries)
-            .ToHashSet(StringComparer.CurrentCultureIgnoreCase);
+        var flags = restOfCommand
+            .Where(c => !char.IsWhiteSpace(c))
+            .Select(char.ToLowerInvariant)
+            .ToHashSet();
 
-        var containsM = elements.Contains("m");
-        var containsA = elements.Contains("a");
-        var containsD = elements.Contains("d");
-        var containsT = elements.Contains("t");
+        var containsM = flags.Contains('m');
+        var containsA = flags.Contains('a');
+        var containsD = flags.Contains('d');
+        var containsT = flags.Contains('t');
+        bare = flags.Contains('b');
 
         outputFolder = (containsM, containsA) switch
         {
@@ -71,7 +75,7 @@ public class ListFilesCommandFactory(IConfigurationProvider configurationProvide
             (false, false) => ListFileTypeEnum.DayList |
                               ListFileTypeEnum.TopicList,
 
-            //One flag but not the other implies only one folder be picked up.
+            //One flag but not the other implies only one type be picked up.
             (true, false) => ListFileTypeEnum.DayList,
             (false, true) => ListFileTypeEnum.TopicList
         };

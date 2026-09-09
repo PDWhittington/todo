@@ -2,15 +2,13 @@
 using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
-using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.CommandFactories;
 
 [SuppressMessage("ReSharper", "UnusedType.Global")]
-public class CreateOrShowDayListCommandFactory(IDateParser dateParser, IConfigurationProvider configurationProvider, 
-    IConsoleTextFormatter consoleTextFormatter, IOutputWriter outputWriter)
-    : CommandFactoryBase<CreateOrShowDayListCommand>(configurationProvider, consoleTextFormatter, outputWriter, Words)
+public class CreateOrShowDayListCommandFactory(IDateParser dateParser, IOutputWriter outputWriter)
+    : CommandFactoryBase<CreateOrShowDayListCommand>(outputWriter, Words)
 {
     private static readonly string[] Words = ["createorshow"];
 
