@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -12,8 +13,8 @@ public class ScoreCommandFactory(IConfigurationProvider configurationProvider,
 {
    private static readonly string[] Words = ["score", "gamify"];
 
-   public override ScoreCommand? TryGetCommand(string commandLine)
-      => IsThisCommand(commandLine, out _)
+   public override ScoreCommand? TryGetCommand(CommandLineInfo commandLine)
+      => IsThisCommand(commandLine)
          ? new ScoreCommand()
          : null;
 

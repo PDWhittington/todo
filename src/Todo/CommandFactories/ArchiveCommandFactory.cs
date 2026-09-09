@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
@@ -27,11 +28,11 @@ public class ArchiveCommandFactory(IDateParser dateParser, IConfigurationProvide
     protected override string Usage => "a [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override ArchiveCommand? TryGetCommand(string commandLine)
+    public override ArchiveCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
+        if (!IsThisCommand(commandLine)) return null;
 
-        if (!dateParser.TryGetDate(restOfCommand, out var dateOnly))
+        if (!dateParser.TryGetDate(commandLine.Switches, out var dateOnly))
             throw new ArgumentException("Date in archive command is not recognised");
 
         return ArchiveCommand.Of(dateOnly);

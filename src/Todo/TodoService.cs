@@ -28,7 +28,7 @@ public class TodoService(
     public void PerformTask()
     {
         logger.LogInformation("{Type}.{MethodName}: Starting Todo App. Command line: {commandLine}",
-            GetType(), nameof(PerformTask), commandLineProvider.GetCommandLineMinusAssemblyLocation());
+            GetType(), nameof(PerformTask), commandLineProvider.GetCommandLine());
 
         logger.LogInformation("{Type}.{MethodName}: BuildInformation:{NewLine}{BoilerPlate}",
             GetType(), nameof(PerformTask), Environment.NewLine, 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -23,11 +24,11 @@ public class PushCommandFactory(IConfigurationProvider configurationProvider,
     protected override string Usage => "push";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override PushCommand? TryGetCommand(string commandLine)
+    public override PushCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
+        if (!IsThisCommand(commandLine)) return null;
 
-        if (!string.IsNullOrWhiteSpace(restOfCommand))
+        if (!string.IsNullOrWhiteSpace(commandLine.Switches))
             throw new ArgumentException("Command expects nothing following.");
 
         return PushCommand.Singleton;

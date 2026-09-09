@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
@@ -28,11 +29,11 @@ public class ListFilesCommandFactory(IConfigurationProvider configurationProvide
 
     protected override string Usage => "l [m|a][d|t]";
 
-    public override ListFilesCommand? TryGetCommand(string commandLine)
+    public override ListFilesCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
+        if (!IsThisCommand(commandLine)) return null;
 
-        GetListParameters(restOfCommand!, out var fileLocation, out var fileType);
+        GetListParameters(commandLine.Switches, out var fileLocation, out var fileType);
 
         return ListFilesCommand.Of(fileLocation, fileType);
     }

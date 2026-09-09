@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -21,12 +22,12 @@ public class ShowWebpageCommandFactory(IConfigurationProvider configurationProvi
     protected override string Usage => "w";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override ShowWebpageCommand? TryGetCommand(string commandLine)
+    public override ShowWebpageCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand))
+        if (!IsThisCommand(commandLine))
             return null;
 
-        if (!string.IsNullOrWhiteSpace(restOfCommand))
+        if (!string.IsNullOrWhiteSpace(commandLine.Switches))
             throw new ArgumentException($"{nameof(ShowWebpageCommand)} expects nothing following.");
 
         return ShowWebpageCommand.Singleton;

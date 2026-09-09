@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Exceptions;
 using Todo.Contracts.Services.CommandFactories;
@@ -17,7 +18,7 @@ public abstract class CommandFactoryBase<T>(IConfigurationProvider configuration
     // ReSharper disable once MemberCanBePrivate.Global
     protected readonly IOutputWriter OutputWriter = outputWriter;
 
-    public abstract T? TryGetCommand(string commandLine);
+    public abstract T? TryGetCommand(CommandLineInfo commandLine);
 
     public abstract bool IsDefaultCommandFactory { get; }
 
@@ -37,35 +38,27 @@ public abstract class CommandFactoryBase<T>(IConfigurationProvider configuration
 
     public HashSet<string> CommandWords { get; } = new(wordsForCommand, StringComparer.InvariantCultureIgnoreCase);
 
-    protected bool IsThisCommand(string commandLine, out string? restOfCommand)
+    protected bool IsThisCommand(CommandLineInfo commandLine)
     {
-        var firstWord = FirstWordToLower(commandLine);
-
-        if (!CommandWords.Contains(firstWord))
-        {
-            restOfCommand = null;
+        if (!CommandWords.Contains(commandLine.Command))
             return false;
-        }
 
         OutputWriter.WriteLine($"Command line interpreted as {typeof(T).Name}");
 
         var excludedCommands = configurationProvider.ConfigInfo.Configuration.DisabledCommands;
 
-        if (excludedCommands is not null && excludedCommands.Any(ec => wordsForCommand.Contains(ec.ToLower())))
+        if (excludedCommands.Any(ec => wordsForCommand.Contains(ec.ToLower())))
         {
-            var message = consoleTextFormatter.FormatWithForegroundColour("However, this command has been diabled.", ConsoleColor.Red);
+            var message = consoleTextFormatter.FormatWithForegroundColour("However, this command has been disabled.", ConsoleColor.Red);
 
             OutputWriter.WriteLine(message);
             throw new CommandExcludedException();
         }
 
-        restOfCommand = commandLine[firstWord.Length..].Trim();
-
         var otherWords = CommandWords
-            .Where(word => !string.Equals(word, firstWord))
+            .Where(word => !string.Equals(word, commandLine.Command, StringComparison.OrdinalIgnoreCase))
             .Select(word => $"'{word}'")
             .ToArray();
-
 
         if (otherWords.Length > 0)
         {
@@ -74,16 +67,5 @@ public abstract class CommandFactoryBase<T>(IConfigurationProvider configuration
 
         OutputWriter.WriteLine();
         return true;
-    }
-
-    private static string FirstWordToLower(string str)
-    {
-        var index = str.IndexOf(' ');
-
-        return index switch
-        {
-            -1 or 0 => str,
-            _ => str[..index].ToLower()
-        };
     }
 }

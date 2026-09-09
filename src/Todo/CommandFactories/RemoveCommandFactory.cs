@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
@@ -22,12 +23,12 @@ public class RemoveCommandFactory(IDateParser dateParser, IConfigurationProvider
     protected override string Usage => "rm [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override RemoveCommand? TryGetCommand(string commandLine)
+    public override RemoveCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand))
+        if (!IsThisCommand(commandLine))
             return null;
 
-        if (!dateParser.TryGetDate(restOfCommand, out var dateOnly))
+        if (!dateParser.TryGetDate(commandLine.Switches, out var dateOnly))
             throw new ArgumentException("Date in remove command is not recognised");
 
         return RemoveCommand.Of(dateOnly);

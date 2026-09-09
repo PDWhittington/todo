@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -22,8 +23,8 @@ public class GraphCommandFactory(IConfigurationProvider configurationProvider,
 
     protected override string Usage => "g";
 
-    public override GraphCommand? TryGetCommand(string commandLine)
-        => IsThisCommand(commandLine, out _)
+    public override GraphCommand? TryGetCommand(CommandLineInfo commandLine)
+        => IsThisCommand(commandLine)
             ? new GraphCommand()
             : null;
 }

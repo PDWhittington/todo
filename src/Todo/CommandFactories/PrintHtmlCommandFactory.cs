@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
@@ -25,11 +26,11 @@ public class PrintHtmlCommandFactory(IDateParser dateParser, IConfigurationProvi
     protected override string Usage => "p [date]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override PrintHtmlCommand? TryGetCommand(string commandLine)
+    public override PrintHtmlCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
+        if (!IsThisCommand(commandLine)) return null;
 
-        if (!dateParser.TryGetDate(restOfCommand, out var dateOnly))
+        if (!dateParser.TryGetDate(commandLine.Switches, out var dateOnly))
         {
             throw new ArgumentException("Date in archive command is not recognised");
         }

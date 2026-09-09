@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -23,11 +24,11 @@ public class OpenTodoFolderCommandFactory(IConfigurationProvider configurationPr
 
     protected override string Usage => "explorer";
 
-    public override OpenTodoFolderCommand? TryGetCommand(string commandLine)
+    public override OpenTodoFolderCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
+        if (!IsThisCommand(commandLine)) return null;
 
-        return !string.IsNullOrWhiteSpace(restOfCommand) 
+        return !string.IsNullOrWhiteSpace(commandLine.Switches) 
             ? throw new ArgumentException("Command expects nothing following.") 
             : OpenTodoFolderCommand.Singleton;
     }

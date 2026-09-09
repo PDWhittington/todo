@@ -12,7 +12,7 @@ public class CommandProvider(
 {
     public CommandBase GetCommand()
     {
-        var commandLine = commandLineProvider.GetCommandLineMinusAssemblyLocation();
+        var commandLine = commandLineProvider.GetCommandLine();
 
         foreach (var commandFactory in commandFactorySet.NonDefaultCommandFactories)
         {
@@ -22,6 +22,6 @@ public class CommandProvider(
         }
 
         var commandForDefault = commandFactorySet.DefaultCommandFactory.TryGetCommand(commandLine);
-        return commandForDefault ?? throw new CommandNotFoundException(commandLine);
+        return commandForDefault ?? throw new CommandNotFoundException(commandLine.ToString());
     }
 }

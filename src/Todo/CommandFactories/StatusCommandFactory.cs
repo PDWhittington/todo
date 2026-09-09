@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -17,9 +18,9 @@ public class StatusCommandFactory(IConfigurationProvider configurationProvider,
     protected override string[] HelpText => [];
     protected override string Usage => "";
 
-    public override StatusCommand? TryGetCommand(string commandLine)
+    public override StatusCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        return !IsThisCommand(commandLine, out _) 
+        return !IsThisCommand(commandLine) 
             ? null 
             : StatusCommand.Singleton;
     }

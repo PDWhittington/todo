@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -21,9 +22,9 @@ public class SyncCommandFactory(IConfigurationProvider configurationProvider,
 
     protected override string Usage => "s [commit message]";
 
-    public override SyncCommand? TryGetCommand(string commandLine)
+    public override SyncCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        return !IsThisCommand(commandLine, out var restOfCommand)
-            ? null : SyncCommand.Of(restOfCommand);
+        return !IsThisCommand(commandLine)
+            ? null : SyncCommand.Of(commandLine.Switches);
     }
 }
