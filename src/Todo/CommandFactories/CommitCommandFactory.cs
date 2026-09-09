@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -22,10 +23,10 @@ public class CommitCommandFactory(IConfigurationProvider configurationProvider, 
     protected override string Usage => "c [commit message]";
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override CommitCommand? TryGetCommand(string commandLine)
+    public override CommitCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand)) return null;
+        if (!IsThisCommand(commandLine)) return null;
 
-        return CommitCommand.Of(restOfCommand);
+        return CommitCommand.Of(commandLine.Switches);
     }
 }

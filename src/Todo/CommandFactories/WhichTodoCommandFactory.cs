@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -24,12 +25,12 @@ public class WhichTodoCommandFactory(IConfigurationProvider configurationProvide
 
     protected override string Usage => "which";
 
-    public override WhichTodoCommand? TryGetCommand(string commandLine)
+    public override WhichTodoCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        if (!IsThisCommand(commandLine, out var restOfCommand))
+        if (!IsThisCommand(commandLine))
             return null;
 
-        return string.IsNullOrWhiteSpace(restOfCommand)
+        return string.IsNullOrWhiteSpace(commandLine.Switches)
             ? WhichTodoCommand.Singleton
             : throw new ArgumentException("Command expects nothing following.");
     }

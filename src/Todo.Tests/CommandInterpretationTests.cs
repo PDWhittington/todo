@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
@@ -41,7 +42,7 @@ public class CommandInterpretationTests
     public void TestCommandLine(CommandLineTestInfo commandLineTestInfo)
     {
         var mockCommandLine = Substitute.For<ICommandLineProvider>();
-        mockCommandLine.GetCommandLineMinusAssemblyLocation().Returns(commandLineTestInfo.CommandLine);
+        mockCommandLine.GetCommandLine().Returns(commandLineTestInfo.CommandLine);
 
         var serviceProvider = GetServiceProvider(mockCommandLine);
 
@@ -104,7 +105,7 @@ public class CommandInterpretationTests
 
     public class CommandLineTestInfo
     {
-        public required string CommandLine { get; init; }
+        public required CommandLineInfo CommandLine { get; init; }
         public required CommandBase ExpectedCommand { get; init; }
 
         public override string ToString() => $"Command line of '{CommandLine}' should create command {ExpectedCommand}";
@@ -114,25 +115,25 @@ public class CommandInterpretationTests
     {
         yield return new CommandLineTestInfo
         {
-            CommandLine = "",
+            CommandLine = CommandLineInfo.Of(string.Empty, string.Empty),
             ExpectedCommand = CreateOrShowDayListCommand.Of(DateOnly.FromDateTime(Constants.CurrentTimeForTest))
         };
 
         yield return new CommandLineTestInfo
         {
-            CommandLine = "explorer",
+            CommandLine = CommandLineInfo.Of("explorer", string.Empty),
             ExpectedCommand = OpenTodoFolderCommand.Singleton
         };
 
         yield return new CommandLineTestInfo
         {
-            CommandLine = "finder",
+            CommandLine = CommandLineInfo.Of("finder", string.Empty),
             ExpectedCommand = OpenTodoFolderCommand.Singleton
         };
 
         yield return new CommandLineTestInfo
         {
-            CommandLine = "files",
+            CommandLine = CommandLineInfo.Of("files", string.Empty),
             ExpectedCommand = OpenTodoFolderCommand.Singleton
         };
     }

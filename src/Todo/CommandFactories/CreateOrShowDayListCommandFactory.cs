@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.Dates;
 using Todo.Contracts.Services.StateAndConfig;
@@ -25,10 +26,10 @@ public class CreateOrShowDayListCommandFactory(IDateParser dateParser, IConfigur
     protected override string Usage => "[date]"; 
 
     [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-    public override CreateOrShowDayListCommand? TryGetCommand(string commandLine)
+    public override CreateOrShowDayListCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        var commandLineToUse = IsThisCommand(commandLine, out var restOfCommand)
-            ? restOfCommand : commandLine;
+        var commandLineToUse = IsThisCommand(commandLine)
+            ? commandLine.Switches : commandLine.ToString();
 
         if (!dateParser.TryGetDate(commandLineToUse, out var dateOnly))
         {

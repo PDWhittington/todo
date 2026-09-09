@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Todo.Contracts.Data.CommandLine;
 using Todo.Contracts.Data.Commands;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Contracts.Services.UI;
@@ -23,11 +24,12 @@ public class CreateOrShowTopicListCommandFactory(IConfigurationProvider configur
 
     protected override string Usage => "t (topic name)";
 
-    public override CreateOrShowTopicListCommand? TryGetCommand(string commandLine)
+    public override CreateOrShowTopicListCommand? TryGetCommand(CommandLineInfo commandLine)
     {
-        return !IsThisCommand(commandLine, out var restOfCommand)
+        return !IsThisCommand(commandLine)
             ? null
-            : CreateOrShowTopicListCommand.Of(restOfCommand?.Trim()
-                ?? throw new Exception("Topic name cannot be blank"));
+            : CreateOrShowTopicListCommand.Of(string.IsNullOrWhiteSpace(commandLine.Switches)
+                ? throw new Exception("Topic name cannot be blank")
+                : commandLine.Switches);
     }
 }
