@@ -7,8 +7,10 @@ CONFIGURATION=$2
 DEPLOY_LOCATION=$3
 
 if [ -z "${USE_SUDO:-}" ]; then
+  
   dest_dir=$(dirname "$DEPLOY_LOCATION")
-  if [ "$OS" = "windows" ] || [ -w "$DEPLOY_LOCATION" ] || [ -w "$dest_dir" ]; then
+
+  if [ "${OS:-}" = "windows" ] || [ -w "$DEPLOY_LOCATION" ] || [ -w "$dest_dir" ]; then    
     USE_SUDO=0
   else
     USE_SUDO=1
