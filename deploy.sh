@@ -1,53 +1,57 @@
 #!/usr/bin/env sh
 
-set -euo pipefail
+set -eu
+# pipefail is not portable to older dash
+(set -o pipefail) 2>/dev/null && set -o pipefail
 
 ARCHITECTURE=$1
 CONFIGURATION=$2
 DEPLOY_LOCATION=$3
 
 if [ -z "${USE_SUDO:-}" ]; then
-  
-  dest_dir=$(dirname "$DEPLOY_LOCATION")
 
-  if [ "${OS:-}" = "windows" ] || [ -w "$DEPLOY_LOCATION" ] || [ -w "$dest_dir" ]; then    
-    USE_SUDO=0
-  else
-    USE_SUDO=1
-  fi
+	dest_dir=$(dirname "$DEPLOY_LOCATION")
+
+	if [ "${OS:-}" = "windows" ] || [ -w "$DEPLOY_LOCATION" ] || [ -w "$dest_dir" ]; then
+		USE_SUDO=0
+	else
+		USE_SUDO=1
+	fi
 fi
 
 run_priv() {
-  if [ "$USE_SUDO" -eq 1 ]; then
-    sudo "$@"
-  else
-    "$@"
-  fi
+	if [ "$USE_SUDO" -eq 1 ]; then
+		sudo "$@"
+	else
+		"$@"
+	fi
 }
 
 # Returns: linux | darwin | windows | wsl | unknown
 detect_os() {
-  case "$(uname -s 2>/dev/null)" in
-    Linux*)
-      if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
-        echo "wsl"
-      else
-        echo "linux"
-      fi
-      ;;
-    Darwin*) echo "darwin" ;;
-    CYGWIN*|MINGW*|MSYS*) echo "windows" ;;   # Git Bash / MSYS2 / Cygwin
-    *) echo "unknown" ;;
-  esac
+	case "$(uname -s 2>/dev/null)" in
+	Linux*)
+		if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then
+			echo "wsl"
+		else
+			echo "linux"
+		fi
+		;;
+	Darwin*) echo "darwin" ;;
+	CYGWIN* | MINGW* | MSYS*) echo "windows" ;; # Git Bash / MSYS2 / Cygwin
+	*) echo "unknown" ;;
+	esac
 }
-
 
 # Validate architecture
 
-if [[ ! "$ARCHITECTURE" =~ ^(osx-arm64|win-x64|linux-x64)$ ]]; then
-    echo "Value '$ARCHITECTURE' is not a valid architecture or not an architecture in the set tested."
-    exit 1
-fi
+case "$ARCHITECTURE" in
+osx-arm64 | win-x64 | linux-x64) ;;
+*)
+	echo "Value '$ARCHITECTURE' is not a valid architecture or not an architecture in the set tested."
+	exit 1
+	;;
+esac
 
 # Check we are on the right architecture
 
@@ -56,39 +60,38 @@ OS=$(detect_os)
 echo "ARCHITECTURE=$ARCHITECTURE"
 echo "OS=$OS"
 
-if [[ "$ARCHITECTURE" == "win-x64" && "$OS" != "windows" ]]; then
-
-  echo "You are trying to deploy for Windows, but this operating system is not Windows."
-  exit 1
+if [ "$ARCHITECTURE" = "win-x64" ] && [ "$OS" != "windows" ]; then
+	echo "You are trying to deploy for Windows, but this operating system is not Windows."
+	exit 1
 fi
 
-if [[ "$ARCHITECTURE" == "osx-x64" && "$OS" != "darwin" ]]; then
+if [ "$ARCHITECTURE" = "osx-x64" ] && [ "$OS" != "darwin" ]; then
 
-  echo "You are trying to publish for MacOS, but this operating system is not MacOS"
-  exit 1
+	echo "You are trying to publish for MacOS, but this operating system is not MacOS"
+	exit 1
 fi
 
-if [[ "$ARCHITECTURE" == "linux-x64" && "$OS" != "linux" ]]; then
-
-  echo "You are trying to publish for Linux, but this operating system is not Linux (WSL is considered a different category)."
-  exit 1
+if [ "$ARCHITECTURE" = "linux-x64" ] && [ "$OS" != "linux" ] && [ "$OS" != "wsl" ]; then
+	echo "You are trying to publish for Linux, but this operating system is not Linux or WSL."
+	exit 1
 fi
 
 # Validate configuration
-
-if [[ ! "$CONFIGURATION" =~ ^(Debug|Release)$ ]]; then
-    echo "Value '$CONFIGURATION' is not a valid configuration. Must be Debug or Release."
-    exit 1
-fi
+case "$CONFIGURATION" in
+Debug | Release) ;;
+*)
+	echo "Value '$CONFIGURATION' is not a valid configuration. Must be Debug or Release."
+	exit 1
+	;;
+esac
 
 # Assume a single solution file in the src sub-folder
-
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 SOLUTION=$(find "$SCRIPT_DIR/src" -name "*.slnx" -type f | head -n 1)
 
 if [ -z "$SOLUTION" ]; then
-  echo " ❌ No .slnx file found in src/ directory."
-  exit 2
+	echo " ❌ No .slnx file found in src/ directory."
+	exit 2
 fi
 
 echo "Found solution: $SOLUTION"
@@ -97,11 +100,11 @@ echo "Found solution: $SOLUTION"
 
 echo "🧪 Running tests in $CONFIGURATION mode..."
 if ! dotnet test "$SOLUTION" \
-  -c $CONFIGURATION \
-  --no-restore; then
-  echo " ❌ TESTS FAILED"
-  echo " Check the error messages above."
-  exit 3
+	-c "$CONFIGURATION" \
+	--no-restore; then
+	echo " ❌ TESTS FAILED"
+	echo " Check the error messages above."
+	exit 3
 fi
 
 echo " ✅ All tests passed. Proceeding to publish..."
@@ -111,26 +114,26 @@ echo " ✅ All tests passed. Proceeding to publish..."
 EXTRA_PUBLISH_FLAGS=""
 
 if [ "$CONFIGURATION" = "Release" ]; then
-  EXTRA_PUBLISH_FLAGS="-p:PublishReadyToRun=true -p:OptimizationPreference=Speed -p:TieredCompilation=false --self-contained"
+	EXTRA_PUBLISH_FLAGS="-p:PublishReadyToRun=true -p:OptimizationPreference=Speed -p:TieredCompilation=false --self-contained"
 fi
 
 PUBLISH_PROPS=""
 
 case "$(uname -s)" in
-  MINGW*|MSYS*|CYGWIN*)
-    export OS=Windows_NT
-    PUBLISH_PROPS="-p:OS=Windows_NT"
-    ;;
+MINGW* | MSYS* | CYGWIN*)
+	export OS=Windows_NT
+	PUBLISH_PROPS="-p:OS=Windows_NT"
+	;;
 esac
 
 if ! dotnet publish $SCRIPT_DIR/src/todo/ \
-  -c $CONFIGURATION \
-  -r $ARCHITECTURE \
-  $EXTRA_PUBLISH_FLAGS; then
+	-c "$CONFIGURATION" \
+	-r "$ARCHITECTURE" \
+	$EXTRA_PUBLISH_FLAGS; then
 
-    echo " ❌ BUILD/PUBLISH FAILED."
-    echo " Check the error messages above."
-    exit 4
+	echo " ❌ BUILD/PUBLISH FAILED."
+	echo " Check the error messages above."
+	exit 4
 fi
 
 echo ""
@@ -139,8 +142,8 @@ echo " ✅ Build succeeded. Proceeding to copy..."
 # Clean previous deployment
 
 if ! run_priv rm -R -f $DEPLOY_LOCATION; then
-  echo " ❌ FAILED TO DELETE /usr/local/bin/todo."
-  exit 5
+	echo " ❌ FAILED TO DELETE /usr/local/bin/todo."
+	exit 5
 fi
 
 echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
@@ -148,8 +151,8 @@ echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
 # Copy the published output
 
 if ! run_priv cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
-  echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
-  exit 6
+	echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
+	exit 6
 fi
 
 echo " ✅ Copied new version to $DEPLOY_LOCATION."
