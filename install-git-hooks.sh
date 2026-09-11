@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
-set -euo pipefail
+set -eu
+# pipefail is not portable to older dash
+(set -o pipefail) 2>/dev/null && set -o pipefail
 
 # scripts/install-hooks.sh
 
