@@ -13,8 +13,7 @@ public partial class HtmlFileLauncher(
     IConfigurationProvider configurationProvider,
     IPathHelper pathHelper,
     IOutputWriter outputWriter,
-    ILaunchInfoSelector launchInfoSelector
-) : IHtmlFileLauncher
+    ILaunchInfoSelector launchInfoSelector) : IHtmlFileLauncher
 {
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
