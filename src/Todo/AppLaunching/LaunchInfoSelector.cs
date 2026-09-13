@@ -27,25 +27,28 @@ public class LaunchInfoSelector(IEnvironmentVariableProvider environmentVariable
 
     private bool TryGetOverride(PerOsLaunchInfos perOsLaunchInfos, out ProcessLaunchInfo? value)
     {
-        var pathVariableNameIsEmpty = string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverridePath);
-        var parameterVariableNameIsEmpty = string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverrideArguments);
+        var pathVariableNameIsExists = !string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverridePath);
+        var parameterVariableNameIsExists = !string.IsNullOrWhiteSpace(perOsLaunchInfos.EnvironmentVariableToOverrideArguments);
 
-        if (!pathVariableNameIsEmpty && !parameterVariableNameIsEmpty)
+        if (!pathVariableNameIsExists || !parameterVariableNameIsExists)
         {
-            var overridePathExists = environmentVariableProvider.TryGetEnvironmentVariable(
-                perOsLaunchInfos.EnvironmentVariableToOverridePath, out var overridePath);
-
-            var overrideAregumentsExist = environmentVariableProvider.TryGetEnvironmentVariable(
-                perOsLaunchInfos.EnvironmentVariableToOverrideArguments, out var overrideParameters);
-
-            if (overridePathExists && overrideAregumentsExist)
-            {
-                value = new ProcessLaunchInfo(overridePath!, overrideParameters!);
-                return true;
-            }
+            value = null;
+            return false;
         }
 
-        value = null;
-        return false;
+        var overridePathExists = environmentVariableProvider.TryGetEnvironmentVariable(
+            perOsLaunchInfos.EnvironmentVariableToOverridePath, out var overridePath);
+
+        var overrideArgumentsExists = environmentVariableProvider.TryGetEnvironmentVariable(
+            perOsLaunchInfos.EnvironmentVariableToOverrideArguments, out var overrideParameters);
+
+        if (!overridePathExists || !overrideArgumentsExists)
+        {
+            value = null;
+            return false;
+        }
+        
+        value = new ProcessLaunchInfo(overridePath!, overrideParameters!);
+        return true;
     }
 }
