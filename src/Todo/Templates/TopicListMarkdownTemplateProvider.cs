@@ -12,8 +12,9 @@ public class TopicListMarkdownTemplateProvider(
     IPathHelper pathHelper,
     IConstantsProvider constantsProvider,
     IMarkdownLineInterpreter markdownLineInterpreter,
-    IUnmanagedByteArrayManager unmanagedByteArrayManager)
-    : TemplateProviderBase(assemblyInformationProvider, pathHelper, markdownLineInterpreter, unmanagedByteArrayManager),
+    IUnmanagedByteArrayManager unmanagedByteArrayManager,
+    IFileSystemFactory fileSystemFactory)
+    : TemplateProviderBase(assemblyInformationProvider, pathHelper, markdownLineInterpreter, unmanagedByteArrayManager, fileSystemFactory),
         ITopicListMarkdownTemplateProvider
 {
     protected override string GetTemplateFileName()

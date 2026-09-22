@@ -12,8 +12,9 @@ public class GraphHtmlTemplateProvider(
     IPathHelper pathHelper,
     IConstantsProvider constantsProvider,
     IMarkdownLineInterpreter markdownLineInterpreter,
-    IUnmanagedByteArrayManager unmanagedByteArrayManager)
-    : TemplateProviderBase(assemblyInformationProvider, pathHelper, markdownLineInterpreter, unmanagedByteArrayManager), 
+    IUnmanagedByteArrayManager unmanagedByteArrayManager,
+    IFileSystemFactory fileSystemFactory)
+    : TemplateProviderBase(assemblyInformationProvider, pathHelper, markdownLineInterpreter, unmanagedByteArrayManager, fileSystemFactory), 
         IGraphHtmlTemplateProvider
 {
     protected override string GetTemplateFileName()

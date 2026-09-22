@@ -7,25 +7,31 @@ using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Todo.Contracts.Data.Git.Commands;
 using Todo.Contracts.Data.Git.Results;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.Git;
 using Todo.Contracts.Services.Git.Execution;
 using Todo.Contracts.Services.UI;
 
 namespace Todo.Git.Execution;
 
-public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRemoveCommandExecutor> logger)
+public class GitRemoveCommandExecutor(
+    IOutputWriter outputWriter,
+    ILogger<GitRemoveCommandExecutor> logger,
+    IFileSystemFactory fileSystemFactory)
     : GitCommandExecutorBase<GitRemoveCommand, VoidResult>(outputWriter, logger),
         IGitRemoveCommandExecutor
 {
-    private static string ToRepoRelativePath(string workingDirectory, string absolutePath)
+    private readonly IFileSystem _fileSystem = fileSystemFactory.Create();
+
+    private string ToRepoRelativePath(string workingDirectory, string absolutePath)
     {
         if (string.IsNullOrEmpty(workingDirectory))
             return absolutePath;
 
-        var rel = Path.GetRelativePath(workingDirectory, absolutePath);
+        var rel = _fileSystem.GetRelativePath(workingDirectory, absolutePath);
 
-        if (Path.DirectorySeparatorChar != '/')
-            rel = rel.Replace(Path.DirectorySeparatorChar, '/');
+        if (_fileSystem.DirectorySeparatorChar != '/')
+            rel = rel.Replace(_fileSystem.DirectorySeparatorChar, '/');
 
         return rel;
     }
@@ -49,7 +55,7 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
         return sb.ToString();
     }
 
-    private static bool IsChangedFromHead(
+    private bool IsChangedFromHead(
         HashSet<string> dirtyPaths,
         string workDir,
         string relPath,
@@ -60,11 +66,11 @@ public class GitRemoveCommandExecutor(IOutputWriter outputWriter, ILogger<GitRem
             return dirtyPaths.Contains(relPath);
 
         var fullWork =
-            Path.GetFullPath(workDir)
-                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-            + Path.DirectorySeparatorChar;
+            _fileSystem.GetFullPath(workDir)
+                .TrimEnd(_fileSystem.DirectorySeparatorChar, _fileSystem.AltDirectorySeparatorChar)
+            + _fileSystem.DirectorySeparatorChar;
 
-        var fullPath = Path.GetFullPath(absPath);
+        var fullPath = _fileSystem.GetFullPath(absPath);
 
         return fullPath.StartsWith(fullWork, StringComparison.OrdinalIgnoreCase)
             &&

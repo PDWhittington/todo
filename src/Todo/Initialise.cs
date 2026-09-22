@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -76,7 +75,7 @@ internal static class Initialise
         var sessionId = Guid.NewGuid();
 
         var homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var todoPath = Path.Combine(homeFolder, ".todo.log");
+        var todoPath = new FileSystemFactory().Create().Combine(homeFolder, ".todo.log");
 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
@@ -120,6 +119,7 @@ internal static class Initialise
 
         private IServiceCollection AddAppLaunchingOperations() =>
             serviceCollection
+                .AddSingleton<IProcessLauncher, ProcessLauncher>()
                 .AddSingleton<IHtmlFileLauncher, HtmlFileLauncher>()
                 .AddSingleton<ITextFileLauncher, TextFileLauncher>()
                 .AddSingleton<IFileExplorerLauncher, FileExplorerLauncher>()
@@ -175,6 +175,9 @@ internal static class Initialise
 
         private IServiceCollection AddFileSystemFunctionality() =>
             serviceCollection
+                .AddSingleton<IFileSystemFactory, FileSystemFactory>()
+                .AddSingleton<IFileSystem>(provider =>
+                    provider.GetRequiredService<IFileSystemFactory>().Create())
                 .AddSingleton<IPathHelper, PathHelper>()
                 .AddSingleton<IOutputFolderPathProvider, OutputFolderPathProvider>()
                 .AddSingleton<IPathEnvironmentVariableRetriever, PathEnvironmentVariableRetriever>()

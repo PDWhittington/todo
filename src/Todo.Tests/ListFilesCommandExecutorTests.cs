@@ -6,6 +6,7 @@ using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.UI;
 using Todo.Execution;
+using Todo.FileSystem;
 
 namespace Todo.Tests;
 
@@ -18,13 +19,14 @@ public class ListFilesCommandExecutorTests
         var fileListCreator = Substitute.For<IFileListCreator>();
         var outputWriter = Substitute.For<IOutputWriter>();
         var logger = Substitute.For<ILogger<ListFilesCommandExecutor>>();
+        var fileSystem = new WindowsFileSystem();
 
         fileListCreator
             .GetFiles<FilePathInfo>(Arg.Any<OutputFolderEnum>(), Arg.Any<ListFileTypeEnum>())
             .Returns(
             [
-                FilePathInfo.Of(@"C:\todos\b.md", FileTypeEnum.MarkdownDayList, FolderEnum.TodoRoot),
-                FilePathInfo.Of(@"C:\todos\a.md", FileTypeEnum.MarkdownDayList, FolderEnum.TodoRoot)
+                FilePathInfo.Of(@"C:\todos\b.md", FileTypeEnum.MarkdownDayList, FolderEnum.TodoRoot, fileSystem),
+                FilePathInfo.Of(@"C:\todos\a.md", FileTypeEnum.MarkdownDayList, FolderEnum.TodoRoot, fileSystem)
             ]);
 
         var executor = new ListFilesCommandExecutor(fileListCreator, outputWriter, logger);
@@ -45,11 +47,13 @@ public class ListFilesCommandExecutorTests
         var outputWriter = Substitute.For<IOutputWriter>();
         var logger = Substitute.For<ILogger<ListFilesCommandExecutor>>();
 
+        var fileSystem = new WindowsFileSystem();
+
         fileListCreator
             .GetFiles<FilePathInfo>(Arg.Any<OutputFolderEnum>(), Arg.Any<ListFileTypeEnum>())
             .Returns(
             [
-                FilePathInfo.Of(@"C:\todos\a.md", FileTypeEnum.MarkdownDayList, FolderEnum.TodoRoot)
+                FilePathInfo.Of(@"C:\todos\a.md", FileTypeEnum.MarkdownDayList, FolderEnum.TodoRoot, fileSystem)
             ]);
 
         var executor = new ListFilesCommandExecutor(fileListCreator, outputWriter, logger);

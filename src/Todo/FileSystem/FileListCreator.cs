@@ -9,9 +9,14 @@ using Todo.Contracts.Services.FileSystem.Paths;
 
 namespace Todo.FileSystem;
 
-public class FileListCreator(IOutputFolderPathProvider pathRootingProvider, IFilenameDateParser filenameDateParser)
+public class FileListCreator(
+    IOutputFolderPathProvider pathRootingProvider,
+    IFilenameDateParser filenameDateParser,
+    IFileSystemFactory fileSystemFactory)
     : IFileListCreator
 {
+    private readonly IFileSystem _fileSystem = fileSystemFactory.Create();
+
     private record struct PathAndFolder
     {
         public string Path { get; init; }
@@ -59,7 +64,7 @@ public class FileListCreator(IOutputFolderPathProvider pathRootingProvider, IFil
 
     private CategoryAndMatchInfo CategoriseAndMatch(PathAndFolder pathAndFolder, ListFileTypeEnum listFileType)
     {
-        var fileName = Path.GetFileName(pathAndFolder.Path);
+        var fileName = _fileSystem.GetFileName(pathAndFolder.Path);
 
         var isDayList = filenameDateParser.TryParse(fileName, out var date);
 
@@ -71,13 +76,13 @@ public class FileListCreator(IOutputFolderPathProvider pathRootingProvider, IFil
         return new CategoryAndMatchInfo(match, fileType, date, pathAndFolder);
     }
 
-    private static FilePathInfo GetFilePathInfo(CategoryAndMatchInfo categoryAndMatchInfo)
+    private FilePathInfo GetFilePathInfo(CategoryAndMatchInfo categoryAndMatchInfo)
     {
         if (categoryAndMatchInfo.FileType != ListFileTypeEnum.DayList)
         {
             return FilePathInfo.Of(
                 categoryAndMatchInfo.PathAndFolder.Path, MapToFileTypeEnum(categoryAndMatchInfo.FileType),
-                categoryAndMatchInfo.PathAndFolder.Folder);
+                categoryAndMatchInfo.PathAndFolder.Folder, _fileSystem);
         }
 
         if (categoryAndMatchInfo.Date is null)
@@ -88,7 +93,7 @@ public class FileListCreator(IOutputFolderPathProvider pathRootingProvider, IFil
 
         return DayListFilePathInfo.Of(
             categoryAndMatchInfo.PathAndFolder.Path, MapToFileTypeEnum(categoryAndMatchInfo.FileType),
-            categoryAndMatchInfo.PathAndFolder.Folder, categoryAndMatchInfo.Date.Value);
+            categoryAndMatchInfo.PathAndFolder.Folder, categoryAndMatchInfo.Date.Value, _fileSystem);
     }
 
     private record CategoryAndMatchInfo(

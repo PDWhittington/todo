@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using NSubstitute;
 using NUnit.Framework;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 using Todo.Dates;
+using Todo.FileSystem;
 
 namespace Todo.Tests;
 
@@ -23,7 +25,10 @@ public class FilenameDateParserTests
 
         configProvider.ConfigInfo.Returns(configInfo);
 
-        var filenameDateParser = new FilenameDateParser(configProvider);
+        var fileSystemFactory = Substitute.For<IFileSystemFactory>();
+        fileSystemFactory.Create().Returns(new LinuxFileSystem());
+
+        var filenameDateParser = new FilenameDateParser(configProvider, fileSystemFactory);
 
         var match = filenameDateParser.TryParse(
             filenameDateParsingTestInfo.TestFileName, out var actualDate);

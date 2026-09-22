@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -11,9 +11,12 @@ namespace Todo.FileSystem.Paths;
 /// into an array of paths. The correct delimiter is used for the operating system
 /// in use.
 /// </summary>
-public class PathEnvironmentVariableRetriever(IEnvironmentVariableProvider environmentVariableProvider)
+public class PathEnvironmentVariableRetriever(
+    IEnvironmentVariableProvider environmentVariableProvider,
+    IFileSystemFactory fileSystemFactory)
     : IPathEnvironmentVariableRetriever
 {
+    private readonly IFileSystem _fileSystem = fileSystemFactory.Create();
     private string[]? _paths;
 
     /// <summary>
@@ -35,11 +38,7 @@ public class PathEnvironmentVariableRetriever(IEnvironmentVariableProvider envir
 
         if (pathVariable is null) throw new Exception("PATH environment variable not found");
 
-        //Paths are separated by ; on Windows, and by : on Mac and Linux
-
-        _paths = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            ? pathVariable.Split(';')
-            : pathVariable.Split(':');
+        _paths = pathVariable.Split(_fileSystem.PathSeparator);
 
         return _paths;
     }

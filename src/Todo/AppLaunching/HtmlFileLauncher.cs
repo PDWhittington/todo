@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using Todo.Contracts.Data.Config;
 using Todo.Contracts.Services.AppLaunching;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
@@ -13,7 +14,9 @@ public partial class HtmlFileLauncher(
     IConfigurationProvider configurationProvider,
     IPathHelper pathHelper,
     IOutputWriter outputWriter,
-    ILaunchInfoSelector launchInfoSelector) : IHtmlFileLauncher
+    ILaunchInfoSelector launchInfoSelector,
+    IProcessLauncher processLauncher)
+    : AppLauncherBase(pathHelper, outputWriter, launchInfoSelector, processLauncher), IHtmlFileLauncher
 {
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -24,27 +27,16 @@ public partial class HtmlFileLauncher(
     [return: MarshalAs(UnmanagedType.I4)]
     private static partial int SetForegroundWindow(IntPtr hwnd);
 
-    public void LaunchFiles(params string[] paths)
+    protected override PerOsLaunchInfos GetLaunchInfos()
+        => configurationProvider.ConfigInfo.Configuration.BrowserPath;
+
+    protected override string GetPathToLaunch(string path)
+        => new Uri(path).ToString();
+
+    protected override void AfterLaunch(Process? process)
     {
-        foreach (var path in paths)
-        {
-            LaunchSingleFile(path);
-        }
-    }
-
-    private void LaunchSingleFile(string path)
-    {
-        var browserLaunchInfos = configurationProvider.ConfigInfo.Configuration.BrowserPath;
-        var browserLaunchInfo = launchInfoSelector.SelectLaunchInfoForThisOs(browserLaunchInfos);
-        var browserPath = pathHelper.ResolveIfNotRooted(browserLaunchInfo.Path);
-
-        var pathWithFileProtocol = new Uri(path);
-        var parameters = browserLaunchInfo.InterpolateParameters(pathWithFileProtocol.ToString());
-
-        outputWriter.WriteLine($"Launching {browserPath} {parameters}");
-
-        var process = Process.Start(browserPath, parameters);
-        BringMainWindowToFrontIfWindows(process);
+        if (process is not null)
+            BringMainWindowToFrontIfWindows(process);
     }
 
     [SuppressMessage("ReSharper", "UnusedMember.Local")]

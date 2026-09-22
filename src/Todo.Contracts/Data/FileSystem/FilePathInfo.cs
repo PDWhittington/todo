@@ -1,4 +1,6 @@
-﻿namespace Todo.Contracts.Data.FileSystem;
+﻿using Todo.Contracts.Services.FileSystem;
+
+namespace Todo.Contracts.Data.FileSystem;
 
 public record FilePathInfo
 {
@@ -11,9 +13,9 @@ public record FilePathInfo
     public override string ToString() => Path;
 
     protected FilePathInfo(string path, FileTypeEnum fileType, 
-        FolderEnum folderType)
+        FolderEnum folderType, IFileSystem fileSystem)
     {
-        Path = System.IO.Path.IsPathRooted(path) ? path
+        Path = fileSystem.IsPathRooted(path) ? path
             : throw new Exception("Only rooted paths are valid");
 
         FileType = fileType;
@@ -21,6 +23,6 @@ public record FilePathInfo
     }
 
     public static FilePathInfo Of(string path, FileTypeEnum fileType, 
-        FolderEnum folderType)
-        => new(path, fileType, folderType);
+        FolderEnum folderType, IFileSystem fileSystem)
+        => new(path, fileType, folderType, fileSystem);
 }

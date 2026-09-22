@@ -1,15 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Todo.Contracts.Data.Config;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.StateAndConfig;
 
-public class AssemblyInformationProvider : IAssemblyInformationProvider
+public class AssemblyInformationProvider(IFileSystemFactory fileSystemFactory)
+    : IAssemblyInformationProvider
 {
     private readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
+    private readonly IFileSystem _fileSystem = fileSystemFactory.Create();
 
     public PackageReferenceInfo[] GetPackageReferences()
     {
@@ -127,8 +129,10 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
     /// <returns></returns>
     public string GetRootedToAssemblyFolder(string path)
     {
-        var rootedPath = Path.IsPathRooted(path) ? path : Path.Combine(GetAssemblyFolder(), path);
-        return Path.GetFullPath(rootedPath); //Use this to format the paths with native / or \
+        var rootedPath = _fileSystem.IsPathRooted(path)
+            ? path
+            : _fileSystem.Combine(GetAssemblyFolder(), path);
+        return _fileSystem.GetFullPath(rootedPath);
     }
 
     /// <summary>
@@ -137,7 +141,7 @@ public class AssemblyInformationProvider : IAssemblyInformationProvider
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
     private string GetAssemblyFolder() =>
-        Path.GetDirectoryName(AssemblyLocation())
+        _fileSystem.GetDirectoryName(AssemblyLocation())
         ?? throw new Exception("Cannot get containing folder of executing process");
 
     /// <summary>

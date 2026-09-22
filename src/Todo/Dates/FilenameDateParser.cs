@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Dates;
@@ -12,9 +12,13 @@ public class FilenameDateParser : IFilenameDateParser
 {
     private readonly Regex _regex;
     private readonly string _dateFormat;   // e.g. "yyyy-MM-dd"
+    private readonly IFileSystem _fileSystem;
 
-    public FilenameDateParser(IConfigurationProvider configurationProvider)
+    public FilenameDateParser(
+        IConfigurationProvider configurationProvider,
+        IFileSystemFactory fileSystemFactory)
     {
+        _fileSystem = fileSystemFactory.Create();
         var template = configurationProvider
             .ConfigInfo.Configuration.TodoListFilenameFormatWithoutExension;
 
@@ -45,7 +49,7 @@ public class FilenameDateParser : IFilenameDateParser
 
     public bool TryParse(string fileName, out DateOnly date)
     {
-        var filenameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+        var filenameWithoutExtension = _fileSystem.GetFileNameWithoutExtension(fileName);
 
         var match = _regex.Match(filenameWithoutExtension);
 

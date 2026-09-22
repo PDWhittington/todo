@@ -15,9 +15,11 @@ public abstract class TemplateProviderBase(
     IAssemblyInformationProvider assemblyInformationProvider,
     IPathHelper pathHelper,
     IMarkdownLineInterpreter markdownLineInterpreter,
-    IUnmanagedByteArrayManager unmanagedByteArrayManager)
+    IUnmanagedByteArrayManager unmanagedByteArrayManager,
+    IFileSystemFactory fileSystemFactory)
     : FileReaderBase(unmanagedByteArrayManager)
 {
+    private readonly IFileSystem _fileSystem = fileSystemFactory.Create();
     /// <summary>
     /// Returns a string representing the Markdown template
     /// </summary>
@@ -32,7 +34,7 @@ public abstract class TemplateProviderBase(
         if (File.Exists(templatePathRootedToWorkingFolder))
         {
             var filePathInfo = FilePathInfo.Of(templatePathRootedToWorkingFolder,
-                FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings);
+                FileTypeEnum.MarkdownTemplate, FolderEnum.SpecifiedInSettings, _fileSystem);
 
             var lazyFile = new Lazy<UnmanagedByteArray>(() => LoadFile(filePathInfo.Path));
 
@@ -47,7 +49,7 @@ public abstract class TemplateProviderBase(
         if (File.Exists(templatePathRootedToAssemblyFolder))
         {
             var filePathInfo = FilePathInfo.Of(templatePathRootedToAssemblyFolder,
-                GetFileType(), FolderEnum.AssemblyFolder);
+                GetFileType(), FolderEnum.AssemblyFolder, _fileSystem);
 
             var lazyFile = new Lazy<UnmanagedByteArray>(() => LoadFile(filePathInfo.Path)); 
 
@@ -61,7 +63,7 @@ public abstract class TemplateProviderBase(
             var manifestName = GetManifestStreamName();
 
             var manifestFileInfo = FilePathInfo.Of($"/{manifestName}",
-                GetFileType(), FolderEnum.Manifest);
+                GetFileType(), FolderEnum.Manifest, _fileSystem);
 
             var lazyFile = new Lazy<UnmanagedByteArray>(() => LoadFromManifest(manifestName));
 

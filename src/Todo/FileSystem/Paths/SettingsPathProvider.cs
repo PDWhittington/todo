@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Exceptions;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -13,12 +14,17 @@ public class SettingsPathProvider : ISettingsPathProvider
 {
     private readonly IPathHelper _pathHelper;
     private readonly IConstantsProvider _constantsProvider;
+    private readonly IFileSystem _fileSystem;
     private readonly Lazy<FilePathInfo> _settingsPath;
 
-    public SettingsPathProvider(IPathHelper pathHelper, IConstantsProvider constantsProvider)
+    public SettingsPathProvider(
+        IPathHelper pathHelper,
+        IConstantsProvider constantsProvider,
+        IFileSystemFactory fileSystemFactory)
     {
         _pathHelper = pathHelper;
         _constantsProvider = constantsProvider;
+        _fileSystem = fileSystemFactory.Create();
         _settingsPath = new Lazy<FilePathInfo>(GetSettingsPath);
     }
 
@@ -56,11 +62,11 @@ public class SettingsPathProvider : ISettingsPathProvider
 
     private FilePathInfo GetSettingsPathInFolder(string folder)
     {
-        var path = Path.Combine(folder, _constantsProvider.SettingsFileName);
-        var formattedPath = Path.GetFullPath(path);
+        var path = _fileSystem.Combine(folder, _constantsProvider.SettingsFileName);
+        var formattedPath = _fileSystem.GetFullPath(path);
 
         return FilePathInfo.Of(formattedPath, FileTypeEnum.Settings, 
-            FolderEnum.AssemblyFolder);
+            FolderEnum.AssemblyFolder, _fileSystem);
     }
 
     public FilePathInfo GetSettingsPathInWorkingFolder()

@@ -1,6 +1,7 @@
 ﻿using System;
 using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -9,8 +10,9 @@ namespace Todo.FileSystem.Paths;
 public sealed class DateListPathResolver(
     IConfigurationProvider configurationProvider,
     IOutputFolderPathProvider outputFolderPathProvider,
-    IFilenameDateParser filenameDateParser)
-    : PathResolverBase<DateOnly>(configurationProvider, outputFolderPathProvider), 
+    IFilenameDateParser filenameDateParser,
+    IFileSystemFactory fileSystemFactory)
+    : PathResolverBase<DateOnly>(configurationProvider, outputFolderPathProvider, fileSystemFactory), 
         IDateListPathResolver
 {
     protected override FilePathInfo GetFilePathInfo(string fileName, string formattedPath, 
@@ -29,7 +31,7 @@ public sealed class DateListPathResolver(
                                 $"but no date parsed from file {fileName}");
         }
 
-        return DayListFilePathInfo.Of(formattedPath, fileType, folderType, date);
+        return DayListFilePathInfo.Of(formattedPath, fileType, folderType, date, FileSystem);
     }
 
     protected override string FileNameWithoutExtension(DateOnly dateOnly)

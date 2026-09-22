@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Todo.Contracts.Data.FileSystem;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.FileSystem.Paths;
 using Todo.Contracts.Services.StateAndConfig;
 
@@ -11,10 +11,13 @@ namespace Todo.FileSystem.Paths;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public abstract class PathResolverBase<TParameterType>(
     IConfigurationProvider configurationProvider,
-    IOutputFolderPathProvider outputFolderPathProvider)
+    IOutputFolderPathProvider outputFolderPathProvider,
+    IFileSystemFactory fileSystemFactory)
     : IPathResolver<TParameterType>
 {
     protected readonly IConfigurationProvider ConfigurationProvider = configurationProvider;
+
+    protected IFileSystem FileSystem { get; } = fileSystemFactory.Create();
 
     protected abstract string FileNameWithoutExtension(TParameterType parameter);
 
@@ -42,8 +45,8 @@ public abstract class PathResolverBase<TParameterType>(
         var fileName = FileNameFor(parameter, fileType);
         var rootedOutputFolder = outputFolderPathProvider.GetRootedOutputFolder();
 
-        var path = Path.Combine(rootedOutputFolder, fileName);
-        var formattedPath = Path.GetFullPath(path);
+        var path = FileSystem.Combine(rootedOutputFolder, fileName);
+        var formattedPath = FileSystem.GetFullPath(path);
 
         return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.TodoRoot);
     }
@@ -51,7 +54,7 @@ public abstract class PathResolverBase<TParameterType>(
     protected virtual FilePathInfo GetFilePathInfo(string fileName, string formattedPath, 
         FileTypeEnum fileType, FolderEnum folderType)
     {
-        return FilePathInfo.Of(formattedPath, fileType, folderType);
+        return FilePathInfo.Of(formattedPath, fileType, folderType, FileSystem);
     }
 
     public FilePathInfo GetArchiveFilePathFor(TParameterType parameter, FileTypeEnum fileType)
@@ -59,8 +62,8 @@ public abstract class PathResolverBase<TParameterType>(
         var fileName = FileNameFor(parameter, fileType);
         var rootedArchiveFolder = outputFolderPathProvider.GetRootedArchiveFolder();
 
-        var path = Path.Combine(rootedArchiveFolder, fileName);
-        var formattedPath = Path.GetFullPath(path);
+        var path = FileSystem.Combine(rootedArchiveFolder, fileName);
+        var formattedPath = FileSystem.GetFullPath(path);
 
         return GetFilePathInfo(fileName, formattedPath, fileType, FolderEnum.Archive);
     }
