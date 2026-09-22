@@ -1,5 +1,16 @@
 # todo &mdash; an idiosyncratic todo list manager
 
+Phil Whittington -- [@PDWhittington](https://x.com/PDWhittington), DMs open.
+
+## Table of contents
+
+- [Introduction](#introduction)
+- [How to build](#how-to-build)
+  - [Building manually](#building-manually)
+  - [Publishing automatically](#publishing-automatically)
+- [Usage](#usage)
+- [Ahead-of-time native compilation](#ahead-of-time-native-compilation)
+
 ## Introduction
 
 This project is a lightweight C# solution which manages todo lists written in Markdown.
