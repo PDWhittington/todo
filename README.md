@@ -4,7 +4,7 @@
 
 This project is a lightweight C# solution which manages todo lists written in Markdown.
 
-Please feel free to DM me on Twitter, [@PDWhittington](https://twitter.com/PDWhittington), or to add issues on this repo for any features you would like to see.
+Please feel free to DM me on Twitter, [@PDWhittington](https://x.com/PDWhittington), or to add issues on this repo for any features you would like to see.
 
 Thanks,
 
@@ -310,3 +310,7 @@ Valid date formats:-
 * -(daycount) &#8594; negative offset a number of days from today<br/>
 
 [Commit Message] &#8594; In the Commit and Sync commands, the commit message is optional. If none is supplied, then a standard message detailing the date and time of the commit will be used.
+
+## Ahead-of-time native compilation
+
+To make the app as fast and responsive as possible, I have done a lot of work to enable AOT compilation. Obviously an app of this nature would not benefit from any run-time optimisation, so the best performance can be achieved only with compile-time native compilation in order that the application skip the JIT-compile stage at startup. I have written a full note on the challenges and their solutions [here](docs/aot-note.md).
