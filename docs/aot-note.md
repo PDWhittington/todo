@@ -1,4 +1,4 @@
-# A note on ahead-of-time compilation
+# A note on ahead-of-time compilation in the Todo app
 
 Phil Whittington -- [@PDWhittington](https://x.com/PDWhittington), DMs open.
 
