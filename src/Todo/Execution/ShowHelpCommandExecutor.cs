@@ -70,7 +70,7 @@ public class ShowHelpCommandExecutor(
         "Valid date formats:-",
 
             "",
-
+            "\t\"latest\", \"mostrecent\", \"most-recent\" -> the most recent day-list in the repo",
             "\t\"y\", \"yesterday\" -> yesterday",
             "\t(empty string), \".\", \"today\" -> today",
             "\t\"tm\", \"tomorrow\" -> tomorrow",

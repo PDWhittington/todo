@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Todo.Contracts.Data.FileSystem;
 using Todo.Contracts.Services.Dates;
+using Todo.Contracts.Services.FileSystem;
 using Todo.Contracts.Services.StateAndConfig;
 
 namespace Todo.Dates;
 
 public class DateParser(IConfigurationProvider configurationProvider, 
-    IDateHelper dateHelper, IDateAdjuster dateAdjuster, IEnvironmentVariableProvider environmentVariableProvider) : IDateParser
+    IDateHelper dateHelper, IDateAdjuster dateAdjuster, 
+    IFileListCreator fileListCreator,
+    IEnvironmentVariableProvider environmentVariableProvider) : IDateParser
 {
 
     public bool TryGetDate(string? str, out DateOnly dateOnly)
@@ -23,6 +27,8 @@ public class DateParser(IConfigurationProvider configurationProvider,
         //NOTE: order of these tests is important.
 
         if (str is null) dateOnly = default;
+        
+        else if (IsLatest(str)) dateOnly = GetLatestDate();
         else if (IsYesterday(str)) dateOnly = relativeToDate.AddDays(-1);
         else if (IsToday(str)) dateOnly = relativeToDate;
         else if (IsTomorrow(str)) dateOnly = relativeToDate.AddDays(1);
@@ -54,6 +60,14 @@ public class DateParser(IConfigurationProvider configurationProvider,
         return false;
     }
 
+    private static bool IsLatest(string commandLine) => commandLine.ToLower() switch
+    {
+        "latest" => true,
+        "mostrecent" => true,
+        "most-recent" => true,
+        _ => false
+    };
+    
     private static bool IsYesterday(string commandLine) => commandLine.ToLower() switch
     {
         "y" => true,
@@ -181,6 +195,19 @@ public class DateParser(IConfigurationProvider configurationProvider,
             => "last".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
                "this".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase) ||
                "next".Equals(firstWord, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    private DateOnly GetLatestDate()
+    {
+        var files = fileListCreator.GetFiles<DayListFilePathInfo>(
+            OutputFolderEnum.MainFolder | OutputFolderEnum.ArchiveFolder,
+            ListFileTypeEnum.DayList);
+
+        var latestDate = files
+            .Select(x => x.Date)
+            .Max();
+        
+        return latestDate;
     }
 
     private DateOnly GetDateFromDayOfWeek(DayOfWeek dayOfWeek)
