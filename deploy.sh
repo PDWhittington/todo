@@ -150,7 +150,7 @@ echo " ✅ Any old version in $DEPLOY_LOCATION has been deleted."
 
 # Copy the published output
 
-if ! run_priv cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net10.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
+if ! run_priv cp -R $SCRIPT_DIR/src/todo/bin/$CONFIGURATION/net11.0/$ARCHITECTURE/publish $DEPLOY_LOCATION; then
 	echo " ❌ FAILED TO COPY NEW FILES TO /usr/local/bin/todo."
 	exit 6
 fi
